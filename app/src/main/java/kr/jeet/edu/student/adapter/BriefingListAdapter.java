@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +36,9 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     private Context mContext;
     private List<BriefingData> mList;
     private ItemClickListener _listener;
+
+    private final boolean IMG_IS_EMPTY = true;
+    private final boolean IMG_IS_NOT_EMPTY = false;
 
     public BriefingListAdapter(Context mContext, List<BriefingData> mList, ItemClickListener listener) {
         this.mContext = mContext;
@@ -98,17 +104,37 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 }
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgBrf);
+                    holder.imgBrf.setVisibility(View.INVISIBLE);
+                    setView(holder.tvTitle, IMG_IS_EMPTY);
+                }else{
+                    holder.imgBrf.setVisibility(View.VISIBLE);
+                    setView(holder.tvTitle, IMG_IS_NOT_EMPTY);
                 }
-
             }
             else {
                 Glide.with(mContext).clear(holder.imgBrf);
+                holder.imgBrf.setVisibility(View.INVISIBLE);
+                setView(holder.tvTitle, IMG_IS_EMPTY);
             }
 
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());
         }
+    }
 
+    private void setView(TextView tv, boolean set){
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tv.getLayoutParams();
+
+        if (set){
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+            layoutParams.endToStart = ConstraintLayout.LayoutParams.UNSET;
+
+        }else{
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET;
+            layoutParams.endToStart = R.id.img_brf;
+
+        }
+        tv.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -118,12 +144,14 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        private ConstraintLayout brfRoot;
         private ImageView imgBrf;
         private TextView tvDate, tvTitle, tvLocation, tvSubscription, tvCampus;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
+            brfRoot = itemView.findViewById(R.id.brf_root);
             tvDate = itemView.findViewById(R.id.tv_brf_date);
             tvTitle = itemView.findViewById(R.id.tv_brf_title);
             tvLocation = itemView.findViewById(R.id.tv_brf_location);

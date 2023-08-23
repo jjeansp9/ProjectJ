@@ -6,7 +6,8 @@
     android:paddingHorizontal="20dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:foreground="?android:attr/selectableItemBackground"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:id="@+id/brf_root">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
@@ -21,7 +22,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintEnd_toStartOf="@id/img_brf"
         android:layout_marginEnd="8dp"
         android:maxLines="2"
         android:ellipsize="end"
@@ -124,8 +125,8 @@
         android:id="@+id/tv_brf_subscription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/img_brf"
-        app:layout_constraintEnd_toEndOf="@id/img_brf"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
         android:hint="신청기간"
         android:gravity="center"

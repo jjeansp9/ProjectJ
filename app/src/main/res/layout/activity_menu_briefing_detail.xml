@@ -85,9 +85,10 @@
 
                 <TextView
                     android:id="@+id/tv_brf_detail_date"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/tv_brf_detail_date_sub"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     android:lineSpacingExtra="4dp"
                     android:hint="정보 없음"
@@ -119,9 +120,10 @@
 
                 <TextView
                     android:id="@+id/tv_brf_detail_loc"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/tv_brf_detail_loc_sub"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_date"
                     android:layout_marginTop="4dp"
                     android:hint="정보 없음"
@@ -140,9 +142,10 @@
                     android:textSize="@dimen/font_size"/>
                 <TextView
                     android:id="@+id/tv_brf_detail_personnel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/tv_brf_detail_personnel_sub"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_loc"
                     android:layout_marginTop="4dp"
                     android:hint="정보 없음"
