@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <queries>
+
+        <!-- 신용카드 -->
+        <package android:name="kr.co.samsungcard.mpocket" /> <!-- 삼성 앱카드, 삼성 앱카드 공동인증서 -->
+        <package android:name="com.shcard.smartpay" /> <!-- 신한 페이판 -->
+        <package android:name="com.shinhancard.smartshinhan" /> <!-- 신한(ARS/일반결제/Smart결제), 신한 공동인증서 -->
+        <package android:name="com.kbcard.cxh.appcard" /> <!-- KBPay -->
+        <package android:name="com.kbstar.liivbank" /> <!-- LiiV(국민은행) -->
+        <package android:name="com.kbstar.reboot" /> <!-- new liib -->
+        <package android:name="com.kbstar.kbbank" /> <!-- new liib -->
+        <package android:name="kvp.jjy.MispAndroid320" /> <!-- 페이북/ISP -->
+        <package android:name="com.hanaskcard.paycla" /> <!-- 하나카드 원큐페이 -->
+        <package android:name="kr.co.hanamembers.hmscustomer" /> <!-- 하나멤버스 -->
+        <package android:name="com.lcacApp" /> <!-- 롯데 앱카드 -->
+        <package android:name="nh.smart.nhallonepay" /> <!-- NH 올원페이, NH 올원페이 공동인증서 -->
+        <package android:name="net.nshc.droidx3web" /> <!-- NH 카드 -->
+        <package android:name="kr.shiftworks.vguardweb" /> <!-- NH 카드 -->
+        <package android:name="com.payprotocol.walletkr" /> <!-- NH 카드 -->
+        <package android:name="kr.danal.app.damoum" /> <!-- NH 카드 -->
+        <package android:name="com.nh.cashcardapp" /> <!-- NH 카드 -->
+        <package android:name="kr.co.kfcc.mobilebank" /> <!-- NH 카드 -->
+        <package android:name="com.wooricard.smartapp" /> <!-- 우리 WON 카드 -->
+        <package android:name="com.wooricard.wpay" /> <!-- 우리 카드 -->
+        <package android:name="com.wooribank.smart.npib" /> <!-- 우리 카드 -->
+        <package android:name="com.mysmilepay.app" /> <!-- 우리 카드 -->
+        <package android:name="com.hyundaicard.appcard" /> <!-- 현대 앱카드 -->
+        <package android:name="kr.co.citibank.citimobile" /> <!-- 씨티카드 -->
+        <package android:name="com.citibank.cardapp" /> <!-- 씨티카드 -->
+
+
+        <!-- 공인인증 -->
+        <package android:name="com.hanaskcard.rocomo.potal" /> <!-- 하나카드 -->
+        <package android:name="com.lumensoft.touchenappfree" /> <!-- 공동인증서 -->
+
+
+        <!-- 백신 -->
+        <package android:name="com.TouchEn.mVaccine.webs" /> <!-- TouchEn mVaccine(신한) -->
+        <package android:name="com.ahnlab.v3mobileplus" /> <!-- V3(NH, 현대) -->
+        <package android:name="kr.co.shiftworks.vguardweb" /> <!-- V-Guard(삼성) -->
+
+
+        <!-- 간편결제 -->
+        <package android:name="com.samsung.android.spay" /> <!-- 삼성페이(삼성, 농협, KB) -->
+        <package android:name="com.samsung.android.spaylite" /> <!-- 삼성페이 미니(삼성, KB) -->
+        <package android:name="com.kakao.talk" /> <!-- 카카오페이 -->
+        <package android:name="com.nhn.android.search" /> <!-- 네이버페이 -->
+        <package android:name="com.ssg.serviceapp.android.egiftcertificate" /> <!-- SSGPay(현대) -->
+        <package android:name="com.nhnent.payapp" /> <!-- 페이코(삼성, 농협, KB) -->
+        <package android:name="com.lge.lgpay" /> <!-- 엘지페이(삼성, KB) -->
+        <package android:name="com.lottemembers.android" /> <!-- LPay -->
+        <package android:name="com.tencent.mm" /> <!-- 위챗페이 -->
+        <package android:name="viva.republica.toss" /> <!-- 토스 -->
+        <package android:name="com.bankpay.android" />
+        <package android:name="com.knb.psb" />
+        <package android:name="com.kbankwith.smartbank" />
+
+        <!-- 계좌이체 -->
+        <package android:name="com.kftc.bankpay.android" /> <!-- 금결원 -->
+
+
+        <!-- 본인인증 -->
+        <package android:name="com.sktelecom.tauth" /> <!-- SKT -->
+        <package android:name="com.kt.ktauth" /> <!-- KT -->
+        <package android:name="com.lguplus.smartotp" /> <!-- LGT -->
+        <package android:name="uplus.membership" /> <!-- LGT -->
+    </queries>
+
+    <uses-permission
+        android:name="android.permission.POST_NOTIFICATIONS"
+        android:minSdkVersion="33"
+        />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_STATE"
+        android:maxSdkVersion="32"
+        />
+    <uses-permission
+        android:name="android.permission.READ_PHONE_NUMBERS"
+        android:minSdkVersion="33"
+        />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_IMAGES"
+        android:minSdkVersion="33"
+        />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_VIDEO"
+        android:minSdkVersion="33"
+        />
+    <uses-permission
+        android:name="android.permission.READ_MEDIA_AUDIO"
+        android:minSdkVersion="33"
+        />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:name=".JeetEducationApplication"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.JeetEducation"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:allowBackup"
+        android:hardwareAccelerated="true"
+        >
+
+        <activity
+            android:name=".activity.MenuNoticeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activity.MenuScheduleActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MenuBriefingReservedListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MenuBriefingWriteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.MenuBriefingDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.MenuBriefingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
+        <activity
+            android:name=".activity.PrivacySeeContentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.InformedQuestionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".activity.MenuTestReserveWriteActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.InformedConsentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.WebViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.MenuTestReserveActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.MenuTestReserveDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.ConsultationRequestActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.MenuStudentInfoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.PhotoViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.SetPasswordActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.SetPhoneNumActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.SetProfileInfoActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.SetAccountActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.MenuBoardDetailActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.MenuAnnouncementActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.SelectStudentActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.JoinActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity
+            android:name=".activity.FindCredentialsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value=""
+                />
+        </activity>
+        <activity
+            android:name=".activity.AgreeTermsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".activity.IntroActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value=""
+                />
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="oauth"
+                    android:scheme="@string/kakao_redirection_scheme"
+                    />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".fcm.MyFirebaseMessagingService"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

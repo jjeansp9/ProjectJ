@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="8dp"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_test_reserve_first"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <TextView
+        android:id="@+id/tv_test_reserve_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:hint="학생이름"
+        android:singleLine="true"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        app:layout_constraintEnd_toStartOf="@+id/img_test_reserve_see_more"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_test_reserve_campus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_test_reserve_see_more"
+        app:layout_constraintTop_toBottomOf="@id/tv_test_reserve_name"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:hint="(캠퍼스 정보 없음)"
+        android:maxLines="1"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size" />
+
+    <TextView
+        android:id="@+id/tv_test_reserve_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/img_test_reserve_see_more"
+        app:layout_constraintTop_toBottomOf="@id/tv_test_reserve_campus"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:hint="0000-00-00"
+        android:maxLines="1"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size" />
+
+    <ImageView
+        android:id="@+id/img_test_reserve_see_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/bt_month_next_nor"/>
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/linearLayout"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="10dp"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/guideline_test_reserve_first"-->
+<!--        app:layout_constraintTop_toTopOf="parent">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="6dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_test_reserve_campus"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="2dp"-->
+<!--                android:ellipsize="end"-->
+<!--                android:hint="(캠퍼스 정보 없음)"-->
+<!--                android:maxLines="1"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textSize="@dimen/font_size" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_test_reserve_date"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:ellipsize="end"-->
+<!--                android:hint="0000-00-00"-->
+<!--                android:maxLines="1"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textSize="@dimen/font_size" />-->
+<!--        </LinearLayout>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_test_reserve_state"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:hint="상태"-->
+<!--            android:maxLines="1"-->
+<!--            android:textColor="@color/font_color_default"-->
+<!--            android:textSize="@dimen/font_size"-->
+<!--            android:visibility="gone" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/img_test_reserve_see_more"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/bt_month_next_nor" />-->
+<!--    </LinearLayout>-->
+
+    <!--    android:src="@drawable/selector_test_reserve_seemore"-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

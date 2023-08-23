@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".activity.JoinActivity">
+
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/login_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/layout_margin"
+            >
+
+            <!-- 사용자 구분 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_type"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/radioBtn1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/parents"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    android:checked="true"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radioBtn2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/student"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    />
+
+
+            </RadioGroup>
+
+            <!-- 이름 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/name"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="10dp"
+                />
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_edittext"
+                android:textSize="@dimen/font_size"
+                android:maxLines="1"
+                android:inputType="text"
+                android:textColor="@color/font_color_default"
+                android:padding="@dimen/editbox_padding"
+                />
+
+            <!--  성별 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gender"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                />
+
+            <RadioGroup
+                android:id="@+id/genderRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/radio_male"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/male"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    android:checked="true"
+                    />
+
+                <RadioButton
+                    android:id="@+id/radio_female"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/female"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    />
+
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/layout_idpwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <!-- 아이디 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/id"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
+                    android:textSize="@dimen/font_size_large"
+                    android:textColor="@color/font_color_default"
+                    android:inputType="text"
+                    android:padding="@dimen/editbox_padding"
+                    android:maxLines="1"
+                    />
+
+                <!-- 비밀번호 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/password"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
+                    android:textSize="@dimen/font_size_large"
+                    android:textColor="@color/font_color_default"
+                    android:inputType="textPassword"
+                    android:padding="@dimen/editbox_padding"
+                    android:maxLines="1"
+                    />
+
+                <TextView
+                    android:id="@+id/check_txt_pw"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/check_password"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="@color/red"
+                    android:layout_marginTop="4dp"
+                    android:visibility="invisible"
+                    />
+
+                <!-- 비밀번호 확인 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/password_confirm"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_pw_confirm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_edittext"
+                    android:textSize="@dimen/font_size_large"
+                    android:textColor="@color/font_color_default"
+                    android:inputType="textPassword"
+                    android:padding="@dimen/editbox_padding"
+                    android:maxLines="1"
+                    />
+
+            </LinearLayout>
+
+            <!-- 휴대폰번호 -->
+            <kr.jeet.edu.student.view.AuthPhoneNumberView
+                android:id="@+id/cv_auth_phoneno"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.widget.Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bottom_button_layout_height"
+        android:background="@drawable/selector_bt_ubderbox"
+        android:stateListAnimator="@xml/animate_button_pull"
+        android:text="@string/complete"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_large"
+        />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

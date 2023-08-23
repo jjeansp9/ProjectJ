@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MenuBriefingDetailActivity"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_brf_center"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50"/>
+
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/customAppbar"
+        app:layout_constraintBottom_toTopOf="@id/line_bottom"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:id="@+id/root_brf">
+            
+            <TextView
+                android:id="@+id/tv_brf_detail_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:hint="제목"
+                android:textSize="@dimen/font_size_xlarge"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+<!--            <View-->
+<!--                android:id="@+id/line_top"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="1dp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_title"-->
+<!--                android:layout_marginTop="16dp"-->
+<!--                android:layout_marginHorizontal="@dimen/layout_margin"-->
+<!--                android:background="@color/line_2"/>-->
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_brf_date_loc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_title"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:background="@drawable/bg_brf_detail_box"
+                android:padding="16dp">
+                <TextView
+                    android:id="@+id/tv_brf_detail_date_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="일　　시 : "
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+
+                <TextView
+                    android:id="@+id/tv_brf_detail_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/tv_brf_detail_date_sub"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:lineSpacingExtra="4dp"
+                    android:hint="정보 없음"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_brf_detail_time"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_date"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:layout_marginTop="4dp"-->
+<!--                    android:hint="시간:"-->
+<!--                    android:textColor="@color/font_color_default"-->
+<!--                    android:textSize="@dimen/font_size"/>-->
+
+                <TextView
+                    android:id="@+id/tv_brf_detail_loc_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_date"
+                    android:layout_marginTop="4dp"
+                    android:text="장　　소 : "
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+
+                <TextView
+                    android:id="@+id/tv_brf_detail_loc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/tv_brf_detail_loc_sub"
+                    app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_date"
+                    android:layout_marginTop="4dp"
+                    android:hint="정보 없음"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+
+                <TextView
+                    android:id="@+id/tv_brf_detail_personnel_sub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_loc"
+                    android:layout_marginTop="4dp"
+                    android:text="참가인원 : "
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+                <TextView
+                    android:id="@+id/tv_brf_detail_personnel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/tv_brf_detail_personnel_sub"
+                    app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_loc"
+                    android:layout_marginTop="4dp"
+                    android:hint="정보 없음"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/tv_brf_detail_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_brf_date_loc"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:layout_marginTop="16dp"
+                android:hint="설명회 내용"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/font_color_default"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_brf_img"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_content"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:layout_marginTop="16dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_brf_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/recycler_brf_img"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"/>
+
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/layout_start_reserve"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/line_bottom"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/guideline_brf_center"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:background="@drawable/bg_pref_sel_checked"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"-->
+<!--                android:paddingVertical="10dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginEnd="4dp"-->
+<!--                android:layout_marginStart="20dp">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="12dp"-->
+<!--                    android:text="@string/briefing_reserve"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/font_size" />-->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/bt_reserve_nor" />-->
+<!--            </RelativeLayout>-->
+
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/layout_reserver_list"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/line_bottom"-->
+<!--                app:layout_constraintStart_toEndOf="@id/guideline_brf_center"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:background="@drawable/btn_brf_reserver_list"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"-->
+<!--                android:paddingVertical="10dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:layout_marginStart="4dp"-->
+<!--                android:layout_marginEnd="20dp">-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentStart="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="12dp"-->
+<!--                    android:text="@string/briefing_reserved_list"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/font_size" />-->
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginEnd="8dp"-->
+<!--                    android:src="@drawable/bt_reserve_nor"/>-->
+<!--            </RelativeLayout>-->
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layout_start_reserve"
+        android:layout_marginBottom="12dp"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_start_reserve"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/scrollview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline_brf_center"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/bg_pref_sel_checked"
+        android:stateListAnimator="@xml/animate_button_push"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:text="@string/briefing_reserve"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/bt_reserve_nor" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_reserver_list"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/scrollview"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline_brf_center"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/btn_brf_reserver_list"
+        android:stateListAnimator="@xml/animate_button_push"
+        android:paddingVertical="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="12dp"
+            android:text="@string/briefing_reserved_list"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/bt_reserve_nor"/>
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

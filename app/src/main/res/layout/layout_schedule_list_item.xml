@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@color/white"
+    android:paddingHorizontal="@dimen/layout_margin"
+    android:paddingVertical="12dp">
+
+    <LinearLayout
+        android:id="@+id/layout_schedule_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/img_schedule_new"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icon_dot_red"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tv_schedule_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5.5 (금)"
+            android:textSize="@dimen/font_size_xlarge"
+            android:textColor="@color/font_color_default"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_schedule_class"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/layout_schedule_date"
+        app:layout_constraintBottom_toBottomOf="@id/layout_schedule_date"
+        android:layout_marginStart="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="[악어수학, 중등]"
+        android:textColor="@color/font_color_blue_sub"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_size_large"/>
+
+    <TextView
+        android:id="@+id/tv_schedule_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_schedule_class"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:text="어린이날 휴무"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

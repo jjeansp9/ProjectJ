@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_margin_28">28dp</dimen>
+    <dimen name="layout_margin">20dp</dimen>
+    <dimen name="layout_margin_16">16dp</dimen>
+    <dimen name="layout_margin_12">12dp</dimen>
+    <dimen name="layout_margin_8">8dp</dimen>
+    <dimen name="layout_margin_4">4dp</dimen>
+    <dimen name="layout_margin_2">2dp</dimen>
+
+    <dimen name="font_size_xxsmall">10dp</dimen>
+    <dimen name="font_size_xsmall">12dp</dimen>
+    <dimen name="font_size_xsmall_13dp">13dp</dimen>
+    <dimen name="font_size_small">14dp</dimen>
+    <dimen name="font_size">16dp</dimen>
+    <dimen name="font_size_large">18dp</dimen>
+    <dimen name="font_size_xlarge">20dp</dimen>
+    <dimen name="font_size_xxlarge">22dp</dimen>
+    <dimen name="font_size_xxxlarge">24dp</dimen>
+
+    <dimen name="header_height">60dp</dimen>
+    <dimen name="header_btn_height">40dp</dimen>
+    <dimen name="under_line_height">1dp</dimen>
+    <dimen name="bottom_button_layout_height">54dp</dimen>
+    <dimen name="editbox_padding">12dp</dimen>
+    <dimen name="editbox_padding_vertical">10dp</dimen>
+
+    <dimen name="profile_size">80dp</dimen>
+    <dimen name="spinner_item_height">48dp</dimen>
+    <dimen name="spinner_popup_elevation">10dp</dimen>
+    <dimen name="image_pallet_size">108dp</dimen>
+    <dimen name="file_icon_size">20dp</dimen>
+    <dimen name="settings_layout_12">12dp</dimen>
+    <dimen name="settings_btn_width">70dp</dimen>
+    <dimen name="settings_btn_height">30dp</dimen>
+    <dimen name="settings_btn_corner">8dp</dimen>
+
+    <dimen name="usergubun_badge_corner">4dp</dimen>
+    <dimen name="usergubun_badge_padding_horizontal">10dp</dimen>
+    <dimen name="usergubun_badge_padding_vertical">1dp</dimen>
+
+    <dimen name="app_version_badge_corner">12dp</dimen>
+    <dimen name="app_version_badge_padding_horizontal">4dp</dimen>
+    <dimen name="app_version_badge_padding_vertical">6dp</dimen>
+
+    <dimen name="settings_btn_box">16dp</dimen>
+
+    <dimen name="informed_consent_check_margin_start">4dp</dimen>
+    <dimen name="informed_consent_check_padding">4dp</dimen>
+    <dimen name="informed_consent_check_padding_start">4dp</dimen>
+
+    <dimen name="et_test_reserve_write">12dp</dimen>
+    <dimen name="tv_test_reserve_write">16dp</dimen>
+    <dimen name="tv_test_reserve_margin_end">10dp</dimen>
+    <dimen name="tv_test_reserve_margin_top">8dp</dimen>
+
+    <dimen name="informed_question_margin_top">12dp</dimen>
+    <dimen name="informed_question_sub_title_margin_top">24dp</dimen>
+
+    <dimen name="test_reserve_detail_item_margin">8dp</dimen>
+    <dimen name="test_reserve_detail_item_title_margin">4dp</dimen>
+
+    <dimen name="line_red">20dp</dimen>
+</resources>

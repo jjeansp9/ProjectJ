@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.ConsultationRequestActivity">
+
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/customAppbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/root_consult"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/layout_margin">
+
+            <TextView
+                android:id="@+id/tv_consultation_day_desired"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/consultation_request_day_desired"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold" />
+            
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_day_desired"
+                android:layout_marginTop="@dimen/layout_margin_12"
+                android:background="@drawable/bg_campus_spinner">
+
+                <TextView
+                    android:id="@+id/tv_consultation_request_cal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/img_cal"
+                    android:paddingHorizontal="@dimen/layout_margin_16"
+                    android:paddingVertical="@dimen/layout_margin_12"
+                    android:hint="@string/consultation_request_sel_date"
+                    android:textSize="@dimen/font_size"
+                    android:textColor="@color/black"/>
+
+                <ImageView
+                    android:id="@+id/img_cal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:src="@drawable/bt_calendar_nor"
+                    android:layout_marginEnd="@dimen/layout_margin_16"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_consultation_campus"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/layout_calendar"-->
+<!--                android:layout_marginTop="@dimen/layout_margin"-->
+<!--                android:text="@string/consultation_request_campus"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
+<!--                android:id="@+id/spinner_campus"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_consultation_campus"-->
+<!--                android:layout_marginTop="@dimen/layout_margin_12"-->
+<!--                android:paddingHorizontal="@dimen/layout_margin_16"-->
+<!--                android:paddingVertical="@dimen/layout_margin_12"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                app:spinner_arrow_gravity="end"-->
+<!--                app:spinner_arrow_tint="@color/blackgray"-->
+<!--                app:spinner_divider_color="@color/line"-->
+<!--                app:spinner_divider_show="true"-->
+<!--                app:spinner_divider_size="0.4dp"-->
+<!--                app:spinner_popup_animation="dropdown"-->
+<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
+<!--                app:spinner_popup_elevation="2dp"-->
+<!--                android:background="@drawable/bg_campus_spinner"/>-->
+
+            <TextView
+                android:id="@+id/tv_consultation_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_calendar"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:text="@string/consultation_request_teacher"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold" />
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinner_teacher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
+                android:layout_marginTop="@dimen/layout_margin_12"
+                android:paddingHorizontal="@dimen/layout_margin_16"
+                android:paddingVertical="@dimen/layout_margin_12"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_tint="@color/blackgray"
+                app:spinner_divider_color="@color/line"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_popup_animation="dropdown"
+                app:spinner_popup_background="@drawable/selector_spinner_item"
+                app:spinner_popup_elevation="2dp"
+                android:background="@drawable/bg_campus_spinner"/>
+
+            <TextView
+                android:id="@+id/tv_consultation_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_teacher"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:text="@string/consultation_request_content"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/et_consultation_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="@dimen/layout_margin_16"
+                android:padding="12dp"
+                android:gravity="start"
+                android:background="@drawable/selector_edit_consultation"
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:minLines="6"
+                android:maxLines="12"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size"
+                android:maxLength="500" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

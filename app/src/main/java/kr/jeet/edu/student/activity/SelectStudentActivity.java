@@ -1,0 +1,191 @@
+package kr.jeet.edu.student.activity;
+
+import androidx.recyclerview.widget.RecyclerView;
+
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
+import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
+import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.model.data.ChildStudentInfo;
+import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
+import kr.jeet.edu.student.server.RetrofitApi;
+import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.view.CustomAppbarLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class SelectStudentActivity extends BaseActivity {
+
+    private String TAG = SelectStudentActivity.class.getSimpleName();
+
+    private TextView tvEmpty;
+
+    private RetrofitApi mRetrofitApi;
+
+    private RecyclerView mListView;
+    private SelectStudentListAdapter mAdapter;
+
+    private int _parentSeq = 0;
+    private PushMessage _pushMessage;
+    private ArrayList<ChildStudentInfo> mList = new ArrayList<>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select_student);
+        mContext = this;
+        initData();
+        initAppbar();
+        initView();
+    }
+
+    private void initData(){
+        try {
+            _parentSeq = PreferenceUtil.getUserSeq(mContext);
+
+            Intent intent = getIntent();
+            if (intent != null) {
+
+                if (intent.hasExtra(IntentParams.PARAM_CHILD_STUDENT_INFO)) {
+
+                    ArrayList<ChildStudentInfo> childStudentInfoList;
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        childStudentInfoList = intent.getParcelableArrayListExtra(IntentParams.PARAM_CHILD_STUDENT_INFO, ChildStudentInfo.class);
+                    } else {
+                        childStudentInfoList = intent.getParcelableArrayListExtra(IntentParams.PARAM_CHILD_STUDENT_INFO);
+                    }
+
+                    if (childStudentInfoList != null) {
+                        mList = childStudentInfoList;
+                    } else {
+
+                    }
+                } else {
+                    LogMgr.e("No intent extra");
+                    requestChildStudentInfo(_parentSeq);
+                }
+
+                if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
+                    LogMgr.e(TAG, "push msg ");
+                    _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                    LogMgr.e(TAG, "msg = " + _pushMessage.body);
+                } else {
+                    LogMgr.e(TAG, "push msg is null");
+                }
+            }
+        } catch (Exception e) {
+            LogMgr.e(TAG + " Exception: ", e.getMessage());
+        }
+
+
+    }
+
+    @Override
+    void initAppbar(){
+        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
+        customAppbar.setLogoVisible(true);
+        setSupportActionBar(customAppbar.getToolbar());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+    }
+    @Override
+    void initView() {
+        tvEmpty = findViewById(R.id.tv_sel_stu_empty);
+
+        mListView = (RecyclerView) findViewById(R.id.listView);
+        mAdapter = new SelectStudentListAdapter(mContext, mList);
+        mListView.setAdapter(mAdapter);
+    }
+
+    private void requestChildStudentInfo(int parentMemberSeq) {
+
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.searchChildStudents(parentMemberSeq).enqueue(new Callback<SearchChildStudentsResponse>() {
+                @Override
+                public void onResponse(Call<SearchChildStudentsResponse> call, Response<SearchChildStudentsResponse> response) {
+                    mList.clear();
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            ArrayList<ChildStudentInfo> data = response.body().data;
+
+                            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+                            SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+
+                            for (ChildStudentInfo item : data) {
+                                try {
+                                    Date birthDate = originalFormat.parse(item.birth);
+                                    if (birthDate != null) {
+                                        item.birth = targetFormat.format(birthDate);
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                            if (data.size() > 0 && data != null){
+                                mList.addAll(data);
+                            }
+
+                        }else{
+
+                        }
+                    }catch (Exception e) { LogMgr.e(TAG + "requestChildStudentInfo() Exception : ", e.getMessage()); }
+
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    if (mList.isEmpty()){
+                        LogMgr.d("Event");
+                    }
+                    tvEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<SearchChildStudentsResponse> call, Throwable t) {
+                    mList.clear();
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    tvEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+
+                    try { LogMgr.e(TAG, "requestStudentInfo() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestChildStudentInfo() Exception : ", e.getMessage()); }
+
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
+                }
+            });
+        }
+    }
+
+    public void goMain(int position) {
+
+        PreferenceUtil.setStuSeq(mContext, mList.get(position).seq);
+        PreferenceUtil.setStName(mContext, mList.get(position).stName);
+        PreferenceUtil.setUserSTCode(mContext, mList.get(position).stCode);
+        PreferenceUtil.setStuGender(mContext, mList.get(position).gender);
+
+        Intent intent = new Intent(mContext, MainActivity.class);
+        if(_pushMessage != null) {
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+}

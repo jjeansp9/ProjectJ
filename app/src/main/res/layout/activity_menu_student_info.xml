@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MenuStudentInfoActivity"
+    android:background="@color/bg_grey">
+
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintTop_toBottomOf="@id/customAppbar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/layout_margin">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_consultation_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="@dimen/layout_margin_16"
+                android:background="@drawable/bg_menu_student_info_layout"
+                android:paddingVertical="@dimen/layout_margin_12">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_stu_info"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:paddingTop="@dimen/layout_margin_12">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_student_info_left"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.40"/>
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guideline_student_info_right"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.60"/>
+
+                    <ImageView
+                        android:id="@+id/img_stu_info_profile"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintEnd_toEndOf="@id/guideline_student_info_left"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintHorizontal_bias="1"
+                        android:src="@drawable/img_profile_man"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/img_stu_info_profile"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/img_stu_info_profile"
+                        app:layout_constraintBottom_toBottomOf="@id/img_stu_info_profile">
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:id="@+id/layout_stu_info_name_birth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:orientation="horizontal"
+                            android:layout_marginStart="@dimen/layout_margin_12">
+
+                            <TextView
+                                android:id="@+id/tv_stu_info_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/name"
+                                android:textColor="@color/font_color_default"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/font_size_xlarge" />
+
+                            <TextView
+                                android:id="@+id/tv_stu_info_birth"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/font_color_666"
+                                android:textSize="@dimen/font_size_large"
+                                android:layout_gravity="center"
+                                android:hint="@string/birth"
+                                android:layout_marginStart="8dp" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                        <TextView
+                            android:id="@+id/tv_stu_info_dept_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/layout_stu_info_name_birth"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginStart="@dimen/layout_margin_12"
+                            android:layout_marginTop="2dp"
+                            android:hint="부서"
+                            android:textSize="@dimen/font_size_large"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_stu_info_st_grade"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toEndOf="@id/tv_stu_info_dept_name"
+                            app:layout_constraintTop_toBottomOf="@id/layout_stu_info_name_birth"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginStart="4dp"
+                            android:hint="학년"
+                            android:textSize="@dimen/font_size_large"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_stu_info_clst_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toEndOf="@id/tv_stu_info_st_grade"
+                            app:layout_constraintTop_toBottomOf="@id/layout_stu_info_name_birth"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginStart="4dp"
+                            android:hint="학급"
+                            android:textSize="@dimen/font_size_large"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_campus_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/img_stu_info_profile"
+                        app:layout_constraintEnd_toEndOf="@id/img_stu_info_profile"
+                        android:layout_marginTop="@dimen/layout_margin_8"
+                        android:textColor="@color/font_color_999"
+                        android:text="@string/menu_stu_info_campus"
+                        android:textScaleX="0.92"
+                        android:textSize="@dimen/font_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_campus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/img_stu_info_profile"
+                        app:layout_constraintStart_toEndOf="@id/tv_stu_info_campus_item"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="@dimen/layout_margin_8"
+                        android:layout_marginStart="@dimen/layout_margin_8"
+                        android:hint="@string/menu_stu_info_empty"
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_stu_phone_num_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_stu_info_campus_item"
+                        app:layout_constraintEnd_toEndOf="@id/img_stu_info_profile"
+                        android:layout_marginTop="@dimen/layout_margin_2"
+                        android:textColor="@color/font_color_999"
+                        android:text="@string/menu_stu_info_stu_phone_num"
+                        android:textScaleX="0.92"
+                        android:textSize="@dimen/font_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_stu_phone_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_stu_info_campus_item"
+                        app:layout_constraintStart_toEndOf="@id/tv_stu_info_stu_phone_num_item"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="@dimen/layout_margin_2"
+                        android:layout_marginStart="@dimen/layout_margin_8"
+                        android:hint="@string/menu_stu_info_empty"
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_parent_phone_num_item"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_stu_info_stu_phone_num_item"
+                        app:layout_constraintEnd_toEndOf="@id/img_stu_info_profile"
+                        android:layout_marginTop="@dimen/layout_margin_2"
+                        android:textColor="@color/font_color_999"
+                        android:text="부모님 연락처"
+                        android:textScaleX="0.92"
+                        android:textSize="@dimen/font_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_stu_info_parent_phone_num"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/tv_stu_info_stu_phone_num_item"
+                        app:layout_constraintStart_toEndOf="@id/tv_stu_info_parent_phone_num_item"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginTop="@dimen/layout_margin_2"
+                        android:layout_marginStart="@dimen/layout_margin_8"
+                        android:hint="@string/menu_stu_info_empty"
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_consultation_request"
+                    android:layout_width="match_parent"
+                    android:layout_height="46dp"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_stu_info"
+                    android:layout_marginTop="@dimen/layout_margin_16"
+                    android:layout_marginHorizontal="@dimen/layout_margin_16"
+                    android:background="@drawable/selector_bt_stu_info_consultation_request"
+                    android:text="@string/menu_stu_info_consultation_request"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/font_size_large"
+                    android:stateListAnimator="@xml/animate_button_push"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                android:id="@+id/layout_calender"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/layout_consultation_request"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:layout_marginTop="@dimen/layout_margin_12"-->
+<!--                android:background="@drawable/bg_menu_student_info_layout">-->
+
+<!--                <TextView-->
+<!--                    android:id="@+id/tv_attendance"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="@string/menu_stu_info_attendance_sheet"-->
+<!--                    app:layout_constraintTop_toTopOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:gravity="center"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/font_size_large"/>-->
+
+<!--                <com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
+<!--                    android:id="@+id/calendarView"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:background="@color/white"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/tv_attendance"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:mcv_dateTextAppearance="@style/CalendarDateTextAppearance"-->
+<!--                    app:mcv_leftArrowMask="@drawable/selector_month_back"-->
+<!--                    app:mcv_rightArrowMask="@drawable/selector_month_next"-->
+<!--                    app:mcv_headerTextAppearance="@style/CalendarHeaderTextAppearance"-->
+<!--                    app:mcv_tileHeight="48dp"-->
+<!--                    android:adjustViewBounds="true"-->
+<!--                    app:mcv_showOtherDates="defaults"-->
+<!--                    android:layout_marginBottom="16dp"/>-->
+
+<!--            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_tuition"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/layout_consultation_request"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="@dimen/layout_margin_12"
+            android:layout_marginBottom="@dimen/layout_margin_16"
+            android:background="@drawable/bg_menu_student_info_layout">
+
+            <TextView
+                android:id="@+id/tv_tuition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/menu_stu_info_tuition"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size_xlarge"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@+id/tv_tuition"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginHorizontal="@dimen/layout_margin_16">
+
+                <ImageView
+                    android:id="@+id/img_tuition_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/layout_year_month"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginEnd="12dp"
+                    android:padding="8dp"
+                    android:src="@drawable/selector_month_back"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_year_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:stateListAnimator="@xml/animate_button_push"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_year"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toStartOf="@id/tv_month"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:gravity="center"
+                        android:textSize="@dimen/font_size"
+                        android:textColor="@color/font_color_default"
+                        android:textAppearance="@style/CalendarHeaderTextAppearance"/>
+
+                    <TextView
+                        android:id="@+id/tv_month"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/tv_year"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginStart="6dp"
+                        android:gravity="center"
+                        android:textSize="@dimen/font_size"
+                        android:textColor="@color/font_color_default"
+                        android:textAppearance="@style/CalendarHeaderTextAppearance"/>
+
+                    <ImageView
+                        android:id="@+id/img_icon_calender"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toEndOf="@id/tv_month"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginStart="@dimen/layout_margin_8"
+                        android:src="@drawable/bt_calendar_nor"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/img_tuition_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/layout_year_month"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="12dp"
+                    android:padding="8dp"
+                    android:src="@drawable/selector_month_next"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/layout_total_unpaid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_year_month"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="8dp">
+
+                    <TextView
+                        android:id="@+id/tv_total_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="@string/menu_stu_info_unpaid_amount"
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_total_payment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:hint="없음"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/font_size_large"
+                        android:textStyle="bold"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                <View-->
+<!--                    android:id="@+id/line_tuition"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="1dp"-->
+<!--                    android:background="@color/line_2"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/layout_total_unpaid"-->
+<!--                    android:layout_marginTop="@dimen/layout_margin_8"/>-->
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_tuition"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layout_total_unpaid"
+                    android:layout_marginTop="@dimen/layout_margin_8"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    tools:listitem="@layout/layout_tuition_item"
+                    android:nestedScrollingEnabled="false"/>
+
+                <TextView
+                    android:id="@+id/tv_tuition_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/layout_total_unpaid"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/menu_stu_info_tuition_empty"
+                    android:textColor="@color/font_color_bc"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="bold"
+                    android:padding="30dp"
+                    android:visibility="gone"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

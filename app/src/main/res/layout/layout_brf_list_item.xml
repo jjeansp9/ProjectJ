@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="20dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@color/white">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75"/>
+
+    <TextView
+        android:id="@+id/tv_brf_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:layout_marginEnd="8dp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:hint="설명회 타이틀"
+        android:textColor="@color/font_color_default"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_size_large"/>
+
+    <TextView
+        android:id="@+id/tv_brf_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_brf_title"
+        app:layout_constraintBottom_toTopOf="@id/tv_brf_campus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        app:layout_constraintVertical_bias="1"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:hint="설명회 날짜"
+        android:textSize="@dimen/font_size"
+        android:textColor="@color/font_color_default"/>
+
+    <TextView
+        android:id="@+id/tv_brf_campus"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tv_brf_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:layout_marginEnd="8dp"
+        android:hint="캠퍼스"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/font_color_555"
+        android:textSize="@dimen/font_size"/>
+
+    <TextView
+        android:id="@+id/tv_brf_location"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:layout_marginEnd="8dp"
+        android:hint="설명회 장소"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/font_color_555"
+        android:textSize="@dimen/font_size"/>
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/layout_photo"-->
+<!--        android:layout_width="108dp"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/img_brf"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="0dp"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:layout_constraintBottom_toTopOf="@id/tv_brf_subscription"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tv_brf_subscription"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            android:hint="신청기간"-->
+<!--            android:gravity="end"-->
+<!--            android:maxLines="1"-->
+<!--            android:ellipsize="end"-->
+<!--            android:textColor="@color/red"-->
+<!--            android:textSize="@dimen/font_size"-->
+<!--            android:textStyle="bold"/>-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+    <ImageView
+        android:id="@+id/img_brf"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/tv_brf_subscription"
+        app:layout_constraintDimensionRatio="W,1:1"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_brf_subscription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/img_brf"
+        app:layout_constraintEnd_toEndOf="@id/img_brf"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
+        android:hint="신청기간"
+        android:gravity="center"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/red"
+        android:textSize="@dimen/font_size_small"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMinTextSize="8dp"
+        app:autoSizeMaxTextSize="@dimen/font_size_small"
+        app:autoSizeStepGranularity="1dp"
+        android:textStyle="bold"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/header_height"
+        android:layout_marginHorizontal="10dp"
+        >
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="@dimen/header_btn_height"
+            android:layout_height="@dimen/header_btn_height"
+            android:layout_centerVertical="true"
+            android:background="@drawable/selector_icon_back"
+            android:stateListAnimator="@xml/animate_button_push"
+            />
+
+        <TextView
+            android:id="@+id/tv_sub_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/btn_back"
+            android:textColor="@color/blackgray"
+            android:textSize="@dimen/font_size_large" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="title"
+            android:textStyle="bold"
+            android:textColor="@color/font_color_default"
+            android:textSize="@dimen/font_size_xlarge" />
+
+        <TextView
+            android:id="@+id/right_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/red"
+            android:textSize="@dimen/font_size" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/under_line_height"
+        android:background="@color/line"
+        />
+
+</LinearLayout>

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string-array name="month_names">
+        <item>1월</item>
+        <item>2월</item>
+        <item>3월</item>
+        <item>4월</item>
+        <item>5월</item>
+        <item>6월</item>
+        <item>7월</item>
+        <item>8월</item>
+        <item>9월</item>
+        <item>10월</item>
+        <item>11월</item>
+        <item>12월</item>
+    </string-array>
+
+    <string-array name="funnel">
+        <item>시스템(커리큘럼,실적)</item>
+        <item>주변 소문을듣고</item>
+        <item>광고(전단, 유인물)</item>
+        <item>인터넷 검색</item>
+        <item>형제 재원</item>
+        <item>재등록</item>
+        <item>기타</item>
+    </string-array>
+
+    <string-array name="grade">
+        <item>초1학년</item>
+        <item>초2학년</item>
+        <item>초3학년</item>
+        <item>초4학년</item>
+        <item>초5학년</item>
+        <item>초6학년</item>
+        <item>중1학년</item>
+        <item>중2학년</item>
+        <item>중3학년</item>
+        <item>고1학년</item>
+        <item>고2학년</item>
+        <item>고3학년</item>
+    </string-array>
+
+    <string-array name="test_stu_class">
+        <item><font color="@color/red">초등</font></item>
+        <item>평일 오후 05:00</item>
+        <item>평일 오후 07:00</item>
+        <item>토요일 오전 11:00</item>
+        <item>토요일 오후 01:00</item>
+        <item><font color="@color/red">중등</font></item>
+        <item>평일 오후 05:00</item>
+        <item>평일 오후 07:00</item>
+        <item>토요일 오전 11:00</item>
+        <item>토요일 오후 01:00</item>
+        <item><font color="@color/red">고등</font></item>
+        <item>평일 오후 04:00</item>
+        <item>평일 오후 07:00</item>
+        <item>토요일 오후 03:00</item>
+        <item>토요일 오후 07:00</item>
+    </string-array>
+
+    <string-array name="test_day">
+        <item>평일</item>
+        <item>토요일</item>
+    </string-array>
+
+    <string-array name="test_time_first">
+        <item>오후 05:00</item>
+        <item>오후 07:00</item>
+    </string-array>
+
+    <string-array name="test_time_second">
+        <item>오전 11:00</item>
+        <item>오후 01:00</item>
+    </string-array>
+
+    <string-array name="test_time_third">
+        <item>오후 04:00</item>
+        <item>오후 07:00</item>
+    </string-array>
+
+    <string-array name="test_time_fourth">
+        <item>오후 03:00</item>
+        <item>오후 07:00</item>
+    </string-array>
+
+    <string-array name="informed_question_class_path">
+        <item>학원</item>
+        <item>과외</item>
+        <item>가정학습(자기주도)</item>
+        <item>구몬/눈높이/재능</item>
+    </string-array>
+
+    <string-array name="informed_question_learning_process">
+        <item>선택</item>
+        <item>초1-1</item>
+        <item>초1-2</item>
+        <item>초2-1</item>
+        <item>초2-2</item>
+        <item>초3-1</item>
+        <item>초3-2</item>
+        <item>초4-1</item>
+        <item>초4-2</item>
+        <item>초5-1</item>
+        <item>초5-2</item>
+        <item>초6-1</item>
+        <item>초6-2</item>
+        <item>중1-1</item>
+        <item>중1-2</item>
+        <item>중2-1</item>
+        <item>중2-2</item>
+        <item>중3-1</item>
+        <item>중3-2</item>
+        <item>수(상)</item>
+        <item>수(하)</item>
+        <item>수1</item>
+        <item>수2</item>
+        <item>미적분</item>
+        <item>확률과 통계</item>
+    </string-array>
+
+    <string-array name="school_type">
+        <item>초등학교</item>
+        <item>중학교</item>
+        <item>고등학교</item>
+    </string-array>
+</resources>
+
+

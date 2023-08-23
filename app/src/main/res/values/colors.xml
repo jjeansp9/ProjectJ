@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="red">#e51b23</color>
+    <color name="red_sel">#b5141a</color>
+    <color name="red_sub">#ff5959</color>
+
+    <color name="font_color_default">#333</color>
+    <color name="font_color_555">#555</color>
+    <color name="font_color_666">#666</color>
+    <color name="font_color_999">#999</color>
+    <color name="font_color_bc">#BCBCBC</color>
+    <color name="font_color_red">#ff3e3e</color>
+    <color name="font_color_blue">#155ae4</color>
+    <color name="font_color_blue_sub">#1F72CC</color>
+
+    <color name="line">#999</color>
+    <color name="line_2">#D5D5D5</color>
+    <color name="line_set">#EDEDED</color>
+    <color name="gray">#cccccc</color>
+    <color name="blackgray">#666666</color>
+    <color name="bg_grey">#eee</color>
+    <color name="bg_gray_transparent">#66666666</color>
+    <color name="bg_white">#f8f8f8</color>
+    <color name="bg_profile">#cccccc</color>
+    <color name="popup_title_bg">#ededed</color>
+    <color name="popup_title_bg2">#333333</color>
+    <color name="popup_line">#bbbbbb</color>
+
+    <color name="student_list_gender_woman">#ff9289</color>
+    <color name="student_list_gender_man">#82a4c4</color>
+
+    <color name="settings_layout_stroke">#D5D5D5</color>
+    <color name="campus_spinner_stroke">#D5D5D5</color>
+
+
+    <color name="btn_main_nor">#daf0d7</color>
+    <color name="btn_main_sel">#c2e7bc</color>
+
+    <color name="btn_stroke">#333</color>
+    <color name="usergubun_badge">#EA6B6B</color>
+    <color name="app_version_update_badge">#FFC800</color>
+
+    <color name="calendar_selected">#4444afcc</color>
+    <color name="calendar_notified">#DD6655</color>
+
+    <color name="side_test_reserve_write">#f8f8f8</color>
+    <color name="bt_address_search_nor">#666666</color>
+    <color name="bt_address_search_sel">#555555</color>
+
+    <color name="bt_stu_info_nor">#ff5959</color>
+    <color name="bt_stu_info_sel">#f44d4d</color>
+
+    <color name="bg_class_path">#F5F5F5</color>
+
+    <color name="saturday">#366FFF</color>
+    <color name="sunday">#FF4444</color>
+
+    <color name="bg_brf_detail_box">#F6F6F6</color>
+</resources>

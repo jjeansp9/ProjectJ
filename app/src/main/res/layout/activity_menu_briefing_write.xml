@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.MenuBriefingWriteActivity">
+
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/customAppbar"
+        app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:id="@+id/root_brf_write"
+            android:paddingHorizontal="@dimen/layout_margin">
+
+            <TextView
+                android:id="@+id/tv_brf_write_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/briefing_write_name_stu"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/et_brf_write_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_name"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_edittext"
+                android:textSize="@dimen/font_size"
+                android:maxLines="1"
+                android:inputType="text"
+                android:textColor="@color/font_color_default"
+                android:padding="@dimen/editbox_padding"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/tv_brf_write_phone_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_name"
+                android:text="@string/briefing_write_phonenumber"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/et_brf_write_phone_num"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_phone_num"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_edittext"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/font_color_default"
+                android:inputType="phone"
+                android:padding="@dimen/editbox_padding"
+                android:maxLines="1"
+                android:maxLength="11"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_brf_write_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_phone_num"
+                android:text="@string/briefing_write_email"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/et_brf_write_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_email"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_edittext"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/font_color_default"
+                android:inputType="textEmailAddress"
+                android:padding="@dimen/editbox_padding"
+                android:maxLines="1"
+                android:maxLength="40"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/tv_brf_write_personnel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_email"
+                android:text="@string/briefing_write_personnel"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <EditText
+                android:id="@+id/et_brf_write_personnel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_personnel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:background="@drawable/bg_edittext"
+                android:textSize="@dimen/font_size"
+                android:maxLines="1"
+                android:inputType="number"
+                android:textColor="@color/font_color_default"
+                android:padding="@dimen/editbox_padding"
+                android:layout_marginTop="10dp" />
+
+            <TextView
+                android:id="@+id/tv_brf_write_school"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_personnel"
+                android:text="@string/school"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"/>
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinner_brf_write_school_type"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_school"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="@dimen/editbox_padding"
+                android:paddingVertical="@dimen/editbox_padding_vertical"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size"
+                android:hint="초/중/고 선택"
+                android:gravity="center"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_tint="@color/blackgray"
+                app:spinner_divider_color="@color/line"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_popup_focusable="true"
+                app:spinner_popup_animation="dropdown"
+                app:spinner_popup_background="@drawable/selector_spinner_item"
+                app:spinner_popup_elevation="2dp"
+                android:background="@drawable/bg_edittext"
+                app:spinner_item_array="@array/school_type"/>
+
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinner_brf_write_school"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/spinner_brf_write_school_type"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="@dimen/editbox_padding"
+                android:paddingVertical="@dimen/editbox_padding_vertical"
+                android:textColor="@color/black"
+                android:textSize="@dimen/font_size"
+                android:hint="@string/test_reserve_write_select_school"
+                android:gravity="center"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_tint="@color/blackgray"
+                app:spinner_divider_color="@color/line"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_popup_focusable="true"
+                app:spinner_popup_animation="dropdown"
+                app:spinner_popup_background="@drawable/selector_spinner_item"
+                app:spinner_popup_elevation="2dp"
+                android:focusable="true"
+                android:background="@drawable/bg_edittext"/>
+
+            <LinearLayout
+                android:id="@+id/layout_brf_privacy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_brf_write_school"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="20dp"
+                android:stateListAnimator="@xml/animate_button_push">
+                <CheckBox
+                    android:id="@+id/cb_brf_check_privacy"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cb_check_all"
+                    android:background="@drawable/selector_brf_check"
+                    android:layout_gravity="center_vertical"
+                    android:checked="true"
+                    android:button="@null"
+                    android:clickable="false"/>
+                <TextView
+                    android:id="@+id/tv_brf_privacy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/informed_consent_check_padding"
+                    android:paddingStart="@dimen/informed_consent_check_padding_start"
+                    android:text="@string/briefing_privacy"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="@color/font_color_default"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/informed_consent_required"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="@color/red_sub"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_brf_view_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/layout_brf_privacy"
+                app:layout_constraintBottom_toBottomOf="@id/layout_brf_privacy"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="4dp"
+                android:stateListAnimator="@xml/animate_button_push"
+                android:orientation="horizontal"
+                android:paddingVertical="4dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/informed_consent_view_content"
+                    android:textSize="@dimen/font_size_small"
+                    android:textColor="@color/font_color_999"
+                    android:layout_gravity="center_vertical"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/bt_seemore_nor"
+                    android:layout_gravity="center_vertical"/>
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <android.widget.Button
+            android:id="@+id/btn_brf_write_complete"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bottom_button_layout_height"
+            android:background="@drawable/selector_bt_ubderbox"
+            android:stateListAnimator="@xml/animate_button_pull"
+            android:text="@string/complete"
+            android:textColor="@color/white"
+            android:textSize="@dimen/font_size_large" />
+
+    </RelativeLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
