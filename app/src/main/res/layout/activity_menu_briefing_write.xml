@@ -134,7 +134,8 @@
                 android:background="@android:color/transparent"
                 android:layout_marginEnd="40dp"
                 android:padding="8dp"
-                android:src="@drawable/selector_month_back"/>
+                android:src="@drawable/selector_month_back"
+                android:stateListAnimator="@xml/animate_button_push"/>
 
             <EditText
                 android:id="@+id/et_brf_write_personnel"
@@ -175,7 +176,8 @@
                 android:background="@android:color/transparent"
                 android:layout_marginStart="40dp"
                 android:padding="8dp"
-                android:src="@drawable/selector_month_next"/>
+                android:src="@drawable/selector_month_next"
+                android:stateListAnimator="@xml/animate_button_push"/>
 
             <TextView
                 android:id="@+id/tv_brf_write_school"

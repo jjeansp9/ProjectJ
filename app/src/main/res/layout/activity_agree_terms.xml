@@ -173,6 +173,5 @@
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_large"
         />
-<!--    android:background="@drawable/selector_bt_ubderbox"-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>
