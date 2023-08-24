@@ -59,13 +59,10 @@ public class PhotoViewActivity extends BaseActivity {
 
     private DownloadReceiver _downloadReceiver = null;
 
-    private AppCompatActivity mActivity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
-        mActivity = this;
         mContext = this;
         initData();
         initView();
@@ -124,53 +121,49 @@ public class PhotoViewActivity extends BaseActivity {
             });
         }
 
-//        WindowInsetsController
-//        위 앱에서는 Immersive 모드를 사용하여 Expand / Collapse 두가지 모드로 UI를 제어하는 것을 볼 수 있다
-        //setStatusBarMode();
-        //setStateBarColor();
-
-//        layoutHeader.setPadding(
-//                0,
-//                statusBarHeight(mContext),
-//                0,
-//                0
-//        );
-
-        //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layoutHeader.getLayoutParams();
-        //params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
-
-//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, dpToPx(60));
-//        params.topMargin = dpToPx(statusBarHeight(mContext));
-//        layoutHeader.setBackgroundColor(Color.RED);
-//        layoutHeader.setLayoutParams(params);
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layoutHeader.getLayoutParams();
+        params.topMargin = statusBarHeight(mContext); // 상단의 상태 바 size만큼 margin 값 주기
+        layoutHeader.setLayoutParams(params);
 
         setStatusBarTransparent();
         //setFullScreen(mActivity, true);
     }
 
-    public int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
-    }
-
     public void setStatusBarTransparent() {
         Window window = getWindow();
-        window.setFlags(
+        window.setFlags( // 바, 상태표시줄의 위치에 제한을 두지않고 레이아웃 확장
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
                 WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         );
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowCompat.setDecorFitsSystemWindows(window, false);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            View decorView = getWindow().getDecorView();
-            int flags = decorView.getSystemUiVisibility();
+            WindowCompat.setDecorFitsSystemWindows(window, false); // false로 설정하면 바, 상태표시줄 확장
 
-            flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        }else{
+            window = getWindow();
+            View decorView = window.getDecorView();
+
+            int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
             decorView.setSystemUiVisibility(flags);
-            getWindow().setNavigationBarColor(Color.BLACK);
+
+            window.setStatusBarColor(Color.TRANSPARENT);
+            window.setNavigationBarColor(Color.TRANSPARENT);
         }
+
+        View decorView = getWindow().getDecorView();
+        int flags = decorView.getSystemUiVisibility();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+        }else{
+            flags ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        }
+
+        decorView.setSystemUiVisibility(flags);
+        getWindow().setNavigationBarColor(Color.BLACK);
     }
 
     public int statusBarHeight(Context context) {
