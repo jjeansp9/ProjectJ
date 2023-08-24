@@ -3,7 +3,9 @@ package kr.jeet.edu.student.activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
@@ -45,9 +47,9 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
     private CheckBox cbPrivacy;
     private TextView mTvPrivacy;
-    private EditText mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel;
+    private EditText mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel, mEtSchool;
     private EditText[] mEtList;
-    private PowerSpinnerView mSpinnerSchool, mSpinnerSchoolType;
+    //private PowerSpinnerView mSpinnerSchool, mSpinnerSchoolType;
 
     private RetrofitApi mRetrofitApi;
 
@@ -99,78 +101,107 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         mEtPhoneNum = findViewById(R.id.et_brf_write_phone_num);
         mEtEmail = findViewById(R.id.et_brf_write_email);
         mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
+        mEtSchool = findViewById(R.id.et_brf_write_school);
 
-        mEtList = new EditText[]{mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel};
+        mEtPersonnel.setText("1");
 
-        setSpinner();
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setSpinner(){
-        mSpinnerSchool = findViewById(R.id.spinner_brf_write_school);
-        mSpinnerSchoolType = findViewById(R.id.spinner_brf_write_school_type);
-
-        mSpinnerSchool.setOnTouchListener((v, event) -> {
-            switch (event.getAction()){
-                case MotionEvent.ACTION_UP:
-                    if (mSpinnerSchoolType.getText().toString().equals("")){
-                        Toast.makeText(mContext, R.string.briefing_write_please_sel, Toast.LENGTH_SHORT).show();
-                    }
-                    Utils.clearFocus(mEtList);
-                    Utils.hideKeyboard(mContext, mEtList);
-                    break;
+        mEtPersonnel.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 1) if ("0".equals(s.toString())) mEtPersonnel.setText("");
+                if (s.length() >= 2 && s.charAt(0) == '0') mEtPersonnel.getText().replace(0, 1, "");
             }
+            @Override
+            public void afterTextChanged(Editable s) {
 
-            return false;
-        });
-        mSpinnerSchoolType.setOnTouchListener((v, event) -> {
-            switch (event.getAction()){
-                case MotionEvent.ACTION_UP:
-                    Utils.clearFocus(mEtList);
-                    Utils.hideKeyboard(mContext, mEtList);
-                    break;
             }
-            return false;
         });
 
-        mSpinnerSchoolType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            setSpinnerSchool();
+        mEtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String cleanedEmail = mEtEmail.getText().toString().replaceAll(" ", "");
+                mEtEmail.setText(cleanedEmail);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
+
+        mEtList = new EditText[]{mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel, mEtSchool};
+
+        //setSpinner();
     }
 
-    private void setSpinnerSchool(){
-        List<SchoolData> schoolList = DataManager.getInstance().getSchoolList();
-        List<String> scNames = new ArrayList<>();
-
-        final String ELEMENTARY = "초등";
-        final String MIDDLE_SCHOOL = "중학교";
-        final String HIGH_SCHOOL = "고등";
-
-        if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_elementary))){
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(MIDDLE_SCHOOL) && !data.scName.contains(HIGH_SCHOOL)){
-                    scNames.add(data.scName);
-                }
-            }
-        }else if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_middle))){
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(HIGH_SCHOOL)){
-                    scNames.add(data.scName);
-                }
-            }
-        }else{
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(MIDDLE_SCHOOL)){
-                    scNames.add(data.scName);
-                }
-            }
-        }
-
-        mSpinnerSchool.setText("");
-        mSpinnerSchool.setItems(scNames);
-
-        mSpinnerSchool.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> _scName = scNames.get(newIndex));
-    }
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void setSpinner(){
+//        mSpinnerSchool = findViewById(R.id.spinner_brf_write_school);
+//        mSpinnerSchoolType = findViewById(R.id.spinner_brf_write_school_type);
+//
+//        mSpinnerSchool.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()){
+//                case MotionEvent.ACTION_UP:
+//                    if (mSpinnerSchoolType.getText().toString().equals("")){
+//                        Toast.makeText(mContext, R.string.briefing_write_please_sel, Toast.LENGTH_SHORT).show();
+//                    }
+//                    Utils.clearFocus(mEtList);
+//                    Utils.hideKeyboard(mContext, mEtList);
+//                    break;
+//            }
+//
+//            return false;
+//        });
+//        mSpinnerSchoolType.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()){
+//                case MotionEvent.ACTION_UP:
+//                    Utils.clearFocus(mEtList);
+//                    Utils.hideKeyboard(mContext, mEtList);
+//                    break;
+//            }
+//            return false;
+//        });
+//
+//        mSpinnerSchoolType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+//            setSpinnerSchool();
+//        });
+//    }
+//
+//    private void setSpinnerSchool(){
+//        List<SchoolData> schoolList = DataManager.getInstance().getSchoolList();
+//        List<String> scNames = new ArrayList<>();
+//
+//        final String ELEMENTARY = "초등";
+//        final String MIDDLE_SCHOOL = "중학교";
+//        final String HIGH_SCHOOL = "고등";
+//
+//        if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_elementary))){
+//            for (SchoolData data : schoolList) {
+//                if (!data.scName.contains(MIDDLE_SCHOOL) && !data.scName.contains(HIGH_SCHOOL)){
+//                    scNames.add(data.scName);
+//                }
+//            }
+//        }else if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_middle))){
+//            for (SchoolData data : schoolList) {
+//                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(HIGH_SCHOOL)){
+//                    scNames.add(data.scName);
+//                }
+//            }
+//        }else{
+//            for (SchoolData data : schoolList) {
+//                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(MIDDLE_SCHOOL)){
+//                    scNames.add(data.scName);
+//                }
+//            }
+//        }
+//
+//        mSpinnerSchool.setText("");
+//        mSpinnerSchool.setItems(scNames);
+//
+//        mSpinnerSchool.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> _scName = scNames.get(newIndex));
+//    }
 
     @Override
     public void onClick(View view) {
@@ -252,10 +283,11 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         request.ptSeq = ptSeq;
         request.memberSeq = _memberSeq;
         request.name = mEtName.getText().toString();
-        request.phoneNumber = mEtPhoneNum.getText().toString();
-        request.email = mEtEmail.getText().toString();
-        request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString());
-        request.schoolNm = _scName;
+        request.phoneNumber = mEtPhoneNum.getText().toString().trim();
+        request.email = mEtEmail.getText().toString().trim();
+        request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString().trim());
+        //request.schoolNm = _scName;
+        request.schoolNm = mEtSchool.getText().toString();
     }
 
     private boolean checkWrite(){

@@ -75,12 +75,14 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 }
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgAnnouncement);
+                    holder.imgAnnouncement.setVisibility(View.GONE);
+                }else{
+                    holder.imgAnnouncement.setVisibility(View.VISIBLE);
                 }
-
             }
             else {
                 Glide.with(mContext).clear(holder.imgAnnouncement);
-//            holder.imgAnnouncement.setVisibility(View.GONE);
+                holder.imgAnnouncement.setVisibility(View.GONE);
             }
             holder.tvTitle.setText(item.title);
             holder.tvName.setText(item.memberResponseVO.name);

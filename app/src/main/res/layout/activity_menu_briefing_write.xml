@@ -151,56 +151,72 @@
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"/>
 
-            <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/spinner_brf_write_school_type"
-                android:layout_width="0dp"
+            <EditText
+                android:id="@+id/et_brf_write_school"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_brf_write_school"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="10dp"
-                android:paddingHorizontal="@dimen/editbox_padding"
-                android:paddingVertical="@dimen/editbox_padding_vertical"
-                android:textColor="@color/black"
-                android:textSize="@dimen/font_size"
-                android:hint="초/중/고 선택"
-                android:gravity="center"
-                app:spinner_arrow_gravity="end"
-                app:spinner_arrow_tint="@color/blackgray"
-                app:spinner_divider_color="@color/line"
-                app:spinner_divider_show="true"
-                app:spinner_divider_size="0.4dp"
-                app:spinner_popup_focusable="true"
-                app:spinner_popup_animation="dropdown"
-                app:spinner_popup_background="@drawable/selector_spinner_item"
-                app:spinner_popup_elevation="2dp"
-                android:background="@drawable/bg_edittext"
-                app:spinner_item_array="@array/school_type"/>
-
-            <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/spinner_brf_write_school"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/spinner_brf_write_school_type"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="10dp"
-                android:paddingHorizontal="@dimen/editbox_padding"
-                android:paddingVertical="@dimen/editbox_padding_vertical"
-                android:textColor="@color/black"
+                android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
-                android:hint="@string/test_reserve_write_select_school"
-                android:gravity="center"
-                app:spinner_arrow_gravity="end"
-                app:spinner_arrow_tint="@color/blackgray"
-                app:spinner_divider_color="@color/line"
-                app:spinner_divider_show="true"
-                app:spinner_divider_size="0.4dp"
-                app:spinner_popup_focusable="true"
-                app:spinner_popup_animation="dropdown"
-                app:spinner_popup_background="@drawable/selector_spinner_item"
-                app:spinner_popup_elevation="2dp"
-                android:focusable="true"
-                android:background="@drawable/bg_edittext"/>
+                android:maxLines="1"
+                android:inputType="text"
+                android:hint="학교 외 기타정보"
+                android:textColor="@color/font_color_default"
+                android:padding="@dimen/editbox_padding"
+                android:layout_marginTop="10dp" />
+
+<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
+<!--                android:id="@+id/spinner_brf_write_school_type"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_school"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:paddingHorizontal="@dimen/editbox_padding"-->
+<!--                android:paddingVertical="@dimen/editbox_padding_vertical"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:hint="초/중/고 선택"-->
+<!--                android:gravity="center"-->
+<!--                app:spinner_arrow_gravity="end"-->
+<!--                app:spinner_arrow_tint="@color/blackgray"-->
+<!--                app:spinner_divider_color="@color/line"-->
+<!--                app:spinner_divider_show="true"-->
+<!--                app:spinner_divider_size="0.4dp"-->
+<!--                app:spinner_popup_focusable="true"-->
+<!--                app:spinner_popup_animation="dropdown"-->
+<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
+<!--                app:spinner_popup_elevation="2dp"-->
+<!--                android:background="@drawable/bg_edittext"-->
+<!--                app:spinner_item_array="@array/school_type"/>-->
+
+<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
+<!--                android:id="@+id/spinner_brf_write_school"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/spinner_brf_write_school_type"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:paddingHorizontal="@dimen/editbox_padding"-->
+<!--                android:paddingVertical="@dimen/editbox_padding_vertical"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:hint="@string/test_reserve_write_select_school"-->
+<!--                android:gravity="center"-->
+<!--                app:spinner_arrow_gravity="end"-->
+<!--                app:spinner_arrow_tint="@color/blackgray"-->
+<!--                app:spinner_divider_color="@color/line"-->
+<!--                app:spinner_divider_show="true"-->
+<!--                app:spinner_divider_size="0.4dp"-->
+<!--                app:spinner_popup_focusable="true"-->
+<!--                app:spinner_popup_animation="dropdown"-->
+<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
+<!--                app:spinner_popup_elevation="2dp"-->
+<!--                android:focusable="true"-->
+<!--                android:background="@drawable/bg_edittext"/>-->
 
             <LinearLayout
                 android:id="@+id/layout_brf_privacy"
@@ -208,7 +224,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_brf_write_school"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_school"
                 android:layout_marginStart="4dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="20dp"

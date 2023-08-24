@@ -9,11 +9,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -375,6 +379,23 @@ public class Utils {
             e.printStackTrace();
             return "";
         }
+    }
+
+    /**
+    * 이메일 형식을 체크해주는 기능
+     *
+     * @param strEmail - 이메일 형식을 체크하고 싶은 텍스트
+    * */
+    public static String checkEmailForm(String strEmail){
+
+        final String MATCH = "올바른 이메일 입니다.";
+        final String NOT_MATCH = "올바른 이메일을 입력해주세요.";
+
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        Matcher matcher = pattern.matcher(strEmail);
+
+        if (matcher.find()) return MATCH;
+        else return NOT_MATCH;
     }
 }
 

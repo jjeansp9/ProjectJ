@@ -105,16 +105,17 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgBrf);
                     holder.imgBrf.setVisibility(View.INVISIBLE);
-                    setView(holder.tvTitle, IMG_IS_EMPTY);
+                    setView(holder.tvTitle, holder.tvSubscription, IMG_IS_EMPTY);
+
                 }else{
                     holder.imgBrf.setVisibility(View.VISIBLE);
-                    setView(holder.tvTitle, IMG_IS_NOT_EMPTY);
+                    setView(holder.tvTitle, holder.tvSubscription, IMG_IS_NOT_EMPTY);
                 }
             }
             else {
                 Glide.with(mContext).clear(holder.imgBrf);
                 holder.imgBrf.setVisibility(View.INVISIBLE);
-                setView(holder.tvTitle, IMG_IS_EMPTY);
+                setView(holder.tvTitle, holder.tvSubscription, IMG_IS_EMPTY);
             }
 
         }catch (Exception e){
@@ -122,19 +123,21 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
         }
     }
 
-    private void setView(TextView tv, boolean set){
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tv.getLayoutParams();
+    private void setView(TextView tvTitle, TextView tvSub, boolean set){
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvTitle.getLayoutParams();
 
         if (set){
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
             layoutParams.endToStart = ConstraintLayout.LayoutParams.UNSET;
+            //tvSub.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
 
         }else{
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET;
             layoutParams.endToStart = R.id.img_brf;
+            //tvSub.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         }
-        tv.setLayoutParams(layoutParams);
+        tvTitle.setLayoutParams(layoutParams);
     }
 
     @Override

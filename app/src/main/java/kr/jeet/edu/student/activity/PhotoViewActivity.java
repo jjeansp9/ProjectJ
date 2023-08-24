@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
@@ -9,12 +10,16 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -106,6 +111,90 @@ public class PhotoViewActivity extends BaseActivity {
                 public void onPageScrollStateChanged(int state) {}
             });
         }
+
+//        WindowInsetsController
+//        위 앱에서는 Immersive 모드를 사용하여 Expand / Collapse 두가지 모드로 UI를 제어하는 것을 볼 수 있다
+        setStatusBarMode(true);
+        //setStateBarColor();
+    }
+
+//    private void setStateBarColor() {
+//        // 라이트모드 일때만 디바이스 상,하단 상태줄 색 변경
+//        int uiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+//        if (uiMode == Configuration.UI_MODE_NIGHT_NO) {
+//            LogMgr.e("Event");
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
+//                WindowInsetsController controller = getWindow().getInsetsController();
+//                if (controller != null) {
+//                    controller.hide(WindowInsets.Type.systemBars());
+//                }
+//            } else {
+//                LogMgr.e("Event2");
+//                getWindow().getDecorView().setSystemUiVisibility(
+//                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+//                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+//            }
+//        }
+//    }
+
+    private void setStateBarColor() {
+        // 라이트모드 일때만 디바이스 상,하단 상태줄 색 변경
+        int uiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (uiMode == Configuration.UI_MODE_NIGHT_NO) {
+            LogMgr.e("Event");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
+                WindowInsetsController controller = getWindow().getInsetsController();
+                if (controller != null) {
+                    controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+                    controller.hide(WindowInsets.Type.systemBars());
+                }
+            } else {
+                LogMgr.e("Event2");
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN |
+                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+                                View.SYSTEM_UI_FLAG_IMMERSIVE);
+            }
+        }
+    }
+
+    private void setStatusBarMode(boolean isLight) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
+            if (isLight) {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            } else {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
+
+            WindowInsetsController insetsController = getWindow().getInsetsController();
+            if (insetsController != null) {
+                if (isLight) {
+                    insetsController.setSystemBarsAppearance(
+                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, // value
+                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS // mask
+                    );
+                } else {
+                    insetsController.setSystemBarsAppearance(
+                            0, // value
+                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS // mask
+                    );
+                }
+            }
+        } else {
+            if (isLight) {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            } else {
+                getWindow().setStatusBarColor(Color.TRANSPARENT);
+            }
+
+            int lFlags = getWindow().getDecorView().getSystemUiVisibility();
+            if (!isLight) {
+                getWindow().getDecorView().setSystemUiVisibility(lFlags & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            } else {
+                getWindow().getDecorView().setSystemUiVisibility(lFlags | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+        }
+
     }
 
     @Override
