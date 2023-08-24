@@ -25,6 +25,7 @@ import kr.jeet.edu.student.model.response.FindPWResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
+import kr.jeet.edu.student.model.response.NoticeListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
@@ -188,6 +189,7 @@ public interface RetrofitApi {
     @GET("pt/reservation/{ptSeq}")
     Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq);
 
+    // 알림장 상세 조회
 
 
 }

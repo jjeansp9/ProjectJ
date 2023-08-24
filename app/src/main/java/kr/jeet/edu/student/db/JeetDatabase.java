@@ -6,6 +6,8 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import kotlin.jvm.Synchronized;
+
 @Database(entities = {PushMessage.class}, version = 1, exportSchema = false)
 public abstract class JeetDatabase extends RoomDatabase {
     private static JeetDatabase JeetDBInstance = null;
@@ -15,7 +17,9 @@ public abstract class JeetDatabase extends RoomDatabase {
         if(JeetDBInstance == null) {
             JeetDBInstance = Room.databaseBuilder(context.getApplicationContext(),
                     JeetDatabase.class,
-                    "jeeteducation.db").build();
+                    "jeeteducation.db")
+                    .fallbackToDestructiveMigration()
+                    .build();
         }
         return JeetDBInstance;
     }

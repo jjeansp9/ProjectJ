@@ -156,11 +156,15 @@
     <string name="push_noti_received_attendance">출결 알림 도착</string>
     <string name="push_noti_received_counsel">상담요청 알림 도착</string>
     <string name="push_noti_received_leveltest">테스트예약 알림 도착</string>
+    <string name="push_noti_received_pt">설명회예약 알림 도착</string>
+    <string name="push_noti_received_system">시스템 알림 도착</string>
 
     <string name="push_type_announcement">공지사항 알림</string>
     <string name="push_type_attendance">출결 알림</string>
     <string name="push_type_counsel">상담요청 알림</string>
     <string name="push_type_leveltest">테스트예약 알림</string>
+    <string name="push_type_pt">설명회예약 알림</string>
+    <string name="push_type_system">시스템 알림</string>
 
     <string name="main_tv_first_notify">공지안내</string>
     <string name="main_tv_second_notify">공지내용 없음</string>

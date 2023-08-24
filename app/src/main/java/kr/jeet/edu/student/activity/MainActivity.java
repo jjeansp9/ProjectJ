@@ -3,6 +3,8 @@ package kr.jeet.edu.student.activity;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
 import kr.jeet.edu.student.R;
@@ -279,12 +281,28 @@ public class MainActivity extends BaseActivity {
                     pushPopupDialog.show();
                 }
                 break;
+                case MSG_TYPE_PT:
+                {
+                    startBoardDetailActivity(intent);
+                }
+                break;
+                case MSG_TYPE_SYSTEM:
+                {
+                    startBoardDetailActivity(intent);
+                }
+                break;
                 default:
                     break;
             }
         }
 
         mHandler.sendEmptyMessage(CMD_GET_ACALIST);
+    }
+    
+    private void startBoardDetailActivity(Intent intent){
+        Intent noticeIntent = new Intent(this, MenuBoardDetailActivity.class);
+        noticeIntent.putExtras(intent);
+        startActivity(noticeIntent);
     }
 
     private String currentDate(){

@@ -3,6 +3,8 @@ package kr.jeet.edu.student.dialog;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
 import android.app.Dialog;
@@ -77,6 +79,13 @@ public class PushPopupDialog extends Dialog {
                     break;
                 case MSG_TYPE_COUNSEL:
                     title = context.getString(R.string.push_type_counsel);
+                    break;
+                case MSG_TYPE_PT:
+                    title = context.getString(R.string.push_type_pt);
+                    break;
+                case MSG_TYPE_SYSTEM:
+                    title = context.getString(R.string.push_type_system);
+                    break;
                 default :
                     title = "JEET알림";
                     break;

@@ -190,9 +190,14 @@ public class FCMManager {
             case MSG_TYPE_TEST_APPT:
                 tickerText = _context.getString(R.string.push_noti_received_leveltest);
                 break;
+            case MSG_TYPE_PT:
+                tickerText = _context.getString(R.string.push_noti_received_leveltest);
+                break;
             case MSG_TYPE_COUNSEL:
                 tickerText = _context.getString(R.string.push_noti_received_counsel);
                 break;
+            case MSG_TYPE_SYSTEM:
+                tickerText = _context.getString(R.string.push_noti_received_system);
             default :
                 tickerText = "JEET알림";
                 break;
