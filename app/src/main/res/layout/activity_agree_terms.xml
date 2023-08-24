@@ -167,11 +167,12 @@
         android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_button_layout_height"
-        android:background="@drawable/selector_bt_ubderbox"
+        android:background="@drawable/bt_click_cancel"
         android:stateListAnimator="@xml/animate_button_pull"
         android:text="@string/next"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_large"
         />
+<!--    android:background="@drawable/selector_bt_ubderbox"-->
 
 </androidx.appcompat.widget.LinearLayoutCompat>

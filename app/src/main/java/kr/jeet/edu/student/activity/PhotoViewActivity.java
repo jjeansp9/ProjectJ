@@ -1,11 +1,14 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +18,16 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
+import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +50,7 @@ public class PhotoViewActivity extends BaseActivity {
     private String TAG = PhotoViewActivity.class.getSimpleName();
 
     private TextView tvPage;
+    private RelativeLayout layoutHeader;
 
     private ArrayList<FileData> mImageList = new ArrayList<>();
     private int position = 0;
@@ -51,10 +59,13 @@ public class PhotoViewActivity extends BaseActivity {
 
     private DownloadReceiver _downloadReceiver = null;
 
+    private AppCompatActivity mActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_view);
+        mActivity = this;
         mContext = this;
         initData();
         initView();
@@ -85,6 +96,7 @@ public class PhotoViewActivity extends BaseActivity {
     @Override
     void initView() {
         tvPage = findViewById(R.id.tv_photoview_page);
+        layoutHeader = findViewById(R.id.layout_header);
 
         findViewById(R.id.img_close).setOnClickListener(this);
         findViewById(R.id.img_photoview_download).setOnClickListener(this);
@@ -114,85 +126,125 @@ public class PhotoViewActivity extends BaseActivity {
 
 //        WindowInsetsController
 //        위 앱에서는 Immersive 모드를 사용하여 Expand / Collapse 두가지 모드로 UI를 제어하는 것을 볼 수 있다
-        setStatusBarMode(true);
+        //setStatusBarMode();
         //setStateBarColor();
+
+//        layoutHeader.setPadding(
+//                0,
+//                statusBarHeight(mContext),
+//                0,
+//                0
+//        );
+
+        //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layoutHeader.getLayoutParams();
+        //params.topMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 20, getResources().getDisplayMetrics());
+
+//        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, dpToPx(60));
+//        params.topMargin = dpToPx(statusBarHeight(mContext));
+//        layoutHeader.setBackgroundColor(Color.RED);
+//        layoutHeader.setLayoutParams(params);
+
+        setStatusBarTransparent();
+        //setFullScreen(mActivity, true);
     }
 
-//    private void setStateBarColor() {
-//        // 라이트모드 일때만 디바이스 상,하단 상태줄 색 변경
-//        int uiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-//        if (uiMode == Configuration.UI_MODE_NIGHT_NO) {
-//            LogMgr.e("Event");
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
-//                WindowInsetsController controller = getWindow().getInsetsController();
-//                if (controller != null) {
-//                    controller.hide(WindowInsets.Type.systemBars());
-//                }
-//            } else {
-//                LogMgr.e("Event2");
-//                getWindow().getDecorView().setSystemUiVisibility(
-//                        View.SYSTEM_UI_FLAG_FULLSCREEN |
-//                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-//            }
-//        }
-//    }
+    public int dpToPx(int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
+    }
 
-    private void setStateBarColor() {
-        // 라이트모드 일때만 디바이스 상,하단 상태줄 색 변경
-        int uiMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (uiMode == Configuration.UI_MODE_NIGHT_NO) {
-            LogMgr.e("Event");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
-                WindowInsetsController controller = getWindow().getInsetsController();
-                if (controller != null) {
-                    controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-                    controller.hide(WindowInsets.Type.systemBars());
-                }
-            } else {
-                LogMgr.e("Event2");
-                getWindow().getDecorView().setSystemUiVisibility(
-                        View.SYSTEM_UI_FLAG_FULLSCREEN |
-                                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-                                View.SYSTEM_UI_FLAG_IMMERSIVE);
-            }
+    public void setStatusBarTransparent() {
+        Window window = getWindow();
+        window.setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowCompat.setDecorFitsSystemWindows(window, false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            View decorView = getWindow().getDecorView();
+            int flags = decorView.getSystemUiVisibility();
+
+            flags &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+
+            decorView.setSystemUiVisibility(flags);
+            getWindow().setNavigationBarColor(Color.BLACK);
         }
     }
 
-    private void setStatusBarMode(boolean isLight) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api 30이상
-            if (isLight) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            } else {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
+    public int statusBarHeight(Context context) {
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
 
-            WindowInsetsController insetsController = getWindow().getInsetsController();
-            if (insetsController != null) {
-                if (isLight) {
-                    insetsController.setSystemBarsAppearance(
-                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS, // value
-                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS // mask
-                    );
-                } else {
-                    insetsController.setSystemBarsAppearance(
-                            0, // value
-                            WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS // mask
-                    );
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+    }
+
+    public int navigationHeight(Context context) {
+        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        } else {
+            return 0;
+        }
+    }
+
+    public static void setFullScreen(Activity activity, boolean overLockscreen)
+    {
+        try{
+            Window window = activity.getWindow();
+            //			requestWindowFeature(Window.FEATURE_NO_TITLE);
+            if(window != null)
+            {
+                if(overLockscreen)
+                    window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                            WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED|
+                            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD|
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                else
+                    window.addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                            WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                if(Build.VERSION.SDK_INT > 10) {
+                    int uiFlag = window.getDecorView().getSystemUiVisibility();
+                    boolean isImmersiveModeEnabled = ((uiFlag | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiFlag);
+                    int newUiFlag = uiFlag;
+                    if (Build.VERSION.SDK_INT >= 14) {
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+
+                    }
+                    if (Build.VERSION.SDK_INT >= 16) {
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+                    }
+                    if (Build.VERSION.SDK_INT >= 18) {
+                        newUiFlag ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+
+                    }
+                    window.getDecorView().setSystemUiVisibility(newUiFlag);
+                    if (Build.VERSION.SDK_INT >= 28 /*P os*/)
+                    {
+//                        if(Utils.supportLayoutInCutoutMode) {
+//                            try {
+//                                WindowManager.LayoutParams lp = window.getAttributes();
+//                                lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+//                                window.setAttributes(lp);
+//                            }catch(Exception ex){
+//                                ex.printStackTrace();
+//                            }
+//                        }
+                    }
                 }
             }
-        } else {
-            if (isLight) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            } else {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
-
-            int lFlags = getWindow().getDecorView().getSystemUiVisibility();
-            if (!isLight) {
-                getWindow().getDecorView().setSystemUiVisibility(lFlags & ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            } else {
-                getWindow().getDecorView().setSystemUiVisibility(lFlags | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
+        }catch(Exception ex){
+            ex.printStackTrace();
         }
 
     }

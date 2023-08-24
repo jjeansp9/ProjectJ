@@ -8,8 +8,10 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
     private CheckBox cbPrivacy;
     private TextView mTvPrivacy;
+    private Button btnComplete;
+    private ImageView mBtnSub, mBtnAdd;
     private EditText mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel, mEtSchool;
     private EditText[] mEtList;
     //private PowerSpinnerView mSpinnerSchool, mSpinnerSchoolType;
@@ -59,6 +63,14 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
     private int ptSeq = 0;
     private int _memberSeq = 0;
+    private int perCnt = 0;
+
+    private final int ADD = 1;
+    private final int SUBTRACT = -1;
+    private final boolean TYPE_ADD = false;
+    private final boolean TYPE_SUB = true;
+    private final int MIN_CNT = 1;
+    private final int MAX_CNT = 9999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +105,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         findViewById(R.id.layout_brf_privacy).setOnClickListener(this);
         findViewById(R.id.layout_brf_view_privacy).setOnClickListener(this);
         findViewById(R.id.btn_brf_write_complete).setOnClickListener(this);
+        findViewById(R.id.img_cnt_sub).setOnClickListener(this);
+        findViewById(R.id.img_cnt_add).setOnClickListener(this);
 
         mTvPrivacy = findViewById(R.id.tv_brf_privacy);
         cbPrivacy = findViewById(R.id.cb_brf_check_privacy);
@@ -103,8 +117,12 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         mEtSchool = findViewById(R.id.et_brf_write_school);
 
-        mEtPersonnel.setText("1");
+        btnComplete = findViewById(R.id.btn_brf_write_complete);
 
+        mEtPersonnel.setText("1");
+        perCnt = Integer.parseInt(mEtPersonnel.getText().toString());
+
+        // 0 입력 막기
         mEtPersonnel.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -112,11 +130,19 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() == 1) if ("0".equals(s.toString())) mEtPersonnel.setText("");
                 if (s.length() >= 2 && s.charAt(0) == '0') mEtPersonnel.getText().replace(0, 1, "");
+                if (s.length() > 4){
+                    mEtPersonnel.setText(s.subSequence(0, 4));
+                    mEtPersonnel.setSelection(4);
+                }
+                if (s.length() > 0) perCnt = Integer.parseInt(s.toString());
             }
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
+        });
 
-            }
+        mEtPersonnel.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) mEtPersonnel.setText("");
+            else mEtPersonnel.setText(String.valueOf(perCnt));
         });
 
         mEtEmail.addTextChangedListener(new TextWatcher() {
@@ -124,8 +150,12 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                String cleanedEmail = mEtEmail.getText().toString().replaceAll(" ", "");
-                mEtEmail.setText(cleanedEmail);
+                if (count > before) { // 문자를 지울때는 실행 안되게
+                    if (s.charAt(start) == ' ') { // 새로 추가된 문자가 공백인지 체크
+                        mEtEmail.setText(s.toString().replace(" ", ""));
+                        mEtEmail.setSelection(start); // 커서 위치 설정
+                    }
+                }
             }
             @Override
             public void afterTextChanged(Editable s) {}
@@ -214,6 +244,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
             case R.id.layout_brf_privacy:
                 cbPrivacy.setChecked(!cbPrivacy.isChecked());
+                if (cbPrivacy.isChecked()) btnComplete.setBackgroundResource(R.drawable.selector_bt_ubderbox);
+                else btnComplete.setBackgroundResource(R.drawable.bt_click_cancel);
                 break;
 
             case R.id.layout_brf_view_privacy:
@@ -223,7 +255,28 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             case R.id.btn_brf_write_complete:
                 if (checkWrite()) requestBrfReserve();
                 break;
+
+            case R.id.img_cnt_sub:
+                addOrSubCnt(SUBTRACT, TYPE_SUB);
+                break;
+
+            case R.id.img_cnt_add:
+                addOrSubCnt(ADD, TYPE_ADD);
+                break;
         }
+    }
+
+    private void addOrSubCnt(int num, boolean type){
+
+        if (perCnt > MIN_CNT && type == TYPE_SUB){
+            perCnt += num;
+            mEtPersonnel.setText(String.valueOf(perCnt));
+
+        }else if (perCnt < MAX_CNT && type == TYPE_ADD){
+            perCnt += num;
+            mEtPersonnel.setText(String.valueOf(perCnt));
+        }
+        mEtPersonnel.clearFocus();
     }
 
     private void requestBrfReserve(){

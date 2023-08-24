@@ -124,9 +124,21 @@
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"/>
 
+            <ImageButton
+                android:id="@+id/img_cnt_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
+                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
+                app:layout_constraintEnd_toStartOf="@id/et_brf_write_personnel"
+                android:background="@android:color/transparent"
+                android:layout_marginEnd="40dp"
+                android:padding="8dp"
+                android:src="@drawable/selector_month_back"/>
+
             <EditText
                 android:id="@+id/et_brf_write_personnel"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_brf_write_personnel"
                 app:layout_constraintStart_toStartOf="parent"
@@ -134,10 +146,36 @@
                 android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
                 android:maxLines="1"
+                android:ems="5"
+                android:hint="본인포함"
+                android:gravity="center"
                 android:inputType="number"
                 android:textColor="@color/font_color_default"
                 android:padding="@dimen/editbox_padding"
                 android:layout_marginTop="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
+                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
+                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"
+                android:text="명"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/font_color_default"
+                android:layout_marginStart="8dp"/>
+
+            <ImageButton
+                android:id="@+id/img_cnt_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
+                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
+                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"
+                android:background="@android:color/transparent"
+                android:layout_marginStart="40dp"
+                android:padding="8dp"
+                android:src="@drawable/selector_month_next"/>
 
             <TextView
                 android:id="@+id/tv_brf_write_school"

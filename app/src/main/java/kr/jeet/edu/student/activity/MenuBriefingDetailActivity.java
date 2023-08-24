@@ -49,7 +49,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private final static String TAG = "BriefingDetailActivity";
 
-    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent;
+    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
     private BoardDetailImageListAdapter mImageAdapter;
     private BoardDetailFileListAdapter mFileAdapter;
@@ -143,6 +143,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         mTvLoc = findViewById(R.id.tv_brf_detail_loc);
         mTvPersonnel = findViewById(R.id.tv_brf_detail_personnel);
         mTvContent = findViewById(R.id.tv_brf_detail_content);
+        mTvCnt = findViewById(R.id.tv_brf_cnt);
 
         mRecyclerViewImages = findViewById(R.id.recycler_brf_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_brf_file);
@@ -186,15 +187,20 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         str = TextUtils.isEmpty(mInfo.place) ? "" : mInfo.place;
         mTvLoc.setText(str);
 
-//        str = TextUtils.isEmpty(mInfo.ptTime) ? "" : "시   간: "+mInfo.ptTime;
-//        mTvTime.setText(str);
-
         str = mInfo.participantsCnt+"명";
-        //str = "참가인원: "+mInfo.reservationCnt+"명";
         mTvPersonnel.setText(str);
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
         mTvContent.setText(str);
+
+        str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "" : "("+mInfo.reservationCnt+")";
+        if (mInfo.reservationCnt < 1) {
+            mTvCnt.setVisibility(View.GONE);
+        }
+        else {
+            mTvCnt.setVisibility(View.VISIBLE);
+            mTvCnt.setText(str);
+        }
     }
 
     private void setImageRecycler(){

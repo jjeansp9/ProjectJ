@@ -267,76 +267,117 @@
         android:background="@color/line_2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/layout_start_reserve"
-        android:layout_marginBottom="12dp"/>
-
-    <RelativeLayout
-        android:id="@+id/layout_start_reserve"
+        app:layout_constraintBottom_toTopOf="@+id/layout_brf_btn"/>
+    
+    <LinearLayout
+        android:id="@+id/layout_brf_btn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/scrollview"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline_brf_center"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/bg_pref_sel_checked"
-        android:stateListAnimator="@xml/animate_button_push"
-        android:paddingVertical="10dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginStart="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:text="@string/briefing_reserve"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_size" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/bt_reserve_nor" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/layout_reserver_list"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/scrollview"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline_brf_center"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/btn_brf_reserver_list"
-        android:stateListAnimator="@xml/animate_button_push"
-        android:paddingVertical="10dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="20dp">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/layout_start_reserve"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="12dp"
-            android:text="@string/briefing_reserved_list"
-            android:textColor="@color/white"
-            android:textSize="@dimen/font_size" />
-        <ImageView
-            android:layout_width="wrap_content"
+            android:layout_weight="4"
+            app:layout_constraintTop_toBottomOf="@id/scrollview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/guideline_brf_center"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_pref_sel_checked"
+            android:stateListAnimator="@xml/animate_button_push"
+            android:paddingVertical="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:text="@string/briefing_reserve"
+                android:textColor="@color/white"
+                android:textSize="@dimen/font_size" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/bt_reserve_nor" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_reserver_list"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
-            android:src="@drawable/bt_reserve_nor"/>
-    </RelativeLayout>
+            android:layout_weight="6"
+            app:layout_constraintTop_toBottomOf="@id/scrollview"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline_brf_center"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/btn_brf_reserver_list"
+            android:stateListAnimator="@xml/animate_button_push"
+            android:paddingVertical="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:layout_toStartOf="@id/img_brf_list"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/tv_brf_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="@string/briefing_reserved_list"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size" />
+
+                <TextView
+                    android:id="@+id/tv_brf_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="end"
+                    android:layout_marginStart="2dp"
+                    android:gravity="end"
+                    android:text="(9999)"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/img_brf_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/bt_reserve_nor"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

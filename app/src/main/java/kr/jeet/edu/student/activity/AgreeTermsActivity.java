@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class AgreeTermsActivity extends BaseActivity {
 
     private CheckBox mAllCheckBox, mCheckBox1, mCheckBox2;
     private TextView mTvCheck1, mTvCheck2;
+    private Button mBtnNext;
     private int mLoginType = Constants.LOGIN_TYPE_NORMAL;
 
     private NaverLoginManager mNaverLogin = null;
@@ -67,7 +69,7 @@ public class AgreeTermsActivity extends BaseActivity {
 
     @Override
     void initView() {
-        findViewById(R.id.btn_next).setOnClickListener(this);
+        //findViewById(R.id.btn_next).setOnClickListener(this);
         findViewById(R.id.layout_all_check).setOnClickListener(this);
         findViewById(R.id.layout_check1).setOnClickListener(this);
         findViewById(R.id.layout_check2).setOnClickListener(this);
@@ -80,6 +82,8 @@ public class AgreeTermsActivity extends BaseActivity {
         mAllCheckBox = (CheckBox) findViewById(R.id.cb_all);
         mCheckBox1 = (CheckBox) findViewById(R.id.check1);
         mCheckBox2 = (CheckBox) findViewById(R.id.check2);
+
+        mBtnNext = findViewById(R.id.btn_next);
     }
 
     @Override
@@ -122,10 +126,12 @@ public class AgreeTermsActivity extends BaseActivity {
                     mAllCheckBox.setChecked(true);
                     mCheckBox1.setChecked(true);
                     mCheckBox2.setChecked(true);
+                    mBtnNext.setBackgroundResource(R.drawable.selector_bt_ubderbox);
                 } else {
                     mAllCheckBox.setChecked(false);
                     mCheckBox1.setChecked(false);
                     mCheckBox2.setChecked(false);
+                    mBtnNext.setBackgroundResource(R.drawable.bt_click_cancel);
                 }
                 break;
 
@@ -151,8 +157,11 @@ public class AgreeTermsActivity extends BaseActivity {
     private void allCheck(){
         if(mCheckBox1.isChecked() && mCheckBox2.isChecked()) {
             mAllCheckBox.setChecked(true);
+            mBtnNext.setBackgroundResource(R.drawable.selector_bt_ubderbox);
+
         } else {
             mAllCheckBox.setChecked(false);
+            mBtnNext.setBackgroundResource(R.drawable.bt_click_cancel);
         }
     }
 
