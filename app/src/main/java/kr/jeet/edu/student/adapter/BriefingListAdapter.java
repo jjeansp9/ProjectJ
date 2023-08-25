@@ -163,8 +163,8 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             imgBrf = itemView.findViewById(R.id.img_brf);
 
             itemView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                int position = getAbsoluteAdapterPosition();
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

@@ -41,4 +41,6 @@ public class IntentParams {
     public final static String PARAM_BRIEFING_PARTICIPANTS_CNT = "briefingParticipantsCnt";  // 참가인원
     public final static String PARAM_BRIEFING_RESERVATION_CNT = "briefingReservationCnt";  // 현재예약수
     public final static String PARAM_BRIEFING_RESERVE_ADDED = "briefingPtSeq";  // 설명회 예약 등록
+
+    public final static String PARAM_NOTICE_INFO = "noticeinfo"; // 알림장 목록에서 클릭한 data
 }

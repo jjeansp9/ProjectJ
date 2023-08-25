@@ -88,14 +88,14 @@ public class BoardDetailFileListAdapter extends RecyclerView.Adapter<BoardDetail
                     break;
             }
             itemView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                int position = getAbsoluteAdapterPosition();
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
             ivAction.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
+                int position = getAbsoluteAdapterPosition();
                 if(position != NO_POSITION) {
                     FileData data = mList.get(position);
-                    _listener.onActionBtnClick(data, _action);
+                    if (mList.size() > 0) _listener.onActionBtnClick(data, _action);
                 }
             });
         }

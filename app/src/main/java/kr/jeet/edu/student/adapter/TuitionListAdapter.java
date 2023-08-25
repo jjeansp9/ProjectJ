@@ -77,7 +77,7 @@ public class TuitionListAdapter extends RecyclerView.Adapter<TuitionListAdapter.
 
             btnAccountLink.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

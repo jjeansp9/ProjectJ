@@ -35,4 +35,10 @@ public class CounselRequest {
 
     @SerializedName("managerPhoneNumber")
     public String managerPhoneNumber;
+
+    @SerializedName("smsSender")
+    public String smsSender;
+
+    @SerializedName("isSendNoti")
+    public String isSendNoti;
 }

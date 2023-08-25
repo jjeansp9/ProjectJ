@@ -112,8 +112,8 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             imgAnnouncement = itemView.findViewById(R.id.img_announcement);
 
             itemView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                int position = getAbsoluteAdapterPosition();
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

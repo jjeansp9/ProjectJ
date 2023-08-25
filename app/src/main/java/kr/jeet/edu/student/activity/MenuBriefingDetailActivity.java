@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
+    private RelativeLayout layoutStartReserve;
+
     private BoardDetailImageListAdapter mImageAdapter;
     private BoardDetailFileListAdapter mFileAdapter;
     private DownloadReceiver _downloadReceiver = null;
@@ -132,6 +135,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         findViewById(R.id.layout_start_reserve).setOnClickListener(this);
         findViewById(R.id.layout_reserver_list).setOnClickListener(this);
 
+        layoutStartReserve = findViewById(R.id.layout_start_reserve);
+
         mTvTitle = findViewById(R.id.tv_brf_detail_title);
         mTvDate = findViewById(R.id.tv_brf_detail_date);
         //mTvTime = findViewById(R.id.tv_brf_detail_time);
@@ -147,6 +152,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         setFileRecycler();
 
         initData();
+
+        if (mInfo.reservationCnt == mInfo.participantsCnt) layoutStartReserve.setVisibility(View.GONE);
+        else layoutStartReserve.setVisibility(View.VISIBLE);
     }
 
     private void initData() {

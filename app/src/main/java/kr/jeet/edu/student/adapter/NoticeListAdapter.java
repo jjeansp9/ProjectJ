@@ -18,19 +18,21 @@ import java.util.Optional;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.DataManager;
+import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.NoticeListData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
-    public interface ItemClickListener{ public void onItemClick(NoticeListData item); }
+    public interface ItemClickListener{ public void onItemClick(PushMessage item); }
 
     private Context mContext;
-    private ArrayList<NoticeListData> mList;
+    private ArrayList<PushMessage> mList;
     private ItemClickListener _listener;
 
-    public NoticeListAdapter(Context mContext, ArrayList<NoticeListData> mList, ItemClickListener _listener) {
+    public NoticeListAdapter(Context mContext, ArrayList<PushMessage> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
         this._listener = _listener;
@@ -45,12 +47,15 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NoticeListData item = mList.get(position);
+        PushMessage item = mList.get(position);
 
-        holder.tvType.setText(TextUtils.isEmpty(item.noticeType) ? "" : item.noticeType);
-        holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
-        holder.tvDate.setText(TextUtils.isEmpty(item.noticeDate) ? "" : item.noticeDate);
-        holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
+        String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
+        if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) holder.tvType.setText("시스템알림");
+        else holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "공지사항" : item.pushType);
+
+        //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
+        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : item.date);
+        //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
         Glide.with(mContext).load(R.drawable.img_dot_woman).into(holder.imgSenderAndReceiver);
     }
@@ -77,7 +82,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

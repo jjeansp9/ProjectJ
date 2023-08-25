@@ -61,6 +61,7 @@ public class ConsultationRequestActivity extends BaseActivity {
     private int _stCodeParent = 0;
     private String _acaCode = "";
     private String _acaName = "";
+    private String _acaTel = "";
     private int _stCode = 0;
     private String _sfName = "";
     private int _sfCode = 0;
@@ -88,6 +89,7 @@ public class ConsultationRequestActivity extends BaseActivity {
     private void initData(){
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
+        _acaTel = PreferenceUtil.getAcaTel(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
@@ -226,6 +228,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.clsName = _clsName;
         request.phoneNumber = _phoneNumber.replace("-", "");
         request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
+        request.smsSender = _acaTel.replace("-", "");
 
         LogMgr.d(TAG + "requestData",
                 "\nmemberSeq: " + request.memberSeq +
@@ -237,10 +240,11 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nsfName: " + request.sfName +
                 "\nmemo: " + request.memo +
                 "\nclsName: " + request.clsName +
-                "\nphoneNumber: " + request.phoneNumber
+                "\nphoneNumber: " + request.phoneNumber +
+                "\nsmsSender: " + request.smsSender
         );
 
-        if (request.counselDate == "" ||
+        if (request.counselDate.equals("") ||
                 request.memo.equals("")){
             Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
         }else{

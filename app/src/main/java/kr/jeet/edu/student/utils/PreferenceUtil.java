@@ -31,6 +31,7 @@ public class PreferenceUtil {
 
     public static final String PREF_ACA_CODE = "aca_code"; // 캠퍼스 코드
     public static final String PREF_ACA_NAME = "aca_name"; // 캠퍼스 이름
+    public static final String PREF_ACA_TEL = "aca_tel"; // 캠퍼스 대표번호
 
     public static final String PREF_PUSH_TOKEN = "push_token";    //PUSH TOKEN
 
@@ -266,6 +267,17 @@ public class PreferenceUtil {
     public static String getAcaName(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return pref.getString(PREF_ACA_NAME, Constants.CAMPUS_ACA_NAME);
+    }
+
+    // aca name
+    public static void setAcaTel(Context context, String acaTel) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putString(PREF_ACA_TEL, acaTel).apply();
+    }
+
+    public static String getAcaTel(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return pref.getString(PREF_ACA_TEL, Constants.CAMPUS_ACA_NAME);
     }
 
     // notification announcement

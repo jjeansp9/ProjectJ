@@ -74,8 +74,8 @@ public class BriefingReservedListAdapter extends RecyclerView.Adapter<BriefingRe
             tvPhoneNum = itemView.findViewById(R.id.tv_brf_reserved_phone_number);
 
             itemView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                int position = getAbsoluteAdapterPosition();
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

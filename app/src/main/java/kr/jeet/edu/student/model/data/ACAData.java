@@ -7,4 +7,6 @@ public class ACAData {
     public String acaName; // 캠퍼스 이름
     @SerializedName("acaCode")
     public String acaCode; // 캠퍼스 코드
+    @SerializedName("acaTel")
+    public String acaTel; // 캠퍼스 대표 번호
 }

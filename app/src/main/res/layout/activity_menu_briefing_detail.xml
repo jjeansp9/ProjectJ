@@ -279,7 +279,8 @@
         app:layout_constraintTop_toBottomOf="@id/scrollview"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginHorizontal="20dp">
 
         <RelativeLayout
             android:id="@+id/layout_start_reserve"
@@ -295,8 +296,7 @@
             android:stateListAnimator="@xml/animate_button_push"
             android:paddingVertical="10dp"
             android:layout_marginTop="12dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="20dp">
+            android:layout_marginEnd="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -329,9 +329,7 @@
             android:background="@drawable/btn_brf_reserver_list"
             android:stateListAnimator="@xml/animate_button_push"
             android:paddingVertical="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="20dp">
+            android:layout_marginTop="12dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"

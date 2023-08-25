@@ -94,9 +94,6 @@ public class MainActivity extends BaseActivity {
     private String acaCode = "";
     private PushMessage _pushMessage;
 
-    private final int BOARD_DETAIL = 0;
-    private final int BRF_DETAIL = 1;
-
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -263,7 +260,7 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-                    startDetailActivity(intent, BOARD_DETAIL);
+                    startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
                 case MSG_TYPE_ATTEND:
@@ -287,12 +284,12 @@ public class MainActivity extends BaseActivity {
                 break;
                 case MSG_TYPE_PT:
                 {
-                    startDetailActivity(intent, BRF_DETAIL);
+                    startDetailActivity(intent, MenuBriefingDetailActivity.class);
                 }
                 break;
                 case MSG_TYPE_SYSTEM:
                 {
-                    startDetailActivity(intent, BOARD_DETAIL);
+                    startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
                 default:
@@ -303,20 +300,13 @@ public class MainActivity extends BaseActivity {
         mHandler.sendEmptyMessage(CMD_GET_ACALIST);
     }
 
-    private void startDetailActivity(Intent intent, int activityType){
-        if (activityType == BRF_DETAIL){
-            Intent noticeIntent = new Intent(this, MenuBriefingDetailActivity.class);
-            noticeIntent.putExtras(intent);
-            startActivity(noticeIntent);
-
-        }else if (activityType == BOARD_DETAIL){
-            Intent noticeIntent = new Intent(this, MenuBoardDetailActivity.class);
+    private void startDetailActivity(Intent intent, Class<?> targetActivity) {
+        if (targetActivity != null) {
+            Intent noticeIntent = new Intent(this, targetActivity);
             noticeIntent.putExtras(intent);
             startActivity(noticeIntent);
         }
     }
-
-
 
     private String currentDate(){
         Date currentDate = new Date(); // 현재 날짜 가져오기
@@ -497,6 +487,13 @@ public class MainActivity extends BaseActivity {
                                 if (getData.acaCode != null) {
                                     acaCode = getData.acaCode;
                                     PreferenceUtil.setAcaCode(mContext, getData.acaCode);
+                                }
+
+                                List<ACAData> item = DataManager.getInstance().getACAList();
+                                for (ACAData data : item){
+                                    if (acaCode.equals(data.acaCode)) {
+                                        PreferenceUtil.setAcaTel(mContext, data.acaTel);
+                                    }
                                 }
 
                                 PreferenceUtil.setStuGender(mContext, getData.gender);

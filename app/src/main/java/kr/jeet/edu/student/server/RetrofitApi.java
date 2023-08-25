@@ -2,6 +2,7 @@ package kr.jeet.edu.student.server;
 
 import java.util.List;
 
+import kr.jeet.edu.student.model.data.SystemNoticeData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.BriefingReserveRequest;
 import kr.jeet.edu.student.model.request.CounselRequest;
@@ -29,6 +30,7 @@ import kr.jeet.edu.student.model.response.NoticeListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
+import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
@@ -190,6 +192,7 @@ public interface RetrofitApi {
     Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq);
 
     // 알림장 상세 조회
-
+    @GET("systemNotice")
+    Call<SystemNoticeResponse> getSystemNoticeDetail(@Query("seq") int seq);
 
 }

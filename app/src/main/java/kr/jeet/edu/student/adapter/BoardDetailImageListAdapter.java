@@ -91,7 +91,7 @@ public class BoardDetailImageListAdapter extends RecyclerView.Adapter<BoardDetai
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                _listener.onItemClick(mList, position);
+                if (mList.size() > 0) _listener.onItemClick(mList, position);
             });
         }
     }

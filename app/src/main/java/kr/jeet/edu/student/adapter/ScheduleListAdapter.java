@@ -74,7 +74,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
             tvContent = itemView.findViewById(R.id.tv_schedule_content);
 
             itemView.setOnClickListener(v -> {
-                int position = getBindingAdapterPosition();
+                int position = getAbsoluteAdapterPosition();
                 _listener.onItemClick(mList.get(position));
             });
         }
