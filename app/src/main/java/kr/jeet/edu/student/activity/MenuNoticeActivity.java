@@ -17,6 +17,7 @@ import kr.jeet.edu.student.adapter.NoticeListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.NoticeListData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -61,12 +62,12 @@ public class MenuNoticeActivity extends BaseActivity {
                         msg.connSeq + "\n" +
                         msg.isRead + "\n"
                 );
-            }
-            mList.addAll(item);
 
-            runOnUiThread(() -> {
-                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-            });
+                if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) mList.add(msg);
+            }
+            //mList.addAll(item);
+
+            runOnUiThread(() -> { if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE); });
         }).start();
     }
 
@@ -90,9 +91,6 @@ public class MenuNoticeActivity extends BaseActivity {
     }
 
     private void setRecycler(){
-//        for (int i = 0; i< 15; i++) {
-//            mList.add(new PushMessage("시스템알림", "결석", "2023-08-30 18:30", "홍길동 외 12명", R.drawable.img_dot_woman));
-//        }
         mAdapter = new NoticeListAdapter(mContext, mList, this::startActivity);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));

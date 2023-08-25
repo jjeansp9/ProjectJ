@@ -75,7 +75,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             if(intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
-                if(added) requestBrfDetail(_currentSeq);
+                if(added) requestBrfDetail(mInfo.seq);
             }
         }
     });
@@ -120,6 +120,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
         }
     }
+    // GET http://192.168.2.77:7777/mobile/api/pt/-1
+    // 400 http://192.168.2.77:7777/mobile/api/pt/-1 (217ms)
 
     @Override
     void initAppbar() {
@@ -152,9 +154,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         setFileRecycler();
 
         initData();
-
-        if (mInfo.reservationCnt == mInfo.participantsCnt) layoutStartReserve.setVisibility(View.GONE);
-        else layoutStartReserve.setVisibility(View.VISIBLE);
     }
 
     private void initData() {
@@ -207,6 +206,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             mTvCnt.setVisibility(View.VISIBLE);
             mTvCnt.setText(str);
         }
+
+        if (mInfo.reservationCnt == mInfo.participantsCnt) layoutStartReserve.setVisibility(View.GONE);
+        else layoutStartReserve.setVisibility(View.VISIBLE);
     }
 
     private void setImageRecycler(){

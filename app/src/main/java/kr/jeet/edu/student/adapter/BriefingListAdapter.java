@@ -72,7 +72,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             String cnt;
             if (item.reservationCnt >= item.participantsCnt) {
                 cnt = "신청마감";
-                int color = ContextCompat.getColor(mContext, R.color.font_color_999);
+                int color = ContextCompat.getColor(mContext, R.color.font_color_bc);
                 holder.tvSubscription.setTextColor(color);
 
             } else {
