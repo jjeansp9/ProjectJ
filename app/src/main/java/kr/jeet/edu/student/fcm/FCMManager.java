@@ -34,14 +34,14 @@ public class FCMManager {
     private static final String TAG = "FCMManager";
 
     public static final String MSG_TYPE_NOTICE = "NOTICE";  //공지사항
-    public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
     public static final String MSG_TYPE_ATTEND = "ATTEND";  //출결
-    public static final String MSG_TYPE_ACA_SCHEDULE = "ACACHEDULE";    //캠퍼스일정
     public static final String MSG_TYPE_PT = "PT";  //설명회
     public static final String MSG_TYPE_SYSTEM = "SYSTEM";  //시스템
-    //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
     public static final String MSG_TYPE_TEST_APPT = "LEVEL_TEST";    //테스트예약
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청
+    public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
+    public static final String MSG_TYPE_ACA_SCHEDULE = "ACACHEDULE";    //캠퍼스일정
+    //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
 
     public static final int NOTIFICATION_ID_NOTICE = 1000001;
     public static final int NOTIFICATION_ID_VIDEO = 1000002;

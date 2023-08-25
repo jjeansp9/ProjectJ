@@ -30,7 +30,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
 import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -280,8 +282,9 @@ public class Utils {
     public static void loadImage(Context mContext, String url, ImageView view){
         Glide.with(mContext)
                 .load(url)
-                .thumbnail(0.2f)
+                //.thumbnail(0.2f)
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .error(R.drawable.ic_vector_image_error)
                 .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                 .into(view);

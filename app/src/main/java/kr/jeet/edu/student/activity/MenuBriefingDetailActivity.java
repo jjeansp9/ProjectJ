@@ -98,7 +98,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     private void initIntentData(){
         Intent intent = getIntent();
         if(intent != null) {
-
             if (intent.hasExtra(IntentParams.PARAM_BRIEFING_INFO)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     mInfo = intent.getParcelableExtra(IntentParams.PARAM_BRIEFING_INFO, BriefingData.class);
@@ -106,7 +105,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     mInfo = intent.getParcelableExtra(IntentParams.PARAM_BRIEFING_INFO);
                 }
 
-                _currentSeq = mInfo.seq;
             }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                 PushMessage message = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -117,9 +115,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 _currentSeq = message.connSeq;
             }
 
-        }
-        if(mInfo == null) {
-            finish();
         }
     }
 
@@ -156,21 +151,24 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private void initData() {
         if (mInfo != null) {
-            setView();
+
             if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
+                new Thread(() -> {
+                    for(FileData data : mInfo.fileList) {
+                        String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+                        LogMgr.w(data.saveName + " / " + mimeType);
 
-                for(FileData data : mInfo.fileList) {
-                    String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
-                    LogMgr.w(data.saveName + " / " + mimeType);
-
-                    // mimeType is checked for null here.
-                    if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-                    else mFileList.add(data);
-
-                }
+                        // mimeType is checked for null here.
+                        if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
+                        else mFileList.add(data);
+                    }
+                }).start();
             }
-            if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
-            if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
+            runOnUiThread(() -> {
+                setView();
+                if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
+                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
+            });
         }else if(_currentSeq != -1) {
             requestBrfDetail(_currentSeq);
         }

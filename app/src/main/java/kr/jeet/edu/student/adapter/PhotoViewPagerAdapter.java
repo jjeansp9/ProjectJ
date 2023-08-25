@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 
@@ -49,11 +50,9 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
             Glide.with(container)
                     .load(imageUrl)
-                    .apply(new RequestOptions()
-                            .placeholder(R.drawable.ic_vector_image_placeholder) // 로딩 중 이미지
-                            .error(R.drawable.ic_vector_image_error) // 로딩 실패 시 이미지
-                    )
-                    .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .error(R.drawable.ic_vector_image_error) // 로딩 실패 시 이미지
+//                    .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                     .into(photoView);
         }
 

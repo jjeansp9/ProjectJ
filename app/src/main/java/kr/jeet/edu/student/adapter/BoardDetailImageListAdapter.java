@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
@@ -60,7 +61,8 @@ public class BoardDetailImageListAdapter extends RecyclerView.Adapter<BoardDetai
 
                     Glide.with(mContext)
                             .load(url)
-                            .thumbnail(0.2f)
+                            //.thumbnail(0.2f)
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                             .error(R.drawable.ic_vector_image_error)
                             .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                             .into(holder.imgBoardDetail);

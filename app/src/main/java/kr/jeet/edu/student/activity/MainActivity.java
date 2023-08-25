@@ -94,6 +94,9 @@ public class MainActivity extends BaseActivity {
     private String acaCode = "";
     private PushMessage _pushMessage;
 
+    private final int BOARD_DETAIL = 0;
+    private final int BRF_DETAIL = 1;
+
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -254,41 +257,42 @@ public class MainActivity extends BaseActivity {
 
         }catch (Exception e){ LogMgr.e(TAG + "initData() Exception : ", e.getMessage()); }
         if(_pushMessage != null) {
+
+            LogMgr.e("EVENT", _pushMessage.pushType);
+
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-                    Intent noticeIntent = new Intent(this, MenuBoardDetailActivity.class);
-                    noticeIntent.putExtras(intent);
-                    startActivity(noticeIntent);
+                    startDetailActivity(intent, BOARD_DETAIL);
                 }
                 break;
                 case MSG_TYPE_ATTEND:
                 case MSG_TYPE_TEST_APPT:
                 case MSG_TYPE_COUNSEL:
                 {
-                    PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
-                    pushPopupDialog.setOnOkButtonClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            if(!TextUtils.isEmpty(_pushMessage.pushId)) {
-                                List<String> list = new ArrayList<>();
-                                list.add(_pushMessage.pushId);
-                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
-                            }
-                            pushPopupDialog.dismiss();
-                        }
-                    });
-                    pushPopupDialog.show();
+//                    PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
+//                    pushPopupDialog.setOnOkButtonClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            if(!TextUtils.isEmpty(_pushMessage.pushId)) {
+//                                List<String> list = new ArrayList<>();
+//                                list.add(_pushMessage.pushId);
+//                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
+//                            }
+//                            pushPopupDialog.dismiss();
+//                        }
+//                    });
+//                    pushPopupDialog.show();
                 }
                 break;
                 case MSG_TYPE_PT:
                 {
-                    startBoardDetailActivity(intent);
+                    startDetailActivity(intent, BRF_DETAIL);
                 }
                 break;
                 case MSG_TYPE_SYSTEM:
                 {
-                    startBoardDetailActivity(intent);
+                    startDetailActivity(intent, BOARD_DETAIL);
                 }
                 break;
                 default:
@@ -298,12 +302,21 @@ public class MainActivity extends BaseActivity {
 
         mHandler.sendEmptyMessage(CMD_GET_ACALIST);
     }
-    
-    private void startBoardDetailActivity(Intent intent){
-        Intent noticeIntent = new Intent(this, MenuBoardDetailActivity.class);
-        noticeIntent.putExtras(intent);
-        startActivity(noticeIntent);
+
+    private void startDetailActivity(Intent intent, int activityType){
+        if (activityType == BRF_DETAIL){
+            Intent noticeIntent = new Intent(this, MenuBriefingDetailActivity.class);
+            noticeIntent.putExtras(intent);
+            startActivity(noticeIntent);
+
+        }else if (activityType == BOARD_DETAIL){
+            Intent noticeIntent = new Intent(this, MenuBoardDetailActivity.class);
+            noticeIntent.putExtras(intent);
+            startActivity(noticeIntent);
+        }
     }
+
+
 
     private String currentDate(){
         Date currentDate = new Date(); // 현재 날짜 가져오기

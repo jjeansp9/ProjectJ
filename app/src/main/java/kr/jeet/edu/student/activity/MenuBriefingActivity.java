@@ -266,7 +266,7 @@ public class MenuBriefingActivity extends BaseActivity {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
-                        LogMgr.e(TAG + "requestTestReserveList() Exception : ", e.getMessage());
+                        LogMgr.e(TAG + "requestBrfList() Exception : ", e.getMessage());
                     }
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
