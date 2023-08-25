@@ -33,8 +33,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:layout_marginTop="@dimen/layout_margin"
+                android:lineSpacingMultiplier="1.2"
                 android:hint="제목"
-                android:textSize="@dimen/font_size_xxxlarge"
+                android:textSize="@dimen/font_size_xlarge"
                 android:textColor="@color/black"
                 android:textStyle="bold"/>
 
@@ -55,7 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_board_detail_name"
-                android:layout_marginTop="@dimen/layout_margin_4"
                 android:hint="날짜"
                 android:textSize="@dimen/font_size_small"
                 android:textColor="@color/font_color_999" />
@@ -76,10 +76,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/board_detail_line"
                 android:layout_marginTop="@dimen/layout_margin_12"
-                android:layout_marginHorizontal="@dimen/layout_margin_4"
+                android:lineSpacingMultiplier="1.3"
                 android:hint="내용"
                 android:textColor="@color/black"
-                android:textSize="@dimen/font_size_xlarge"/>
+                android:textSize="@dimen/font_size"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_board_img"

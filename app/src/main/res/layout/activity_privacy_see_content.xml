@@ -34,8 +34,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:padding="@dimen/layout_margin"
+                android:lineSpacingMultiplier="1.2"
                 android:textColor="@color/font_color_default"
-                android:textSize="@dimen/font_size_large" />
+                android:textSize="@dimen/font_size" />
 
             <WebView
                 android:id="@+id/wv_privacy_content"
