@@ -49,12 +49,11 @@
         android:layout_marginTop="4dp">
         <ImageView
             android:id="@+id/img_notice_send_and_receiver"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="1dp"
             android:layout_marginEnd="4dp"
-            android:src="@drawable/img_dot_woman"/>
+            android:src="@drawable/img_receive"/>
         <TextView
             android:id="@+id/tv_notice_date"
             android:layout_width="wrap_content"
@@ -73,6 +72,17 @@
         app:layout_constraintTop_toTopOf="parent"
         android:hint="수신인 정보없음"
         android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size"/>
+        android:textSize="@dimen/font_size"
+        android:visibility="gone"/>
+    
+    <ImageButton
+        android:id="@+id/btn_notice_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:src="@drawable/bt_seemore_nor"
+        android:background="@android:color/transparent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

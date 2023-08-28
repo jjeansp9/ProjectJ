@@ -90,15 +90,16 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                         msg.isRead + "\n"
                 );
 
-
                 if (selType.equals(allType)) {
-                    newMessages.add(msg);
+                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)){
+                        newMessages.add(msg);
+                    }
 
                 } else if (selType.equals(systemType)){
-                    if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) newMessages.add(msg);
+                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) newMessages.add(msg);
 
                 }else if (selType.equals(attendanceType)){
-                    if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) newMessages.add(msg);
+                    if (msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) newMessages.add(msg);
                 }
             }
 
@@ -175,6 +176,16 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 
+    private void startActivity(PushMessage item){
+        if (item != null){
+            Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
+            intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_notice));
+            intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
+            startActivity(intent);
+        }else LogMgr.e("item is null ");
+    }
+
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -208,17 +219,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         calendar.set(Calendar.MONTH, month);
         _selectedDate = calendar.getTime();
 
-        LogMgr.e("Tet", month + ", " + year);
-
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
-    }
-
-    private void startActivity(PushMessage item){
-        if (item != null){
-            Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
-            intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_notice));
-            startActivity(intent);
-        }else LogMgr.e("item is null ");
     }
 }

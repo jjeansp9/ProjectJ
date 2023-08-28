@@ -25,6 +25,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -244,12 +245,20 @@ public class MenuBriefingActivity extends BaseActivity {
         requestBrfList(_acaCode, selAllOrNot);
     }
 
+    int index = 0;
+
     private void requestBrfList(String acaCode, boolean all){
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getBriefingList(acaCode, year, month).enqueue(new Callback<BriefingResponse>() {
                 @Override
                 public void onResponse(Call<BriefingResponse> call, Response<BriefingResponse> response) {
-                    mList.clear();
+                    if (mList.size() > 0){
+                        for (int i = mList.size() - 1; i >= 0; i--) {
+                            mList.remove(i);
+                            mAdapter.notifyItemRemoved(i);
+                        }
+                        index = 0;
+                    }
 
                     try {
                         if (response.isSuccessful()) {
@@ -257,7 +266,12 @@ public class MenuBriefingActivity extends BaseActivity {
 
                                 List<BriefingData> list = response.body().data;
                                 if (list != null && !list.isEmpty()) {
-                                    mList.addAll(list);
+                                    //mList.addAll(list);
+                                    for (BriefingData item : list) {
+                                        mList.add(index, item);
+                                        mAdapter.notifyItemInserted(index);
+                                        index++;
+                                    }
 
                                     for (BriefingData data : mList) data.campusAll = all;
                                 }
@@ -269,7 +283,7 @@ public class MenuBriefingActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBrfList() Exception : ", e.getMessage());
                     }
 
-                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    //if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                 }

@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -101,6 +102,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private void setListRecycler(){
         mAdapter = new AnnouncementListAdapter(mContext, mList, this::startBoardDetailActivity);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemAnimator(null);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -145,18 +147,27 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mPowerSpinner.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
             else _acaCode = "";
-
             requestBoardList(_acaCode);
         });
     }
+
+    int index = 0;
 
     private void requestBoardList(String acaCodes, int... lastSeq) {
         int lastNoticeSeq = 0;
         if(lastSeq != null && lastSeq.length > 0) {
             lastNoticeSeq = lastSeq[0];
         }
+        //if(lastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+
         if(lastNoticeSeq == 0) {
-            if (mList.size() > 0) mList.clear();
+            if (mList.size() > 0){
+                for (int i = mList.size() - 1; i >= 0; i--) {
+                    mList.remove(i);
+                    mAdapter.notifyItemRemoved(i);
+                }
+                index = 0;
+            }
         }
 
         if (RetrofitClient.getInstance() != null) {
@@ -166,12 +177,18 @@ public class MenuAnnouncementActivity extends BaseActivity {
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {
                         if (response.isSuccessful()) {
-                            List<AnnouncementData> getData = null;
+                            List<AnnouncementData> getData = new ArrayList<>();
 
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
-                                    mList.addAll(getData);
+                                    //mList.addAll(getData);
+
+                                    for (AnnouncementData item : getData) {
+                                        mList.add(index, item);
+                                        mAdapter.notifyItemInserted(index);
+                                        index++;
+                                    }
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");
@@ -184,13 +201,14 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mSwipeRefresh.setRefreshing(false);
                 }
 
                 @Override
                 public void onFailure(Call<AnnouncementListResponse> call, Throwable t) {
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     try {
                         LogMgr.e(TAG, "requestBoardList() onFailure >> " + t.getMessage());
                     } catch (Exception e) {

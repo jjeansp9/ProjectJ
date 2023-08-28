@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,15 +52,28 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         PushMessage item = mList.get(position);
 
         String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
-        if (noticeType.equals(FCMManager.MSG_TYPE_NOTICE)) holder.tvType.setText("공지사항");
-        else if (noticeType.equals(FCMManager.MSG_TYPE_PT)) holder.tvType.setText("설명회예약");
-        else holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
+        if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+            holder.tvType.setText("시스템알림");
+            holder.btnNext.setVisibility(View.VISIBLE);
+            holder.tvAttState.setVisibility(View.GONE);
+        }
+        else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
+            holder.tvType.setText("출결현황");
+            holder.btnNext.setVisibility(View.GONE);
+            holder.tvAttState.setVisibility(View.VISIBLE);
+        }
+        else {
+            holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
+            holder.tvAttState.setVisibility(View.GONE);
+            holder.btnNext.setVisibility(View.GONE);
+        }
 
         //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
         holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
         //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
-        Glide.with(mContext).load(R.drawable.img_dot_woman).into(holder.imgSenderAndReceiver);
+        Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
+        holder.imgSenderAndReceiver.setVisibility(View.GONE);
     }
 
     @Override
@@ -72,10 +86,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
         private TextView tvType, tvAttState, tvDate, tvReceiver;
         private ImageView imgSenderAndReceiver;
+        private ImageButton btnNext;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            btnNext = itemView.findViewById(R.id.btn_notice_next);
             tvType = itemView.findViewById(R.id.tv_notice_type);
             tvAttState = itemView.findViewById(R.id.tv_notice_attendance_state);
             tvDate = itemView.findViewById(R.id.tv_notice_date);
