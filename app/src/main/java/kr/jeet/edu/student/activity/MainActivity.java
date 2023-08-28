@@ -540,12 +540,15 @@ public class MainActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()){
                             List<BoardAttributeData> getData = null;
-                            if (response.body() != null)  getData= response.body().data;
-
-                            if (getData != null) {
-
+                            if (response.body() != null)  {
+                                getData= response.body().data;
+                                if (getData != null) {
+                                    List<BoardAttributeData> list = response.body().data;
+                                    for(BoardAttributeData data : list){
+                                        DataManager.getInstance().setBoardInfo(data);
+                                    }
+                                }
                             }
-
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());

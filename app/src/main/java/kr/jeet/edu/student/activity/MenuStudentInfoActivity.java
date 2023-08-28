@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private RetrofitApi mRetrofitApi;
 
     private Calendar calendar;
+    String strYear = "";
+    String strMonth = "";
     private SimpleDateFormat yearFormat, monthFormat;
 
     private ArrayList<TuitionData> mList = new ArrayList<>();
@@ -145,8 +148,11 @@ public class MenuStudentInfoActivity extends BaseActivity {
         imgBack = findViewById(R.id.img_tuition_back);
         imgNext = findViewById(R.id.img_tuition_next);
 
-        mTvYear.setText(currentYear + getString(R.string.year));
-        mTvMonth.setText(currentMonth + getString(R.string.month));
+        strYear = currentYear + getString(R.string.year);
+        strMonth = currentMonth + getString(R.string.month);
+
+        mTvYear.setText(strYear);
+        mTvMonth.setText(strMonth);
 
         requestMemberInfo(_stuSeq, _stCode);
         requestTuitionList(currentDate);
@@ -210,8 +216,11 @@ public class MenuStudentInfoActivity extends BaseActivity {
         currentMonth = String.format(currentLocale, "%02d", month);
         currentDate = currentYear + currentMonth;
 
-        mTvYear.setText(currentYear + getString(R.string.year));
-        mTvMonth.setText(currentMonth + getString(R.string.month));
+        strYear = currentYear + getString(R.string.year);
+        strMonth = currentMonth + getString(R.string.month);
+
+        mTvYear.setText(strYear);
+        mTvMonth.setText(strMonth);
 
         requestTuitionList(currentDate);
     }
@@ -236,8 +245,11 @@ public class MenuStudentInfoActivity extends BaseActivity {
         currentMonth = monthFormat.format(calendar.getTime());
         currentDate = currentYear + currentMonth;
 
-        mTvYear.setText(currentYear + getString(R.string.year));
-        mTvMonth.setText(currentMonth + getString(R.string.month));
+        strYear = currentYear + getString(R.string.year);
+        strMonth = currentMonth + getString(R.string.month);
+
+        mTvYear.setText(strYear);
+        mTvMonth.setText(strMonth);
 
         requestTuitionList(currentDate);
     }

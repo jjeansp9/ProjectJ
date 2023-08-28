@@ -325,13 +325,14 @@
 
                 <ImageView
                     android:id="@+id/img_tuition_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/calendar_arrow_size"
+                    android:layout_height="@dimen/calendar_arrow_size"
                     app:layout_constraintEnd_toStartOf="@id/layout_year_month"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginEnd="12dp"
-                    android:padding="8dp"
-                    android:src="@drawable/selector_month_back"/>
+                    android:padding="4dp"
+                    android:src="@drawable/bt_month_back_nor"
+                    android:stateListAnimator="@xml/animate_button_push"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_year_month"
@@ -383,13 +384,14 @@
 
                 <ImageView
                     android:id="@+id/img_tuition_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/calendar_arrow_size"
+                    android:layout_height="@dimen/calendar_arrow_size"
                     app:layout_constraintStart_toEndOf="@id/layout_year_month"
                     app:layout_constraintTop_toTopOf="parent"
                     android:layout_marginStart="12dp"
-                    android:padding="8dp"
-                    android:src="@drawable/selector_month_next"/>
+                    android:padding="4dp"
+                    android:src="@drawable/bt_month_next_nor"
+                    android:stateListAnimator="@xml/animate_button_push"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_total_unpaid"

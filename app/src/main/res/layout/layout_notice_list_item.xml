@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="결석"
+            android:hint="출석현황 정보없음"
             android:textColor="@color/font_color_default"
             android:textSize="@dimen/font_size"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="230830 18:30"
+            android:hint="날짜 정보없음"
             android:textSize="@dimen/font_size"
             android:textColor="@color/font_color_default"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="홍길동 외 2명"
+        android:hint="수신인 정보없음"
         android:textColor="@color/font_color_default"
         android:textSize="@dimen/font_size"/>
 

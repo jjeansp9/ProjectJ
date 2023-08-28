@@ -123,6 +123,12 @@
         <item>중학교</item>
         <item>고등학교</item>
     </string-array>
+
+    <string-array name="notice_type">
+        <item>전체</item>
+        <item>공지사항(ui테스트용)</item>
+        <item>설명회예약(ui테스트용)</item>
+    </string-array>
 </resources>
 
 

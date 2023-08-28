@@ -69,4 +69,14 @@ public class Constants {
     public static final int COMPANY_REGISTRATION_NUM_LENGTH = 10; // 사업자 등록번호 length
     public static final int BIRTH_LENGTH = 8; // 생년월일 length
 
+    //dateFormatter String
+    public static final String DATE_FORMATTER_YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String DATE_FORMATTER_YYYY_MM = "yyyy-MM";
+    public static final String DATE_FORMATTER_YYYYMM = "yyyyMM";
+    public static final String DATE_FORMATTER_YYYY_MM_DD_KOR = "yyyy년 M월 d일";
+    public static final String DATE_FORMATTER_YYYY_MM_KOR = "yyyy년 M월";
+    public static final String DATE_FORMATTER_YYYYMMDD = "yyyyMMdd";
+    public static final String DATE_FORMATTER_YYMMDD = "yyMMdd";
+    public static final String TIME_FORMATTER_A_HH_MM = "a hh:mm";
+    public static final String TIME_FORMATTER_HH_MM = "HH:mm";
 }

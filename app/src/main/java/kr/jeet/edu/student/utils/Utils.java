@@ -62,9 +62,10 @@ public class Utils {
         return generator.nextInt(1000000) % 1000000;
     }
 
-    // TODO : JEET에서 로그아웃 API 호출하면 자동으로 PUSH Token 도 DB 에서 날리고 Topic도 해제 해주기 때문에
-    //        Preference 에 저장된 토큰만 삭제하기
-
+    /**
+     * JEET에서 로그아웃 API 호출하면 자동으로 PUSH Token 도 DB 에서 날리고 Topic도 해제 해주기 때문에
+     * Preference 에 저장된 토큰만 삭제하기
+    * */
     public static void refreshPushToken(Context context, int memberSeq, String... tokenArg) {
 
         if(tokenArg == null || tokenArg.length == 0) {
@@ -284,7 +285,7 @@ public class Utils {
                 .load(url)
                 //.thumbnail(0.2f)
                 .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                //.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .error(R.drawable.ic_vector_image_error)
                 .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                 .into(view);
@@ -377,6 +378,26 @@ public class Utils {
                 LogMgr.e("Event", formattedDate + "(" + dayOfWeekStr + ")\n" + inputTime);
                 return formattedDate + "(" + dayOfWeekStr + ") " + inputTime;
             }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+    * 알림장 목록의 날짜형식 format [ yyyy-MM-dd HH:mm:ss.S -> yyyy-MM-dd HH:mm ]
+    * */
+    public static String formatNoticeDate(String inputDate){
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+
+        try {
+            Date date = inputDateFormat.parse(inputDate);
+
+            String formattedDate = "";
+            if (date != null) formattedDate = outputFormat.format(date);
+            return formattedDate;
 
         } catch (ParseException e) {
             e.printStackTrace();

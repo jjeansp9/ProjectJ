@@ -23,6 +23,7 @@ import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.NoticeListData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.utils.Utils;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
@@ -50,11 +51,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         PushMessage item = mList.get(position);
 
         String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
-        if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) holder.tvType.setText("시스템알림");
-        else holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "공지사항" : item.pushType);
+        if (noticeType.equals(FCMManager.MSG_TYPE_NOTICE)) holder.tvType.setText("공지사항");
+        else if (noticeType.equals(FCMManager.MSG_TYPE_PT)) holder.tvType.setText("설명회예약");
+        else holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
 
         //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
-        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : item.date);
+        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
         //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
         Glide.with(mContext).load(R.drawable.img_dot_woman).into(holder.imgSenderAndReceiver);

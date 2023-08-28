@@ -1,9 +1,12 @@
 package kr.jeet.edu.student.common;
 
+import android.util.ArrayMap;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 
@@ -19,10 +22,16 @@ public class DataManager {
     private static class LazyHolder {
         private static final DataManager INSTANCE = new DataManager();
     }
-    // 캠퍼스 리스트
+    // 공지사항
+    public final String BOARD_NOTICE = "notice";
+    public final String BOARD_PT = "pt";
+    public final String BOARD_MESSAGE_NOTICE = "messageNotice";
+    // 캠퍼스, 레벨캠퍼스, 학교 리스트
     private List<ACAData> ACAList = new ArrayList<>();
     private List<LTCData> LTCList = new ArrayList<>();
     private List<SchoolData> SchoolList = new ArrayList<>();
+    // 게시판 정보 리스트
+    private ArrayMap<String, BoardAttributeData> BoardListMap = new ArrayMap<>();
 
     /**
      * JEET 캠퍼스 리스트 정보 조회
@@ -70,5 +79,28 @@ public class DataManager {
      */
     public void setSchoolList(List<SchoolData> SchoolList) {
         this.SchoolList = SchoolList;
+    }
+
+    /**
+    * 게시판 속성목록 저장 및 조회
+    * */
+    public ArrayMap<String, BoardAttributeData> getBoardInfoArrayMap() {
+        return BoardListMap;
+    }
+    public void setBoardInfoMap(ArrayMap<String, BoardAttributeData> map) { this.BoardListMap =  map; }
+
+    public BoardAttributeData getBoardInfo(String boardType){
+        if (BoardListMap.containsKey(boardType)) return BoardListMap.get(boardType);
+        return null;
+    }
+
+    public boolean setBoardInfo(BoardAttributeData data){
+        if (data == null) return false;
+        String key = data.boardType;
+        if (!BoardListMap.containsKey(key)){
+            BoardListMap.put(key, data);
+            return true;
+        }
+        return false;
     }
 }

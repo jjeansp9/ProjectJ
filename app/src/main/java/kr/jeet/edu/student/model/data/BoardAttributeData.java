@@ -4,17 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 public class BoardAttributeData {
     @SerializedName("boardType")
-    private String boardType;
+    public String boardType;
 
     @SerializedName("boardNm")
-    private String boardNm;
+    public String boardNm;
 
     @SerializedName("atchPosblFileNum")
-    private int atchPosblFileNum;
+    public int atchPosblFileNum;
 
     @SerializedName("commentAt")
-    private String commentAt;
+    public String commentAt;
 
     @SerializedName("cntPerPage")
-    private int cntPerPage;
+    public int cntPerPage;
 }
