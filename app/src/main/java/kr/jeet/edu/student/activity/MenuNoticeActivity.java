@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -20,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -52,11 +54,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     Date _selectedDate = new Date();
     SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
+    SimpleDateFormat _monthFormat = new SimpleDateFormat("M", Locale.KOREA);
 
     private String[] noticeType;
     private String allType = "";
     private String systemType = "";
     private String attendanceType = "";
+
+    private boolean isTargetItemVisible = false;
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
@@ -93,20 +98,98 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private static final int PAGE_SIZE = 20;
     private long currentMaxSeq = 0;
+    private int systemCnt = 0;
+    private int attendanceCnt = 0;
+
 
     private void getListData(String selType, boolean isUpdate){
         new Thread(() -> {
             if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
 
             List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getReverseMessages(currentMaxSeq, PAGE_SIZE);
-            List<PushMessage> items = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage();
+            List<PushMessage> items = JeetDatabase.getInstance(mContext).pushMessageDao().getReverseAllMessage(currentMaxSeq);
             List<PushMessage> newMessage = new ArrayList<>(item);
 
             if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1;
 
-            for (PushMessage msg : items){
-                LogMgr.w("DBTest",
-                        "pushType : " + msg.pushType + "\n" +
+//            if (selSpin){
+//                for (PushMessage msg : items){
+//                    LogMgr.w(TAG,
+//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
+//                                    "acaCode : " + msg.acaCode + "\n" +
+//                                    "date : " + msg.date + "\n" +
+//                                    "body : " + msg.body + "\n" +
+//                                    "id : " + msg.id + "\n" +
+//                                    "pushId : " + msg.pushId + "\n" +
+//                                    "title : " + msg.title + "\n" +
+//                                    "connSeq : " + msg.connSeq + "\n" +
+//                                    "isRead : " + msg.isRead + "\n"
+//                    );
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                    Date date = null;
+//
+//                    try { date = dateFormat.parse(msg.date); }
+//                    catch (ParseException e) { e.printStackTrace(); }
+//
+//                    Calendar calendar = Calendar.getInstance();
+//                    if (date != null) calendar.setTime(date);
+//
+//                    int month = Integer.parseInt(selMonth)-1;
+//
+//                    if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
+//
+//                        if (selType.equals(systemType)) {
+//                            LogMgr.i("spinnerEvent1", selType+","+systemType);
+//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
+//                                if (systemCnt < 5){
+//                                    newMessage.add(msg);
+//                                    systemCnt ++;
+//                                }
+//                            }
+//
+//                        }else if (selType.equals(attendanceType)) {
+//                            LogMgr.i("spinnerEvent2", selType+","+attendanceType);
+//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) {
+//                                if (attendanceCnt < 10){
+//                                    newMessage.add(msg);
+//                                    attendanceCnt ++;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                selSpin = false;
+//            }else{
+//                for (PushMessage msg : item){
+//
+//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                    Date date = null;
+//
+//                    try { date = dateFormat.parse(msg.date); }
+//                    catch (ParseException e) { e.printStackTrace(); }
+//
+//                    Calendar calendar = Calendar.getInstance();
+//                    if (date != null) calendar.setTime(date);
+//
+//                    int month = Integer.parseInt(selMonth)-1;
+//
+//                    if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
+//
+//                        if (selType.equals(systemType)) {
+//                            LogMgr.i("spinnerEvent1", selType+","+systemType);
+//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) newMessage.add(msg);
+//
+//                        }else if (selType.equals(attendanceType)) {
+//                            LogMgr.i("spinnerEvent2", selType+","+attendanceType);
+//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) newMessage.add(msg);
+//                        }
+//                    }
+//                }
+//            }
+
+            for (PushMessage msg : item){
+                LogMgr.w(TAG,
+                        "RoomDB LIST \npushType : " + msg.pushType + "\n" +
                                 "acaCode : " + msg.acaCode + "\n" +
                                 "date : " + msg.date + "\n" +
                                 "body : " + msg.body + "\n" +
@@ -116,15 +199,39 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                                 "connSeq : " + msg.connSeq + "\n" +
                                 "isRead : " + msg.isRead + "\n"
                 );
-
-//                if (selType.equals(allType)) {
-//                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)){
-//                        newMessage.add(msg);
-//                    }
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+//                Date date = null;
 //
+//                try { date = dateFormat.parse(msg.date); }
+//                catch (ParseException e) { e.printStackTrace(); }
+//
+//                Calendar calendar = Calendar.getInstance();
+//                if (date != null) calendar.setTime(date);
+//
+//                int month = Integer.parseInt(selMonth)-1;
+//
+//                if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
+//
+//                    if (selType.equals(systemType)) {
+//                        LogMgr.i("spinnerEvent1", selType+","+systemType);
+//                        if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
+//                            if (systemCnt < 20){
+//                                newMessage.add(msg);
+//                                systemCnt ++;
+//                            }
+//                        }
+//
+//                    }else if (selType.equals(attendanceType)) {
+//                        LogMgr.i("spinnerEvent2", selType+","+attendanceType);
+//                        if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) {
+//                            if (attendanceCnt < 10){
+//                                newMessage.add(msg);
+//                                attendanceCnt ++;
+//                            }
+//                        }
+//                    }
 //                }
-                if (selType.equals(systemType)) if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) newMessage.add(msg);
-                else if (selType.equals(attendanceType)) if (msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) newMessage.add(msg);
+                newMessage.add(msg);
             }
 
             // TODO : 페이징처리 , 전체 항목은 제거
@@ -149,6 +256,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         mListIndex = mList.size();
         for (int i = 0; i < newMessage.size(); i++) {
+            LogMgr.i("spinnerEvent3", newMessage.get(i).pushType + ", index:" + i);
             mList.add(mListIndex, newMessage.get(i));
             mAdapter.notifyItemInserted(mListIndex);
             mListIndex ++;
@@ -177,25 +285,26 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         mTvCalendar.setOnClickListener(this);
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
+        selMonth= _monthFormat.format(_selectedDate);
 
         setSpinner();
         setRecycler();
         mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString(), true));
     }
 
+    private boolean selSpin = false;
+
     private void setSpinner(){
         _spinnerType.setText(systemType);
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if(oldItem != null && oldItem.equals(newItem)) return;
-            getListData(newItem.toString(), false);
+            selSpin = true;
+            getListData(_spinnerType.getText().toString(), true);
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
     }
-
-    private boolean isTargetItemVisible = false;
 
     private void setRecycler(){
         mAdapter = new NoticeListAdapter(mContext, mList, this::startActivity);
@@ -213,25 +322,18 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                 LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
                 if (layoutManager != null) {
-                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
-                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
+                    int firstItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
+                    int lastItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
 
                     // mList.size() - 5 위치의 아이템 확인
                     int targetItemPosition = mList.size() - 5;
 
-//                    // 해당 위치의 아이템이 현재 화면에 보이는지 확인
-//                    if (targetItemPosition >= firstVisibleItemPosition && targetItemPosition <= lastVisibleItemPosition) {
-//                        LogMgr.i("Events");
-//                        getListData(_spinnerType.getText().toString(), false);
-//                    }
-
-                    if (!isTargetItemVisible && targetItemPosition >= firstVisibleItemPosition && targetItemPosition <= lastVisibleItemPosition) {
-                        // 처음으로 targetItemPosition이 화면에 보이면 getListData()를 호출하고 플래그를 true로 설정합니다.
-                        LogMgr.i("Events");
+                    if (!isTargetItemVisible && targetItemPosition >= firstItemPosition && targetItemPosition <= lastItemPosition) {
                         getListData(_spinnerType.getText().toString(), false);
                         isTargetItemVisible = true;
-                    } else if (targetItemPosition < firstVisibleItemPosition || targetItemPosition > lastVisibleItemPosition) {
-                        // targetItemPosition이 화면에서 사라지면 플래그를 리셋합니다.
+                        LogMgr.i("getListData");
+
+                    } else if (targetItemPosition < firstItemPosition || targetItemPosition > lastItemPosition) {
                         isTargetItemVisible = false;
                     }
                 }
@@ -275,6 +377,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         onDateSet(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
     }
 
+    private String selMonth = "";
+
     @Override
     public void onDateSet(int month, int year) {
         Calendar calendar = Calendar.getInstance();
@@ -282,6 +386,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         calendar.set(Calendar.MONTH, month);
         _selectedDate = calendar.getTime();
 
+        selMonth = _monthFormat.format(_selectedDate);
+        LogMgr.e(TAG + "Date", _monthFormat.format(_selectedDate));
+
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
+        getListData(_spinnerType.getText().toString(), true);
     }
 }

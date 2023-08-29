@@ -52,12 +52,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         PushMessage item = mList.get(position);
 
         String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
-        if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+        if (noticeType.equals(FCMManager.MSG_TYPE_NOTICE)) {
             holder.tvType.setText("시스템알림");
             holder.btnNext.setVisibility(View.VISIBLE);
             holder.tvAttState.setVisibility(View.GONE);
         }
-        else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
+        else if (noticeType.equals(FCMManager.MSG_TYPE_PT)) {
             holder.tvType.setText("출결현황");
             holder.btnNext.setVisibility(View.GONE);
             holder.tvAttState.setVisibility(View.VISIBLE);

@@ -121,7 +121,7 @@
         >
 
         <activity
-            android:name=".activity.MenuNoticeActivity"
+            android:name=".activity.IntroActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
 
@@ -272,7 +272,7 @@
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".activity.IntroActivity"
+            android:name=".activity.MenuNoticeActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             >
