@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -89,6 +90,7 @@ public class MenuScheduleActivity extends BaseActivity {
         mSpinnerCampus = findViewById(R.id.spinner_schedule_campus);
         mCalendarView = findViewById(R.id.cv_schedule);
         mRecyclerSchedule = findViewById(R.id.recycler_schedule);
+
         setSpinner();
         setCalendar();
         setRecycler();

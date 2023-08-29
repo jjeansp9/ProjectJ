@@ -102,7 +102,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private void setListRecycler(){
         mAdapter = new AnnouncementListAdapter(mContext, mList, this::startBoardDetailActivity);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(null);
+        //mRecyclerView.setItemAnimator(null);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -160,21 +160,21 @@ public class MenuAnnouncementActivity extends BaseActivity {
         }
         //if(lastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
 
-        if(lastNoticeSeq == 0) {
-            if (mList.size() > 0){
-                for (int i = mList.size() - 1; i >= 0; i--) {
-                    mList.remove(i);
-                    mAdapter.notifyItemRemoved(i);
-                }
-                index = 0;
-            }
-        }
-
         if (RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
+            int finalLastNoticeSeq = lastNoticeSeq;
             mRetrofitApi.getAnnouncementList(lastNoticeSeq, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
+                    if(finalLastNoticeSeq == 0) {
+                        if (mList.size() > 0){
+                            for (int i = mList.size() - 1; i >= 0; i--) {
+                                mList.remove(i);
+                                mAdapter.notifyItemRemoved(i);
+                            }
+                            index = 0;
+                        }
+                    }
                     try {
                         if (response.isSuccessful()) {
                             List<AnnouncementData> getData = new ArrayList<>();

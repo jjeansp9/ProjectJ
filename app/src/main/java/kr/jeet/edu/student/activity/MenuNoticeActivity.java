@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -60,12 +61,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         setContentView(R.layout.activity_menu_notice);
 
         noticeType = getResources().getStringArray(R.array.notice_type);
-        allType = noticeType[0];
-        systemType = noticeType[1];
-        attendanceType = noticeType[2];
+        //allType = noticeType[0];
+        systemType = noticeType[0];
+        attendanceType = noticeType[1];
 
         mContext = this;
-        getListData(allType);
+        getListData(systemType);
         initAppbar();
         initView();
     }
@@ -79,29 +80,32 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
             for (PushMessage msg : item){
                 LogMgr.w("DBTest",
-                        msg.pushType + "\n" +
-                        msg.acaCode + "\n" +
-                        msg.date + "\n" +
-                        msg.body + "\n" +
-                        msg.id + "\n" +
-                        msg.pushId + "\n" +
-                        msg.title + "\n" +
-                        msg.connSeq + "\n" +
-                        msg.isRead + "\n"
+                        "pushType : " + msg.pushType + "\n" +
+                                "acaCode : " + msg.acaCode + "\n" +
+                                "date : " + msg.date + "\n" +
+                                "body : " + msg.body + "\n" +
+                                "id : " + msg.id + "\n" +
+                                "pushId : " + msg.pushId + "\n" +
+                                "title : " + msg.title + "\n" +
+                                "connSeq : " + msg.connSeq + "\n" +
+                                "isRead : " + msg.isRead + "\n"
                 );
 
-                if (selType.equals(allType)) {
-                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)){
-                        newMessages.add(msg);
-                    }
-
-                } else if (selType.equals(systemType)){
+//                if (selType.equals(allType)) {
+//                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)){
+//                        newMessages.add(msg);
+//                    }
+//
+//                }
+                if (selType.equals(systemType)){
                     if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) newMessages.add(msg);
 
                 }else if (selType.equals(attendanceType)){
                     if (msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) newMessages.add(msg);
                 }
             }
+
+            // TODO : 페이징처리 , 전체 항목은 제거
 
             runOnUiThread(() -> {
                 if (txtEmpty != null) txtEmpty.setVisibility(newMessages.isEmpty() ? View.VISIBLE : View.GONE);
@@ -155,7 +159,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void setSpinner(){
-        _spinnerType.setText(allType);
+        _spinnerType.setText(systemType);
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -174,6 +178,20 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         dividerItemDecoration.setDrawable(dividerColor);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!mRecyclerView.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                        && (mList != null && !mList.isEmpty()))
+                {
+                    //int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    getListData(_spinnerType.getText().toString());
+                }
+            }
+        });
     }
 
     private void startActivity(PushMessage item){
