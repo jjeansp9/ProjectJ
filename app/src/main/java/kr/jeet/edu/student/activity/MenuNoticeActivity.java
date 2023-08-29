@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
 
@@ -55,6 +58,19 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String systemType = "";
     private String attendanceType = "";
 
+    private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case CMD_GET_LIST:
+                    getListData(systemType, false);
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,20 +81,30 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         systemType = noticeType[0];
         attendanceType = noticeType[1];
 
+        new Thread(() -> {
+            currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
+            mHandler.sendEmptyMessage(CMD_GET_LIST);
+        }).start();
+
         mContext = this;
-        getListData(systemType);
         initAppbar();
         initView();
     }
 
-    private void getListData(String selType){
-        if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
+    private static final int PAGE_SIZE = 20;
+    private long currentMaxSeq = 0;
 
+    private void getListData(String selType, boolean isUpdate){
         new Thread(() -> {
-            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage();
-            List<PushMessage> newMessages = new ArrayList<>();
+            if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
 
-            for (PushMessage msg : item){
+            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getReverseMessages(currentMaxSeq, PAGE_SIZE);
+            List<PushMessage> items = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage();
+            List<PushMessage> newMessage = new ArrayList<>(item);
+
+            if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1;
+
+            for (PushMessage msg : items){
                 LogMgr.w("DBTest",
                         "pushType : " + msg.pushType + "\n" +
                                 "acaCode : " + msg.acaCode + "\n" +
@@ -93,40 +119,39 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
 //                if (selType.equals(allType)) {
 //                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM) || msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)){
-//                        newMessages.add(msg);
+//                        newMessage.add(msg);
 //                    }
 //
 //                }
-                if (selType.equals(systemType)){
-                    if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) newMessages.add(msg);
-
-                }else if (selType.equals(attendanceType)){
-                    if (msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) newMessages.add(msg);
-                }
+                if (selType.equals(systemType)) if (msg.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) newMessage.add(msg);
+                else if (selType.equals(attendanceType)) if (msg.pushType.equals(FCMManager.MSG_TYPE_ATTEND)) newMessage.add(msg);
             }
 
             // TODO : 페이징처리 , 전체 항목은 제거
 
             runOnUiThread(() -> {
-                if (txtEmpty != null) txtEmpty.setVisibility(newMessages.isEmpty() ? View.VISIBLE : View.GONE);
-                updateList(newMessages);
+                updateList(newMessage, isUpdate);
+                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
             });
         }).start();
     }
 
-    private void updateList(List<PushMessage> newMessage){
-        for (int i = mList.size() - 1; i >= 0; i--) {
-            if (!newMessage.contains(mList.get(i))) {
+    int mListIndex = 0;
+
+    private void updateList(List<PushMessage> newMessage, boolean isUpdate){
+        if (isUpdate){
+            for (int i = mList.size() - 1; i >= 0; i--) {
                 mList.remove(i);
                 mAdapter.notifyItemRemoved(i);
             }
+            if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
         }
 
+        mListIndex = mList.size();
         for (int i = 0; i < newMessage.size(); i++) {
-            if (!mList.contains(newMessage.get(i))) {
-                mList.add(i, newMessage.get(i));
-                mAdapter.notifyItemInserted(i);
-            }
+            mList.add(mListIndex, newMessage.get(i));
+            mAdapter.notifyItemInserted(mListIndex);
+            mListIndex ++;
         }
     }
 
@@ -155,7 +180,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         setSpinner();
         setRecycler();
-        mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString()));
+        mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString(), true));
     }
 
     private void setSpinner(){
@@ -164,11 +189,13 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if(oldItem != null && oldItem.equals(newItem)) return;
-            getListData(newItem.toString());
+            getListData(newItem.toString(), false);
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
     }
+
+    private boolean isTargetItemVisible = false;
 
     private void setRecycler(){
         mAdapter = new NoticeListAdapter(mContext, mList, this::startActivity);
@@ -181,14 +208,32 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if(!mRecyclerView.canScrollVertically(1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && (mList != null && !mList.isEmpty()))
-                {
-                    //int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    getListData(_spinnerType.getText().toString());
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager != null) {
+                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
+                    int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
+
+                    // mList.size() - 5 위치의 아이템 확인
+                    int targetItemPosition = mList.size() - 5;
+
+//                    // 해당 위치의 아이템이 현재 화면에 보이는지 확인
+//                    if (targetItemPosition >= firstVisibleItemPosition && targetItemPosition <= lastVisibleItemPosition) {
+//                        LogMgr.i("Events");
+//                        getListData(_spinnerType.getText().toString(), false);
+//                    }
+
+                    if (!isTargetItemVisible && targetItemPosition >= firstVisibleItemPosition && targetItemPosition <= lastVisibleItemPosition) {
+                        // 처음으로 targetItemPosition이 화면에 보이면 getListData()를 호출하고 플래그를 true로 설정합니다.
+                        LogMgr.i("Events");
+                        getListData(_spinnerType.getText().toString(), false);
+                        isTargetItemVisible = true;
+                    } else if (targetItemPosition < firstVisibleItemPosition || targetItemPosition > lastVisibleItemPosition) {
+                        // targetItemPosition이 화면에서 사라지면 플래그를 리셋합니다.
+                        isTargetItemVisible = false;
+                    }
                 }
             }
         });

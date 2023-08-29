@@ -317,9 +317,9 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                     mTvDate.setText(_systemNoticeData.insertDate); // 작성날짜
                                     mTvContent.setText(_systemNoticeData.content); // 내용
 
-                                    if(_systemNoticeData.fileVOList != null && _systemNoticeData.fileVOList.size() > 0) {
+                                    if(_systemNoticeData.fileList != null && _systemNoticeData.fileList.size() > 0) {
 
-                                        for(FileData file : _systemNoticeData.fileVOList) {
+                                        for(FileData file : _systemNoticeData.fileList) {
                                             String mimeType = FileUtils.getMimeTypeFromExtension(file.extension);
                                             LogMgr.w(file.saveName + " / " + mimeType);
 

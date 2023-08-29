@@ -6,7 +6,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import kr.jeet.edu.student.db.PushMessage;
-import kr.jeet.edu.student.model.data.NoticeData;
 
 public class NoticeListResponse extends BaseResponse{
     @SerializedName("data")

@@ -69,7 +69,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         }
 
         //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
-        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
+        //holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
+        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : item.date);
         //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
         Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);

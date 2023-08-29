@@ -6,62 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activity.MenuScheduleActivity">
 
-<!--    <kr.jeet.edu.student.view.CustomAppbarLayout-->
-<!--        android:id="@+id/customAppbar"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_collapseMode="pin"-->
-<!--        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>-->
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar_layout"
+    <kr.jeet.edu.student.view.CustomAppbarLayout
+        android:id="@+id/customAppbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        tools:ignore="MissingConstraints">
-
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:contentScrim="@color/white">
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/white"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:contentInsetStartWithNavigation="0dp"
-                app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center">
-                    <ImageView
-                        android:id="@+id/btn_toolbar_back"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
-                        android:padding="16dp"
-                        android:src="@drawable/icon_back_nor"/>
-                    <TextView
-                        android:id="@+id/toolbar_title"
-                        android:layout_width="180dp"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:ellipsize="end"
-                        android:gravity="center"
-                        android:maxLines="1"
-                        android:text="@{vmAssist.assistModel.title}"
-                        android:textStyle="bold"
-                        android:textColor="@color/black"
-                        android:textSize="17sp"/>
-                </RelativeLayout>
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_collapseMode="pin"
+        app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested_scroll_view"

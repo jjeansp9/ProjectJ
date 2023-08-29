@@ -13,6 +13,9 @@ public interface PushMessageDao {
     @Query("SELECT * FROM tbl_push_message")
     List<PushMessage> getAllMessage();
 
+    @Query("SELECT * FROM tbl_push_message WHERE id <= :startSeq ORDER BY id DESC LIMIT :limit")
+    List<PushMessage> getReverseMessages(long startSeq, int limit);
+
     @Query("SELECT * FROM tbl_push_message WHERE id =:id")
     List<PushMessage> getMessageById(int id);
 

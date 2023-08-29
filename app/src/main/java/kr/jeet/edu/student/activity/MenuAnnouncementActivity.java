@@ -1,6 +1,8 @@
 package kr.jeet.edu.student.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -12,8 +14,10 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -103,7 +107,11 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mAdapter = new AnnouncementListAdapter(mContext, mList, this::startBoardDetailActivity);
         mRecyclerView.setAdapter(mAdapter);
         //mRecyclerView.setItemAnimator(null);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL);
+        Drawable dividerColor = new ColorDrawable(ContextCompat.getColor(this, R.color.line_2));
+
+        dividerItemDecoration.setDrawable(dividerColor);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
