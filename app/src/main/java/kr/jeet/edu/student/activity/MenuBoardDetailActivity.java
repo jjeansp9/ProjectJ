@@ -115,9 +115,12 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
                 dataType = TYPE_PUSH;
 
-            } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO)) {
+            } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
+                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
+                LogMgr.e("Event here1");
             }
 
             if (extraKey != null) {
@@ -126,11 +129,20 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     if (extraKey.equals(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
                         result = intent.getParcelableExtra(extraKey, AnnouncementData.class);
 
-                    } else {
+                    } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         result = intent.getParcelableExtra(extraKey, PushMessage.class);
+                    } else{
+                        LogMgr.e("Event here2");
                     }
+
                 } else {
-                    result = intent.getParcelableExtra(extraKey);
+
+                    if (extraKey.equals(IntentParams.PARAM_ANNOUNCEMENT_INFO) || extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
+                        result = intent.getParcelableExtra(extraKey);
+
+                    }else{
+                        LogMgr.e("Event here2");
+                    }
                 }
             }
 
@@ -140,10 +152,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
             } else if (result instanceof PushMessage) {
                 _pushData = (PushMessage) result;
                 //_currentSeq = ((PushMessage) result).connSeq;
-            }
+            }else{
 
-            if (intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
             }
         }
         LogMgr.w("currentData = " + _currentData);
@@ -198,12 +208,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
             if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
 
         }else if (dataType == TYPE_PUSH){
-            LogMgr.e(TAG, "push type connSeq: " + _pushData.connSeq+"");
             if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) requestNoticeDetail(_pushData.connSeq);
             else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) requestSystemDetail();
 
         }else if (dataType == TYPE_SYSTEM){
-            LogMgr.e(TAG, "system type connSeq: " + _pushData.connSeq+"");
             requestSystemDetail();
         }
     }
@@ -269,7 +277,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                     _currentData = data;
                                     initData();
 
-                                }else LogMgr.e(TAG+" DetailData is null");
+                                }else LogMgr.e(TAG+" requestNoticeDetail is null");
                             }
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -301,7 +309,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             showProgressDialog();
 
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getSystemNoticeDetail(_pushData.connSeq).enqueue(new Callback<SystemNoticeResponse>() {
+            mRetrofitApi.getSystemNoticeDetail(_currentSeq).enqueue(new Callback<SystemNoticeResponse>() {
                 @Override
                 public void onResponse(Call<SystemNoticeResponse> call, Response<SystemNoticeResponse> response) {
                     try {

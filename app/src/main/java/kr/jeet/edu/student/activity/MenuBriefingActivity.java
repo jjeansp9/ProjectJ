@@ -7,15 +7,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -25,7 +28,6 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -37,12 +39,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MenuBriefingActivity extends BaseActivity {
+public class MenuBriefingActivity extends BaseActivity implements MonthPickerDialog.OnDateSetListener {
 
     private final static String TAG = "BriefingActivity";
 
     private PowerSpinnerView mSpinnerCampus;
-    private TextView mTvYear, mTvMonth, mTvEmptyList;
+    private TextView mTvCalendar, mTvEmptyList;
     private RecyclerView mRecyclerBrf;
     private SwipeRefreshLayout mSwipeRefresh;
 
@@ -55,16 +57,12 @@ public class MenuBriefingActivity extends BaseActivity {
     private String _userType = "";
     private boolean selAllOrNot = false;
 
-    private Calendar calendar;
-    private SimpleDateFormat yearFormat, monthFormat;
+    Date _selectedDate = new Date();
+    SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
 
-    private String year = "";
-    private String month = "";
-
-    private static final int ADD = 1;
-    private static final int SUBTRACT = -1;
-    private static final String NEXT = "CLICK_NEXT";
-    private static final String PREVIOUS = "CLICK_PREVIOUS";
+    private int selYear = 0;
+    private int selMonth = 0;
+    private int position = -1;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -86,12 +84,10 @@ public class MenuBriefingActivity extends BaseActivity {
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
 
-        calendar = Calendar.getInstance();
-        yearFormat = new SimpleDateFormat("yyyy", Locale.KOREA);
-        monthFormat = new SimpleDateFormat("MM", Locale.KOREA);
+        Calendar calendar = Calendar.getInstance();
 
-        year = yearFormat.format(calendar.getTime());
-        month = monthFormat.format(calendar.getTime());
+        selYear = calendar.get(Calendar.YEAR);
+        selMonth = calendar.get(Calendar.MONTH);
 
         if (_userType.equals(Constants.MEMBER)) {
             selAllOrNot = false;
@@ -112,28 +108,20 @@ public class MenuBriefingActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    String strYear = "";
-    String strMonth = "";
-
     @Override
     void initView() {
-        findViewById(R.id.layout_brf_year_month).setOnClickListener(this);
-        findViewById(R.id.img_brf_back).setOnClickListener(this);
-        findViewById(R.id.img_brf_next).setOnClickListener(this);
+        findViewById(R.id.btn_brf_previous).setOnClickListener(this);
+        findViewById(R.id.btn_brf_next).setOnClickListener(this);
 
         mTvEmptyList = findViewById(R.id.tv_brf_empty_list);
-        mTvYear = findViewById(R.id.tv_brf_year);
-        mTvMonth = findViewById(R.id.tv_brf_month);
+        mTvCalendar = findViewById(R.id.tv_brf_calendar);
 
         mSpinnerCampus = findViewById(R.id.spinner_brf_campus);
         mRecyclerBrf = findViewById(R.id.recycler_briefing);
         mSwipeRefresh = findViewById(R.id.refresh_layout);
 
-        strYear = year + getString(R.string.year);
-        strMonth = month + getString(R.string.month);
-
-        mTvYear.setText(strYear);
-        mTvMonth.setText(strMonth);
+        mTvCalendar.setOnClickListener(this);
+        mTvCalendar.setText(_dateFormat.format(_selectedDate));
 
         setSpinner();
         setRecycler();
@@ -173,8 +161,11 @@ public class MenuBriefingActivity extends BaseActivity {
         mRecyclerBrf.addItemDecoration(Utils.setDivider(mContext));
     }
 
-    private void startDetailActivity(BriefingData item){
+    private void startDetailActivity(BriefingData item, int position){
         if (item != null){
+
+            this.position = position;
+
             Intent intent = new Intent(mContext, MenuBriefingDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_BRIEFING_INFO, item);
             resultLauncher.launch(intent);
@@ -185,63 +176,43 @@ public class MenuBriefingActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.layout_brf_year_month:
-                Utils.yearMonthPicker(mContext, (month, year) -> selectYearMonth(year, month+1), Integer.parseInt(year), Integer.parseInt(month)-1);
+            case R.id.tv_brf_calendar:
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(_selectedDate);
+                Utils.yearMonthPicker(mContext, this::onDateSet, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
                 break;
 
-            case R.id.img_brf_back:
-                nextOrPrevious(SUBTRACT, PREVIOUS);
+            case R.id.btn_brf_previous:
+                if (selYear <= Constants.PICKER_MIN_YEAR && selMonth <= 0) break;
+                navigateMonth(-1);
                 break;
 
-            case R.id.img_brf_next:
-                nextOrPrevious(ADD, NEXT);
+            case R.id.btn_brf_next:
+                if (selYear <= Constants.PICKER_MAX_YEAR && selMonth >= 11) break;
+                navigateMonth(1);
                 break;
         }
     }
 
-    private void selectYearMonth(int year, int month){
+    private void navigateMonth(int addMonth){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(_selectedDate);
+        calendar.add(Calendar.MONTH, addMonth);
+        onDateSet(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+    }
+
+    @Override
+    public void onDateSet(int month, int year) {
+        Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month-1);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        _selectedDate = calendar.getTime();
 
-        Locale currentLocale = Locale.getDefault();
+        selYear = calendar.get(Calendar.YEAR);
+        selMonth = calendar.get(Calendar.MONTH);
 
-        this.year = String.valueOf(year);
-        this.month = String.format(currentLocale, "%02d", month);
-
-        strYear = this.year + getString(R.string.year);
-        strMonth = this.month + getString(R.string.month);
-
-        mTvYear.setText(strYear);
-        mTvMonth.setText(strMonth);
-
-        requestBrfList(_acaCode, selAllOrNot);
-    }
-
-    private void nextOrPrevious(int num, String btnType){
-        if (btnType.equals(PREVIOUS)){
-            if (Integer.parseInt(yearFormat.format(calendar.getTime())) <= Constants.PICKER_MIN_YEAR &&
-                    Integer.parseInt(monthFormat.format(calendar.getTime())) == 1) {
-                return;
-            }
-        }
-        if (btnType.equals(NEXT)){
-            if (Integer.parseInt(yearFormat.format(calendar.getTime())) >= Constants.PICKER_MAX_YEAR &&
-                    Integer.parseInt(monthFormat.format(calendar.getTime())) == 12 ) {
-                return;
-            }
-        }
-
-        calendar.add(Calendar.MONTH, num);
-
-        year = yearFormat.format(calendar.getTime());
-        month = monthFormat.format(calendar.getTime());
-
-        strYear = year + getString(R.string.year);
-        strMonth = month + getString(R.string.month);
-
-        mTvYear.setText(strYear);
-        mTvMonth.setText(strMonth);
-
+        mTvCalendar.setText(_dateFormat.format(_selectedDate));
         requestBrfList(_acaCode, selAllOrNot);
     }
 
@@ -249,13 +220,17 @@ public class MenuBriefingActivity extends BaseActivity {
 
     private void requestBrfList(String acaCode, boolean all){
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getBriefingList(acaCode, year, month).enqueue(new Callback<BriefingResponse>() {
+            RetrofitClient.getApiInterface().getBriefingList(acaCode, selYear, selMonth+1).enqueue(new Callback<BriefingResponse>() {
                 @Override
                 public void onResponse(Call<BriefingResponse> call, Response<BriefingResponse> response) {
                     if (mList.size() > 0){
-                        for (int i = mList.size() - 1; i >= 0; i--) {
-                            mList.remove(i);
-                            mAdapter.notifyItemRemoved(i);
+                        if (position != -1){
+                        }else{
+                            for (int i = mList.size() - 1; i >= 0; i--) {
+                                mList.remove(i);
+                                mAdapter.notifyItemRemoved(i);
+                            }
+                            position = -1;
                         }
                         index = 0;
                     }
@@ -266,14 +241,21 @@ public class MenuBriefingActivity extends BaseActivity {
 
                                 List<BriefingData> list = response.body().data;
                                 if (list != null && !list.isEmpty()) {
-                                    //mList.addAll(list);
-                                    for (BriefingData item : list) {
-                                        mList.add(index, item);
-                                        mAdapter.notifyItemInserted(index);
-                                        index++;
-                                    }
+                                    if (position != -1){
+                                        mList.set(position, list.get(position));
+                                        mAdapter.notifyItemChanged(position);
+                                        new Handler().postDelayed(() -> mRecyclerBrf.scrollToPosition(position), 100);
 
-                                    for (BriefingData data : mList) data.campusAll = all;
+                                    }else{
+                                        for (BriefingData item : list) {
+                                            mList.add(index, item);
+                                            mAdapter.notifyItemInserted(index);
+                                            index++;
+                                        }
+
+                                        for (BriefingData data : mList) data.campusAll = all;
+                                        position = -1;
+                                    }
                                 }
                             }
                         } else {

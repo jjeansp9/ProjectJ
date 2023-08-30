@@ -494,7 +494,6 @@ public class LoginActivity extends BaseActivity {
                                     if (getData.size() == 1){ // 자녀가 1명인 경우
                                         int lastIndex = getData.size() - 1;
                                         goMain(getData.get(lastIndex));
-                                        PreferenceUtil.setStuGender(mContext, getData.get(lastIndex).gender);
 
                                     }else{
                                         Intent intent = new Intent(mContext, SelectStudentActivity.class);
@@ -550,10 +549,10 @@ public class LoginActivity extends BaseActivity {
 
     public void goMain(ChildStudentInfo data) {
         if (data != null){
-
             PreferenceUtil.setStuSeq(mContext, data.seq);
             PreferenceUtil.setStName(mContext, data.stName);
             PreferenceUtil.setUserSTCode(mContext, data.stCode);
+            PreferenceUtil.setStuGender(mContext, data.gender);
 
             Intent intent = new Intent(mContext, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

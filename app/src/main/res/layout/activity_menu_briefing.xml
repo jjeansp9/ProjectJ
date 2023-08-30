@@ -45,85 +45,135 @@
             android:focusable="true"
             android:background="@drawable/bg_campus_spinner"/>
 
-        <ImageView
-            android:id="@+id/img_brf_back"
-            android:layout_width="@dimen/calendar_arrow_size"
+<!--        <ImageView-->
+<!--            android:id="@+id/img_brf_back"-->
+<!--            android:layout_width="@dimen/calendar_arrow_size"-->
+<!--            android:layout_height="@dimen/calendar_arrow_size"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/layout_brf_year_month"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginEnd="12dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:src="@drawable/bt_month_back_nor"-->
+<!--            android:stateListAnimator="@xml/animate_button_push"/>-->
+
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/layout_brf_year_month"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:stateListAnimator="@xml/animate_button_push"-->
+<!--            android:padding="8dp">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_brf_year"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/tv_brf_month"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="@dimen/font_size_large"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_brf_month"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toEndOf="@id/tv_brf_year"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                android:layout_marginStart="6dp"-->
+<!--                android:gravity="center"-->
+<!--                android:textSize="@dimen/font_size_large"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
+
+<!--            <ImageView-->
+<!--                android:layout_width="29dp"-->
+<!--                android:layout_height="24dp"-->
+<!--                android:layout_marginStart="@dimen/layout_margin_8"-->
+<!--                android:src="@drawable/bt_calendar_nor"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@id/tv_brf_month"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/img_brf_next"-->
+<!--            android:layout_width="@dimen/calendar_arrow_size"-->
+<!--            android:layout_height="@dimen/calendar_arrow_size"-->
+<!--            app:layout_constraintStart_toEndOf="@id/layout_brf_year_month"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
+<!--            android:layout_marginTop="8dp"-->
+<!--            android:layout_marginStart="12dp"-->
+<!--            android:padding="4dp"-->
+<!--            android:src="@drawable/bt_month_next_nor"-->
+<!--            android:stateListAnimator="@xml/animate_button_push"/>-->
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_brf_previous"
             android:layout_height="@dimen/calendar_arrow_size"
-            app:layout_constraintEnd_toStartOf="@id/layout_brf_year_month"
-            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
+            android:layout_width="@dimen/calendar_arrow_size"
+            app:layout_constraintEnd_toStartOf="@id/tv_brf_calendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_brf_campus"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
             android:padding="4dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/bt_month_back_nor"
+            android:background="@android:color/transparent"
             android:stateListAnimator="@xml/animate_button_push"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_brf_year_month"
+        <TextView
+            android:id="@+id/tv_brf_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_brf_campus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"
-            android:layout_marginTop="8dp"
-            android:stateListAnimator="@xml/animate_button_push"
-            android:padding="8dp">
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:drawableEnd="@drawable/bt_calendar_nor"
+            android:drawablePadding="8dp"
+            android:padding="8dp"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/font_size_large"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:stateListAnimator="@xml/animate_button_push"/>
 
-            <TextView
-                android:id="@+id/tv_brf_year"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@id/tv_brf_month"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:gravity="center"
-                android:textSize="@dimen/font_size_large"
-                android:textColor="@color/font_color_default"
-                android:textAppearance="@style/CalendarHeaderTextAppearance"/>
-
-            <TextView
-                android:id="@+id/tv_brf_month"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toEndOf="@id/tv_brf_year"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="6dp"
-                android:gravity="center"
-                android:textSize="@dimen/font_size_large"
-                android:textColor="@color/font_color_default"
-                android:textAppearance="@style/CalendarHeaderTextAppearance"/>
-
-            <ImageView
-                android:layout_width="29dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="@dimen/layout_margin_8"
-                android:src="@drawable/bt_calendar_nor"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_brf_month"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <ImageView
-            android:id="@+id/img_brf_next"
-            android:layout_width="@dimen/calendar_arrow_size"
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_brf_next"
             android:layout_height="@dimen/calendar_arrow_size"
-            app:layout_constraintStart_toEndOf="@id/layout_brf_year_month"
-            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="@dimen/calendar_arrow_size"
+            app:layout_constraintStart_toEndOf="@id/tv_brf_calendar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/spinner_brf_campus"
+            android:layout_marginTop="12dp"
+            app:layout_constraintHorizontal_chainStyle="spread"
             android:padding="4dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/bt_month_next_nor"
+            android:background="@android:color/transparent"
             android:stateListAnimator="@xml/animate_button_push"/>
 
         <View
             android:id="@+id/line_top"
             android:layout_width="match_parent"
             android:layout_height="3dp"
-            app:layout_constraintTop_toBottomOf="@id/layout_brf_year_month"
+            app:layout_constraintTop_toBottomOf="@id/tv_brf_calendar"
             android:layout_marginHorizontal="@dimen/line_red"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="12dp"
             android:background="@color/red"/>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

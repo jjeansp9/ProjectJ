@@ -68,12 +68,14 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private int _currentSeq = -1; //PushMessage 용
 
+    boolean added = false;
+
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if(result.getResultCode() != RESULT_CANCELED) {
             Intent intent = result.getData();
             if(intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
-                boolean added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
+                added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
                 if(added) requestBrfDetail(mInfo.seq);
             }
@@ -93,9 +95,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();
-        setResult(RESULT_OK, intent);
+        if (added) setResult(RESULT_OK, intent);
         finish();
-        Log.e(TAG, "Event");
     }
 
     private void initIntentData(){

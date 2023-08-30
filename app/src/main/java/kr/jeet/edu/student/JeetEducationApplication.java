@@ -2,6 +2,8 @@ package kr.jeet.edu.student;
 
 import android.app.Application;
 
+import com.jakewharton.threetenabp.AndroidThreeTen;
+
 import kr.jeet.edu.student.db.JeetDatabase;
 public class JeetEducationApplication extends Application {
 
@@ -9,6 +11,8 @@ public class JeetEducationApplication extends Application {
     public void onCreate() {
         super.onCreate();
         JeetDatabase.getInstance(this);
+        //ThreeTenABP 초기화
+        AndroidThreeTen.init(this);
     }
 
     @Override

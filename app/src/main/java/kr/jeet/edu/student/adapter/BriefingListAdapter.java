@@ -31,7 +31,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
 
     private final static String TAG = "BrfListAdapter";
 
-    public interface ItemClickListener{ public void onItemClick(BriefingData item); }
+    public interface ItemClickListener{ public void onItemClick(BriefingData item, int position); }
 
     private Context mContext;
     private List<BriefingData> mList;
@@ -164,7 +164,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position), position);
             });
         }
     }

@@ -5,10 +5,13 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import kotlin.jvm.Synchronized;
+import kr.jeet.edu.student.utils.Converters;
 
 @Database(entities = {PushMessage.class}, version = 1, exportSchema = false)
+@TypeConverters({Converters.class})
 public abstract class JeetDatabase extends RoomDatabase {
     private static JeetDatabase JeetDBInstance = null;
     public abstract PushMessageDao pushMessageDao();

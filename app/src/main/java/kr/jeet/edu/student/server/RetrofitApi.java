@@ -177,7 +177,7 @@ public interface RetrofitApi {
 
     // 설명회 목록 조회
     @GET("pts")
-    Call<BriefingResponse> getBriefingList(@Query("acaCode") String acaCode, @Query("year") String year, @Query("month") String month);
+    Call<BriefingResponse> getBriefingList(@Query("acaCode") String acaCode, @Query("year") int year, @Query("month") int month);
 
     // 설명회 글 상세보기
     @GET("pt/{ptSeq}")

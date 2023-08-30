@@ -21,13 +21,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeFormatterBuilder;
+import org.threeten.bp.temporal.ChronoField;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.NoticeListAdapter;
@@ -54,14 +61,23 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     Date _selectedDate = new Date();
     SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
-    SimpleDateFormat _monthFormat = new SimpleDateFormat("M", Locale.KOREA);
+    SimpleDateFormat _yearFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY, Locale.KOREA);
+    SimpleDateFormat _monthFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_MM, Locale.KOREA);
 
     private String[] noticeType;
     private String allType = "";
     private String systemType = "";
     private String attendanceType = "";
 
+    private String selYear = "";
+    private String selMonth = "";
+
     private boolean isTargetItemVisible = false;
+
+    private static final int PAGE_SIZE = 20;
+    private long currentMaxSeq = 0;
+    private int systemCnt = 0;
+    private int attendanceCnt = 0;
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
@@ -87,7 +103,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         attendanceType = noticeType[1];
 
         new Thread(() -> {
-            currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
+            //currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
             mHandler.sendEmptyMessage(CMD_GET_LIST);
         }).start();
 
@@ -96,98 +112,25 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         initView();
     }
 
-    private static final int PAGE_SIZE = 20;
-    private long currentMaxSeq = 0;
-    private int systemCnt = 0;
-    private int attendanceCnt = 0;
-
-
     private void getListData(String selType, boolean isUpdate){
         new Thread(() -> {
-            if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
+            //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
 
-            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getReverseMessages(currentMaxSeq, PAGE_SIZE);
-            List<PushMessage> items = JeetDatabase.getInstance(mContext).pushMessageDao().getReverseAllMessage(currentMaxSeq);
-            List<PushMessage> newMessage = new ArrayList<>(item);
+            LogMgr.i("year", selYear);
+            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
+            List<PushMessage> newMessage = new ArrayList<>();
 
-            if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1;
-
-//            if (selSpin){
-//                for (PushMessage msg : items){
-//                    LogMgr.w(TAG,
-//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
-//                                    "acaCode : " + msg.acaCode + "\n" +
-//                                    "date : " + msg.date + "\n" +
-//                                    "body : " + msg.body + "\n" +
-//                                    "id : " + msg.id + "\n" +
-//                                    "pushId : " + msg.pushId + "\n" +
-//                                    "title : " + msg.title + "\n" +
-//                                    "connSeq : " + msg.connSeq + "\n" +
-//                                    "isRead : " + msg.isRead + "\n"
-//                    );
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//                    Date date = null;
-//
-//                    try { date = dateFormat.parse(msg.date); }
-//                    catch (ParseException e) { e.printStackTrace(); }
-//
-//                    Calendar calendar = Calendar.getInstance();
-//                    if (date != null) calendar.setTime(date);
-//
-//                    int month = Integer.parseInt(selMonth)-1;
-//
-//                    if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
-//
-//                        if (selType.equals(systemType)) {
-//                            LogMgr.i("spinnerEvent1", selType+","+systemType);
-//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
-//                                if (systemCnt < 5){
-//                                    newMessage.add(msg);
-//                                    systemCnt ++;
-//                                }
-//                            }
-//
-//                        }else if (selType.equals(attendanceType)) {
-//                            LogMgr.i("spinnerEvent2", selType+","+attendanceType);
-//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) {
-//                                if (attendanceCnt < 10){
-//                                    newMessage.add(msg);
-//                                    attendanceCnt ++;
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//                selSpin = false;
-//            }else{
-//                for (PushMessage msg : item){
-//
-//                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//                    Date date = null;
-//
-//                    try { date = dateFormat.parse(msg.date); }
-//                    catch (ParseException e) { e.printStackTrace(); }
-//
-//                    Calendar calendar = Calendar.getInstance();
-//                    if (date != null) calendar.setTime(date);
-//
-//                    int month = Integer.parseInt(selMonth)-1;
-//
-//                    if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
-//
-//                        if (selType.equals(systemType)) {
-//                            LogMgr.i("spinnerEvent1", selType+","+systemType);
-//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) newMessage.add(msg);
-//
-//                        }else if (selType.equals(attendanceType)) {
-//                            LogMgr.i("spinnerEvent2", selType+","+attendanceType);
-//                            if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) newMessage.add(msg);
-//                        }
-//                    }
-//                }
-//            }
+            //if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1;
 
             for (PushMessage msg : item){
+
+                Map<String, String> type = new HashMap<>();
+                type.put(systemType, FCMManager.MSG_TYPE_NOTICE);
+                type.put(attendanceType, FCMManager.MSG_TYPE_PT);
+
+                String mappedType = type.get(selType);
+                if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +
                                 "acaCode : " + msg.acaCode + "\n" +
@@ -199,42 +142,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                                 "connSeq : " + msg.connSeq + "\n" +
                                 "isRead : " + msg.isRead + "\n"
                 );
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-//                Date date = null;
-//
-//                try { date = dateFormat.parse(msg.date); }
-//                catch (ParseException e) { e.printStackTrace(); }
-//
-//                Calendar calendar = Calendar.getInstance();
-//                if (date != null) calendar.setTime(date);
-//
-//                int month = Integer.parseInt(selMonth)-1;
-//
-//                if (month == calendar.get(Calendar.MONTH)  && mTvCalendar.getText().toString().contains(Integer.toString(calendar.get(Calendar.YEAR)))){
-//
-//                    if (selType.equals(systemType)) {
-//                        LogMgr.i("spinnerEvent1", selType+","+systemType);
-//                        if (msg.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
-//                            if (systemCnt < 20){
-//                                newMessage.add(msg);
-//                                systemCnt ++;
-//                            }
-//                        }
-//
-//                    }else if (selType.equals(attendanceType)) {
-//                        LogMgr.i("spinnerEvent2", selType+","+attendanceType);
-//                        if (msg.pushType.equals(FCMManager.MSG_TYPE_PT)) {
-//                            if (attendanceCnt < 10){
-//                                newMessage.add(msg);
-//                                attendanceCnt ++;
-//                            }
-//                        }
-//                    }
-//                }
-                newMessage.add(msg);
             }
-
-            // TODO : 페이징처리 , 전체 항목은 제거
 
             runOnUiThread(() -> {
                 updateList(newMessage, isUpdate);
@@ -254,12 +162,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
         }
 
-        mListIndex = mList.size();
+        //mListIndex = mList.size();
         for (int i = 0; i < newMessage.size(); i++) {
-            LogMgr.i("spinnerEvent3", newMessage.get(i).pushType + ", index:" + i);
-            mList.add(mListIndex, newMessage.get(i));
-            mAdapter.notifyItemInserted(mListIndex);
-            mListIndex ++;
+            mList.add(i, newMessage.get(i));
+            mAdapter.notifyItemInserted(i);
+            //mListIndex ++;
         }
     }
 
@@ -285,6 +192,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         mTvCalendar.setOnClickListener(this);
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
+        selYear= _yearFormat.format(_selectedDate);
         selMonth= _monthFormat.format(_selectedDate);
 
         setSpinner();
@@ -292,14 +200,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString(), true));
     }
 
-    private boolean selSpin = false;
-
     private void setSpinner(){
         _spinnerType.setText(systemType);
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            selSpin = true;
             getListData(_spinnerType.getText().toString(), true);
         });
 
@@ -315,30 +220,30 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         dividerItemDecoration.setDrawable(dividerColor);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null) {
-                    int firstItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
-                    int lastItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
-
-                    // mList.size() - 5 위치의 아이템 확인
-                    int targetItemPosition = mList.size() - 5;
-
-                    if (!isTargetItemVisible && targetItemPosition >= firstItemPosition && targetItemPosition <= lastItemPosition) {
-                        getListData(_spinnerType.getText().toString(), false);
-                        isTargetItemVisible = true;
-                        LogMgr.i("getListData");
-
-                    } else if (targetItemPosition < firstItemPosition || targetItemPosition > lastItemPosition) {
-                        isTargetItemVisible = false;
-                    }
-                }
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                if (layoutManager != null) {
+//                    int firstItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
+//                    int lastItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
+//
+//                    // mList.size() - 5 위치의 아이템 확인
+//                    int targetItemPosition = mList.size() - 5;
+//
+//                    if (!isTargetItemVisible && targetItemPosition >= firstItemPosition && targetItemPosition <= lastItemPosition) {
+//                        getListData(_spinnerType.getText().toString(), false);
+//                        isTargetItemVisible = true;
+//                        LogMgr.i("getListData");
+//
+//                    } else if (targetItemPosition < firstItemPosition || targetItemPosition > lastItemPosition) {
+//                        isTargetItemVisible = false;
+//                    }
+//                }
+//            }
+//        });
     }
 
     private void startActivity(PushMessage item){
@@ -360,11 +265,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 calendar.setTime(_selectedDate);
                 Utils.yearMonthPicker(mContext, this::onDateSet, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH));
                 break;
+
             case R.id.btn_notice_previous:
+                if (Integer.parseInt(selYear) <= Constants.PICKER_MIN_YEAR && Integer.parseInt(selMonth) <= 1) break;
                 navigateMonth(-1);
                 break;
 
             case R.id.btn_notice_next:
+                if (Integer.parseInt(selYear) <= Constants.PICKER_MAX_YEAR && Integer.parseInt(selMonth) >= 12) break;
                 navigateMonth(1);
                 break;
         }
@@ -377,17 +285,16 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         onDateSet(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
     }
 
-    private String selMonth = "";
-
     @Override
     public void onDateSet(int month, int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
         _selectedDate = calendar.getTime();
 
+        selYear = _yearFormat.format(_selectedDate);
         selMonth = _monthFormat.format(_selectedDate);
-        LogMgr.e(TAG + "Date", _monthFormat.format(_selectedDate));
 
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
         getListData(_spinnerType.getText().toString(), true);

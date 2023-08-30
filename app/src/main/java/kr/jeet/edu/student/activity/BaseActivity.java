@@ -41,32 +41,34 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected void showProgressDialog()
     {
-        runOnUiThread(() -> showProgressDialog(getString(R.string.requesting), null));
+        showProgressDialog(getString(R.string.requesting), null);
     }
 
     protected void showProgressDialog(String msg)
     {
 
-        runOnUiThread(() -> showProgressDialog(msg, null));
+        showProgressDialog(msg, null);
     }
 
     protected void showProgressDialog(DialogInterface.OnCancelListener listener)
     {
-        runOnUiThread(() -> showProgressDialog(getString(R.string.requesting), listener));
+        showProgressDialog(getString(R.string.requesting), listener);
     }
 
     protected void showProgressDialog(String msg, DialogInterface.OnCancelListener listener) {
-        if (mProgressDialog == null){
-            View view = getLayoutInflater().inflate(R.layout.dialog_progressbar, null, false);
-            TextView txt = view.findViewById(R.id.text);
-            txt.setText(msg);
+        runOnUiThread(() -> {
+            if (mProgressDialog == null){
+                View view = getLayoutInflater().inflate(R.layout.dialog_progressbar, null, false);
+                TextView txt = view.findViewById(R.id.text);
+                txt.setText(msg);
 
-            mProgressDialog = new AlertDialog.Builder(this)
-                    .setCancelable(false)
-                    .setView(view)
-                    .create();
-            mProgressDialog.show();
-        }
+                mProgressDialog = new AlertDialog.Builder(this)
+                        .setCancelable(false)
+                        .setView(view)
+                        .create();
+                mProgressDialog.show();
+            }
+        });
 /*
         Window window = mProgressDialog.getWindow();
         if(window != null) {

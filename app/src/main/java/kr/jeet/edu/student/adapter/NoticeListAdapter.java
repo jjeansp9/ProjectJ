@@ -14,16 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Optional;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.NoticeListData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.utils.Converters;
 import kr.jeet.edu.student.utils.Utils;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
@@ -39,6 +43,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         this.mList = mList;
         this._listener = _listener;
     }
+
+    SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm, Locale.KOREA);
 
     @NonNull
     @Override
@@ -70,7 +76,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
         //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
         //holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
-        holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : item.date);
+        holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
         //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
         Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
