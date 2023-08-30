@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.constraintlayout.widget.Guideline;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -95,7 +93,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                         String url = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;
                         url = FileUtils.replaceMultipleSlashes(url);
 
-                        Utils.loadImage(mContext, url, holder.imgBrf);
+                        FileUtils.loadImage(mContext, url, holder.imgBrf);
                         LogMgr.e(TAG+" UrlTest", url);
                         break;
                     }else{

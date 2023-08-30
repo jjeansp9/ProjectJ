@@ -280,17 +280,6 @@ public class Utils {
         return number;
     }
 
-    public static void loadImage(Context mContext, String url, ImageView view){
-        Glide.with(mContext)
-                .load(url)
-                //.thumbnail(0.2f)
-                .centerCrop()
-                //.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .error(R.drawable.ic_vector_image_error)
-                .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
-                .into(view);
-    }
-
     /**
     * 리스트뷰 구분선에 margin을 주기위한 customDivider
     * */

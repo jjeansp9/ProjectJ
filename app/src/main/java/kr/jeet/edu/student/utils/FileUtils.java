@@ -13,6 +13,10 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,10 +26,12 @@ import java.io.OutputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.model.data.AttachFileData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.server.RetrofitApi;
+import kr.jeet.edu.student.view.DrawableAlwaysCrossFadeFactory;
 
 public class FileUtils {
 
@@ -341,6 +347,17 @@ public class FileUtils {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         downloadManager.enqueue(request);
 
+    }
+
+    public static void loadImage(Context mContext, String url, ImageView view){
+        Glide.with(mContext)
+                .load(url)
+                //.thumbnail(0.2f)
+                .centerCrop()
+                //.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .error(R.drawable.ic_vector_image_error)
+                .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
+                .into(view);
     }
 //    public static void downloadFile(Context context, String fileUrl, String destinationPath, final onDownloadListener callback) {
 //        if(RetrofitClient.getInstance() != null) {

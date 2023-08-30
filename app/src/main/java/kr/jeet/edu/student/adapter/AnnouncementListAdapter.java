@@ -11,19 +11,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.List;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.activity.LoginActivity;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
-import kr.jeet.edu.student.utils.Utils;
-import kr.jeet.edu.student.view.DrawableAlwaysCrossFadeFactory;
 
 public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementListAdapter.ViewHolder> {
 
@@ -66,7 +62,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                         String url = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;
                         url = FileUtils.replaceMultipleSlashes(url);
 
-                        Utils.loadImage(mContext, url, holder.imgAnnouncement);
+                        FileUtils.loadImage(mContext, url, holder.imgAnnouncement);
                         LogMgr.e(TAG+" UrlTest", url);
                         break;
                     }else{
