@@ -63,10 +63,19 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private int selYear = 0;
     private int selMonth = 0;
     private int position = -1;
+    private boolean added = false;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
-        if(result.getResultCode() != RESULT_CANCELED) requestBrfList(_acaCode, selAllOrNot);
+        Intent intent = result.getData();
+        if(result.getResultCode() != RESULT_CANCELED) {
+            if(intent != null && intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
+                added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
+
+                if(added) requestBrfList(_acaCode, selAllOrNot);
+            }
+
+        }
     });
 
     @Override
@@ -219,18 +228,17 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     int index = 0;
 
     private void requestBrfList(String acaCode, boolean all){
+        LogMgr.e("Position",position+"");
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getBriefingList(acaCode, selYear, selMonth+1).enqueue(new Callback<BriefingResponse>() {
                 @Override
                 public void onResponse(Call<BriefingResponse> call, Response<BriefingResponse> response) {
                     if (mList.size() > 0){
-                        if (position != -1){
-                        }else{
+                        if (!added){
                             for (int i = mList.size() - 1; i >= 0; i--) {
                                 mList.remove(i);
                                 mAdapter.notifyItemRemoved(i);
                             }
-                            position = -1;
                         }
                         index = 0;
                     }
@@ -241,10 +249,10 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
                                 List<BriefingData> list = response.body().data;
                                 if (list != null && !list.isEmpty()) {
-                                    if (position != -1){
+                                    if (added){
                                         mList.set(position, list.get(position));
                                         mAdapter.notifyItemChanged(position);
-                                        new Handler().postDelayed(() -> mRecyclerBrf.scrollToPosition(position), 100);
+                                        position = -1;
 
                                     }else{
                                         for (BriefingData item : list) {
@@ -252,10 +260,9 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                             mAdapter.notifyItemInserted(index);
                                             index++;
                                         }
-
-                                        for (BriefingData data : mList) data.campusAll = all;
-                                        position = -1;
                                     }
+
+                                    for (BriefingData data : mList) data.campusAll = all;
                                 }
                             }
                         } else {

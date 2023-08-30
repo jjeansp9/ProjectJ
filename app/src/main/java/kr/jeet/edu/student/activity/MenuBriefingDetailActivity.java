@@ -74,7 +74,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         LogMgr.w("result =" + result);
         if(result.getResultCode() != RESULT_CANCELED) {
             Intent intent = result.getData();
-            if(intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
+            if(intent != null && intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
                 added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
                 if(added) requestBrfDetail(mInfo.seq);
@@ -95,7 +95,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Intent intent = getIntent();
-        if (added) setResult(RESULT_OK, intent);
+        if (added) {
+            intent.putExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, added);
+            setResult(RESULT_OK, intent);
+        }
         finish();
     }
 
