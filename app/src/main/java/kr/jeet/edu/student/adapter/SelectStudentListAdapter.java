@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.SelectStudentActivity;
@@ -46,6 +50,17 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             String itemClass = "";
             if (item.stGrade.equals(item.clstName)) itemClass = item.deptName + " / " + item.clstName;
             else itemClass = item.deptName + " " + item.stGrade + " / " + item.clstName;
+
+            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+            SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+
+            try {
+                Date birthDate = originalFormat.parse(item.birth);
+                if (birthDate != null) item.birth = targetFormat.format(birthDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             holder.tvName.setText(item.stName);
             holder.tvBirth.setText(item.birth);

@@ -360,25 +360,11 @@ public class MenuStudentInfoActivity extends BaseActivity {
                                 if (getData.stGrade.equals("")) mTvStGrade.setVisibility(View.GONE);
                                 if (getData.clstName.equals("")) mTvClstName.setVisibility(View.GONE);
 
-                                String phoneNumber = "";
-                                String parentPhoneNumber = "";
-
-                                if (getData.phoneNumber.length() == 11) {
-                                    phoneNumber =
-                                            Utils.formatNum(getData.phoneNumber).equals("") ? PreferenceUtil.getStuPhoneNum(mContext) : Utils.formatNum(getData.phoneNumber);
-                                }
-                                else phoneNumber = getData.phoneNumber;
-
-                                if (getData.parentPhoneNumber.length() == 11) {
-                                    phoneNumber =
-                                            Utils.formatNum(getData.parentPhoneNumber).equals("") ? PreferenceUtil.getParentPhoneNum(mContext) : Utils.formatNum(getData.parentPhoneNumber);
-                                }
-                                else parentPhoneNumber = getData.parentPhoneNumber;
+                                String phoneNumber = formatPhoneNum(getData.phoneNumber, PreferenceUtil.getStuPhoneNum(mContext));
+                                String parentPhoneNumber = formatPhoneNum(getData.parentPhoneNumber, PreferenceUtil.getParentPhoneNum(mContext));
 
                                 mTvStuPhoneNum.setText(phoneNumber);
                                 mTvParentPhoneNum.setText(parentPhoneNumber);
-
-                                LogMgr.e("phoneTest", getData.phoneNumber.length() + ", " + getData.parentPhoneNumber.length());
                             }
 
                         }else{
@@ -399,5 +385,13 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    public String formatPhoneNum(String phoneNum, String defaultNum){
+        if (phoneNum != null && !phoneNum.isEmpty()){
+            if (phoneNum.length() == 11) return Utils.formatNum(phoneNum).equals("") ? defaultNum : Utils.formatNum(phoneNum);
+            else return phoneNum;
+        }
+        else return "";
     }
 }

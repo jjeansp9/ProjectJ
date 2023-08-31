@@ -125,34 +125,12 @@ public class SelectStudentActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<ChildStudentInfo> data = response.body().data;
+                            if (data.size() > 0 && data != null) mList.addAll(data);
+                        }else{}
 
-                            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-                            SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-
-                            for (ChildStudentInfo item : data) {
-                                try {
-                                    Date birthDate = originalFormat.parse(item.birth);
-                                    if (birthDate != null) {
-                                        item.birth = targetFormat.format(birthDate);
-                                    }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                            if (data.size() > 0 && data != null){
-                                mList.addAll(data);
-                            }
-
-                        }else{
-
-                        }
                     }catch (Exception e) { LogMgr.e(TAG + "requestChildStudentInfo() Exception : ", e.getMessage()); }
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    if (mList.isEmpty()){
-                        LogMgr.d("Event");
-                    }
                     tvEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     hideProgressDialog();
                 }
@@ -174,7 +152,6 @@ public class SelectStudentActivity extends BaseActivity {
     }
 
     public void goMain(int position) {
-
         PreferenceUtil.setStuSeq(mContext, mList.get(position).seq);
         PreferenceUtil.setStName(mContext, mList.get(position).stName);
         PreferenceUtil.setUserSTCode(mContext, mList.get(position).stCode);
