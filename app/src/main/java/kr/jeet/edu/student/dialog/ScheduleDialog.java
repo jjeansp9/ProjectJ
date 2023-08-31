@@ -58,11 +58,11 @@ public class ScheduleDialog extends Dialog {
     }
 
     public void setData(ScheduleData item){
-        tvTitle.setText(TextUtils.isEmpty(item.stDate) ? "" : item.stDate);
-        tvCampus.setText(TextUtils.isEmpty(item.stClass) ? "" : item.stClass);
+        tvTitle.setText(TextUtils.isEmpty(item.year+"") ? "" : item.year+"");
+        tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
         //tvDate.setText(TextUtils.isEmpty(item) ? "" : item);
         //tvClass.setText(TextUtils.isEmpty(item) ? "" : item);
-        tvSchedule.setText(TextUtils.isEmpty(item.stContent) ? "" : item.stContent);
+        tvSchedule.setText(TextUtils.isEmpty(item.content) ? "" : item.content);
     }
 
     public void setTitle(String str){ tvTitle.setText(TextUtils.isEmpty(str) ? "" : str); }

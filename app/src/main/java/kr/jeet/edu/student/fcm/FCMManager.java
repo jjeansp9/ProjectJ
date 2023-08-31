@@ -40,7 +40,7 @@ public class FCMManager {
     public static final String MSG_TYPE_TEST_APPT = "LEVEL_TEST";    //테스트예약
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청
     public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
-    public static final String MSG_TYPE_ACA_SCHEDULE = "ACACHEDULE";    //캠퍼스일정
+    public static final String MSG_TYPE_ACA_SCHEDULE = "SCHEDULE";    //캠퍼스일정
     //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
 
     public static final int NOTIFICATION_ID_NOTICE = 1000001;

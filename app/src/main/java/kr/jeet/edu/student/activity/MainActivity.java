@@ -260,6 +260,7 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
+                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
@@ -289,6 +290,7 @@ public class MainActivity extends BaseActivity {
                 break;
                 case MSG_TYPE_SYSTEM:
                 {
+                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;

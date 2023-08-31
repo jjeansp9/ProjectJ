@@ -110,7 +110,7 @@
                         android:stateListAnimator="@xml/animate_button_push"
                         android:text="@string/login"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/font_size_large" />
+                        android:textSize="@dimen/font_size_large"/>
 
                 </LinearLayout>
 

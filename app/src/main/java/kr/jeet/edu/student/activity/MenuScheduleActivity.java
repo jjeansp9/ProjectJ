@@ -3,6 +3,9 @@ package kr.jeet.edu.student.activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +18,9 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -26,8 +31,13 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.dialog.ScheduleDialog;
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
+import kr.jeet.edu.student.model.response.AnnouncementListResponse;
+import kr.jeet.edu.student.model.response.BriefingResponse;
+import kr.jeet.edu.student.model.response.ScheduleListResponse;
+import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -41,11 +51,15 @@ import kr.jeet.edu.student.view.calendar.decorator.TodayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.UnSelEventDecorator;
 import kr.jeet.edu.student.view.calendar.formatter.CustomTitleFormatter;
 import kr.jeet.edu.student.view.calendar.formatter.CustomWeekDayFormatter;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuScheduleActivity extends BaseActivity {
 
     private static final String TAG = "ScheduleActivity";
 
+    private TextView mTvListEmpty;
     private PowerSpinnerView mSpinnerCampus;
     private MaterialCalendarView mCalendarView;
     private RecyclerView mRecyclerSchedule;
@@ -56,6 +70,17 @@ public class MenuScheduleActivity extends BaseActivity {
     private String _acaCode = "";
     private String _acaName = "";
     private String _userType = "";
+
+    private CalendarDay unSelDay;
+
+    Date _selectedDate = new Date();
+    private int selYear = 0;
+    private int selMonth = 0;
+    private int selDay = 0;
+
+    private int eventYear = 0;
+    private int eventMonth = 0;
+    private int eventDay = 0;
 
     private AppCompatActivity mActivity;
 
@@ -74,6 +99,13 @@ public class MenuScheduleActivity extends BaseActivity {
         _userType = PreferenceUtil.getUserType(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
+
+        Calendar cal = Calendar.getInstance();
+        selYear = cal.get(Calendar.YEAR);
+        selMonth = cal.get(Calendar.MONTH);
+
+        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode);
+        else requestScheduleList("");
     }
 
     @Override
@@ -90,6 +122,7 @@ public class MenuScheduleActivity extends BaseActivity {
         mSpinnerCampus = findViewById(R.id.spinner_schedule_campus);
         mCalendarView = findViewById(R.id.cv_schedule);
         mRecyclerSchedule = findViewById(R.id.recycler_schedule);
+        mTvListEmpty = findViewById(R.id.tv_schedule_empty_list);
 
         setSpinner();
         setCalendar();
@@ -114,12 +147,10 @@ public class MenuScheduleActivity extends BaseActivity {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
             else _acaCode = "";
 
-            //request(_acaCode);
+            requestScheduleList(_acaCode);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
-
-    private CalendarDay unSelDay;
 
     private void setCalendar(){
         final int MIN_MONTH = 0;
@@ -179,19 +210,27 @@ public class MenuScheduleActivity extends BaseActivity {
             selectionDec.setSelectedDay(date);
             runOnUiThread(view::invalidateDecorators);
             unSelEventDec.setSelectedDay(null);
+
+            selYear = date.getYear();
+            selMonth = date.getMonth()+1;
+            selDay = date.getDay();
+            LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
+
+
         });
 
         mCalendarView.setOnMonthChangedListener((view, date) -> {
+            requestScheduleList(_acaCode);
         });
     }
 
     private void setRecycler(){
-        for (int i=0; i<10; i++) mList.add(
-                new ScheduleData(
-                        "5.3 (수)",
-                        "[악어수학, 중등]",
-                        " - 재원생 레벨테스트 5/8(월) ~ 5/10(수)"
-                ));
+//        for (int i=0; i<10; i++) mList.add(
+//                new ScheduleData(
+//                        "5.3 (수)",
+//                        "[악어수학, 중등]",
+//                        " - 재원생 레벨테스트 5/8(월) ~ 5/10(수)"
+//                ));
 
         mAdapter = new ScheduleListAdapter(mContext, mList, this::showDialog);
         mRecyclerSchedule.setAdapter(mAdapter);
@@ -210,6 +249,65 @@ public class MenuScheduleActivity extends BaseActivity {
         dialog.show();
     }
 
+    int index = 0;
+
+    private void requestScheduleList(String acaCode) {
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getScheduleList(acaCode, selYear, selMonth).enqueue(new Callback<ScheduleListResponse>() {
+                @Override
+                public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
+                    if (mList.size() > 0){
+                        for (int i = mList.size() - 1; i >= 0; i--) {
+                            mList.remove(i);
+                            mAdapter.notifyItemRemoved(i);
+                        }
+                        index = 0;
+                    }
+                    try {
+                        if (response.isSuccessful()) {
+                            List<ScheduleData> getData = new ArrayList<>();
+
+                            if (response.body() != null) {
+                                getData = response.body().data.scheduleList;
+                                if (getData != null && !getData.isEmpty()) {
+                                    //mList.addAll(getData);
+
+                                    for (ScheduleData item : getData) {
+                                        mList.add(index, item);
+                                        mAdapter.notifyItemInserted(index);
+                                        index++;
+                                    }
+
+                                } else {
+                                    LogMgr.e(TAG, "ListData is null");
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
+                    }
+                    mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    //if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    //mSwipeRefresh.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<ScheduleListResponse> call, Throwable t) {
+                    mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    try {
+                        LogMgr.e(TAG, "requestBoardList() onFailure >> " + t.getMessage());
+                    } catch (Exception e) {
+                    }
+                    hideProgressDialog();
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    //mSwipeRefresh.setRefreshing(false);
+                }
+            });
+        }
+    }
 }
 
 

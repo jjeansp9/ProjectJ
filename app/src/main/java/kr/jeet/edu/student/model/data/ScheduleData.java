@@ -1,13 +1,14 @@
 package kr.jeet.edu.student.model.data;
 
 public class ScheduleData {
-    public String stDate;
-    public String stClass;
-    public String stContent;
-
-    public ScheduleData(String stDate, String stClass, String stContent) {
-        this.stDate = stDate;
-        this.stClass = stClass;
-        this.stContent = stContent;
-    }
+    public int seq;          // 글 seq
+    public String title;     // 제목
+    public String content;   // 내용
+    public String target;    // 대상
+    public String acaCode;   // 캠퍼스 코드
+    public String acaName;   // 캠퍼스 명
+    public int year;         // 년
+    public int month;        // 월
+    public int day;          // 일
+    public int writerSeq;    // 작성자 seq
 }

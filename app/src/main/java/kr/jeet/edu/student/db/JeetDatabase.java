@@ -21,7 +21,6 @@ public abstract class JeetDatabase extends RoomDatabase {
             JeetDBInstance = Room.databaseBuilder(context.getApplicationContext(),
                     JeetDatabase.class,
                     "jeeteducation.db")
-                    .fallbackToDestructiveMigration()
                     .build();
         }
         return JeetDBInstance;

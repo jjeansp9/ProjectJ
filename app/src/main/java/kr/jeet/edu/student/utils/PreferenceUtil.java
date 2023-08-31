@@ -61,12 +61,6 @@ public class PreferenceUtil {
         return pref.getInt(PREF_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
     }
 
-    //User Type
-    public static void setUserType(Context context, String userType) {
-        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        pref.edit().putString(PREF_USER_TYPE, userType).apply();
-    }
-
     // user is original
     public static void setUserIsOriginal(Context context, String loginType) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -76,6 +70,12 @@ public class PreferenceUtil {
     public static String getUserIsOriginal(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return pref.getString(PREF_USER_IS_ORIGINAL, "");
+    }
+
+    //User Type
+    public static void setUserType(Context context, String userType) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putString(PREF_USER_TYPE, userType).apply();
     }
 
     public static String getUserType(Context context) {

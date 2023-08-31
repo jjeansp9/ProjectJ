@@ -107,13 +107,15 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
             String extraKey = null;
 
-            if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
+            if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 LogMgr.w("param is recived");
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
+                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 dataType = TYPE_ANNOUNCEMENT;
 
-            } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
+            } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
+                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 dataType = TYPE_PUSH;
 
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {

@@ -46,9 +46,9 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         ScheduleData item = mList.get(position);
         try{
 
-            holder.tvDate.setText(item.stDate);
-            holder.tvClass.setText(item.stClass);
-            holder.tvContent.setText(item.stContent);
+            holder.tvDate.setText(item.year+"."+item.month);
+            holder.tvClass.setText(item.target);
+            holder.tvContent.setText(item.content);
 
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());

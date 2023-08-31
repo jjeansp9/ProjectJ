@@ -30,7 +30,7 @@ public class UnSelEventDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        LogMgr.i(TAG + " <<< UnSel >>> ",day.equals(selDay) ? "true" + "day: " + day + ", selDay: " + selDay : "false" + "day: " + day + ", selDay: " + selDay);
+        //LogMgr.i(TAG + " <<< UnSel >>> ",day.equals(selDay) ? "true" + "day: " + day + ", selDay: " + selDay : "false" + "day: " + day + ", selDay: " + selDay);
         return day != null && day.equals(selDay);
     }
 

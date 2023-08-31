@@ -24,7 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public Context mContext;
     private AlertDialog mProgressDialog = null;
     private PopupDialog popupDialog = null;
-
+    TextView txt;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,19 +56,17 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     }
 
     protected void showProgressDialog(String msg, DialogInterface.OnCancelListener listener) {
-        runOnUiThread(() -> {
-            if (mProgressDialog == null){
-                View view = getLayoutInflater().inflate(R.layout.dialog_progressbar, null, false);
-                TextView txt = view.findViewById(R.id.text);
-                txt.setText(msg);
+        if (mProgressDialog == null){
+            View view = getLayoutInflater().inflate(R.layout.dialog_progressbar, null, false);
+            TextView txt = view.findViewById(R.id.text);
+            txt.setText(msg);
 
-                mProgressDialog = new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setView(view)
-                        .create();
-                mProgressDialog.show();
-            }
-        });
+            mProgressDialog = new AlertDialog.Builder(this)
+                    .setCancelable(false)
+                    .setView(view)
+                    .create();
+            mProgressDialog.show();
+        }
 /*
         Window window = mProgressDialog.getWindow();
         if(window != null) {
@@ -79,6 +77,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             mProgressDialog.getWindow().setAttributes(layoutParams);
         }
         */
+        runOnUiThread(() -> {
+            if (txt != null && mProgressDialog != null) {
+                txt.setText(msg);  // 텍스트만 변경
+                mProgressDialog.show();
+            }
+        });
     }
 
     protected void hideProgressDialog() {

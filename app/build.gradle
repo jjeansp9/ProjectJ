@@ -78,11 +78,10 @@ dependencies {
     implementation "com.google.android.flexbox:flexbox:3.0.0"
 
     // spinner
-    implementation "com.github.skydoves:powerspinner:1.2.4"
+    implementation "com.github.skydoves:powerspinner:1.2.7"
 
     // material CalendarView
     implementation 'com.prolificinteractive:material-calendarview:1.4.3'
-    implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
     // monthAndYear Picker
     implementation 'com.github.demogorgorn:MonthAndYearPicker:1.0.11'
     //room db

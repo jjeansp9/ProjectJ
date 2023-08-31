@@ -123,6 +123,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
 
             LogMgr.i("year", selYear);
+            LogMgr.i("month", selMonth);
             List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
             List<PushMessage> newMessage = new ArrayList<>();
 
@@ -135,7 +136,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 type.put(attendanceType, FCMManager.MSG_TYPE_PT);
 
                 String mappedType = type.get(selType);
-                if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+                //if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+                if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
 
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +
@@ -257,7 +259,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         if (item != null){
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_notice));
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
             intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
             startActivity(intent);
         }else LogMgr.e("item is null ");

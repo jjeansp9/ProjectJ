@@ -113,17 +113,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
     }
 
-
-
-    /**
-    * 수강료 조회하기 위한 tuitionDate 날짜 형식 : [yyyyMM] ex) 202306
-     *
-     *      deptName : 부서
-     *      stGrade : 학년
-     *      clstName : 학급
-     *      acaName : 캠퍼스
-     *      phoneNumber : 휴대폰 번호
-    * */
     @Override
     void initView() {
         findViewById(R.id.btn_consultation_request).setOnClickListener(this);
