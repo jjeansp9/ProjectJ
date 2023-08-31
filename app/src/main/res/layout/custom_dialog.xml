@@ -109,34 +109,73 @@
             android:orientation="horizontal"
             >
 
-            <android.widget.Button
+<!--            <android.widget.Button-->
+<!--                android:id="@+id/cancelBtn"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:padding="16dp"-->
+<!--                android:gravity="center"-->
+<!--                android:background="@color/white"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"-->
+<!--                android:layout_marginRight="1dp"-->
+<!--                android:text="@string/cancel"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textSize="@dimen/font_size_large"-->
+<!--                />-->
+
+            <RelativeLayout
                 android:id="@+id/cancelBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="16dp"
-                android:gravity="center"
-                android:background="@color/white"
-                android:stateListAnimator="@xml/animate_button_push"
-                android:layout_marginRight="1dp"
-                android:text="@string/cancel"
-                android:textColor="@color/font_color_default"
-                android:textSize="@dimen/font_size_large"
-                />
+                android:background="@color/white">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:stateListAnimator="@xml/animate_button_push"
+                    android:text="@string/cancel"
+                    android:textColor="@color/font_color_default"
+                    android:textSize="@dimen/font_size_large"/>
+            </RelativeLayout>
 
-            <android.widget.Button
+            <RelativeLayout
                 android:id="@+id/okBtn"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="16dp"
-                android:gravity="center"
-                android:background="@color/red"
-                android:stateListAnimator="@xml/animate_button_push"
-                android:text="@string/ok"
-                android:textColor="@color/white"
-                android:textSize="@dimen/font_size_large"
-                />
+                android:background="@color/red">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:stateListAnimator="@xml/animate_button_push"
+                    android:text="@string/ok"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/font_size_large"/>
+            </RelativeLayout>
+
+
+
+<!--            <android.widget.Button-->
+<!--                android:id="@+id/okBtn"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:padding="16dp"-->
+<!--                android:gravity="center"-->
+<!--                android:background="@color/red"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"-->
+<!--                android:text="@string/ok"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/font_size_large"-->
+<!--                />-->
 
         </LinearLayout>
 

@@ -11,10 +11,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import org.w3c.dom.Text;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -25,7 +28,8 @@ public class PopupDialog extends Dialog {
     private Context context;
     private TextView titleTv, contentTv, noteTv, notMatchTv;
     private EditText editText;
-    private Button cancelBtn, okBtn;
+    //private Button cancelBtn, okBtn;
+    private RelativeLayout cancelBtn, okBtn;
     private ViewGroup titleLayout;
 
     public PopupDialog(@NonNull Context context) {
@@ -62,8 +66,10 @@ public class PopupDialog extends Dialog {
         editText = (EditText) findViewById(R.id.edit);
         noteTv = (TextView) findViewById(R.id.note);
         notMatchTv = (TextView) findViewById(R.id.not_match);
-        cancelBtn = (Button) findViewById(R.id.cancelBtn);
-        okBtn = (Button) findViewById(R.id.okBtn);
+//        cancelBtn = (Button) findViewById(R.id.cancelBtn);
+//        okBtn = (Button) findViewById(R.id.okBtn);
+        cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
+        okBtn = (RelativeLayout) findViewById(R.id.okBtn);
 
         titleLayout.setVisibility(View.GONE);
         noteTv.setVisibility(View.GONE);
@@ -108,9 +114,9 @@ public class PopupDialog extends Dialog {
 
     private String mInputText;
 
-    public void setOkButtonText(String str) {
-        okBtn.setText(str);
-    }
+//    public void setOkButtonText(String str) {
+//        okBtn.setText(str);
+//    }
 
     public void setOnOkButtonClickListener(View.OnClickListener listener) {
         okBtn.setOnClickListener(listener);

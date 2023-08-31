@@ -65,6 +65,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private int position = -1;
     private boolean added = false;
 
+    int index = 0;
+
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         Intent intent = result.getData();
@@ -225,8 +227,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
         requestBrfList(_acaCode, selAllOrNot);
     }
-
-    int index = 0;
 
     private void requestBrfList(String acaCode, boolean all){
         LogMgr.e("Position",position+"");

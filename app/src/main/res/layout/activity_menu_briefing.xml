@@ -34,6 +34,8 @@
             android:paddingVertical="@dimen/layout_margin_12"
             android:textColor="@color/black"
             android:textSize="@dimen/font_size"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:spinner_arrow_gravity="end"
             app:spinner_arrow_tint="@color/blackgray"
             app:spinner_divider_color="@color/line"

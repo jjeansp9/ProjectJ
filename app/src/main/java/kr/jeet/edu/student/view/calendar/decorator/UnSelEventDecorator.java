@@ -36,6 +36,6 @@ public class UnSelEventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        if (view != null && activity != null) activity.runOnUiThread(() -> view.addSpan(new DotSpan(10f, color)));
+        if (view != null && activity != null) activity.runOnUiThread(() -> view.addSpan(new DotSpan(7f, color)));
     }
 }
