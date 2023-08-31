@@ -44,6 +44,7 @@ import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 
@@ -72,8 +73,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String selYear = "";
     private String selMonth = "";
 
-    private boolean isTargetItemVisible = false;
+    private int _memberSeq = 0;
 
+    // 페이징 관련 변수들
+    private boolean isTargetItemVisible = false;
     private static final int PAGE_SIZE = 20;
     private long currentMaxSeq = 0;
     private int systemCnt = 0;
@@ -97,13 +100,15 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_notice);
 
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
+
         noticeType = getResources().getStringArray(R.array.notice_type);
         //allType = noticeType[0];
         systemType = noticeType[0];
         attendanceType = noticeType[1];
 
         new Thread(() -> {
-            //currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
+            //currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
             mHandler.sendEmptyMessage(CMD_GET_LIST);
         }).start();
 
@@ -113,14 +118,15 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void getListData(String selType, boolean isUpdate){
+
         new Thread(() -> {
-            //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size();
+            //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
 
             LogMgr.i("year", selYear);
             List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
             List<PushMessage> newMessage = new ArrayList<>();
 
-            //if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1;
+            //if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1; // 페이징 관련
 
             for (PushMessage msg : item){
 
@@ -129,7 +135,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 type.put(attendanceType, FCMManager.MSG_TYPE_PT);
 
                 String mappedType = type.get(selType);
-                if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+                if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
 
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +
@@ -139,6 +145,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                                 "id : " + msg.id + "\n" +
                                 "pushId : " + msg.pushId + "\n" +
                                 "title : " + msg.title + "\n" +
+                                "memberSeq : " + msg.memberSeq + "\n" +
                                 "connSeq : " + msg.connSeq + "\n" +
                                 "isRead : " + msg.isRead + "\n"
                 );
@@ -151,7 +158,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         }).start();
     }
 
-    int mListIndex = 0;
+    int mListIndex = 0; // 페이징 관련 변수
 
     private void updateList(List<PushMessage> newMessage, boolean isUpdate){
         if (isUpdate){

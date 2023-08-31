@@ -13,6 +13,8 @@ import kr.jeet.edu.student.utils.LogMgr;
 
 public class SelEventDecorator implements DayViewDecorator {
 
+    private static final String TAG = "SelEventDecorator";
+
     private int color;
     private AppCompatActivity activity;
     private CalendarDay selDay;
@@ -28,7 +30,7 @@ public class SelEventDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        LogMgr.i("Sel >>> ", day.equals(selDay) ? "true" + "day: " + day + ", selDay: " + selDay : "false" + "day: " + day + ", selDay: " + selDay);
+        LogMgr.i(TAG+" <<< Sel >>> ", day.equals(selDay) ? "true" + "day: " + day + ", selDay: " + selDay : "false" + "day: " + day + ", selDay: " + selDay);
         return day != null && day.equals(selDay);
     }
 

@@ -214,7 +214,7 @@
                     android:layout_marginBottom="@dimen/layout_margin_16"
                     android:text="@string/main_attendance_date"
                     android:textSize="@dimen/font_size"
-                    android:textColor="@color/font_color_666"/>
+                    android:textColor="@color/font_color_default"/>
                 
             </androidx.constraintlayout.widget.ConstraintLayout>
             

@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -320,10 +321,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 SystemNoticeData data = response.body().data;
                                 if (data != null){
                                     _systemNoticeData = data;
-                                    mTvTitle.setText(_systemNoticeData.title); // 제목
+                                    mTvTitle.setText(TextUtils.isEmpty(_systemNoticeData.title) ? "" : _systemNoticeData.title); // 제목
                                     //mTvName.setText(_systemNoticeData.); // 작성자 이름
-                                    mTvDate.setText(_systemNoticeData.insertDate); // 작성날짜
-                                    mTvContent.setText(_systemNoticeData.content); // 내용
+                                    mTvDate.setText(TextUtils.isEmpty(_systemNoticeData.insertDate) ? "" : _systemNoticeData.insertDate); // 작성날짜
+                                    mTvContent.setText(TextUtils.isEmpty(_systemNoticeData.content) ? "" : _systemNoticeData.content); // 내용
 
                                     if(_systemNoticeData.fileList != null && _systemNoticeData.fileList.size() > 0) {
 

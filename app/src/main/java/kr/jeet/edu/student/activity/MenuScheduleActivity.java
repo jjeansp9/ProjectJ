@@ -107,6 +107,8 @@ public class MenuScheduleActivity extends BaseActivity {
         if (_userType.equals(Constants.MEMBER)) mSpinnerCampus.setText(_acaName);
         else mSpinnerCampus.setText(acaNames.get(0));
 
+
+
         mSpinnerCampus.setItems(acaNames);
         mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
@@ -114,6 +116,7 @@ public class MenuScheduleActivity extends BaseActivity {
 
             //request(_acaCode);
         });
+        mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
 
     private CalendarDay unSelDay;

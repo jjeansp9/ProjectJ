@@ -162,6 +162,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
             requestBrfList(_acaCode, selAllOrNot);
         });
+        mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
 
     private void setRecycler(){

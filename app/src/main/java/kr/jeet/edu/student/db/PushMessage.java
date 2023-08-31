@@ -33,19 +33,22 @@ public class PushMessage implements Parcelable {
     public LocalDateTime date;
     @ColumnInfo(name="pushType")
     public String pushType;
+    @ColumnInfo(name="memberSeq")
+    public int memberSeq;
     @ColumnInfo(name="connSeq")
     public int connSeq;
     @ColumnInfo(name="pushId")
     public String pushId;
     @ColumnInfo(name="isRead", defaultValue = "false")
     public boolean isRead = false;
-    public PushMessage(long id, String title, String body, String acaCode, LocalDateTime date, String pushType,int connSeq, String pushId, boolean isRead) {
+    public PushMessage(long id, String title, String body, String acaCode, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
         this.id = id;
         this.title = title;
         this.body = body;
         this.acaCode = acaCode;
         this.date = date;
         this.pushType = pushType;
+        this.memberSeq = memberSeq;
         this.connSeq = connSeq;
         this.pushId = pushId;
         this.isRead = isRead;
@@ -84,6 +87,11 @@ public class PushMessage implements Parcelable {
         String content = map.containsKey("body")? map.get("body") : "";
         String acaCode = map.containsKey("acaCode")? map.get("acaCode") : "";
         LocalDateTime date = initDate;
+        int memberSeq = -1;
+        String memberSeqStr = map.containsKey("memberSeq")? map.get("memberSeq") : "";
+        try{
+            memberSeq = Integer.parseInt(memberSeqStr);
+        }catch(Exception ex){}
         int connSeq = -1;
         String connSeqStr = map.containsKey("connSeq")? map.get("connSeq") : "";
         try{
@@ -91,7 +99,7 @@ public class PushMessage implements Parcelable {
         }catch(Exception ex){}
         String pushType = map.containsKey("pushType")? map.get("pushType") : "";
         String pushId = map.containsKey("pushId")? map.get("pushId") : "";
-        return new PushMessage(id, title, content, acaCode, date, pushType, connSeq, pushId, false);
+        return new PushMessage(id, title, content, acaCode, date, pushType, memberSeq, connSeq, pushId, false);
     }
 
     @Override
@@ -105,6 +113,7 @@ public class PushMessage implements Parcelable {
         acaCode = in.readString();
         date = LocalDateTime.parse(in.readString(), dateTimeFormatter);
         pushType = in.readString();
+        memberSeq = in.readInt();
         connSeq = in.readInt();
         pushId = in.readString();
         isRead = in.readByte() != 0;
@@ -117,6 +126,7 @@ public class PushMessage implements Parcelable {
         parcel.writeString(acaCode);
         parcel.writeString(date.format(dateTimeFormatter));
         parcel.writeString(pushType);
+        parcel.writeInt(memberSeq);
         parcel.writeInt(connSeq);
         parcel.writeString(pushId);
         parcel.writeByte((byte) (isRead ? 1 : 0));

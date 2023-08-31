@@ -23,6 +23,9 @@ public class FileData implements Parcelable {
     @SerializedName("extension")
     public String extension;
 
+    @SerializedName("contentType")
+    public String contentType;
+
     protected FileData(Parcel in) {
         seq = in.readInt();
         fileId = in.readString();
@@ -30,6 +33,7 @@ public class FileData implements Parcelable {
         saveName = in.readString();
         path = in.readString();
         extension = in.readString();
+        contentType = in.readString();
     }
 
     public static final Creator<FileData> CREATOR = new Creator<FileData>() {
@@ -57,5 +61,6 @@ public class FileData implements Parcelable {
         dest.writeString(saveName);
         dest.writeString(path);
         dest.writeString(extension);
+        dest.writeString(contentType);
     }
 }
