@@ -75,7 +75,6 @@ public class ScheduleDialog extends Dialog {
 
         try {
 
-            //String getDate = item.year+""+item.month+""+item.day;
             String getDate = String.format(Locale.KOREA, "%d%d%d", item.year, item.month, item.day);
             date = inputDateFormat.parse(getDate);
 
@@ -97,9 +96,7 @@ public class ScheduleDialog extends Dialog {
             e.printStackTrace();
         }
 
-        tvDate.setText(
-                resultDate
-        );
+        tvDate.setText(resultDate);
         tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : "["+item.acaName+"]");
         tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
         tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]");

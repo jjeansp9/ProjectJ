@@ -191,7 +191,7 @@ public class FCMManager {
                 tickerText = _context.getString(R.string.push_noti_received_leveltest);
                 break;
             case MSG_TYPE_PT:
-                tickerText = _context.getString(R.string.push_noti_received_leveltest);
+                tickerText = _context.getString(R.string.push_noti_received_pt);
                 break;
             case MSG_TYPE_COUNSEL:
                 tickerText = _context.getString(R.string.push_noti_received_counsel);

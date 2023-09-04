@@ -1,10 +1,18 @@
 package kr.jeet.edu.student.activity;
 
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,12 +22,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.dialog.PushPopupDialog;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -93,6 +103,32 @@ public class SelectStudentActivity extends BaseActivity {
             }
         } catch (Exception e) {
             LogMgr.e(TAG + " Exception: ", e.getMessage());
+        }
+
+        if(_pushMessage != null) {
+
+            LogMgr.e("EVENT", _pushMessage.pushType);
+
+            switch(_pushMessage.pushType) {
+                case MSG_TYPE_ATTEND: // 출결알림
+                {
+                    if (PreferenceUtil.getNumberOfChild(mContext) > 1){
+                        PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
+                        pushPopupDialog.setOnOkButtonClickListener(view -> {
+                            if(!TextUtils.isEmpty(_pushMessage.pushId)) {
+                                List<String> list = new ArrayList<>();
+                                list.add(_pushMessage.pushId);
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
+                            }
+                            pushPopupDialog.dismiss();
+                        });
+                        pushPopupDialog.show();
+                    }
+
+                }
+                default:
+                    break;
+            }
         }
 
 

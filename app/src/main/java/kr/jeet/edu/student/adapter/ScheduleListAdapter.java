@@ -10,11 +10,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder> {
 
@@ -42,18 +48,51 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ScheduleData item = mList.get(position);
-        try{
 
-            String date = item.month+"."+item.day;
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("M.d ", Locale.KOREA);
+        Date date = null;
 
-            holder.tvDate.setText(date);
-            holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
-            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        String resultDate = "";
 
-        }catch (Exception e){
-            LogMgr.e("ListAdapter Exception : " + e.getMessage());
+        try {
+
+            String getDate = String.format(Locale.KOREA, "%d%d%d", item.year,item.month, item.day);
+            date = inputDateFormat.parse(getDate);
+
+            String formattedDate = "";
+
+            int dayOfWeek = 0;
+            if (date != null) {
+                formattedDate = outputFormat.format(date);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            }
+
+            String dayOfWeekStr = Utils.formatDayOfWeek(dayOfWeek).replace("요일", "");
+
+            resultDate = formattedDate+"("+dayOfWeekStr+")";
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
+        holder.tvDate.setText(resultDate);
+        holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
+        holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+
+//        try{
+//
+//            String date = item.month+"."+item.day;
+//
+//            holder.tvDate.setText(date);
+//            holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
+//            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+//
+//        }catch (Exception e){
+//            LogMgr.e("ListAdapter Exception : " + e.getMessage());
+//        }
     }
 
     @Override

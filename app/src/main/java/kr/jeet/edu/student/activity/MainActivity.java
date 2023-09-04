@@ -264,7 +264,21 @@ public class MainActivity extends BaseActivity {
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
-                case MSG_TYPE_ATTEND:
+                case MSG_TYPE_ATTEND: // 출결알림
+                {
+                    if (PreferenceUtil.getNumberOfChild(mContext) < 2){
+                        PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
+                        pushPopupDialog.setOnOkButtonClickListener(view -> {
+                            if(!TextUtils.isEmpty(_pushMessage.pushId)) {
+                                List<String> list = new ArrayList<>();
+                                list.add(_pushMessage.pushId);
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
+                            }
+                            pushPopupDialog.dismiss();
+                        });
+                        pushPopupDialog.show();
+                    }
+                }
                 case MSG_TYPE_TEST_APPT:
                 case MSG_TYPE_COUNSEL:
                 {
@@ -283,12 +297,12 @@ public class MainActivity extends BaseActivity {
 //                    pushPopupDialog.show();
                 }
                 break;
-                case MSG_TYPE_PT:
+                case MSG_TYPE_PT: // 설명회예약
                 {
                     startDetailActivity(intent, MenuBriefingDetailActivity.class);
                 }
                 break;
-                case MSG_TYPE_SYSTEM:
+                case MSG_TYPE_SYSTEM: // 시스템알림
                 {
                     intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
                     startDetailActivity(intent, MenuBoardDetailActivity.class);

@@ -164,76 +164,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         });
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel, mEtSchool};
-
-        //setSpinner();
     }
-
-//    @SuppressLint("ClickableViewAccessibility")
-//    private void setSpinner(){
-//        mSpinnerSchool = findViewById(R.id.spinner_brf_write_school);
-//        mSpinnerSchoolType = findViewById(R.id.spinner_brf_write_school_type);
-//
-//        mSpinnerSchool.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()){
-//                case MotionEvent.ACTION_UP:
-//                    if (mSpinnerSchoolType.getText().toString().equals("")){
-//                        Toast.makeText(mContext, R.string.briefing_write_please_sel, Toast.LENGTH_SHORT).show();
-//                    }
-//                    Utils.clearFocus(mEtList);
-//                    Utils.hideKeyboard(mContext, mEtList);
-//                    break;
-//            }
-//
-//            return false;
-//        });
-//        mSpinnerSchoolType.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()){
-//                case MotionEvent.ACTION_UP:
-//                    Utils.clearFocus(mEtList);
-//                    Utils.hideKeyboard(mContext, mEtList);
-//                    break;
-//            }
-//            return false;
-//        });
-//
-//        mSpinnerSchoolType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-//            setSpinnerSchool();
-//        });
-//    }
-//
-//    private void setSpinnerSchool(){
-//        List<SchoolData> schoolList = DataManager.getInstance().getSchoolList();
-//        List<String> scNames = new ArrayList<>();
-//
-//        final String ELEMENTARY = "초등";
-//        final String MIDDLE_SCHOOL = "중학교";
-//        final String HIGH_SCHOOL = "고등";
-//
-//        if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_elementary))){
-//            for (SchoolData data : schoolList) {
-//                if (!data.scName.contains(MIDDLE_SCHOOL) && !data.scName.contains(HIGH_SCHOOL)){
-//                    scNames.add(data.scName);
-//                }
-//            }
-//        }else if (mSpinnerSchoolType.getText().toString().contains(getString(R.string.informed_question_middle))){
-//            for (SchoolData data : schoolList) {
-//                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(HIGH_SCHOOL)){
-//                    scNames.add(data.scName);
-//                }
-//            }
-//        }else{
-//            for (SchoolData data : schoolList) {
-//                if (!data.scName.contains(ELEMENTARY) && !data.scName.contains(MIDDLE_SCHOOL)){
-//                    scNames.add(data.scName);
-//                }
-//            }
-//        }
-//
-//        mSpinnerSchool.setText("");
-//        mSpinnerSchool.setItems(scNames);
-//
-//        mSpinnerSchool.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> _scName = scNames.get(newIndex));
-//    }
 
     @Override
     public void onClick(View view) {
