@@ -132,12 +132,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             for (PushMessage msg : item){
 
                 Map<String, String> type = new HashMap<>();
-                type.put(systemType, FCMManager.MSG_TYPE_NOTICE);
-                type.put(attendanceType, FCMManager.MSG_TYPE_PT);
+                type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
+                type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
 
                 String mappedType = type.get(selType);
-                //if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
-                if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+
+                LogMgr.i(TAG, "memberSeq " + msg.memberSeq + ", " + _memberSeq);
+
+                if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
 
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +

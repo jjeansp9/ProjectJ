@@ -146,7 +146,6 @@ public class InformedConsentActivity extends BaseActivity {
                 break;
 
             case R.id.layout_view_collection: // 내용보기 (개인정보 수집 및 이용)
-
                 startPvyActivity(mTvPvyCollection.getText().toString());
                 break;
 

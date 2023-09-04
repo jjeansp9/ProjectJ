@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -45,6 +47,10 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
     public View instantiateItem(ViewGroup container, int position) {
         PhotoView photoView = new PhotoView(container.getContext());
 
+        int paddingInPx = dpToPx(container.getContext(), 2);
+        photoView.setPadding(paddingInPx, paddingInPx, paddingInPx, paddingInPx);
+
+
         if (mImageList != null && mImageList.size() > 0) { // 이미지가 있는 경우
             String imageUrl = RetrofitApi.FILE_SUFFIX_URL + mImageList.get(position).path + "/" + mImageList.get(position).saveName;
 
@@ -60,6 +66,10 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
         container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT); // 사이즈는 MATCH_PARENT 크기로 add
 
         return photoView;
+    }
+
+    public static int dpToPx(Context context, int dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     @Override

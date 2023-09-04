@@ -1,10 +1,10 @@
 package kr.jeet.edu.student.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,10 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.utils.LogMgr;
-import kr.jeet.edu.student.utils.Utils;
 
 public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder> {
 
@@ -46,9 +44,11 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         ScheduleData item = mList.get(position);
         try{
 
-            holder.tvDate.setText(item.year+"."+item.month);
-            holder.tvClass.setText(item.target);
-            holder.tvContent.setText(item.content);
+            String date = item.month+"."+item.day;
+
+            holder.tvDate.setText(date);
+            holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
+            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
 
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());
@@ -64,18 +64,18 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvDate, tvClass, tvContent;
+        private TextView tvDate, tvTarget, tvTitle;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
             tvDate = itemView.findViewById(R.id.tv_schedule_date);
-            tvClass = itemView.findViewById(R.id.tv_schedule_class);
-            tvContent = itemView.findViewById(R.id.tv_schedule_content);
+            tvTarget = itemView.findViewById(R.id.tv_schedule_target);
+            tvTitle = itemView.findViewById(R.id.tv_schedule_title);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                _listener.onItemClick(mList.get(position));
+                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

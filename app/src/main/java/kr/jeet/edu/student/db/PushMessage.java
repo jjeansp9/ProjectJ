@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.db;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 import java.util.Map;
 
 import kr.jeet.edu.student.utils.Converters;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 
 @Entity(tableName = "tbl_push_message")
 public class PushMessage implements Parcelable {
@@ -76,7 +78,7 @@ public class PushMessage implements Parcelable {
         }
     };
 
-    public static PushMessage buildFromMap(Map<String, String> map) {
+    public static PushMessage buildFromMap(Map<String, String> map, Context context) {
         LocalDateTime initDate = LocalDateTime.now();
         if(map.containsKey("date")) {
             String dateStr = map.get("date");
@@ -87,7 +89,7 @@ public class PushMessage implements Parcelable {
         String content = map.containsKey("body")? map.get("body") : "";
         String acaCode = map.containsKey("acaCode")? map.get("acaCode") : "";
         LocalDateTime date = initDate;
-        int memberSeq = -1;
+        int memberSeq = PreferenceUtil.getUserSeq(context);
         String memberSeqStr = map.containsKey("memberSeq")? map.get("memberSeq") : "";
         try{
             memberSeq = Integer.parseInt(memberSeqStr);

@@ -75,7 +75,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 LogMgr.e(TAG, "key = " + key + " : value = " + map.get(key));
             }
             if(map != null){
-                PushMessage pushMsg = PushMessage.buildFromMap(map);
+                PushMessage pushMsg = PushMessage.buildFromMap(map, getApplicationContext());
                 class InsertRunnable implements Runnable {
                     PushMessage[] pushMessages;
                     InsertRunnable(PushMessage... pushMessages) {

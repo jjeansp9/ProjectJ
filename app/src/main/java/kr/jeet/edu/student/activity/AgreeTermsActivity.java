@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
 import kr.jeet.edu.student.sns.KaKaoLoginManager;
 import kr.jeet.edu.student.sns.NaverLoginManager;
@@ -33,7 +34,7 @@ public class AgreeTermsActivity extends BaseActivity {
 
     private AppCompatActivity mActivity = null;
 
-    private final String URL = "";
+    private String url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,10 +145,12 @@ public class AgreeTermsActivity extends BaseActivity {
                 allCheck();
                 break;
 
-            case R.id.layout_view_check1:
+            case R.id.layout_view_check1: // 이용약관
+                url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/service";
                 startPvyActivity(mTvCheck1.getText().toString());
                 break;
-            case R.id.layout_view_check2:
+            case R.id.layout_view_check2: // 개인정보취급방침
+                url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy";
                 startPvyActivity(mTvCheck2.getText().toString());
                 break;
 
@@ -175,7 +178,7 @@ public class AgreeTermsActivity extends BaseActivity {
     private void startPvyActivity(String title){
         Intent intent = new Intent(mContext, PrivacySeeContentActivity.class);
         intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, title);
-        //intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, URL);
+        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, url);
         startActivity(intent);
     }
 }

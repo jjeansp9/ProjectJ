@@ -27,6 +27,7 @@ import kr.jeet.edu.student.model.response.GetACAListResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
+import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
@@ -193,10 +194,14 @@ public interface RetrofitApi {
     Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq);
 
     // 알림장 상세 조회
-    @GET("systemNotice")
-    Call<SystemNoticeResponse> getSystemNoticeDetail(@Query("seq") int seq);
+    @GET("systemNotice/{seq}")
+    Call<SystemNoticeResponse> getSystemNoticeDetail(@Path("seq") int seq);
 
     // 캠퍼스일정 목록 조회
     @GET("schedules")
     Call<ScheduleListResponse> getScheduleList(@Query("acaCode") String acaCode, @Query("year") int year, @Query("month") int month);
+
+    // 캠퍼스일정 상세 조회
+    @GET("schedule/{scheduleSeq}")
+    Call<ScheduleDetailResponse> getScheduleDetail(@Path("scheduleSeq") int scheduleSeq);
 }

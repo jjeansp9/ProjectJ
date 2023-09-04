@@ -34,7 +34,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_schedule_class"
+        android:id="@+id/tv_schedule_target"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
@@ -50,12 +50,12 @@
         android:textSize="@dimen/font_size_large"/>
 
     <TextView
-        android:id="@+id/tv_schedule_content"
+        android:id="@+id/tv_schedule_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_schedule_class"
+        app:layout_constraintTop_toBottomOf="@id/tv_schedule_target"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         android:maxLines="1"

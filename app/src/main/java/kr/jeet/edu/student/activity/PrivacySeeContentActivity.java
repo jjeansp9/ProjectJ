@@ -9,6 +9,7 @@ import android.webkit.WebView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.IntentParams;
@@ -20,6 +21,7 @@ public class PrivacySeeContentActivity extends BaseActivity {
 
     private final static String TAG = "privacySeeContent Activity";
 
+    private NestedScrollView mScrollView;
     private TextView mTvContent;
     private String title = "";
     private String url = "";
@@ -54,15 +56,18 @@ public class PrivacySeeContentActivity extends BaseActivity {
 
     @Override
     void initView() {
+        mScrollView = findViewById(R.id.scroll_privacy_content);
         mTvContent = findViewById(R.id.tv_privacy_content);
         findViewById(R.id.btn_pvy_consent_confirm).setOnClickListener(this);
 
         if (!TextUtils.isEmpty(url)){
-            mTvContent.setVisibility(View.GONE);
+            mScrollView.setVisibility(View.GONE);
             wv = findViewById(R.id.wv_privacy_content);
 
             wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+            wv.getSettings().setSupportZoom(true);
+            wv.getSettings().setBuiltInZoomControls(true);
 
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);

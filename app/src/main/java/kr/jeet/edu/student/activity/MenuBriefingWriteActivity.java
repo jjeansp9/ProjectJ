@@ -72,6 +72,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     private final int MIN_CNT = 1;
     private final int MAX_CNT = 9999;
 
+    private String url = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -248,7 +250,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                 else btnComplete.setBackgroundResource(R.drawable.bt_click_cancel);
                 break;
 
-            case R.id.layout_brf_view_privacy:
+            case R.id.layout_brf_view_privacy: // 개인정보취급방침
+                url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy";
                 startPvyActivity(mTvPrivacy.getText().toString());
                 break;
 
@@ -364,6 +367,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     private void startPvyActivity(String title){
         Intent intent = new Intent(mContext, PrivacySeeContentActivity.class);
         intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, title);
+        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, url);
         startActivity(intent);
     }
 }

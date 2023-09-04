@@ -12,13 +12,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.ScheduleData;
+import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class ScheduleDialog extends Dialog {
 
     private Context context;
-    private TextView tvTitle, tvCampus, tvDate, tvClass, tvSchedule;
+    private TextView tvDate, tvCampus, tvTitle, tvTarget, tvContent;
     private ImageButton btnClose;
 
     public ScheduleDialog(@NonNull Context context) {
@@ -48,28 +56,55 @@ public class ScheduleDialog extends Dialog {
 
         findViewById(R.id.dialog_ly).setClipToOutline(true);
 
-        tvTitle = findViewById(R.id.tv_title);
-        tvCampus = findViewById(R.id.tv_campus);
         tvDate = findViewById(R.id.tv_date);
-        tvClass = findViewById(R.id.tv_class);
-        tvSchedule = findViewById(R.id.tv_schedule);
+        tvCampus = findViewById(R.id.tv_campus);
+        tvTitle = findViewById(R.id.tv_title);
+        tvTarget = findViewById(R.id.tv_class);
+        tvContent = findViewById(R.id.tv_schedule);
 
         btnClose = findViewById(R.id.btn_dialog_close);
     }
 
     public void setData(ScheduleData item){
-        tvTitle.setText(TextUtils.isEmpty(item.year+"") ? "" : item.year+"");
-        tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
-        //tvDate.setText(TextUtils.isEmpty(item) ? "" : item);
-        //tvClass.setText(TextUtils.isEmpty(item) ? "" : item);
-        tvSchedule.setText(TextUtils.isEmpty(item.content) ? "" : item.content);
-    }
 
-    public void setTitle(String str){ tvTitle.setText(TextUtils.isEmpty(str) ? "" : str); }
-    public void setCampus(String str){ tvCampus.setText(TextUtils.isEmpty(str) ? "" : str); }
-    public void setDate(String str){ tvDate.setText(TextUtils.isEmpty(str) ? "" : str); }
-    public void setClass(String str){ tvClass.setText(TextUtils.isEmpty(str) ? "" : str); }
-    public void setSchedule(String str){ tvSchedule.setText(TextUtils.isEmpty(str) ? "" : str); }
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy.MM.dd ", Locale.KOREA);
+        Date date = null;
+
+        String resultDate = "";
+
+        try {
+
+            //String getDate = item.year+""+item.month+""+item.day;
+            String getDate = String.format(Locale.KOREA, "%d%d%d", item.year, item.month, item.day);
+            date = inputDateFormat.parse(getDate);
+
+            String formattedDate = "";
+
+            int dayOfWeek = 0;
+            if (date != null) {
+                formattedDate = outputFormat.format(date);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(date);
+                dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+            }
+
+            String dayOfWeekStr = Utils.formatDayOfWeek(dayOfWeek).replace("요일", "");
+
+            resultDate = formattedDate+"("+dayOfWeekStr+")";
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        tvDate.setText(
+                resultDate
+        );
+        tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : "["+item.acaName+"]");
+        tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]");
+        tvContent.setText(TextUtils.isEmpty(item.content) ? "" : item.content);
+    }
 
     public void setOnCloseClickListener(View.OnClickListener listener){ btnClose.setOnClickListener(listener); }
 }

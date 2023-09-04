@@ -337,30 +337,7 @@ public class Utils {
                 dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
             }
 
-            String dayOfWeekStr = "";
-            switch (dayOfWeek) {
-                case Calendar.SUNDAY:
-                    dayOfWeekStr = "일요일";
-                    break;
-                case Calendar.MONDAY:
-                    dayOfWeekStr = "월요일";
-                    break;
-                case Calendar.TUESDAY:
-                    dayOfWeekStr = "화요일";
-                    break;
-                case Calendar.WEDNESDAY:
-                    dayOfWeekStr = "수요일";
-                    break;
-                case Calendar.THURSDAY:
-                    dayOfWeekStr = "목요일";
-                    break;
-                case Calendar.FRIDAY:
-                    dayOfWeekStr = "금요일";
-                    break;
-                case Calendar.SATURDAY:
-                    dayOfWeekStr = "토요일";
-                    break;
-            }
+            String dayOfWeekStr = formatDayOfWeek(dayOfWeek);
 
             if (isDetail) return formattedDate + "(" + dayOfWeekStr + ")\n" + formattedTime;
             else {
@@ -372,6 +349,37 @@ public class Utils {
             e.printStackTrace();
             return "";
         }
+    }
+
+    /**
+    * 요일 포맷
+    * */
+    public static String formatDayOfWeek(int dayOfWeek){
+        String dayOfWeekStr = "";
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                dayOfWeekStr = "일요일";
+                break;
+            case Calendar.MONDAY:
+                dayOfWeekStr = "월요일";
+                break;
+            case Calendar.TUESDAY:
+                dayOfWeekStr = "화요일";
+                break;
+            case Calendar.WEDNESDAY:
+                dayOfWeekStr = "수요일";
+                break;
+            case Calendar.THURSDAY:
+                dayOfWeekStr = "목요일";
+                break;
+            case Calendar.FRIDAY:
+                dayOfWeekStr = "금요일";
+                break;
+            case Calendar.SATURDAY:
+                dayOfWeekStr = "토요일";
+                break;
+        }
+        return dayOfWeekStr;
     }
 
     /**

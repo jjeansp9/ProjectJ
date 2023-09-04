@@ -23,7 +23,7 @@
             android:background="@color/popup_title_bg2">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +69,7 @@
                 android:textSize="@dimen/font_size_large"/>
 
             <TextView
-                android:id="@+id/tv_date"
+                android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_color_default"

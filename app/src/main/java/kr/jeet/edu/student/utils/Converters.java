@@ -18,7 +18,7 @@ import java.lang.reflect.Type;
 
 @ProvidedTypeConverter
 public class Converters {
-    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @TypeConverter
     public static LocalDateTime fromString(String value) {

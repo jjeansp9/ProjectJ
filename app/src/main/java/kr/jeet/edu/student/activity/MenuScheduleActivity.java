@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.ScheduleListAdapter;
@@ -31,6 +32,7 @@ import kr.jeet.edu.student.dialog.ScheduleDialog;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.response.HolidayData;
+import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -63,6 +65,7 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private ArrayList<ScheduleData> mList = new ArrayList<>();
     private ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
+    Set<CalendarDay> cal = new HashSet<>();
 
     private String _acaCode = "";
     private String _acaName = "";
@@ -205,45 +208,56 @@ public class MenuScheduleActivity extends BaseActivity {
 
         mCalendarView.setOnDateChangedListener((view, date, selected) -> {
             unSelEventDec.setSelectedDay(null);
-            LogMgr.i("DateChanged", date.toString());
-            if (calendarDaySet.contains(date)) {
-                selEventDec.setSelectedDay(date);
-                calUnSelDay = date;
-
-            } else { if (calUnSelDay != null) unSelEventDec.setSelectedDay(calUnSelDay); }
-
-            selectionDec.setSelectedDay(date);
-            runOnUiThread(view::invalidateDecorators);
 
             selYear = date.getYear();
             selMonth = date.getMonth()+1;
             selDay = date.getDay();
 
+            if (calendarDaySet != null){
+                if (calendarDaySet.contains(date)) {
+                    selEventDec.setSelectedDay(date);
+                    calUnSelDay = date;
+
+                } else { if (calUnSelDay != null) unSelEventDec.setSelectedDay(calUnSelDay); }
+            }
+
+            selectionDec.setSelectedDay(date);
+
             calSelDay = date;
 
             LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
+            requestScheduleList(_acaCode);
         });
 
         mCalendarView.setOnMonthChangedListener((view, date) -> {
             unSelEventDec.setSelectedDay(null);
 
-            if (calSelDay != null){
-                mCalendarView.setSelectedDate(calSelDay);
-
-                if (calendarDaySet.contains(calSelDay)) {
-                    selEventDec.setSelectedDay(calSelDay);
-                    calUnSelDay = calSelDay;
-
-                } else { if (calUnSelDay != null) unSelEventDec.setSelectedDay(calUnSelDay); }
-
-                selectionDec.setSelectedDay(calSelDay);
-            }
-
-            runOnUiThread(view::invalidateDecorators);
+            mCalendarView.setSelectedDate((CalendarDay) null);
 
             selYear = date.getYear();
             selMonth = date.getMonth()+1;
+            selDay = 0;
 
+            if (calSelDay != null){
+                //mCalendarView.setSelectedDate(calSelDay);
+
+                if (calendarDaySet != null){
+                    if (calendarDaySet.contains(calSelDay)) {
+                        selEventDec.setSelectedDay((CalendarDay) null);
+                        //calUnSelDay = calSelDay;
+
+                    }
+                    else {
+                        if (calUnSelDay != null){
+                            unSelEventDec.setSelectedDay(calUnSelDay);
+                        }
+                    }
+                }
+
+                selectionDec.setSelectedDay((CalendarDay) null);
+            }
+
+            LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
             requestScheduleList(_acaCode);
         });
     }
@@ -254,18 +268,24 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private void setRecycler(){
 
-        mAdapter = new ScheduleListAdapter(mContext, mList, this::showDialog);
+        mAdapter = new ScheduleListAdapter(mContext, mList, this::getDetailData);
         mRecyclerSchedule.setAdapter(mAdapter);
         mRecyclerSchedule.addItemDecoration(Utils.setDivider(mContext));
 
         mAdapter.notifyDataSetChanged();
     }
 
+    private void getDetailData(ScheduleData item){
+        if (item != null){
+            showDialog(item);
+        }else{
+            requestDetailSchedule(item.seq);
+        }
+
+    }
+
     private void showDialog(ScheduleData item){
         ScheduleDialog dialog = new ScheduleDialog(mContext);
-//        dialog.setTitle(item.stDate);
-//        dialog.setCampus(item.stClass);
-//        dialog.setSchedule(item.stContent);
         dialog.setData(item);
         dialog.setOnCloseClickListener(v -> dialog.dismiss());
         dialog.show();
@@ -278,13 +298,8 @@ public class MenuScheduleActivity extends BaseActivity {
             RetrofitClient.getApiInterface().getScheduleList(acaCode, selYear, selMonth).enqueue(new Callback<ScheduleListResponse>() {
                 @Override
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
-                    if (mList.size() > 0){
-                        for (int i = mList.size() - 1; i >= 0; i--) {
-                            mList.remove(i);
-                            mAdapter.notifyItemRemoved(i);
-                        }
-                        index = 0;
-                    }
+                    if (mList.size() > 0) mList.clear();
+
                     try {
                         if (response.isSuccessful()) {
                             List<ScheduleData> getData = new ArrayList<>();
@@ -294,13 +309,13 @@ public class MenuScheduleActivity extends BaseActivity {
                                 getData = response.body().data.scheduleList;
 
                                 if (!getData.isEmpty()) {
-                                    //mList.addAll(getData);
 
-                                    for (ScheduleData item : getData) {
-                                        mList.add(index, item);
-                                        calendarDayList.add(CalendarDay.from(item.year, item.month-1, item.day));
-                                        mAdapter.notifyItemInserted(index);
-                                        index++;
+                                    if (selDay == 0) {
+                                        mList.addAll(getData);
+                                        for (ScheduleData item : getData) calendarDayList.add(CalendarDay.from(item.year, item.month-1, item.day));
+
+                                    } else {
+                                        for (int i=0; i < getData.size(); i++) if (selDay == getData.get(i).day) mList.add(getData.get(i));
                                     }
 
                                     calendarDaySet = new HashSet<>(calendarDayList);
@@ -315,14 +330,14 @@ public class MenuScheduleActivity extends BaseActivity {
                                 getHoliday = response.body().data.holidayList;
 
                                 if (!getHoliday.isEmpty()){
-                                    List<CalendarDay> cal = new ArrayList<>();
                                     getHoliday.forEach(holiday -> cal.add(CalendarDay.from(selYear, Integer.parseInt(holiday.month) - 1, Integer.parseInt(holiday.day))));
 
                                     holidayDec.setDates(cal);
                                 }
-                            }
 
-                            mCalendarView.invalidateDecorators();
+                                holidayDec.setDates(cal);
+                                LogMgr.i(TAG, "calSize : " + cal.size());
+                            }
 
                         } else {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -330,8 +345,10 @@ public class MenuScheduleActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestScheduleList() Exception: ", e.getMessage());
                     }
+
+                    mCalendarView.invalidateDecorators();
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-                    //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     //mSwipeRefresh.setRefreshing(false);
                 }
 
@@ -342,7 +359,45 @@ public class MenuScheduleActivity extends BaseActivity {
                         LogMgr.e(TAG, "requestScheduleList() onFailure >> " + t.getMessage());
                     } catch (Exception e) {
                     }
+                    mCalendarView.invalidateDecorators();
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    //mSwipeRefresh.setRefreshing(false);
+                }
+            });
+        }
+    }
+
+    private void requestDetailSchedule(int seq){
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getScheduleDetail(seq).enqueue(new Callback<ScheduleDetailResponse>() {
+                @Override
+                public void onResponse(Call<ScheduleDetailResponse> call, Response<ScheduleDetailResponse> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            ScheduleData getData = null;
+
+                            if (response.body() != null) {
+                                getData = response.body().data;
+
+                                if (getData != null) showDialog(getData);
+
+                                LogMgr.i(TAG, "mListSize : " + mList.size());
+                            }
+
+                        } else {
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestDetailSchedule() Exception: ", e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ScheduleDetailResponse> call, Throwable t) {
+                    try {
+                        LogMgr.e(TAG, "requestDetailSchedule() onFailure >> " + t.getMessage());
+                    } catch (Exception e) {}
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                     //mSwipeRefresh.setRefreshing(false);
                 }
