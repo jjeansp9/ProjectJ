@@ -168,6 +168,11 @@ public class MenuScheduleActivity extends BaseActivity {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
             else _acaCode = "";
 
+            LogMgr.i(TAG, "spinnerTest Size1() : " + calendarDayList.size());
+
+            if (!calendarDayList.isEmpty() && calendarDayList.size() > 0) calendarDayList.clear();
+
+            LogMgr.i(TAG, "spinnerTest Size2() : " + calendarDayList.size());
             requestScheduleList(_acaCode);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
@@ -176,6 +181,7 @@ public class MenuScheduleActivity extends BaseActivity {
     SelEventDecorator selEventDec= null;
     UnSelEventDecorator unSelEventDec= null;
     SelectionDecorator selectionDec= null;
+
     private void setCalendar(){
         final int MIN_MONTH = 0;
         final int MAX_MONTH = 11;
@@ -298,6 +304,7 @@ public class MenuScheduleActivity extends BaseActivity {
             requestScheduleList(_acaCode);
         });
     }
+    // TODO : 캠퍼스목록에서 캠퍼스를 변경했을 때의 처리
 
     private void setDeco(CalendarDay day){
         selectionDec.setSelectedDay(day);
@@ -312,6 +319,10 @@ public class MenuScheduleActivity extends BaseActivity {
                     unSelEventDec.setSelectedDay(calUnSelDay);
                 }
             }
+        }else{
+            //eventDecorator.setDates(null);
+            selEventDec.setSelectedDay((CalendarDay) null);
+            calUnSelDay = null;
         }
     }
 
@@ -355,6 +366,7 @@ public class MenuScheduleActivity extends BaseActivity {
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
                     if (mList.size() > 0) mList.clear();
                     if (mListDay.size() > 0) mListDay.clear();
+                    if (calendarDayList.size() > 0) calendarDayList.clear();
 
                     try {
                         if (response.isSuccessful()) {
