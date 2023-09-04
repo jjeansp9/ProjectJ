@@ -124,8 +124,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
         }
     }
-    // GET http://192.168.2.77:7777/mobile/api/pt/-1
-    // 400 http://192.168.2.77:7777/mobile/api/pt/-1 (217ms)
 
     @Override
     void initAppbar() {
