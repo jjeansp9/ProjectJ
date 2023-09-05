@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.view.calendar.decorator;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Context;
+
 import androidx.core.content.ContextCompat;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -16,12 +17,12 @@ public class UnSelEventDecorator implements DayViewDecorator {
     private static final String TAG = "UnSelEventDecorator";
 
     private int color;
-    private AppCompatActivity activity;
+    private Context context;
     private CalendarDay selDay;
 
-    public UnSelEventDecorator(AppCompatActivity mActivity) {
-        this.activity = mActivity;
-        this.color = ContextCompat.getColor(this.activity, R.color.red);
+    public UnSelEventDecorator(Context mContext) {
+        this.context = mContext;
+        this.color = ContextCompat.getColor(this.context, R.color.red);
     }
 
     public void setSelectedDay(CalendarDay day) {
@@ -36,6 +37,6 @@ public class UnSelEventDecorator implements DayViewDecorator {
 
     @Override
     public void decorate(DayViewFacade view) {
-        if (view != null && activity != null) activity.runOnUiThread(() -> view.addSpan(new DotSpan(7f, color)));
+        if (view != null && context != null) view.addSpan(new DotSpan(7f, color));
     }
 }

@@ -315,7 +315,7 @@ public class Utils {
     * */
     public static String formatDate(String inputDate, String inputTime, boolean isDetail) {
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-        SimpleDateFormat outputFormat = new SimpleDateFormat("M월 d일 ", Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("M월 d일 (E요일) ", Locale.KOREA);
 
         SimpleDateFormat inputTimeFormat = new SimpleDateFormat("HH:mm", Locale.KOREA);
         SimpleDateFormat outputTimeFormat = new SimpleDateFormat("HH시 mm분", Locale.KOREA);
@@ -325,25 +325,13 @@ public class Utils {
             Date time = inputTimeFormat.parse(inputTime);
 
             String formattedDate = "";
-
             String formattedTime = "";
+
             if (time != null) formattedTime = outputTimeFormat.format(time);
+            if (date != null) formattedDate = outputFormat.format(date);
 
-            int dayOfWeek = 0;
-            if (date != null) {
-                formattedDate = outputFormat.format(date);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            }
-
-            String dayOfWeekStr = formatDayOfWeek(dayOfWeek);
-
-            if (isDetail) return formattedDate + "(" + dayOfWeekStr + ")\n" + formattedTime;
-            else {
-                LogMgr.e("Event", formattedDate + "(" + dayOfWeekStr + ")\n" + inputTime);
-                return formattedDate + "(" + dayOfWeekStr + ") " + inputTime;
-            }
+            if (isDetail) return formattedDate + "\n" + formattedTime;
+            else return formattedDate + inputTime;
 
         } catch (ParseException e) {
             e.printStackTrace();

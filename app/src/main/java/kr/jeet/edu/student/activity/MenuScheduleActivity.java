@@ -168,11 +168,8 @@ public class MenuScheduleActivity extends BaseActivity {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
             else _acaCode = "";
 
-            LogMgr.i(TAG, "spinnerTest Size1() : " + calendarDayList.size());
+            selDay = 1;
 
-            if (!calendarDayList.isEmpty() && calendarDayList.size() > 0) calendarDayList.clear();
-
-            LogMgr.i(TAG, "spinnerTest Size2() : " + calendarDayList.size());
             requestScheduleList(_acaCode);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
@@ -192,9 +189,9 @@ public class MenuScheduleActivity extends BaseActivity {
         HighlightSaturdayDecorator saturdayDec = new HighlightSaturdayDecorator(mContext);
         HighlightSundayDecorator sundayDec = new HighlightSundayDecorator(mContext);
         holidayDec = new HolidayDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
-        selectionDec = new SelectionDecorator(mActivity);
-        selEventDec = new SelEventDecorator(mActivity);
-        unSelEventDec = new UnSelEventDecorator(mActivity);
+        selectionDec = new SelectionDecorator(mContext);
+        selEventDec = new SelEventDecorator(mContext);
+        unSelEventDec = new UnSelEventDecorator(mContext);
         eventDecorator = new EventDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
 
         mCalendarView.setShowOtherDates(MaterialCalendarView.SHOW_DEFAULTS);
@@ -250,7 +247,7 @@ public class MenuScheduleActivity extends BaseActivity {
             view.invalidateDecorators();
 
             LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
-            for (int i=0; i < mList.size(); i++) if (selDay == mList.get(i).day) mListDay.add(mList.get(i));
+            for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
             mAdapter.notifyDataSetChanged();
 
             mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
@@ -282,46 +279,48 @@ public class MenuScheduleActivity extends BaseActivity {
 //                selectionDec.setSelectedDay(date);
 //            }
 
-
-//            selectionDec.setSelectedDay(date);
-//
-//            if (calendarDaySet != null){
-//                if (calendarDaySet.contains(date)) {
-//                    selEventDec.setSelectedDay(date);
-//                    calUnSelDay = date;
-//
-//                } else {
-//                    if (calUnSelDay != null){
-//                        unSelEventDec.setSelectedDay(calUnSelDay);
-//                    }
-//                }
-//            }
-
-            view.setSelectedDate(date);
-            setDeco(date);
+            //view.setSelectedDate(date);
+            //setDeco(date);
 
             LogMgr.i("DateTestMonth", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
             requestScheduleList(_acaCode);
         });
     }
-    // TODO : 캠퍼스목록에서 캠퍼스를 변경했을 때의 처리
 
     private void setDeco(CalendarDay day){
         selectionDec.setSelectedDay(day);
 
-        if (calendarDaySet != null){
+        if (calendarDaySet != null && calendarDaySet.size() > 0){
+            LogMgr.e("mEvent1");
             if (calendarDaySet.contains(day)) {
+                LogMgr.e("mEvent2");
+                unSelEventDec.setSelectedDay((CalendarDay) null);
                 selEventDec.setSelectedDay(day);
                 calUnSelDay = day;
 
             } else {
                 if (calUnSelDay != null){
+                    LogMgr.e("mEvent3");
                     unSelEventDec.setSelectedDay(calUnSelDay);
+                }else{
+                    LogMgr.e("mEvent4");
+                    if (calendarDaySet.contains(day)){
+                        LogMgr.e("mEvent5");
+                        selEventDec.setSelectedDay(day);
+                    }else{
+                        LogMgr.e("mEvent6");
+                        selEventDec.setSelectedDay((CalendarDay) null);
+                    }
+                    LogMgr.i("mEvent!!", calendarDayList.size()+"");
+                    eventDecorator.setDates(calendarDayList);
+
                 }
             }
         }else{
-            //eventDecorator.setDates(null);
+            LogMgr.e("mEvent7");
+            eventDecorator.setDates(Collections.emptySet());
             selEventDec.setSelectedDay((CalendarDay) null);
+            unSelEventDec.setSelectedDay((CalendarDay) null);
             calUnSelDay = null;
         }
     }
@@ -382,11 +381,11 @@ public class MenuScheduleActivity extends BaseActivity {
                                     for (int i=0; i < getData.size(); i++) if (selDay == getData.get(i).day) mListDay.add(getData.get(i));
                                     for (ScheduleData item : getData) calendarDayList.add(CalendarDay.from(item.year, item.month-1, item.day));
 
-                                    calendarDaySet = new HashSet<>(calendarDayList);
-                                    eventDecorator.setDates(calendarDayList);
+                                    if (calendarDayList.size() > 0) calendarDaySet = new HashSet<>(calendarDayList);
 
                                 } else {
-                                    LogMgr.e(TAG, "ListData is null");
+                                    if (calendarDaySet != null && calendarDayList.size() > 0) calendarDayList.clear();
+                                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
                                 }
                             }
 
@@ -398,9 +397,6 @@ public class MenuScheduleActivity extends BaseActivity {
 
                                     holidayDec.setDates(cal);
                                 }
-
-                                holidayDec.setDates(cal);
-                                LogMgr.i(TAG, "calSize : " + cal.size());
                             }
 
                         } else {
@@ -412,24 +408,8 @@ public class MenuScheduleActivity extends BaseActivity {
 
                     CalendarDay firstDay = CalendarDay.from(selYear, selMonth-1, selDay);
 
-                    LogMgr.i(TAG, "requestScheduleList() Date : "+ selYear+","+selMonth+","+selDay);
-
                     mCalendarView.setSelectedDate(firstDay);
-
                     setDeco(firstDay);
-//                    selectionDec.setSelectedDay(oneDay);
-//
-//                    if (calendarDaySet != null){
-//                        if (calendarDaySet.contains(oneDay)) {
-//                            selEventDec.setSelectedDay(oneDay);
-//                            calUnSelDay = oneDay;
-//
-//                        } else {
-//                            if (calUnSelDay != null){
-//                                unSelEventDec.setSelectedDay(calUnSelDay);
-//                            }
-//                        }
-//                    }
 
                     mCalendarView.invalidateDecorators();
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();

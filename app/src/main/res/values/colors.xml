@@ -27,6 +27,7 @@
     <color name="blackgray">#666666</color>
     <color name="bg_grey">#eee</color>
     <color name="bg_gray_transparent">#66666666</color>
+    <color name="transparent">#00FFFFFF</color>
     <color name="bg_white">#f8f8f8</color>
     <color name="bg_profile">#cccccc</color>
     <color name="popup_title_bg">#ededed</color>
