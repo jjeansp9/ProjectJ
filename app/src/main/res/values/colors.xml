@@ -16,6 +16,7 @@
     <color name="font_color_666">#666</color>
     <color name="font_color_999">#999</color>
     <color name="font_color_bc">#BCBCBC</color>
+    <color name="font_color_other_month_cal">#DADADA</color>
     <color name="font_color_red">#ff3e3e</color>
     <color name="font_color_blue">#155ae4</color>
     <color name="font_color_blue_sub">#1F72CC</color>
@@ -60,8 +61,10 @@
 
     <color name="bg_class_path">#F5F5F5</color>
 
-    <color name="saturday">#366FFF</color>
     <color name="sunday">#FF4444</color>
+    <color name="sunday_other_month">#FFD3D3</color>
+    <color name="saturday">#3999FF</color>
+    <color name="saturday_other_month">#CFECFF</color>
 
     <color name="bg_brf_detail_box">#F6F6F6</color>
 </resources>

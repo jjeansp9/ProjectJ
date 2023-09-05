@@ -14,7 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.format.DayFormatter;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.ArrayList;
@@ -45,6 +47,9 @@ import kr.jeet.edu.student.view.calendar.decorator.EventDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HighlightSaturdayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HighlightSundayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HolidayDecorator;
+import kr.jeet.edu.student.view.calendar.decorator.OtherMonthDecorator;
+import kr.jeet.edu.student.view.calendar.decorator.OtherSaturdayDecorator;
+import kr.jeet.edu.student.view.calendar.decorator.OtherSundayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelBackgroundDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelectionDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelEventDecorator;
@@ -95,6 +100,9 @@ public class MenuScheduleActivity extends BaseActivity {
     EventDecorator eventDecorator = null;
     HashSet<CalendarDay> calendarDaySet = null;
     HolidayDecorator holidayDec = null;
+    SelEventDecorator selEventDec= null;
+    UnSelEventDecorator unSelEventDec= null;
+    SelectionDecorator selectionDec= null;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -177,9 +185,9 @@ public class MenuScheduleActivity extends BaseActivity {
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
 
-    SelEventDecorator selEventDec= null;
-    UnSelEventDecorator unSelEventDec= null;
-    SelectionDecorator selectionDec= null;
+    OtherMonthDecorator otherDec = null;
+    OtherSundayDecorator otherSundayDec = null;
+    OtherSaturdayDecorator otherSaturdayDec = null;
 
     private void setCalendar(){
         final int MIN_MONTH = 0;
@@ -191,6 +199,9 @@ public class MenuScheduleActivity extends BaseActivity {
         HighlightSaturdayDecorator saturdayDec = new HighlightSaturdayDecorator(mContext);
         HighlightSundayDecorator sundayDec = new HighlightSundayDecorator(mContext);
         SelBackgroundDecorator bgDec = new SelBackgroundDecorator(mContext);
+        otherDec = new OtherMonthDecorator(mContext);
+        otherSundayDec = new OtherSundayDecorator(mContext);
+        otherSaturdayDec = new OtherSaturdayDecorator(mContext);
         holidayDec = new HolidayDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
         selectionDec = new SelectionDecorator(mContext);
         selEventDec = new SelEventDecorator(mContext);
@@ -200,10 +211,14 @@ public class MenuScheduleActivity extends BaseActivity {
         CalendarDay today = CalendarDay.from(selYear, selMonth-1, selDay);
         todayDec.setSelectedDay(today);
         bgDec.setSelectedDay(today);
+        otherDec.setSelectedDay(today);
+        otherSundayDec.setSelectedDay(today);
+        otherSaturdayDec.setSelectedDay(today);
+        holidayDec.setSelectedDay(today);
 
-        mCalendarView.setShowOtherDates(MaterialCalendarView.SHOW_DEFAULTS);
+        mCalendarView.setDynamicHeightEnabled(true);
         mCalendarView.setWeekDayFormatter(new CustomWeekDayFormatter(mContext));
-        mCalendarView.addDecorators(eventDecorator, todayDec, saturdayDec, sundayDec, bgDec, holidayDec, selectionDec, selEventDec, unSelEventDec);
+        mCalendarView.addDecorators(eventDecorator, todayDec, saturdayDec, sundayDec, bgDec, otherDec, otherSundayDec, otherSaturdayDec, holidayDec, selectionDec, selEventDec, unSelEventDec);
         mCalendarView.setTitleFormatter(new CustomTitleFormatter(mContext));
         mCalendarView.state().edit()
                 .setMinimumDate(CalendarDay.from(Constants.PICKER_MIN_YEAR, MIN_MONTH, MIN_DAY))
@@ -287,6 +302,11 @@ public class MenuScheduleActivity extends BaseActivity {
 
             //view.setSelectedDate(date);
             //setDeco(date);
+
+            otherDec.setSelectedDay(date);
+            otherSundayDec.setSelectedDay(date);
+            otherSaturdayDec.setSelectedDay(date);
+            holidayDec.setSelectedDay(date);
 
             LogMgr.i("DateTestMonth", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
             requestScheduleList(_acaCode);

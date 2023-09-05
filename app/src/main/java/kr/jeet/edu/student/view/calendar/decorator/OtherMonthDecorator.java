@@ -10,22 +10,18 @@ import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
 
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
 
 import kr.jeet.edu.student.R;
 
-public class HolidayDecorator implements DayViewDecorator {
+public class OtherMonthDecorator implements DayViewDecorator {
 
     private int color;
     private Context context;
-    private HashSet<CalendarDay> dates;
     private CalendarDay selDay;
 
-    public HolidayDecorator(Context mContext, HashSet<CalendarDay> dates) {
+    public OtherMonthDecorator(Context mContext) {
         this.context = mContext;
-        color = ContextCompat.getColor(this.context, R.color.sunday);
-        this.dates = new HashSet<>(dates);
+        this.color = ContextCompat.getColor(this.context, R.color.font_color_other_month_cal);
     }
 
     public void setSelectedDay(CalendarDay day) {
@@ -34,15 +30,16 @@ public class HolidayDecorator implements DayViewDecorator {
 
     @Override
     public boolean shouldDecorate(CalendarDay day) {
-        return dates.contains(day) && selDay.getMonth() == day.getMonth();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(day.getDate());
+
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        return day != null && day.getMonth() != selDay.getMonth() && weekDay != Calendar.SUNDAY;
     }
 
     @Override
     public void decorate(DayViewFacade view) {
-        if (view != null) view.addSpan(new ForegroundColorSpan(color));
-    }
-
-    public void setDates(Collection<CalendarDay> collection){
-        this.dates = new HashSet<>(collection);
+        if (view != null && context != null) view.addSpan(new ForegroundColorSpan(color));
     }
 }
