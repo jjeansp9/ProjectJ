@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,17 +15,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.format.DayFormatter;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import kr.jeet.edu.student.R;
@@ -34,6 +35,7 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.ScheduleDialog;
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.response.HolidayData;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
@@ -54,7 +56,6 @@ import kr.jeet.edu.student.view.calendar.decorator.SelBackgroundDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelectionDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelEventDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.TodayBackgroundDecorator;
-import kr.jeet.edu.student.view.calendar.decorator.TodayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.UnSelEventDecorator;
 import kr.jeet.edu.student.view.calendar.formatter.CustomTitleFormatter;
 import kr.jeet.edu.student.view.calendar.formatter.CustomWeekDayFormatter;
@@ -66,7 +67,7 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private static final String TAG = "ScheduleActivity";
 
-    private TextView mTvListEmpty;
+    private TextView mTvListEmpty, mTvHolidayDate, mTvHoliday;
     private PowerSpinnerView mSpinnerCampus;
     private MaterialCalendarView mCalendarView;
     private RecyclerView mRecyclerSchedule;
@@ -75,7 +76,10 @@ public class MenuScheduleActivity extends BaseActivity {
     private ArrayList<ScheduleData> mList = new ArrayList<>();
     private ArrayList<ScheduleData> mListDay = new ArrayList<>();
     private ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
-    Set<CalendarDay> cal = new HashSet<>();
+
+    private SimpleDateFormat _holidayFormat = new SimpleDateFormat(Constants.TIME_FORMATTER_M_D_E, Locale.KOREA);
+    private Set<CalendarDay> calHoliday = new HashSet<>();
+    private ArrayList<HolidayData> calHolidayList = new ArrayList<>();
 
     private String _acaCode = "";
     private String _acaName = "";
@@ -97,12 +101,17 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private final int CMD_VIEW_INIT = 0;       // View init
 
-    EventDecorator eventDecorator = null;
     HashSet<CalendarDay> calendarDaySet = null;
+    EventDecorator eventDecorator = null;
     HolidayDecorator holidayDec = null;
     SelEventDecorator selEventDec= null;
     UnSelEventDecorator unSelEventDec= null;
     SelectionDecorator selectionDec= null;
+    OtherMonthDecorator otherDec = null;
+    OtherSundayDecorator otherSundayDec = null;
+    OtherSaturdayDecorator otherSaturdayDec = null;
+
+    private boolean selAllOrNot = false;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -137,8 +146,8 @@ public class MenuScheduleActivity extends BaseActivity {
 
         LogMgr.i(TAG, "day: " + selDay);
 
-        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode);
-        else requestScheduleList("");
+        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode, false);
+        else requestScheduleList("", true);
     }
 
     @Override
@@ -156,10 +165,14 @@ public class MenuScheduleActivity extends BaseActivity {
         mCalendarView = findViewById(R.id.cv_schedule);
         mRecyclerSchedule = findViewById(R.id.recycler_schedule);
         mTvListEmpty = findViewById(R.id.tv_schedule_empty_list);
+        mTvHolidayDate = findViewById(R.id.tv_holiday_date);
+        mTvHoliday = findViewById(R.id.tv_holiday);
 
         setSpinner();
         setCalendar();
         setRecycler();
+
+        setTvHolidayDate();
     }
 
     private void setSpinner(){
@@ -175,19 +188,41 @@ public class MenuScheduleActivity extends BaseActivity {
 
         mSpinnerCampus.setItems(acaNames);
         mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
-            else _acaCode = "";
+            if (newIndex > 0) {
+                _acaCode = spinList.get(newIndex - 1).acaCode;
+                selAllOrNot = false;
+            }
+            else {
+                _acaCode = "";
+                selAllOrNot = true;
+            }
 
             selDay = 1;
 
-            requestScheduleList(_acaCode);
+            requestScheduleList(_acaCode, selAllOrNot);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
 
-    OtherMonthDecorator otherDec = null;
-    OtherSundayDecorator otherSundayDec = null;
-    OtherSaturdayDecorator otherSaturdayDec = null;
+    private void setTvHolidayDate(){
+        mTvHoliday.setText("");
+        mTvHoliday.setVisibility(View.GONE);
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.set(Calendar.YEAR, selYear);
+        calendar.set(Calendar.MONTH, selMonth-1);
+        calendar.set(Calendar.DAY_OF_MONTH, selDay);
+        _selectedDate = calendar.getTime();
+
+        mTvHolidayDate.setText(_holidayFormat.format(_selectedDate));
+
+        for (HolidayData item : calHolidayList){
+            if (Integer.parseInt(item.month) == selMonth && Integer.parseInt(item.day) == selDay){
+                mTvHoliday.setText(TextUtils.isEmpty(item.name) ? "" : item.name);
+                mTvHoliday.setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     private void setCalendar(){
         final int MIN_MONTH = 0;
@@ -217,6 +252,7 @@ public class MenuScheduleActivity extends BaseActivity {
         holidayDec.setSelectedDay(today);
 
         mCalendarView.setDynamicHeightEnabled(true);
+        mCalendarView.setSelected(false);
         mCalendarView.setWeekDayFormatter(new CustomWeekDayFormatter(mContext));
         mCalendarView.addDecorators(eventDecorator, todayDec, saturdayDec, sundayDec, bgDec, otherDec, otherSundayDec, otherSaturdayDec, holidayDec, selectionDec, selEventDec, unSelEventDec);
         mCalendarView.setTitleFormatter(new CustomTitleFormatter(mContext));
@@ -248,28 +284,16 @@ public class MenuScheduleActivity extends BaseActivity {
             selMonth = date.getMonth()+1;
             selDay = date.getDay();
 
-//            selectionDec.setSelectedDay(date);
-//
-//            if (calendarDaySet != null){
-//                if (calendarDaySet.contains(date)) {
-//                    selEventDec.setSelectedDay(date);
-//                    calUnSelDay = date;
-//
-//                } else {
-//                    if (calUnSelDay != null) {
-//                        unSelEventDec.setSelectedDay(calUnSelDay);
-//                    }
-//                }
-//            }
-
+            setTvHolidayDate();
             setDeco(date);
-
-            //calSelDay = date;
             view.invalidateDecorators();
 
             LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
-            for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
-            mAdapter.notifyDataSetChanged();
+
+            new Thread(() -> {
+                for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
+                runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+            }).start();
 
             mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
         });
@@ -281,27 +305,7 @@ public class MenuScheduleActivity extends BaseActivity {
             selMonth = date.getMonth()+1;
             selDay = date.getDay();
 
-//            if (calSelDay != null){
-//                view.setSelectedDate(date);
-//
-//                if (calendarDaySet != null){
-//                    if (calendarDaySet.contains(date)) {
-//                        selEventDec.setSelectedDay(date);
-//                        calUnSelDay = date;
-//
-//                    }
-//                    else {
-//                        if (calUnSelDay != null){
-//                            unSelEventDec.setSelectedDay(calUnSelDay);
-//                        }
-//                    }
-//                }
-//
-//                selectionDec.setSelectedDay(date);
-//            }
-
-            //view.setSelectedDate(date);
-            //setDeco(date);
+            setTvHolidayDate();
 
             otherDec.setSelectedDay(date);
             otherSundayDec.setSelectedDay(date);
@@ -309,7 +313,7 @@ public class MenuScheduleActivity extends BaseActivity {
             holidayDec.setSelectedDay(date);
 
             LogMgr.i("DateTestMonth", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
-            requestScheduleList(_acaCode);
+            requestScheduleList(_acaCode, selAllOrNot);
         });
     }
 
@@ -362,11 +366,6 @@ public class MenuScheduleActivity extends BaseActivity {
     }
 
     private void startDetailActivity(ScheduleData item){
-//        if (item != null){
-//            showDialog(item);
-//        }else{
-//            requestDetailSchedule(item.seq);
-//        }
         if (item != null){
             Intent targetIntent = new Intent(mContext, MenuScheduleDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_SCHEDULE_INFO, item);
@@ -383,15 +382,16 @@ public class MenuScheduleActivity extends BaseActivity {
         dialog.show();
     }
 
-    private void requestScheduleList(String acaCode) {
+    private void requestScheduleList(String acaCode, boolean all) {
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getScheduleList(acaCode, selYear, selMonth).enqueue(new Callback<ScheduleListResponse>() {
                 @Override
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
-//                    if (mList != null && mList.size() > 0) mList.clear();
-//                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
-//                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
-//                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
+                    if (mList != null && mList.size() > 0) mList.clear();
+                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
+                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
+                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
+                    if (calHolidayList != null && calHolidayList.size() > 0) calHolidayList.clear();
 
                     try {
                         if (response.isSuccessful()) {
@@ -409,21 +409,30 @@ public class MenuScheduleActivity extends BaseActivity {
 
                                     if (calendarDayList.size() > 0) calendarDaySet = new HashSet<>(calendarDayList);
 
-                                } else {
-                                    if (mList != null && mList.size() > 0) mList.clear();
-                                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
-                                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
-                                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
+                                    for (ScheduleData data : mList) data.campusAll = all;
                                 }
+//                                else {
+//                                    if (mList != null && mList.size() > 0) mList.clear();
+//                                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
+//                                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
+//                                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
+//                                    if (calHolidayList != null && calHolidayList.size() > 0) calHolidayList.clear();
+//                                }
                             }
 
                             if (response.body().data.holidayList != null){
                                 getHoliday = response.body().data.holidayList;
 
                                 if (!getHoliday.isEmpty()){
-                                    getHoliday.forEach(holiday -> cal.add(CalendarDay.from(selYear, Integer.parseInt(holiday.month) - 1, Integer.parseInt(holiday.day))));
 
-                                    holidayDec.setDates(cal);
+                                    calHolidayList.addAll(getHoliday);
+
+                                    for (HolidayData item : getHoliday) {
+                                        calHoliday.add(CalendarDay.from(selYear, Integer.parseInt(item.month) - 1, Integer.parseInt(item.day)));
+                                    }
+
+                                    holidayDec.setDates(calHoliday);
+
                                 }
                             }
 
@@ -442,7 +451,6 @@ public class MenuScheduleActivity extends BaseActivity {
                     mCalendarView.invalidateDecorators();
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
-                    //mSwipeRefresh.setRefreshing(false);
                 }
 
                 @Override
@@ -455,44 +463,6 @@ public class MenuScheduleActivity extends BaseActivity {
                     mCalendarView.invalidateDecorators();
                     mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    //mSwipeRefresh.setRefreshing(false);
-                }
-            });
-        }
-    }
-
-    private void requestDetailSchedule(int seq){
-        if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getScheduleDetail(seq).enqueue(new Callback<ScheduleDetailResponse>() {
-                @Override
-                public void onResponse(Call<ScheduleDetailResponse> call, Response<ScheduleDetailResponse> response) {
-                    try {
-                        if (response.isSuccessful()) {
-                            ScheduleData getData = null;
-
-                            if (response.body() != null) {
-                                getData = response.body().data;
-
-                                if (getData != null) showDialog(getData);
-
-                                LogMgr.i(TAG, "mListSize : " + mList.size());
-                            }
-
-                        } else {
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        LogMgr.e(TAG + "requestDetailSchedule() Exception: ", e.getMessage());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ScheduleDetailResponse> call, Throwable t) {
-                    try {
-                        LogMgr.e(TAG, "requestDetailSchedule() onFailure >> " + t.getMessage());
-                    } catch (Exception e) {}
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    //mSwipeRefresh.setRefreshing(false);
                 }
             });
         }

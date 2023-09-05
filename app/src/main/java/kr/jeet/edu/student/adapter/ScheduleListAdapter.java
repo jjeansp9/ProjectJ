@@ -71,8 +71,16 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         }
 
         holder.tvDate.setText(formattedDate);
-        holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
+        holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]");
         holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+
+        if (item.campusAll){
+            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+            holder.tvCampus.setVisibility(View.VISIBLE);
+
+        }else{
+            holder.tvCampus.setVisibility(View.GONE);
+        }
 
 //        try{
 //
@@ -95,7 +103,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvDate, tvTarget, tvTitle;
+        private TextView tvDate, tvTarget, tvTitle, tvCampus;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -103,6 +111,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
             tvDate = itemView.findViewById(R.id.tv_schedule_date);
             tvTarget = itemView.findViewById(R.id.tv_schedule_target);
             tvTitle = itemView.findViewById(R.id.tv_schedule_title);
+            tvCampus = itemView.findViewById(R.id.tv_schedule_campus);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();

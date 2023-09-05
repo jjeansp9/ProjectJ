@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -60,7 +61,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(title);
+        customAppbar.setTitle(getString(R.string.main_menu_campus_schedule));
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,16 +72,16 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
         initData();
 
-        //tvDate = findViewById(R.id.tv_sc_detail_date);
+        tvDate = findViewById(R.id.tv_sc_detail_date);
         tvCampus = findViewById(R.id.tv_sc_detail_campus);
-        tvTitle = findViewById(R.id.tv_sc_detail_title);
         tvTarget = findViewById(R.id.tv_sc_detail_target);
+        tvTitle = findViewById(R.id.tv_sc_detail_title);
         tvContent = findViewById(R.id.tv_sc_detail_content);
 
         // TODO : 요일 관련 코드 수정하기 [ Utils.formatDayOfWeek() 사용하지 않기 ]
 
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy.MM.dd ", Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일", Locale.KOREA);
         Date date = null;
 
         try {
@@ -90,23 +91,15 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
             String formattedDate = "";
 
-            int dayOfWeek = 0;
-            if (date != null) {
-                formattedDate = outputFormat.format(date);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-            }
+            if (date != null) formattedDate = outputFormat.format(date);
 
-            String dayOfWeekStr = Utils.formatDayOfWeek(dayOfWeek).replace("요일", "");
-
-            title = formattedDate+"("+dayOfWeekStr+")";
+            tvDate.setText(formattedDate);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        String str = TextUtils.isEmpty(mInfo.acaName) ? "" : "["+mInfo.acaName+"]";
+        String str = TextUtils.isEmpty(mInfo.acaName) ? "" : mInfo.acaName;
         tvCampus.setText(str);
 
         str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;
@@ -115,8 +108,12 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         str = TextUtils.isEmpty(mInfo.target) ? "" : "["+mInfo.target+"]";
         tvTarget.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
-        tvContent.setText(str);
+        if (TextUtils.isEmpty(mInfo.content)){
+            tvContent.setVisibility(View.GONE);
+        }else{
+            str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
+            tvContent.setText(str);
+        }
 
         initAppbar();
     }

@@ -25,25 +25,31 @@
             android:paddingHorizontal="@dimen/layout_margin">
 
             <TextView
-                android:id="@+id/tv_sc_detail_campus"
+                android:id="@+id/tv_sc_detail_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:textColor="@color/font_color_blue_sub"
+                android:textColor="@color/font_color_default"
                 android:textStyle="bold"
-                android:hint="캠퍼스 정보 없음"
-                android:textSize="@dimen/font_size_large"
+                android:hint="날짜 정보없음"
+                android:textSize="@dimen/font_size_xlarge"
                 android:lineSpacingMultiplier="1.2"/>
 
             <TextView
-                android:id="@+id/tv_sc_detail_title"
+                android:id="@+id/tv_sc_detail_campus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:hint="날짜 정보 없음"
-                android:layout_marginTop="4dp"
+                android:hint="캠퍼스 정보없음"
                 android:lineSpacingMultiplier="1.2"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/line_2"/>
 
             <TextView
                 android:id="@+id/tv_sc_detail_target"
@@ -52,18 +58,32 @@
                 android:textColor="@color/font_color_blue_sub"
                 android:hint="학급 정보 없음"
                 android:textStyle="bold"
+                android:textSize="@dimen/font_size_xlarge"
+                android:layout_marginTop="16dp"
+                android:lineSpacingMultiplier="1.2"/>
+
+            <TextView
+                android:id="@+id/tv_sc_detail_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:textSize="@dimen/font_size_large"
-                android:layout_marginTop="12dp"
+                android:hint="일정 정보없음"
+                android:textColor="@color/font_color_default"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="16dp"
                 android:lineSpacingMultiplier="1.2"/>
 
             <TextView
                 android:id="@+id/tv_sc_detail_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/bg_schedule_detail_box"
+                android:minLines="4"
+                android:padding="8dp"
                 android:textSize="@dimen/font_size"
-                android:hint="캠퍼스 일정 정보 없음"
+                android:hint="상세내용 정보없음"
                 android:textColor="@color/font_color_default"
-                android:layout_marginTop="4dp"
                 android:layout_marginBottom="16dp"
                 android:lineSpacingMultiplier="1.2"/>
 

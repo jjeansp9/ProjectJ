@@ -1,6 +1,8 @@
 package kr.jeet.edu.student.view.calendar.decorator;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
 
@@ -16,11 +18,13 @@ public class SelBackgroundDecorator implements DayViewDecorator {
 
     private Context context;
     private Drawable drawable;
+    private Drawable transRes;
     private CalendarDay selDay;
 
     public SelBackgroundDecorator(Context mContext) {
         this.context = mContext;
         this.drawable = ContextCompat.getDrawable(context, R.drawable.selector_bg_calender);
+        this.transRes = new ColorDrawable(Color.TRANSPARENT);
     }
 
     public void setSelectedDay(CalendarDay day) {this.selDay = day;}
@@ -29,5 +33,10 @@ public class SelBackgroundDecorator implements DayViewDecorator {
     public boolean shouldDecorate(CalendarDay day) {return !selDay.equals(day);}
 
     @Override
-    public void decorate(DayViewFacade view) { if (view != null && context != null) {view.setSelectionDrawable(drawable);} }
+    public void decorate(DayViewFacade view) {
+        if (view != null && context != null) {
+            view.setSelectionDrawable(transRes);
+            view.setBackgroundDrawable(drawable);
+        }
+    }
 }

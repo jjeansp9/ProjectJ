@@ -18,6 +18,7 @@ public class ScheduleData implements Parcelable {
     public int day;          // 일
     public int writerSeq;    // 작성자 seq
     public List<ReceiverData> receiverList;
+    public boolean campusAll;
 
     // Parcelable 구현 부분
     protected ScheduleData(Parcel in) {

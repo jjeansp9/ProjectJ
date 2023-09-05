@@ -82,4 +82,5 @@ public class Constants {
     public static final String DATE_FORMATTER_MM = "MM";
     public static final String TIME_FORMATTER_A_HH_MM = "a hh:mm";
     public static final String TIME_FORMATTER_HH_MM = "HH:mm";
+    public static final String TIME_FORMATTER_M_D_E = "M월 d일 E요일";
 }

@@ -12,5 +12,4 @@
             <corners android:radius="6dp"/>
         </shape>
     </item>
-    <item android:drawable="@android:color/transparent"/>
 </selector>

@@ -22,7 +22,7 @@
     <color name="font_color_blue_sub">#1F72CC</color>
 
     <color name="line">#999</color>
-    <color name="line_2">#D5D5D5</color>
+    <color name="line_2">#DDDDDD</color>
     <color name="line_set">#EDEDED</color>
     <color name="gray">#cccccc</color>
     <color name="blackgray">#666666</color>
@@ -61,10 +61,12 @@
 
     <color name="bg_class_path">#F5F5F5</color>
 
+    <color name="holiday">#FF7070</color>
+
     <color name="sunday">#FF4444</color>
     <color name="sunday_other_month">#FFD3D3</color>
     <color name="saturday">#3999FF</color>
     <color name="saturday_other_month">#CFECFF</color>
 
-    <color name="bg_brf_detail_box">#F6F6F6</color>
+    <color name="bg_brf_detail_box">#F8F8F8</color>
 </resources>
