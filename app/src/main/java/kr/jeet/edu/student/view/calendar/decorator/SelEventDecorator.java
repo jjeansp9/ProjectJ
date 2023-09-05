@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.view.calendar.decorator;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 
 import androidx.core.content.ContextCompat;
 
@@ -30,13 +31,8 @@ public class SelEventDecorator implements DayViewDecorator {
     }
 
     @Override
-    public boolean shouldDecorate(CalendarDay day) {
-        //LogMgr.i(TAG+" <<< Sel >>> ", day.equals(selDay) ? "true" + "day: " + day + ", selDay: " + selDay : "false" + "day: " + day + ", selDay: " + selDay);
-        return day != null && day.equals(selDay);
-    }
+    public boolean shouldDecorate(CalendarDay day) {return day != null && day.equals(selDay);}
 
     @Override
-    public void decorate(DayViewFacade view) {
-        if (view != null && context != null) view.addSpan(new DotSpan(7f, color));
-    }
+    public void decorate(DayViewFacade view) { if (view != null && context != null) {view.addSpan(new DotSpan(7f, color));} }
 }

@@ -68,7 +68,7 @@
                 android:adjustViewBounds="true"
                 app:mcv_showOtherDates="defaults"
                 android:layout_marginBottom="16dp"
-                app:layout_collapseMode="parallax"/>
+                app:mcv_selectionColor="#ffdedb" />
 
             <View
                 android:id="@+id/line"

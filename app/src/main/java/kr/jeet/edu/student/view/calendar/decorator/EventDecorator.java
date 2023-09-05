@@ -28,16 +28,7 @@ public class EventDecorator implements DayViewDecorator {
     }
 
     @Override
-    public boolean shouldDecorate(CalendarDay day) {
-//        if (dates.isEmpty()) {
-//            this.color = ContextCompat.getColor(this.context, R.color.transparent);
-//        }
-//        else {
-//            this.color = ContextCompat.getColor(this.context, R.color.red);
-//        }
-
-        return dates.contains(day);
-    }
+    public boolean shouldDecorate(CalendarDay day) {return dates.contains(day);}
 
     @Override
     public void decorate(DayViewFacade view) {

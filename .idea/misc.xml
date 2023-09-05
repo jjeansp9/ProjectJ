@@ -31,9 +31,13 @@
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0810/app/src/main/res/layout/layout_test_reserve_list_item.xml" value="0.38697916666666665" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0810/app/src/main/res/layout/view_auth_phone_number.xml" value="0.38697916666666665" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_brf_detail_box.xml" value="0.1855" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_calendar_today.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_campus_spinner.xml" value="0.237" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_click_event.xml" value="0.272" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_dialog_layout.xml" value="0.2755" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_edittext_login.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_nonmember.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_pref_sel_checked.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_set_click_event.xml" value="0.272" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_set_click_event_body.xml" value="0.219" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bg_set_click_event_bottom.xml" value="0.272" />
@@ -44,10 +48,22 @@
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bt_address_search_sel.xml" value="0.237" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/bt_click_cancel.xml" value="0.194" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/btn_brf_reserver_list.xml" value="0.2545" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/et_login_inputbox_sel.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/icon_dot_red.xml" value="0.184" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_address_search.xml" value="0.237" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bg_calender.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_brf_check.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bt_account_link.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bt_agree.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bt_login_user.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bt_stu_info_consultation_request.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_bt_ubderbox.xml" value="0.194" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_campus_spinner.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_icon_back.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_login_inputbox.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_month_back.xml" value="0.219" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_pref_sel_check.xml" value="0.221" />
+        <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/drawable/selector_test_reserve_seemore.xml" value="0.221" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/layout/activity_agree_terms.xml" value="0.38697916666666665" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/layout/activity_find_credentials.xml" value="0.38697916666666665" />
         <entry key="..\:/JspAndroid/AppProject/dev/JEET_EDU/JEET_Export_0816/app/src/main/res/layout/activity_informed_consent.xml" value="0.38697916666666665" />

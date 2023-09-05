@@ -45,8 +45,10 @@ import kr.jeet.edu.student.view.calendar.decorator.EventDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HighlightSaturdayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HighlightSundayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.HolidayDecorator;
+import kr.jeet.edu.student.view.calendar.decorator.SelBackgroundDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelectionDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.SelEventDecorator;
+import kr.jeet.edu.student.view.calendar.decorator.TodayBackgroundDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.TodayDecorator;
 import kr.jeet.edu.student.view.calendar.decorator.UnSelEventDecorator;
 import kr.jeet.edu.student.view.calendar.formatter.CustomTitleFormatter;
@@ -185,18 +187,23 @@ public class MenuScheduleActivity extends BaseActivity {
         final int MIN_DAY = 1;
         final int MAX_DAY = 31;
 
-        TodayDecorator todayDec = new TodayDecorator();
+        TodayBackgroundDecorator todayDec = new TodayBackgroundDecorator(mContext);
         HighlightSaturdayDecorator saturdayDec = new HighlightSaturdayDecorator(mContext);
         HighlightSundayDecorator sundayDec = new HighlightSundayDecorator(mContext);
+        SelBackgroundDecorator bgDec = new SelBackgroundDecorator(mContext);
         holidayDec = new HolidayDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
         selectionDec = new SelectionDecorator(mContext);
         selEventDec = new SelEventDecorator(mContext);
         unSelEventDec = new UnSelEventDecorator(mContext);
         eventDecorator = new EventDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
 
+        CalendarDay today = CalendarDay.from(selYear, selMonth-1, selDay);
+        todayDec.setSelectedDay(today);
+        bgDec.setSelectedDay(today);
+
         mCalendarView.setShowOtherDates(MaterialCalendarView.SHOW_DEFAULTS);
         mCalendarView.setWeekDayFormatter(new CustomWeekDayFormatter(mContext));
-        mCalendarView.addDecorators(eventDecorator, todayDec, saturdayDec, sundayDec, holidayDec, selectionDec, selEventDec, unSelEventDec);
+        mCalendarView.addDecorators(eventDecorator, todayDec, saturdayDec, sundayDec, bgDec, holidayDec, selectionDec, selEventDec, unSelEventDec);
         mCalendarView.setTitleFormatter(new CustomTitleFormatter(mContext));
         mCalendarView.state().edit()
                 .setMinimumDate(CalendarDay.from(Constants.PICKER_MIN_YEAR, MIN_MONTH, MIN_DAY))
@@ -208,7 +215,6 @@ public class MenuScheduleActivity extends BaseActivity {
             int currentMonth = mCalendarView.getCurrentDate().getMonth();
 
             Utils.yearMonthPicker(mContext, (month, year) -> {
-                //LocalDate localDate = LocalDate.of(year, month + 1, 1);
                 LogMgr.e(TAG, year+"년 "+month+"월");
                 CalendarDay newDate = CalendarDay.from(year, month, 1);
                 runOnUiThread( () -> mCalendarView.setCurrentDate(newDate) );
@@ -288,28 +294,29 @@ public class MenuScheduleActivity extends BaseActivity {
     }
 
     private void setDeco(CalendarDay day){
-        selectionDec.setSelectedDay(day);
+        //selectionDec.setSelectedDay(day);
 
         if (calendarDaySet != null && calendarDaySet.size() > 0){
             LogMgr.e("mEvent1");
             if (calendarDaySet.contains(day)) {
                 LogMgr.e("mEvent2");
-                unSelEventDec.setSelectedDay((CalendarDay) null);
-                selEventDec.setSelectedDay(day);
+                //unSelEventDec.setSelectedDay((CalendarDay) null);
+                //selEventDec.setSelectedDay(day);
                 calUnSelDay = day;
-
+                eventDecorator.setDates(calendarDayList);
             } else {
                 if (calUnSelDay != null){
                     LogMgr.e("mEvent3");
-                    unSelEventDec.setSelectedDay(calUnSelDay);
+                    //unSelEventDec.setSelectedDay(calUnSelDay);
+                    eventDecorator.setDates(calendarDayList);
                 }else{
                     LogMgr.e("mEvent4");
                     if (calendarDaySet.contains(day)){
                         LogMgr.e("mEvent5");
-                        selEventDec.setSelectedDay(day);
+                        //selEventDec.setSelectedDay(day);
                     }else{
                         LogMgr.e("mEvent6");
-                        selEventDec.setSelectedDay((CalendarDay) null);
+                        //selEventDec.setSelectedDay((CalendarDay) null);
                     }
                     LogMgr.i("mEvent!!", calendarDayList.size()+"");
                     eventDecorator.setDates(calendarDayList);
@@ -319,22 +326,22 @@ public class MenuScheduleActivity extends BaseActivity {
         }else{
             LogMgr.e("mEvent7");
             eventDecorator.setDates(Collections.emptySet());
-            selEventDec.setSelectedDay((CalendarDay) null);
-            unSelEventDec.setSelectedDay((CalendarDay) null);
+            //selEventDec.setSelectedDay((CalendarDay) null);
+            //unSelEventDec.setSelectedDay((CalendarDay) null);
             calUnSelDay = null;
         }
     }
 
     private void setRecycler(){
 
-        mAdapter = new ScheduleListAdapter(mContext, mListDay, this::getDetailData);
+        mAdapter = new ScheduleListAdapter(mContext, mListDay, this::startDetailActivity);
         mRecyclerSchedule.setAdapter(mAdapter);
         mRecyclerSchedule.addItemDecoration(Utils.setDivider(mContext));
 
         mAdapter.notifyDataSetChanged();
     }
 
-    private void getDetailData(ScheduleData item){
+    private void startDetailActivity(ScheduleData item){
 //        if (item != null){
 //            showDialog(item);
 //        }else{
@@ -356,16 +363,15 @@ public class MenuScheduleActivity extends BaseActivity {
         dialog.show();
     }
 
-    int index = 0;
-
     private void requestScheduleList(String acaCode) {
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getScheduleList(acaCode, selYear, selMonth).enqueue(new Callback<ScheduleListResponse>() {
                 @Override
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
-                    if (mList.size() > 0) mList.clear();
-                    if (mListDay.size() > 0) mListDay.clear();
-                    if (calendarDayList.size() > 0) calendarDayList.clear();
+//                    if (mList != null && mList.size() > 0) mList.clear();
+//                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
+//                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
+//                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
 
                     try {
                         if (response.isSuccessful()) {
@@ -376,15 +382,17 @@ public class MenuScheduleActivity extends BaseActivity {
                                 getData = response.body().data.scheduleList;
 
                                 if (!getData.isEmpty()) {
-
                                     mList.addAll(getData);
+
                                     for (int i=0; i < getData.size(); i++) if (selDay == getData.get(i).day) mListDay.add(getData.get(i));
                                     for (ScheduleData item : getData) calendarDayList.add(CalendarDay.from(item.year, item.month-1, item.day));
 
                                     if (calendarDayList.size() > 0) calendarDaySet = new HashSet<>(calendarDayList);
 
                                 } else {
-                                    if (calendarDaySet != null && calendarDayList.size() > 0) calendarDayList.clear();
+                                    if (mList != null && mList.size() > 0) mList.clear();
+                                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
+                                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
                                     if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
                                 }
                             }

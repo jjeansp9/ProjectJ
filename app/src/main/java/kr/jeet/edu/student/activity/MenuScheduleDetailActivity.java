@@ -77,6 +77,8 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         tvTarget = findViewById(R.id.tv_sc_detail_target);
         tvContent = findViewById(R.id.tv_sc_detail_content);
 
+        // TODO : 요일 관련 코드 수정하기 [ Utils.formatDayOfWeek() 사용하지 않기 ]
+
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
         SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy.MM.dd ", Locale.KOREA);
         Date date = null;

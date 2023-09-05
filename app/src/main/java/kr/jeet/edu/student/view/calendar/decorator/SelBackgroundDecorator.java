@@ -1,0 +1,33 @@
+package kr.jeet.edu.student.view.calendar.decorator;
+
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.text.style.ForegroundColorSpan;
+
+import androidx.core.content.ContextCompat;
+
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
+
+import kr.jeet.edu.student.R;
+
+public class SelBackgroundDecorator implements DayViewDecorator {
+
+    private Context context;
+    private Drawable drawable;
+    private CalendarDay selDay;
+
+    public SelBackgroundDecorator(Context mContext) {
+        this.context = mContext;
+        this.drawable = ContextCompat.getDrawable(context, R.drawable.selector_bg_calender);
+    }
+
+    public void setSelectedDay(CalendarDay day) {this.selDay = day;}
+
+    @Override
+    public boolean shouldDecorate(CalendarDay day) {return !selDay.equals(day);}
+
+    @Override
+    public void decorate(DayViewFacade view) { if (view != null && context != null) {view.setSelectionDrawable(drawable);} }
+}
