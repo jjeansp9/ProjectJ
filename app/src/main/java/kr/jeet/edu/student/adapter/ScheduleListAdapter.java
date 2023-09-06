@@ -79,15 +79,18 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
             holder.tvTarget.setText(str);
             holder.tvTarget.setVisibility(View.VISIBLE);
         }else{
-            holder.tvTarget.setVisibility(View.GONE);
+            if (item.campusAll) holder.tvTarget.setVisibility(View.INVISIBLE);
+            else holder.tvTarget.setVisibility(View.GONE);
         }
 
-        if (item.campusAll){
+        // TODO target데이터가 없을 때 INVISIBLE or GONE 처리 생각해보기
+
+       if (item.campusAll){
             holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
             holder.tvCampus.setVisibility(View.VISIBLE);
-        }else{
+       }else{
             holder.tvCampus.setVisibility(View.GONE);
-        }
+       }
 
 //        try{
 //

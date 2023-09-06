@@ -16,8 +16,7 @@ import kr.jeet.edu.student.R;
 public class TodayBackgroundDecorator implements DayViewDecorator {
 
     private Context context;
-    private Drawable drawable;
-    private Drawable transRes;
+    private Drawable drawable, transRes;
     private CalendarDay today;
 
     public TodayBackgroundDecorator(Context mContext) {
@@ -34,8 +33,7 @@ public class TodayBackgroundDecorator implements DayViewDecorator {
     @Override
     public void decorate(DayViewFacade view) {
         if (view != null && context != null) {
-            view.setSelectionDrawable(transRes);
-            view.setBackgroundDrawable(drawable);
+            view.setSelectionDrawable(drawable);
         }
     }
 }

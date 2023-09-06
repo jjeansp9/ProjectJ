@@ -100,6 +100,12 @@ public class FCMManager {
                 isRequireConfirmReceived = true;
                 _notifyID = NOTIFICATION_ID_SYSTEM;
             }
+        } else if (message.pushType.equals(MSG_TYPE_ACA_SCHEDULE)) {
+            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
+                isReject = true;
+                isRequireConfirmReceived = true;
+                _notifyID = NOTIFICATION_ID_ACA_SCHEDULE;
+            }
         }
         LogMgr.d(TAG, "isReject = " + isReject);
         if(!isReject) {
@@ -198,6 +204,10 @@ public class FCMManager {
                 break;
             case MSG_TYPE_SYSTEM:
                 tickerText = _context.getString(R.string.push_noti_received_system);
+                break;
+            case MSG_TYPE_ACA_SCHEDULE:
+                tickerText = _context.getString(R.string.push_noti_received_schedule);
+                break;
             default :
                 tickerText = "JEET알림";
                 break;

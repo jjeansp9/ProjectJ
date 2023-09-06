@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.text.style.ForegroundColorSpan;
 
 import androidx.core.content.ContextCompat;
 
@@ -17,8 +16,7 @@ import kr.jeet.edu.student.R;
 public class SelBackgroundDecorator implements DayViewDecorator {
 
     private Context context;
-    private Drawable drawable;
-    private Drawable transRes;
+    private Drawable drawable, transRes;
     private CalendarDay selDay;
 
     public SelBackgroundDecorator(Context mContext) {
@@ -35,8 +33,7 @@ public class SelBackgroundDecorator implements DayViewDecorator {
     @Override
     public void decorate(DayViewFacade view) {
         if (view != null && context != null) {
-            view.setSelectionDrawable(transRes);
-            view.setBackgroundDrawable(drawable);
+            view.setSelectionDrawable(drawable);
         }
     }
 }

@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.activity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -33,12 +34,9 @@ import kr.jeet.edu.student.adapter.ScheduleListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.dialog.ScheduleDialog;
 import kr.jeet.edu.student.model.data.ACAData;
-import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.response.HolidayData;
-import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -86,18 +84,11 @@ public class MenuScheduleActivity extends BaseActivity {
     private String _userType = "";
 
     private CalendarDay calUnSelDay;
-    private CalendarDay calSelDay;
 
     Date _selectedDate = new Date();
     private int selYear = 0;
     private int selMonth = 0;
     private int selDay = 0;
-
-    private int eventYear = 0;
-    private int eventMonth = 0;
-    private int eventDay = 0;
-
-    private AppCompatActivity mActivity;
 
     private final int CMD_VIEW_INIT = 0;       // View init
 
@@ -128,7 +119,6 @@ public class MenuScheduleActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_schedule);
         mContext = this;
-        mActivity = this;
         initData();
         initView();
         initAppbar();
@@ -143,8 +133,6 @@ public class MenuScheduleActivity extends BaseActivity {
         selYear = cal.get(Calendar.YEAR);
         selMonth = cal.get(Calendar.MONTH)+1;
         selDay = cal.get(Calendar.DAY_OF_MONTH);
-
-        LogMgr.i(TAG, "day: " + selDay);
 
         if (_userType.equals(Constants.MEMBER)) {
             selAllOrNot = false;
@@ -202,8 +190,6 @@ public class MenuScheduleActivity extends BaseActivity {
                 _acaCode = "";
                 selAllOrNot = true;
             }
-
-            selDay = 1;
 
             requestScheduleList(_acaCode, selAllOrNot);
         });
@@ -294,10 +280,11 @@ public class MenuScheduleActivity extends BaseActivity {
             setDeco(date);
             view.invalidateDecorators();
 
-            LogMgr.i("DateTest", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
+            LogMgr.i(TAG,"DateTest >> " + "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
 
             new Thread(() -> {
                 for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
+
                 runOnUiThread(() -> {
                     mAdapter.notifyDataSetChanged();
                     mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
@@ -319,43 +306,33 @@ public class MenuScheduleActivity extends BaseActivity {
             otherSaturdayDec.setSelectedDay(date);
             holidayDec.setSelectedDay(date);
 
-            LogMgr.i("DateTestMonth", "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
+            LogMgr.i(TAG, "DateTestMonth >> " + "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
             requestScheduleList(_acaCode, selAllOrNot);
         });
     }
 
     private void setDeco(CalendarDay day){
-        //selectionDec.setSelectedDay(day);
 
         if (calendarDaySet != null && calendarDaySet.size() > 0){
-            LogMgr.e("mEvent1");
             if (calendarDaySet.contains(day)) {
-                LogMgr.e("mEvent2");
                 //unSelEventDec.setSelectedDay((CalendarDay) null);
                 //selEventDec.setSelectedDay(day);
                 calUnSelDay = day;
                 eventDecorator.setDates(calendarDayList);
             } else {
                 if (calUnSelDay != null){
-                    LogMgr.e("mEvent3");
                     //unSelEventDec.setSelectedDay(calUnSelDay);
                     eventDecorator.setDates(calendarDayList);
                 }else{
-                    LogMgr.e("mEvent4");
                     if (calendarDaySet.contains(day)){
-                        LogMgr.e("mEvent5");
                         //selEventDec.setSelectedDay(day);
                     }else{
-                        LogMgr.e("mEvent6");
                         //selEventDec.setSelectedDay((CalendarDay) null);
                     }
-                    LogMgr.i("mEvent!!", calendarDayList.size()+"");
                     eventDecorator.setDates(calendarDayList);
-
                 }
             }
         }else{
-            LogMgr.e("mEvent7");
             eventDecorator.setDates(Collections.emptySet());
             //selEventDec.setSelectedDay((CalendarDay) null);
             //unSelEventDec.setSelectedDay((CalendarDay) null);
@@ -376,17 +353,8 @@ public class MenuScheduleActivity extends BaseActivity {
         if (item != null){
             Intent targetIntent = new Intent(mContext, MenuScheduleDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_SCHEDULE_INFO, item);
-            //targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_campus_schedule));
             startActivity(targetIntent);
-
         }
-    }
-
-    private void showDialog(ScheduleData item){
-        ScheduleDialog dialog = new ScheduleDialog(mContext);
-        dialog.setData(item);
-        dialog.setOnCloseClickListener(v -> dialog.dismiss());
-        dialog.show();
     }
 
     private void requestScheduleList(String acaCode, boolean all) {
@@ -418,13 +386,6 @@ public class MenuScheduleActivity extends BaseActivity {
 
                                     for (ScheduleData data : mList) data.campusAll = all;
                                 }
-//                                else {
-//                                    if (mList != null && mList.size() > 0) mList.clear();
-//                                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
-//                                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
-//                                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
-//                                    if (calHolidayList != null && calHolidayList.size() > 0) calHolidayList.clear();
-//                                }
                             }
 
                             if (response.body().data.holidayList != null){
@@ -439,7 +400,6 @@ public class MenuScheduleActivity extends BaseActivity {
                                     }
 
                                     holidayDec.setDates(calHoliday);
-
                                 }
                             }
 
@@ -450,12 +410,8 @@ public class MenuScheduleActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestScheduleList() Exception: ", e.getMessage());
                     }
 
-                    CalendarDay firstDay = CalendarDay.from(selYear, selMonth-1, selDay);
+                    updateCalView();
 
-                    mCalendarView.setSelectedDate(firstDay);
-                    setDeco(firstDay);
-
-                    mCalendarView.invalidateDecorators();
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
                 }
@@ -470,9 +426,18 @@ public class MenuScheduleActivity extends BaseActivity {
                     mCalendarView.invalidateDecorators();
                     mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+
+                    updateCalView();
                 }
             });
         }
+    }
+
+    private void updateCalView(){
+        CalendarDay firstDay = CalendarDay.from(selYear, selMonth-1, selDay);
+        mCalendarView.setSelectedDate(firstDay);
+        setDeco(firstDay);
+        mCalendarView.invalidateDecorators();
     }
 }
 

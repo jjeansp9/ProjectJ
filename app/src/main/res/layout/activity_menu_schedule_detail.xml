@@ -32,7 +32,7 @@
                 android:textColor="@color/font_color_default"
                 android:textStyle="bold"
                 android:hint="날짜 정보없음"
-                android:textSize="@dimen/font_size_xlarge"
+                android:textSize="@dimen/font_size_large"
                 android:lineSpacingMultiplier="1.2"/>
 
             <TextView
@@ -59,7 +59,7 @@
                 android:textColor="@color/font_color_blue_sub"
                 android:hint="학급 정보 없음"
                 android:textStyle="bold"
-                android:textSize="@dimen/font_size_xlarge"
+                android:textSize="@dimen/font_size_large"
                 android:lineSpacingMultiplier="1.2"/>
 
             <TextView

@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.activity;
 
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
@@ -308,6 +309,10 @@ public class MainActivity extends BaseActivity {
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
+                case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
+                {
+                    startDetailActivity(intent, MenuScheduleDetailActivity.class);
+                }
                 default:
                     break;
             }

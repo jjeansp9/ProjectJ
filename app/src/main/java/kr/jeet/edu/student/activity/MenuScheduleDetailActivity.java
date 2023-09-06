@@ -43,18 +43,12 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
     private void initData(){
         Intent intent = getIntent();
-        if(intent != null) {
-            if (intent.hasExtra(IntentParams.PARAM_SCHEDULE_INFO)){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_SCHEDULE_INFO, ScheduleData.class);
-                }else{
-                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_SCHEDULE_INFO);
-                }
-
+        if (intent != null && intent.hasExtra(IntentParams.PARAM_SCHEDULE_INFO)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mInfo = intent.getParcelableExtra(IntentParams.PARAM_SCHEDULE_INFO, ScheduleData.class);
             }else{
-
+                mInfo = intent.getParcelableExtra(IntentParams.PARAM_SCHEDULE_INFO);
             }
-
         }
     }
 
@@ -78,26 +72,16 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         tvTitle = findViewById(R.id.tv_sc_detail_title);
         tvContent = findViewById(R.id.tv_sc_detail_content);
 
-        // TODO : 요일 관련 코드 수정하기 [ Utils.formatDayOfWeek() 사용하지 않기 ]
-
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일", Locale.KOREA);
-        Date date = null;
-
         try {
+            SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일", Locale.KOREA);
 
             String getDate = String.format(Locale.KOREA, "%d%d%d", mInfo.year, mInfo.month, mInfo.day);
-            date = inputDateFormat.parse(getDate);
+            Date date = inputDateFormat.parse(getDate);
 
-            String formattedDate = "";
+            if (date != null) tvDate.setText(outputFormat.format(date));
 
-            if (date != null) formattedDate = outputFormat.format(date);
-
-            tvDate.setText(formattedDate);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        } catch (ParseException e) { e.printStackTrace(); }
 
         String str = TextUtils.isEmpty(mInfo.acaName) ? "" : mInfo.acaName;
         tvCampus.setText(str);
@@ -106,13 +90,16 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         tvTitle.setText(str);
 
         str = TextUtils.isEmpty(mInfo.target) ? "" : "["+mInfo.target+"]";
-        if (!TextUtils.isEmpty(mInfo.target)) tvTarget.setText(str);
-        else tvTarget.setVisibility(View.GONE);
+        viewVisibility(tvTarget, str);
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
-        if (!TextUtils.isEmpty(mInfo.content)) tvContent.setText(str);
-        else tvContent.setVisibility(View.GONE);
+        viewVisibility(tvContent, str);
 
         initAppbar();
+    }
+
+    private void viewVisibility(TextView tv, String str){
+        if (!TextUtils.isEmpty(str)) tv.setText(str);
+        else tv.setVisibility(View.GONE);
     }
 }

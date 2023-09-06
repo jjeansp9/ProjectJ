@@ -136,9 +136,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
 
                 String mappedType = type.get(selType);
-
-                LogMgr.i(TAG, "memberSeq " + msg.memberSeq + ", " + _memberSeq);
-
                 if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
 
                 LogMgr.w(TAG,

@@ -340,57 +340,6 @@ public class Utils {
     }
 
     /**
-    * 요일 포맷
-    * */
-    public static String formatDayOfWeek(int dayOfWeek){
-        String dayOfWeekStr = "";
-        switch (dayOfWeek) {
-            case Calendar.SUNDAY:
-                dayOfWeekStr = "일요일";
-                break;
-            case Calendar.MONDAY:
-                dayOfWeekStr = "월요일";
-                break;
-            case Calendar.TUESDAY:
-                dayOfWeekStr = "화요일";
-                break;
-            case Calendar.WEDNESDAY:
-                dayOfWeekStr = "수요일";
-                break;
-            case Calendar.THURSDAY:
-                dayOfWeekStr = "목요일";
-                break;
-            case Calendar.FRIDAY:
-                dayOfWeekStr = "금요일";
-                break;
-            case Calendar.SATURDAY:
-                dayOfWeekStr = "토요일";
-                break;
-        }
-        return dayOfWeekStr;
-    }
-
-    /**
-    * 알림장 목록의 날짜형식 format [ yyyy-MM-dd HH:mm:ss.S -> yyyy-MM-dd HH:mm ]
-    * */
-    public static String formatNoticeDate(String inputDate){
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S", Locale.KOREA);
-        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
-
-        try {
-            Date date = inputDateFormat.parse(inputDate);
-
-            String formattedDate = "";
-            if (date != null) formattedDate = outputFormat.format(date);
-            return formattedDate;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-            return "";
-        }
-    }
-
-    /**
     * 이메일 형식을 체크해주는 기능
      *
      * @param strEmail - 이메일 형식을 체크하고 싶은 텍스트

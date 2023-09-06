@@ -39,6 +39,7 @@ public class PreferenceUtil {
     public static final String PREF_NOTIFICATION_SEMINAR = "notification_seminar";    //설명회 push 여부
     public static final String PREF_NOTIFICATION_ATTENDANCE = "notification_attendance";    //출석 push 여부
     public static final String PREF_NOTIFICATION_SYSTEM = "notification_system";    //시스템알림 push 여부
+    public static final String PREF_NOTIFICATION_SCHEDULE = "notification_schedule";    //캠퍼스일정알림 push 여부
     //Auto Login
     public static void setAutoLogin(Context context, boolean set) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -318,6 +319,16 @@ public class PreferenceUtil {
     public static boolean getNotificationSystem(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return pref.getBoolean(PREF_NOTIFICATION_SYSTEM, true);
+    }
+
+    // notification schedule
+    public static void setNotificationSchedule(Context context, boolean flag) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putBoolean(PREF_NOTIFICATION_SCHEDULE, flag).apply();
+    }
+    public static boolean getNotificationSchedule(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return pref.getBoolean(PREF_NOTIFICATION_SCHEDULE, true);
     }
 
 }
