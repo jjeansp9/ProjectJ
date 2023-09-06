@@ -32,12 +32,16 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
     private List<ScheduleData> mList;
     private ItemClickListener _listener;
 
+    private static boolean isWholeCampusMode = false;
+
     public ScheduleListAdapter(Context mContext, List<ScheduleData> mList, ItemClickListener listener) {
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
     }
-
+    public void setWholeCampusMode(boolean flag) {
+        this.isWholeCampusMode = flag;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -79,30 +83,16 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
             holder.tvTarget.setText(str);
             holder.tvTarget.setVisibility(View.VISIBLE);
         }else{
-            if (item.campusAll) holder.tvTarget.setVisibility(View.INVISIBLE);
+            if (isWholeCampusMode) holder.tvTarget.setVisibility(View.INVISIBLE);
             else holder.tvTarget.setVisibility(View.GONE);
         }
 
-        // TODO target데이터가 없을 때 INVISIBLE or GONE 처리 생각해보기
-
-       if (item.campusAll){
+       if (isWholeCampusMode){
             holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
             holder.tvCampus.setVisibility(View.VISIBLE);
        }else{
             holder.tvCampus.setVisibility(View.GONE);
        }
-
-//        try{
-//
-//            String date = item.month+"."+item.day;
-//
-//            holder.tvDate.setText(date);
-//            holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : item.target);
-//            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
-//
-//        }catch (Exception e){
-//            LogMgr.e("ListAdapter Exception : " + e.getMessage());
-//        }
     }
 
     @Override

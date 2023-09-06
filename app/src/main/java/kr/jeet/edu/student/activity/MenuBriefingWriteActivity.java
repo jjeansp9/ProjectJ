@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.SchoolData;
@@ -182,7 +183,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                 break;
 
             case R.id.layout_brf_view_privacy: // 개인정보취급방침
-                url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy";
+                url = Constants.POLICY_PRIVACY_PT;
                 startPvyActivity(mTvPrivacy.getText().toString());
                 break;
 

@@ -35,6 +35,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     private List<BriefingData> mList;
     private ItemClickListener _listener;
 
+    private static boolean isWholeCampusMode = false;
     private final boolean IMG_IS_EMPTY = true;
     private final boolean IMG_IS_NOT_EMPTY = false;
 
@@ -43,7 +44,9 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
         this._listener = listener;
         this.mList = mList;
     }
-
+    public void setWholeCampusMode(boolean flag) {
+        this.isWholeCampusMode = flag;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -59,7 +62,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
             holder.tvLocation.setText(TextUtils.isEmpty(item.place) ? "" : item.place);
 
-            if (item.campusAll) {
+            if (isWholeCampusMode) {
                 holder.tvCampus.setVisibility(View.VISIBLE);
                 holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 

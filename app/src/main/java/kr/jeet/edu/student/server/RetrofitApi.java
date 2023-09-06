@@ -80,11 +80,11 @@ public interface RetrofitApi {
 
     // 회원가입 SNS
     @POST("member/sns/signUp")
-    Call<BaseResponse> singUpFromSNS(@Body SignupSNSRequest signUpRequest);
+    Call<BaseResponse> signUpFromSNS(@Body SignupSNSRequest signUpRequest);
 
     //  로그인(SNS)
     @POST("member/sns/signIn")
-    Call<LoginResponse> singInSNS(@Query("snsId") String id);
+    Call<LoginResponse> signInSNS(@Query("snsId") String id);
 
     //  아이디찾기
     @GET("member/id")

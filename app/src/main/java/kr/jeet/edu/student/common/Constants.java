@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.common;
 
+import kr.jeet.edu.student.server.RetrofitApi;
+
 public class Constants {
 
     // 사용자 구분 타입
@@ -46,6 +48,10 @@ public class Constants {
 
     public final static int PICKER_MIN_YEAR = 1999;
     public final static int PICKER_MAX_YEAR = 2099;
+
+    public final static String POLICY_SERVICE = RetrofitApi.SERVER_BASE_URL+"web/api/policy/service";
+    public final static String POLICY_PRIVACY = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy";
+    public final static String POLICY_PRIVACY_PT = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacyPT";
 
     // -------------------------------------------------
 

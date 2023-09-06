@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -17,7 +16,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -410,7 +408,7 @@ public class JoinActivity extends BaseActivity {
         if(RetrofitClient.getInstance() != null) {
             showProgressDialog();
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.singUpFromSNS(request).enqueue(new Callback<BaseResponse>() {
+            mRetrofitApi.signUpFromSNS(request).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     hideProgressDialog();

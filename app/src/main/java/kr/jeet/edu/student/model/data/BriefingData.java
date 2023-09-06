@@ -19,7 +19,6 @@ public class BriefingData implements Parcelable {
     public int reservationCnt; // 현재예약수
     public String fileId; // 파일 ID
     public List<FileData> fileList; // 파일목록
-    public boolean campusAll; // 캠퍼스목록에서 전체로 선택했는지 여부
 
     public BriefingData() {}
 

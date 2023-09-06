@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,7 +63,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private String _acaCode = "";
     private String _acaName = "";
     String _userType = "";
-    private boolean selAllOrNot = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,14 +79,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
 
-        if (_userType.equals(Constants.MEMBER)) {
-            selAllOrNot = false;
-            requestBoardList(_acaCode, selAllOrNot);
-        }
-        else {
-            selAllOrNot = true;
-            requestBoardList("", selAllOrNot);
-        }
+        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
+        else requestBoardList("");
     }
 
     @Override
@@ -108,7 +102,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         setListRecycler();
         setListSpinner();
 
-        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList(_acaCode, selAllOrNot) );
+        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList(_acaCode) );
     }
 
     private void setListRecycler(){
@@ -130,7 +124,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         && (mList != null && !mList.isEmpty()))
                 {
                     int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    requestBoardList(_acaCode, selAllOrNot, lastNoticeSeq);
+                    requestBoardList(_acaCode, lastNoticeSeq);
                 }
             }
         });
@@ -161,26 +155,16 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         mPowerSpinner.setItems(acaNames);
         mPowerSpinner.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) {
-                _acaCode = spinList.get(newIndex - 1).acaCode;
-                selAllOrNot = false;
-            }
-            else {
-                _acaCode = "";
-                selAllOrNot = true;
-            }
-            requestBoardList(_acaCode, selAllOrNot);
+            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
+            else _acaCode = "";
+
+            requestBoardList(_acaCode);
         });
     }
 
-    int index = 0;
-
-    private void requestBoardList(String acaCodes, boolean all, int... lastSeq) {
+    private void requestBoardList(String acaCodes, int... lastSeq) {
         int lastNoticeSeq = 0;
-        if(lastSeq != null && lastSeq.length > 0) {
-            lastNoticeSeq = lastSeq[0];
-        }
-        //if(lastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+        if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
 
         if (RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
@@ -188,15 +172,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
             mRetrofitApi.getAnnouncementList(lastNoticeSeq, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
-                    if(finalLastNoticeSeq == 0) {
-                        if (mList.size() > 0){
-                            for (int i = mList.size() - 1; i >= 0; i--) {
-                                mList.remove(i);
-                                mAdapter.notifyItemRemoved(i);
-                            }
-                            index = 0;
-                        }
-                    }
                     try {
                         if (response.isSuccessful()) {
                             List<AnnouncementData> getData = new ArrayList<>();
@@ -204,15 +179,12 @@ public class MenuAnnouncementActivity extends BaseActivity {
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
-                                    //mList.addAll(getData);
 
-                                    for (AnnouncementData item : getData) {
-                                        mList.add(index, item);
-                                        mAdapter.notifyItemInserted(index);
-                                        index++;
-                                    }
+                                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                                    mList.addAll(getData);
+                                    mAdapter.notifyDataSetChanged();
 
-                                    for (AnnouncementData item : mList) item.campusAll = all;
+                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCodes));
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");

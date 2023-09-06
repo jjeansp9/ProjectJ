@@ -40,10 +40,6 @@ public class AnnouncementData implements Parcelable {
 
     @SerializedName("fileList")
     public List<FileData> fileList;
-
-    public boolean campusAll;
-
-    public AnnouncementData(){}
     public AnnouncementData(Parcel in) {
         readFromParcel(in);
     }

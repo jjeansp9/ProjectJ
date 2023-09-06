@@ -7,8 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +34,7 @@ public class SettingsActivity extends BaseActivity {
 
     private String TAG = SettingsActivity.class.getSimpleName();
 
-    private TextView mTvUserGubun, mTvName, mTvPhoneNum, mTvAppVersion, mTvAppVersionBadge, mTvPIUseConsent;
+    private TextView mTvUserGubun, mTvName, mTvPhoneNum, mTvAppVersion, mTvAppVersionBadge, mTvPrivacy, mTvService;
     private SwitchMaterial mSwAnnouncement, mSwInformationSession, mSwAttendance, mSwSystem;
     private AppCompatButton btnSetAccount;
     private RetrofitApi mRetrofitApi;
@@ -60,6 +58,8 @@ public class SettingsActivity extends BaseActivity {
     private int stCodeParent = 0;
 
     private int pushSeq = 0;
+
+    private String url = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +114,8 @@ public class SettingsActivity extends BaseActivity {
         mTvPhoneNum = (TextView) findViewById(R.id.tv_set_phone_num);
         mTvAppVersionBadge = (TextView) findViewById(R.id.tv_app_version_update);
         mTvAppVersion = (TextView) findViewById(R.id.tv_app_version);
-        mTvPIUseConsent = findViewById(R.id.tv_set_PI_use_consent);
+        mTvPrivacy = findViewById(R.id.tv_set_privacy);
+        mTvService = findViewById(R.id.tv_set_service);
 
         mSwAnnouncement = (SwitchMaterial) findViewById(R.id.sw_set_announcement_state);
         mSwInformationSession = (SwitchMaterial) findViewById(R.id.sw_set_information_session_state);
@@ -181,10 +182,13 @@ public class SettingsActivity extends BaseActivity {
                 break;
 
             case R.id.layout_set_operation_policy:
+                url = Constants.POLICY_SERVICE;
+                startPvyActivity(mTvService.getText().toString());
                 break;
 
             case R.id.layout_set_PI_use_consent:
-                startPvyActivity(mTvPIUseConsent.getText().toString());
+                url = Constants.POLICY_PRIVACY;
+                startPvyActivity(mTvPrivacy.getText().toString());
                 break;
 
             case R.id.layout_set_app_info:
@@ -299,7 +303,7 @@ public class SettingsActivity extends BaseActivity {
     private void startPvyActivity(String title){
         Intent intent = new Intent(mContext, PrivacySeeContentActivity.class);
         intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, title);
-        //intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, URL);
+        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, url);
         startActivity(intent);
     }
 

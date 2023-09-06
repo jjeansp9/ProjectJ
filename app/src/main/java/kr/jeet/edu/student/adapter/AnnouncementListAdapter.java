@@ -32,12 +32,16 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     private List<AnnouncementData> mList;
     private ItemClickListener _listener;
 
+    private static boolean isWholeCampusMode = false;
+
     public AnnouncementListAdapter(Context mContext, List<AnnouncementData> mList, AnnouncementListAdapter.ItemClickListener listener) {
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
     }
-
+    public void setWholeCampusMode(boolean flag) {
+        this.isWholeCampusMode = flag;
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -85,7 +89,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             holder.tvName.setText(item.memberResponseVO.name);
             holder.tvDate.setText(item.insertDate);
 
-            if (item.campusAll) {
+            if (isWholeCampusMode) {
                 holder.tvCampus.setVisibility(View.VISIBLE);
                 holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 

@@ -8,6 +8,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private String _acaCode = "";
     private String _acaName = "";
     private String _userType = "";
-    private boolean selAllOrNot = false;
 
     Date _selectedDate = new Date();
     SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
@@ -74,7 +74,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             if(intent != null && intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
                 added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
-                if(added) requestBrfList(_acaCode, selAllOrNot);
+                if(added) requestBrfList(_acaCode);
             }
 
         }
@@ -100,14 +100,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         selYear = calendar.get(Calendar.YEAR);
         selMonth = calendar.get(Calendar.MONTH);
 
-        if (_userType.equals(Constants.MEMBER)) {
-            selAllOrNot = false;
-            requestBrfList(_acaCode, selAllOrNot);
-        }
-        else {
-            selAllOrNot = true;
-            requestBrfList("", selAllOrNot);
-        }
+        if (_userType.equals(Constants.MEMBER)) requestBrfList(_acaCode);
+        else requestBrfList("");
     }
 
     @Override
@@ -137,7 +131,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         setSpinner();
         setRecycler();
 
-        mSwipeRefresh.setOnRefreshListener(() -> requestBrfList(_acaCode, selAllOrNot));
+        mSwipeRefresh.setOnRefreshListener(() -> requestBrfList(_acaCode));
     }
 
     private void setSpinner(){
@@ -153,16 +147,10 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
         mSpinnerCampus.setItems(acaNames);
         mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) {
-                selAllOrNot = false;
-                _acaCode = spinList.get(newIndex - 1).acaCode;
-            }
-            else {
-                selAllOrNot = true;
-                _acaCode = "";
-            }
+            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
+            else _acaCode = "";
 
-            requestBrfList(_acaCode, selAllOrNot);
+            requestBrfList(_acaCode);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
@@ -225,11 +213,10 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         selMonth = calendar.get(Calendar.MONTH);
 
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
-        requestBrfList(_acaCode, selAllOrNot);
+        requestBrfList(_acaCode);
     }
 
-    private void requestBrfList(String acaCode, boolean all){
-        LogMgr.e("Position",position+"");
+    private void requestBrfList(String acaCode){
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getBriefingList(acaCode, selYear, selMonth+1).enqueue(new Callback<BriefingResponse>() {
                 @Override
@@ -263,7 +250,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         }
                                     }
 
-                                    for (BriefingData data : mList) data.campusAll = all;
+                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }
                             }
                         } else {
