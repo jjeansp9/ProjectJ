@@ -21,7 +21,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
@@ -208,9 +217,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             mTvCnt.setVisibility(View.VISIBLE);
             mTvCnt.setText(str);
         }
-
-        if (mInfo.reservationCnt == mInfo.participantsCnt) layoutStartReserve.setVisibility(View.GONE);
-        else layoutStartReserve.setVisibility(View.VISIBLE);
     }
 
     private void setImageRecycler(){
@@ -259,7 +265,30 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()){
             case R.id.layout_start_reserve:
-                startActivity(MenuBriefingWriteActivity.class, RESERVE);
+
+                try {
+                    String dateStr = mInfo.date+mInfo.ptTime;
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.KOREA);
+
+                    Date date = sdf.parse(dateStr);
+                    Calendar calBrf = Calendar.getInstance();
+
+                    if (date != null) calBrf.setTime(date);
+                    Calendar calCurrent = Calendar.getInstance();
+
+                    if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) {
+                        Toast.makeText(mContext, R.string.briefing_write_finish, Toast.LENGTH_SHORT).show();
+
+                    }else if (mInfo.reservationCnt >= mInfo.participantsCnt) {
+                        Toast.makeText(mContext, R.string.briefing_write_finish, Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        startActivity(MenuBriefingWriteActivity.class, RESERVE);
+                    }
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
 
             case R.id.layout_reserver_list:
@@ -267,6 +296,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 break;
         }
     }
+
+
 
     private void requestBrfDetail(int ptSeq){
         if (RetrofitClient.getInstance() != null){

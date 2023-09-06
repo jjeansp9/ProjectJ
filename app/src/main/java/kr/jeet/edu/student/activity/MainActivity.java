@@ -153,8 +153,6 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(customAppbar.getToolbar());
 
         if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우 뒤로가기 버튼 활성화
-//            getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
-//            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             customAppbar.setMainBtnLeftClickListener(v -> { startActivity(new Intent(mContext, SelectStudentActivity.class)); });
         }
 
@@ -313,6 +311,7 @@ public class MainActivity extends BaseActivity {
                 {
                     startDetailActivity(intent, MenuScheduleDetailActivity.class);
                 }
+                break;
                 default:
                     break;
             }
