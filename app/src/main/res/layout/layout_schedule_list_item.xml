@@ -14,8 +14,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_schedule_title"
         android:maxLines="1"
+        android:gravity="end"
         android:ellipsize="end"
         android:textColor="@color/font_color_999"
         android:textSize="@dimen/font_size_small"/>
@@ -52,10 +53,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/layout_schedule_date"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_schedule_campus"
+        app:layout_constraintTop_toTopOf="parent"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="[악어수학, 중등]"
         android:textColor="@color/font_color_blue_sub"
         android:textStyle="bold"
         android:textSize="@dimen/font_size_large"/>
@@ -70,7 +70,6 @@
         android:layout_marginTop="4dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="어린이날 휴무"
         android:textColor="@color/font_color_default"
         android:textSize="@dimen/font_size"/>
 

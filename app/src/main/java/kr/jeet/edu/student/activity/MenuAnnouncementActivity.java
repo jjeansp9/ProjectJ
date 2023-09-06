@@ -34,6 +34,7 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
+import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -61,6 +62,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private String _acaCode = "";
     private String _acaName = "";
     String _userType = "";
+    private boolean selAllOrNot = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
 
-        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
-        else requestBoardList("");
+        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode, false);
+        else requestBoardList("", true);
     }
 
     @Override
@@ -100,7 +102,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         setListRecycler();
         setListSpinner();
 
-        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList(_acaCode) );
+        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList(_acaCode, selAllOrNot) );
     }
 
     private void setListRecycler(){
@@ -122,7 +124,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         && (mList != null && !mList.isEmpty()))
                 {
                     int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    requestBoardList(_acaCode, lastNoticeSeq);
+                    requestBoardList(_acaCode, selAllOrNot, lastNoticeSeq);
                 }
             }
         });
@@ -153,15 +155,21 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         mPowerSpinner.setItems(acaNames);
         mPowerSpinner.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
-            else _acaCode = "";
-            requestBoardList(_acaCode);
+            if (newIndex > 0) {
+                _acaCode = spinList.get(newIndex - 1).acaCode;
+                selAllOrNot = false;
+            }
+            else {
+                _acaCode = "";
+                selAllOrNot = true;
+            }
+            requestBoardList(_acaCode, selAllOrNot);
         });
     }
 
     int index = 0;
 
-    private void requestBoardList(String acaCodes, int... lastSeq) {
+    private void requestBoardList(String acaCodes, boolean all, int... lastSeq) {
         int lastNoticeSeq = 0;
         if(lastSeq != null && lastSeq.length > 0) {
             lastNoticeSeq = lastSeq[0];
@@ -197,6 +205,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                         mAdapter.notifyItemInserted(index);
                                         index++;
                                     }
+
+                                    for (AnnouncementData item : mList) item.campusAll = all;
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");

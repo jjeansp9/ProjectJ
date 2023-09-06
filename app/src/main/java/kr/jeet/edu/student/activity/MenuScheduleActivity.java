@@ -292,10 +292,11 @@ public class MenuScheduleActivity extends BaseActivity {
 
             new Thread(() -> {
                 for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
-                runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+                runOnUiThread(() -> {
+                    mAdapter.notifyDataSetChanged();
+                    mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
+                });
             }).start();
-
-            mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
         });
 
         mCalendarView.setOnMonthChangedListener((view, date) -> {

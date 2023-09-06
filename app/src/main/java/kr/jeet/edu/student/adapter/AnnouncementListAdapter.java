@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,14 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             holder.tvTitle.setText(item.title);
             holder.tvName.setText(item.memberResponseVO.name);
             holder.tvDate.setText(item.insertDate);
+
+            if (item.campusAll) {
+                holder.tvCampus.setVisibility(View.VISIBLE);
+                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+
+            } else {
+                holder.tvCampus.setVisibility(View.GONE);
+            }
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());
         }
@@ -97,7 +106,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ImageView imgAnnouncement;
-        private TextView tvTitle, tvName, tvDate;
+        private TextView tvTitle, tvName, tvDate, tvCampus;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -105,6 +114,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             tvTitle = itemView.findViewById(R.id.tv_announcement_title);
             tvName = itemView.findViewById(R.id.tv_announcement_name);
             tvDate = itemView.findViewById(R.id.tv_announcement_date);
+            tvCampus = itemView.findViewById(R.id.tv_announcement_campus);
             imgAnnouncement = itemView.findViewById(R.id.img_announcement);
 
             itemView.setOnClickListener(v -> {

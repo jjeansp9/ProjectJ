@@ -29,6 +29,9 @@ public class AnnouncementData implements Parcelable {
     @SerializedName("acaCode")
     public String acaCode;
 
+    @SerializedName("acaName")
+    public String acaName;
+
     @SerializedName("insertDate")
     public String insertDate;
 
@@ -37,6 +40,8 @@ public class AnnouncementData implements Parcelable {
 
     @SerializedName("fileList")
     public List<FileData> fileList;
+
+    public boolean campusAll;
 
     public AnnouncementData(){}
     public AnnouncementData(Parcel in) {
@@ -68,6 +73,7 @@ public class AnnouncementData implements Parcelable {
         parcel.writeInt(rdcnt);
         parcel.writeString(fileId);
         parcel.writeString(acaCode);
+        parcel.writeString(acaName);
         parcel.writeString(insertDate);
         parcel.writeParcelable(memberResponseVO, i);
         parcel.writeInt(fileList.size());
@@ -83,6 +89,7 @@ public class AnnouncementData implements Parcelable {
         rdcnt = in.readInt();
         fileId = in.readString();
         acaCode = in.readString();
+        acaName = in.readString();
         insertDate = in.readString();
         memberResponseVO = in.readParcelable(MemberResponseVO.class.getClassLoader());
         int size = in.readInt();
