@@ -172,7 +172,7 @@
         <View
             android:id="@+id/line_top"
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="@dimen/line_red_margin_height"
             app:layout_constraintTop_toBottomOf="@id/tv_brf_calendar"
             android:layout_marginHorizontal="@dimen/line_red"
             android:layout_marginTop="12dp"
