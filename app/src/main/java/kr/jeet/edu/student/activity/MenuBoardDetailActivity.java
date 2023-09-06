@@ -77,34 +77,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if(intent != null){
 
-//            if(intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
-//                LogMgr.w("param is recived");
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, AnnouncementData.class);
-//                }else{
-//                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
-//                }
-//
-//            }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-//                PushMessage message = null;
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-//                }else{
-//                    message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
-//                }
-//                _currentSeq = message.connSeq;
-//
-//            }else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO)){
-//                PushMessage message = null;
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    message = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO, PushMessage.class);
-//                }else{
-//                    message = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
-//                }
-//                _currentSeq = message.connSeq;
-//            }
-
-
             String extraKey = null;
 
             if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {

@@ -71,13 +71,20 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         }
 
         holder.tvDate.setText(formattedDate);
-        holder.tvTarget.setText(TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]");
         holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+
+        String str = TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]";
+
+        if (!TextUtils.isEmpty(item.target)){
+            holder.tvTarget.setText(str);
+            holder.tvTarget.setVisibility(View.VISIBLE);
+        }else{
+            holder.tvTarget.setVisibility(View.GONE);
+        }
 
         if (item.campusAll){
             holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
             holder.tvCampus.setVisibility(View.VISIBLE);
-
         }else{
             holder.tvCampus.setVisibility(View.GONE);
         }
