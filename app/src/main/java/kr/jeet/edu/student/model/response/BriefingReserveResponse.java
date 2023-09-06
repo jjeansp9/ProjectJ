@@ -12,5 +12,6 @@ public class BriefingReserveResponse {
     public String msg;
 
     @SerializedName("errMsg")
+    @Expose
     public String errMsg;
 }

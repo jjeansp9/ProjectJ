@@ -229,7 +229,7 @@ public class SetAccountActivity extends BaseActivity {
                 showMessageDialog(getString(R.string.settings_logout), getString(R.string.msg_confirm_logout), new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                runOnUiThread(() -> hideMessageDialog());
+                                hideMessageDialog();
                                 requestLogOut(_memberSeq);
                             }
                         },

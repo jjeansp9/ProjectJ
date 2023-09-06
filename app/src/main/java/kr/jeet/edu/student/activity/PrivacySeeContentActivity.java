@@ -71,8 +71,8 @@ public class PrivacySeeContentActivity extends BaseActivity {
 
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            webSettings.setLoadWithOverviewMode(true);   //html 컨텐츠가 웹뷰보다 클 경우 스크린 크기에 맞게 조정되도록 설정
-            webSettings.setUseWideViewPort(true);        //html viewport 메타태그 지원
+            webSettings.setLoadWithOverviewMode(true);
+            webSettings.setUseWideViewPort(true);
             webSettings.setSupportMultipleWindows(true);
             webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 

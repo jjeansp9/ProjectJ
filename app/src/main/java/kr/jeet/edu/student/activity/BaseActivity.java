@@ -79,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         */
         runOnUiThread(() -> {
             if (txt != null && mProgressDialog != null) {
-                txt.setText(msg);  // 텍스트만 변경
+                txt.setText(msg);
                 mProgressDialog.show();
             }
         });

@@ -110,7 +110,7 @@ public class SelectStudentActivity extends BaseActivity {
             LogMgr.e("EVENT", _pushMessage.pushType);
 
             switch(_pushMessage.pushType) {
-                case MSG_TYPE_ATTEND: // 출결알림
+                case MSG_TYPE_ATTEND:
                 {
                     if (PreferenceUtil.getNumberOfChild(mContext) > 1){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);

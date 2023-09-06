@@ -11,7 +11,6 @@ public class JeetEducationApplication extends Application {
     public void onCreate() {
         super.onCreate();
         JeetDatabase.getInstance(this);
-        //ThreeTenABP 초기화
         AndroidThreeTen.init(this);
     }
 

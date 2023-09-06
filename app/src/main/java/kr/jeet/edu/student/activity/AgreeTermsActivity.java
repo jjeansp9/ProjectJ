@@ -145,11 +145,11 @@ public class AgreeTermsActivity extends BaseActivity {
                 allCheck();
                 break;
 
-            case R.id.layout_view_check1: // 이용약관
+            case R.id.layout_view_check1:
                 url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/service";
                 startPvyActivity(mTvCheck1.getText().toString());
                 break;
-            case R.id.layout_view_check2: // 개인정보취급방침
+            case R.id.layout_view_check2:
                 url = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy";
                 startPvyActivity(mTvCheck2.getText().toString());
                 break;

@@ -109,15 +109,15 @@
     <application
         android:name=".JeetEducationApplication"
         android:allowBackup="false"
+        tools:replace="android:allowBackup"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.JeetEducation"
         android:usesCleartextTraffic="true"
-        tools:replace="android:allowBackup"
+        android:hardwareAccelerated="true"
         >
         <activity
             android:name=".activity.MenuScheduleDetailActivity"
@@ -155,12 +155,9 @@
             android:exported="false"
             android:screenOrientation="portrait"
             />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"
-            />
-
+            android:value="@string/default_notification_channel_id" />
         <activity
             android:name=".activity.PrivacySeeContentActivity"
             android:exported="false"
@@ -191,13 +188,11 @@
         <activity
             android:name=".activity.MenuTestReserveActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MenuTestReserveDetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ConsultationRequestActivity"
             android:exported="false"
@@ -218,76 +213,62 @@
             android:name=".activity.SetPasswordActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.SetPhoneNumActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.SetProfileInfoActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.SetAccountActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MenuBoardDetailActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.MenuAnnouncementActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SettingsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.SelectStudentActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.JoinActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activity.FindCredentialsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value=""
-                />
+                android:value=""/>
         </activity>
         <activity
             android:name=".activity.AgreeTermsActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.LoginActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.IntroActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -296,19 +277,16 @@
 
             <meta-data
                 android:name="android.app.lib_name"
-                android:value=""
-                />
+                android:value=""/>
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"
-            android:launchMode="singleTask"
-            >
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
