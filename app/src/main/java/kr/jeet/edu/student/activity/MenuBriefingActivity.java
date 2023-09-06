@@ -65,8 +65,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private int position = -1;
     private boolean added = false;
 
-    int index = 0;
-
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         Intent intent = result.getData();
@@ -221,16 +219,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             RetrofitClient.getApiInterface().getBriefingList(acaCode, selYear, selMonth+1).enqueue(new Callback<BriefingResponse>() {
                 @Override
                 public void onResponse(Call<BriefingResponse> call, Response<BriefingResponse> response) {
-                    if (mList.size() > 0){
-                        if (!added){
-                            for (int i = mList.size() - 1; i >= 0; i--) {
-                                mList.remove(i);
-                                mAdapter.notifyItemRemoved(i);
-                            }
-                        }
-                        index = 0;
-                    }
-
                     try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
@@ -240,14 +228,14 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                     if (added){
                                         mList.set(position, list.get(position));
                                         mAdapter.notifyItemChanged(position);
+
                                         position = -1;
+                                        added = false;
 
                                     }else{
-                                        for (BriefingData item : list) {
-                                            mList.add(index, item);
-                                            mAdapter.notifyItemInserted(index);
-                                            index++;
-                                        }
+                                        if (mList.size() > 0) mList.clear();
+                                        mList.addAll(list);
+                                        mAdapter.notifyDataSetChanged();
                                     }
 
                                     mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
