@@ -73,6 +73,4 @@
         android:textColor="@color/font_color_default"
         android:textSize="@dimen/font_size"/>
 
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

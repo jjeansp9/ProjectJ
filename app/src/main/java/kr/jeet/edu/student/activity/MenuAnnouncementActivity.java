@@ -79,8 +79,14 @@ public class MenuAnnouncementActivity extends BaseActivity {
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
 
-        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode, false);
-        else requestBoardList("", true);
+        if (_userType.equals(Constants.MEMBER)) {
+            selAllOrNot = false;
+            requestBoardList(_acaCode, selAllOrNot);
+        }
+        else {
+            selAllOrNot = true;
+            requestBoardList("", selAllOrNot);
+        }
     }
 
     @Override

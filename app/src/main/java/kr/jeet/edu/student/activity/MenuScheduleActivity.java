@@ -146,8 +146,14 @@ public class MenuScheduleActivity extends BaseActivity {
 
         LogMgr.i(TAG, "day: " + selDay);
 
-        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode, false);
-        else requestScheduleList("", true);
+        if (_userType.equals(Constants.MEMBER)) {
+            selAllOrNot = false;
+            requestScheduleList(_acaCode, selAllOrNot);
+        }
+        else {
+            selAllOrNot = true;
+            requestScheduleList("", selAllOrNot);
+        }
     }
 
     @Override
