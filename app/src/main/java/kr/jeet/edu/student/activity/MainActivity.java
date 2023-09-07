@@ -368,7 +368,6 @@ public class MainActivity extends BaseActivity {
     }
 
     private void startActivityBottomMenu(Class<?> cls){
-
         Intent targetIntent = new Intent(mContext, cls);
 
         if (cls == MenuBoardDetailActivity.class){
@@ -379,7 +378,8 @@ public class MainActivity extends BaseActivity {
         }else if (cls == MenuNoticeActivity.class){
             targetIntent.putExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, true);
             startActivity(targetIntent);
-        }else{
+
+        }else if (cls == TeacherInfoActivity.class){
             startActivity(targetIntent);
         }
     }
