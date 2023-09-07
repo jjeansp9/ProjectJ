@@ -45,4 +45,6 @@ public class IntentParams {
     public final static String PARAM_NOTICE_INFO = "noticeinfo"; // 알림장 목록에서 클릭한 data
 
     public final static String PARAM_SCHEDULE_INFO = "scheduleInfo"; // 선택한 캠퍼스일정 정보
+
+    public final static String PARAM_TYPE_FROM_BOTTOM_MENU = "typeFromBottomMenu"; // 메인화면 하단의 메뉴에서 출석현황클릭했을 때 (출석타입)
 }

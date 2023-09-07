@@ -26,6 +26,7 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
@@ -53,10 +54,10 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private RecyclerView mRecyclerView;
     private TextView mTvListEmpty;
-    private AnnouncementListAdapter mAdapter;
     private PowerSpinnerView mPowerSpinner;
     private SwipeRefreshLayout mSwipeRefresh;
 
+    private AnnouncementListAdapter mAdapter;
     private ArrayList<AnnouncementData> mList = new ArrayList<>();
 
     private String _acaCode = "";
@@ -68,7 +69,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_announcement);
         mContext = this;
-        getData();
         initAppbar();
         initView();
     }
@@ -93,6 +93,9 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     @Override
     void initView(){
+
+        getData();
+
         mSwipeRefresh = findViewById(R.id.refresh_layout);
         mRecyclerView = findViewById(R.id.recycler_announcement);
         mPowerSpinner = findViewById(R.id.power_spinner);
@@ -144,10 +147,24 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         List<ACAData> spinList = DataManager.getInstance().getACAList();
         List<String> acaNames = new ArrayList<>();
+        ACAData selectedACA = null;
 
         acaNames.add(getString(R.string.announcement_spinner_default_text));
 
         for (ACAData data : spinList) acaNames.add(data.acaName);
+
+
+//        try{
+//            LogMgr.e("TEST", spinList.indexOf(selectedACA)+"");
+//            if (selectedACA != null) {
+//                int selIndex = spinList.indexOf(selectedACA);
+//                if(selIndex >= 0 && selIndex <= spinList.size()) {
+//                    mPowerSpinner.selectItemByIndex(selIndex + 1);
+//                }
+//            }else{
+//                mPowerSpinner.selectItemByIndex(0);
+//            }
+//        }catch (Exception e){}
 
         if (_userType.equals(Constants.MEMBER)) mPowerSpinner.setText(_acaName);
         else mPowerSpinner.setText(acaNames.get(0));
@@ -159,6 +176,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
             requestBoardList(_acaCode);
         });
+        mPowerSpinner.setLifecycleOwner(this);
     }
 
     private void requestBoardList(String acaCodes, int... lastSeq) {

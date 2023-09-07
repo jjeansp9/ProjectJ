@@ -41,9 +41,10 @@
     <color name="settings_layout_stroke">#D5D5D5</color>
     <color name="campus_spinner_stroke">#D5D5D5</color>
 
-
     <color name="btn_main_nor">#daf0d7</color>
     <color name="btn_main_sel">#c2e7bc</color>
+
+    <color name="color_spinner_selected_item">#FFD3D3</color>
 
     <color name="btn_stroke">#333</color>
     <color name="usergubun_badge">#EA6B6B</color>

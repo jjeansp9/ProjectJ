@@ -297,17 +297,17 @@ public class ConsultationRequestActivity extends BaseActivity {
                             setSpinnerTeacher();
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                            LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());
+                            LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
                         }
 
-                    }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+                    }catch (Exception e){ LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
 
                 }
 
                 @Override
                 public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
-                    try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
-                    catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+                    try { LogMgr.e(TAG, "requestTeacherCls() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }

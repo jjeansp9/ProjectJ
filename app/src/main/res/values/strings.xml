@@ -133,6 +133,8 @@
     <string name="main_menu_vehicle_info">차량정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
 
+    <string name="teacher_list_title">강사님 목록</string>
+
     <string name="settings_title">설정</string>
     <string name="settings_notice_system">시스템알림</string>
     <string name="settings_operation_policy">운영정책</string>
@@ -170,7 +172,7 @@
     <string name="main_tv_first_notify">공지안내</string>
     <string name="main_tv_second_notify">공지내용 없음</string>
 
-    <string name="main_tv_my_teacher">지도교사</string>
+    <string name="main_tv_my_teacher">지도강사</string>
     <string name="main_tv_teacher">선생님</string>
 
     <string name="menu_item_settings">설정</string>

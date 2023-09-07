@@ -68,8 +68,7 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintEnd_toEndOf="@id/guideline_student_info_left"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintHorizontal_bias="1"
-                        android:src="@drawable/img_profile_man"/>
+                        app:layout_constraintHorizontal_bias="1"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"

@@ -75,6 +75,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private int _memberSeq = 0;
 
+    private boolean fromBottomMenu = false;
+
     // 페이징 관련 변수들
     private boolean isTargetItemVisible = false;
     private static final int PAGE_SIZE = 20;
@@ -90,7 +92,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case CMD_GET_LIST:
-                    getListData(systemType, false);
+                    if (fromBottomMenu) getListData(attendanceType, false);
+                    else getListData(systemType, false);
                     break;
             }
         }
@@ -107,6 +110,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         //allType = noticeType[0];
         systemType = noticeType[0];
         attendanceType = noticeType[1];
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU)){
+            fromBottomMenu = intent.getBooleanExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, fromBottomMenu);
+        }
 
         new Thread(() -> {
             //currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
@@ -194,7 +202,9 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void setSpinner(){
-        _spinnerType.setText(systemType);
+        if (fromBottomMenu) _spinnerType.setText(attendanceType);
+        else _spinnerType.setText(systemType);
+
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {

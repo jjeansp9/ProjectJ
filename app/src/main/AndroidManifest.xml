@@ -109,181 +109,221 @@
     <application
         android:name=".JeetEducationApplication"
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.JeetEducation"
         android:usesCleartextTraffic="true"
-        android:hardwareAccelerated="true"
+        tools:replace="android:allowBackup"
         >
         <activity
-            android:name=".activity.MenuScheduleDetailActivity"
+            android:name=".activity.TeacherInfoActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
+        <activity
+            android:name=".activity.MenuScheduleDetailActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".activity.MenuNoticeActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuScheduleActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuBriefingReservedListActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuBriefingWriteActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuBriefingDetailActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuBriefingActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
+            android:value="@string/default_notification_channel_id"
+            />
+
         <activity
             android:name=".activity.PrivacySeeContentActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.InformedQuestionActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuTestReserveWriteActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.InformedConsentActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.WebViewActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuTestReserveActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuTestReserveDetailActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.ConsultationRequestActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuStudentInfoActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.PhotoViewActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SetPasswordActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SetPhoneNumActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SetProfileInfoActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SetAccountActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuBoardDetailActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.MenuAnnouncementActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SettingsActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.SelectStudentActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.JoinActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.FindCredentialsActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout">
+            >
             <meta-data
                 android:name="android.app.lib_name"
-                android:value=""/>
+                android:value=""
+                />
         </activity>
         <activity
             android:name=".activity.AgreeTermsActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.LoginActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name=".activity.IntroActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -292,17 +332,20 @@
 
             <meta-data
                 android:name="android.app.lib_name"
-                android:value=""/>
+                android:value=""
+                />
         </activity>
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"/>
+            />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

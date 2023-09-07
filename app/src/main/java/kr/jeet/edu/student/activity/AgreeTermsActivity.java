@@ -77,14 +77,15 @@ public class AgreeTermsActivity extends BaseActivity {
         findViewById(R.id.layout_view_check1).setOnClickListener(this);
         findViewById(R.id.layout_view_check2).setOnClickListener(this);
 
+        mBtnNext = findViewById(R.id.btn_next);
+        mBtnNext.setOnClickListener(this);
+
         mTvCheck1 = findViewById(R.id.tv_check1);
         mTvCheck2 = findViewById(R.id.tv_check2);
 
         mAllCheckBox = (CheckBox) findViewById(R.id.cb_all);
         mCheckBox1 = (CheckBox) findViewById(R.id.check1);
         mCheckBox2 = (CheckBox) findViewById(R.id.check2);
-
-        mBtnNext = findViewById(R.id.btn_next);
     }
 
     @Override
@@ -103,7 +104,6 @@ public class AgreeTermsActivity extends BaseActivity {
                         mNaverLogin.setJoinProcess();
                         mNaverLogin.LoginProcess();
                     }
-                    break;
                 }
                 else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) {
                     if(mKakaoLogin != null) {

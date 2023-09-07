@@ -5,29 +5,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bg_student_info_list"
-    android:stateListAnimator="@xml/animate_button_push"
     android:gravity="center"
     android:layout_marginTop="@dimen/layout_margin_12"
     android:layout_marginHorizontal="@dimen/layout_margin_16"
     android:elevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_student_info"
+        android:id="@+id/layout_teacher_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/img_line_gender"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginVertical="@dimen/layout_margin">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_student_list_v10"
+            android:id="@+id/guideline_teacher_list_start"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.10"/>
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_student_list_v90"
+            android:id="@+id/guideline_teacher_list_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -37,16 +36,17 @@
             android:id="@+id/imgGender"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            app:layout_constraintStart_toStartOf="@id/guideline_student_list_v10"
+            app:layout_constraintStart_toStartOf="@id/guideline_teacher_list_start"
             app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name"/>
+            app:layout_constraintBottom_toBottomOf="@id/name" />
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/imgGender"
+            app:layout_constraintEnd_toStartOf="@id/guideline_teacher_list_end"
             android:layout_marginStart="@dimen/layout_margin_4"
             android:hint="@string/name"
             android:textColor="@color/font_color_default"
@@ -54,23 +54,8 @@
             android:textSize="@dimen/font_size_xlarge"
             />
 
-        <TextView
-            android:id="@+id/tv_birth"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/name"
-            app:layout_constraintEnd_toStartOf="@id/profileImg"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name"
-            android:textColor="@color/font_color_666"
-            android:textSize="@dimen/font_size"
-            android:hint="@string/birth"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_aca_name"
+            android:id="@+id/layout_cls_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name"
@@ -80,25 +65,25 @@
             android:layout_marginEnd="4dp">
 
             <TextView
-                android:id="@+id/tv_aca_name"
+                android:id="@+id/tv_cls_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:hint="캠퍼스"
+                android:hint="학급명"
                 android:textSize="@dimen/font_size"
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/tv_class"
+                android:id="@+id/tv_phone_num"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_aca_name"
+                app:layout_constraintTop_toBottomOf="@id/tv_cls_name"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="2dp"
                 android:textSize="@dimen/font_size"
-                android:hint="@string/tv_class"
+                android:hint="연락처"
                 android:textColor="@color/black" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -108,8 +93,8 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/layout_aca_name"
-            app:layout_constraintEnd_toEndOf="@id/guideline_student_list_v90"
+            app:layout_constraintTop_toTopOf="@id/layout_cls_name"
+            app:layout_constraintEnd_toEndOf="@id/guideline_teacher_list_end"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
