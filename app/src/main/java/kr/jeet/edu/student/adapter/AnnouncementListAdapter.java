@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -123,7 +125,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

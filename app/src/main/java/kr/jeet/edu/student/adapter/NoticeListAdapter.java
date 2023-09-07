@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -43,9 +45,6 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         this.mList = mList;
         this._listener = _listener;
     }
-
-    SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm, Locale.KOREA);
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -74,10 +73,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             holder.btnNext.setVisibility(View.GONE);
         }
 
-        //holder.tvAttState.setText(TextUtils.isEmpty(item.noticeAttendanceState) ? "" : item.noticeAttendanceState);
-        //holder.tvDate.setText(TextUtils.isEmpty(item.date) ? "" : Utils.formatNoticeDate(item.date));
         holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
-        //holder.tvReceiver.setText(TextUtils.isEmpty(item.noticeReceiver) ? "" : item.noticeReceiver);
 
         Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
         holder.imgSenderAndReceiver.setVisibility(View.GONE);
@@ -107,7 +103,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }
     }

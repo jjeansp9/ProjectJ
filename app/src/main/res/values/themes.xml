@@ -12,6 +12,19 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <!-- Hint Text Color -->
+        <item name="android:textColorHint">@color/gray</item>
+    </style>
+
+    <style name="CalendarDateTextAppearance" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/font_color_default</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_size</item>
+    </style>
+
+    <style name="CalendarHeaderTextAppearance" parent="TextAppearance.AppCompat.Medium">
+        <item name="android:textColor">@color/font_color_default</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/font_size_large</item>
     </style>
 </resources>

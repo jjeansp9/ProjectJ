@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,7 +78,7 @@ public class ClassPathListAdapter extends RecyclerView.Adapter<ClassPathListAdap
 
             imgDelete.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                _listener.onDeleteClick(mList.get(position), position);
+                if (position != NO_POSITION) _listener.onDeleteClick(mList.get(position), position);
             });
         }
     }

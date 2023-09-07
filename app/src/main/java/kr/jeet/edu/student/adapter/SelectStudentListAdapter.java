@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -110,7 +112,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 @Override
                 public void onClick(View view) {
                     int position = getAbsoluteAdapterPosition();
-                    ((SelectStudentActivity)mContext).goMain(position);
+                    if (position != NO_POSITION) ((SelectStudentActivity)mContext).goMain(position);
                 }
             });
 

@@ -61,6 +61,8 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private static final String TAG = "ScheduleActivity";
 
+    private static final int CMD_GET_SCHEDULES = 0;
+
     private TextView mTvListEmpty, mTvHolidayDate, mTvHoliday;
     private PowerSpinnerView mSpinnerCampus;
     private MaterialCalendarView mCalendarView;
@@ -69,7 +71,8 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private ArrayList<ScheduleData> mList = new ArrayList<>();
     private ArrayList<ScheduleData> mListDay = new ArrayList<>();
-    private ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
+    //private ArrayList<CalendarDay> calendarDayList = new ArrayList<>();
+    private Set<CalendarDay> calendarDaySet = new HashSet<>();
 
     private SimpleDateFormat _holidayFormat = new SimpleDateFormat(Constants.TIME_FORMATTER_M_D_E, Locale.KOREA);
     private Set<CalendarDay> calHoliday = new HashSet<>();
@@ -80,11 +83,9 @@ public class MenuScheduleActivity extends BaseActivity {
     private String _userType = "";
 
     Date _selectedDate = new Date();
-    private int selYear = 0;
-    private int selMonth = 0;
-    private int selDay = 0;
-
-    private final int CMD_VIEW_INIT = 0;       // View init
+//    private int selYear = 0;
+//    private int selMonth = 0;
+//    private int selDay = 0;
 
     EventDecorator eventDecorator = null;
     HolidayDecorator holidayDec = null;
@@ -93,11 +94,16 @@ public class MenuScheduleActivity extends BaseActivity {
     OtherSundayDecorator otherSundayDec = null;
     OtherSaturdayDecorator otherSaturdayDec = null;
 
-    private Handler mHandler = new Handler(Looper.getMainLooper()){
+    private Handler _handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
-                case CMD_VIEW_INIT:
+                case CMD_GET_SCHEDULES:
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(_selectedDate);
+                    int year = cal.get(Calendar.YEAR);
+                    int month = cal.get(Calendar.MONTH) + 1;
+                    requestScheduleList(_acaCode, year, month);
                     break;
             }
         }
@@ -119,12 +125,12 @@ public class MenuScheduleActivity extends BaseActivity {
         _acaName = PreferenceUtil.getAcaName(mContext);
 
         Calendar cal = Calendar.getInstance();
-        selYear = cal.get(Calendar.YEAR);
-        selMonth = cal.get(Calendar.MONTH)+1;
-        selDay = cal.get(Calendar.DAY_OF_MONTH);
+        cal.setTime(_selectedDate);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
 
-        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode);
-        else requestScheduleList("");
+        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode, year, month);
+        else requestScheduleList("", year, month);
     }
 
     @Override
@@ -168,7 +174,7 @@ public class MenuScheduleActivity extends BaseActivity {
             if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
             else _acaCode = "";
 
-            requestScheduleList(_acaCode);
+            _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
         });
         mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
     }
@@ -176,17 +182,14 @@ public class MenuScheduleActivity extends BaseActivity {
     private void setTvHolidayDate(){
         mTvHoliday.setText("");
         mTvHoliday.setVisibility(View.GONE);
-        Calendar calendar = Calendar.getInstance();
 
-        calendar.set(Calendar.YEAR, selYear);
-        calendar.set(Calendar.MONTH, selMonth-1);
-        calendar.set(Calendar.DAY_OF_MONTH, selDay);
-        _selectedDate = calendar.getTime();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(_selectedDate);
 
         mTvHolidayDate.setText(_holidayFormat.format(_selectedDate));
 
         for (HolidayData item : calHolidayList){
-            if (Integer.parseInt(item.month) == selMonth && Integer.parseInt(item.day) == selDay){
+            if ((Integer.parseInt(item.month) == calendar.get(Calendar.MONTH) + 1) && Integer.parseInt(item.day) == calendar.get(Calendar.DATE)){
                 mTvHoliday.setText(TextUtils.isEmpty(item.name) ? "" : item.name);
                 mTvHoliday.setVisibility(View.VISIBLE);
                 break;
@@ -211,7 +214,7 @@ public class MenuScheduleActivity extends BaseActivity {
         selectionDec = new SelectionDecorator(mContext);
         eventDecorator = new EventDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
 
-        CalendarDay today = CalendarDay.from(selYear, selMonth-1, selDay);
+        CalendarDay today = CalendarDay.from(_selectedDate);
         todayDec.setSelectedDay(today);
         bgDec.setSelectedDay(today);
         otherDec.setSelectedDay(today);
@@ -237,41 +240,28 @@ public class MenuScheduleActivity extends BaseActivity {
                 LogMgr.e(TAG, year+"년 "+month+"월");
                 CalendarDay newDate = CalendarDay.from(year, month, 1);
                 runOnUiThread( () -> mCalendarView.setCurrentDate(newDate) );
-                selYear = year;
-                selMonth = month+1;
-                selDay = 1;
-                LogMgr.e(TAG, selYear+"년 "+selMonth+"월");
+
+                _selectedDate = newDate.getDate();
+
+                _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
             }, currentYear, currentMonth);
         });
 
         mCalendarView.setOnDateChangedListener((view, date, selected) -> {
             if (mListDay.size() > 0) mListDay.clear();
-
-            selYear = date.getYear();
-            selMonth = date.getMonth()+1;
-            selDay = date.getDay();
+            _selectedDate = date.getDate();
 
             setTvHolidayDate();
             setDeco();
             view.invalidateDecorators();
 
-            LogMgr.i(TAG,"DateTest >> " + "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
-
-            new Thread(() -> {
-                for (ScheduleData item : mList) if (selDay == item.day) mListDay.add(item);
-
-                runOnUiThread(() -> {
-                    mAdapter.notifyDataSetChanged();
-                    mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
-                });
-            }).start();
+            if (mAdapter != null) mAdapter.getFilter().filter(String.valueOf(date.getDay()));
         });
 
         mCalendarView.setOnMonthChangedListener((view, date) -> {
-
-            selYear = date.getYear();
-            selMonth = date.getMonth()+1;
-            selDay = date.getDay();
+            Calendar calendar = date.getCalendar();
+            calendar.set(Calendar.DAY_OF_MONTH, 1);
+            _selectedDate = calendar.getTime();
 
             setTvHolidayDate();
 
@@ -280,19 +270,24 @@ public class MenuScheduleActivity extends BaseActivity {
             otherSaturdayDec.setSelectedDay(date);
             holidayDec.setSelectedDay(date);
 
-            LogMgr.i(TAG, "DateTestMonth >> " + "year: "+selYear + ", " +"month: "+ selMonth + ", " + "day: " + selDay);
-            requestScheduleList(_acaCode);
+            LogMgr.i(TAG, "DateTestMonth >> " + _selectedDate);
+            _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
         });
     }
 
     private void setDeco(){
-        if (calendarDayList != null && calendarDayList.size() > 0) eventDecorator.setDates(calendarDayList);
+        if (calendarDaySet != null && calendarDaySet.size() > 0) eventDecorator.setDates(calendarDaySet);
         else eventDecorator.setDates(Collections.emptySet());
     }
 
     private void setRecycler(){
 
-        mAdapter = new ScheduleListAdapter(mContext, mListDay, this::startDetailActivity);
+        mAdapter = new ScheduleListAdapter(mContext, mList, new ScheduleListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(ScheduleData item) { startDetailActivity(item); }
+            @Override
+            public void onFilteringCompleted() { mTvListEmpty.setVisibility(mAdapter.getItemCount() == 0 ? View.VISIBLE : View.GONE); }
+        });
         mRecyclerSchedule.setAdapter(mAdapter);
         mRecyclerSchedule.addItemDecoration(Utils.setDivider(mContext));
 
@@ -307,14 +302,15 @@ public class MenuScheduleActivity extends BaseActivity {
         }
     }
 
-    private void requestScheduleList(String acaCode) {
+    private void requestScheduleList(String acaCode, int year, int month) {
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getScheduleList(acaCode, selYear, selMonth).enqueue(new Callback<ScheduleListResponse>() {
+            RetrofitClient.getApiInterface().getScheduleList(acaCode, year, month).enqueue(new Callback<ScheduleListResponse>() {
                 @Override
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
                     if (mList != null && mList.size() > 0) mList.clear();
-                    if (mListDay != null && mListDay.size() > 0) mListDay.clear();
-                    if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
+                    //if (mListDay != null && mListDay.size() > 0) mListDay.clear();
+                    //if (calendarDayList != null && calendarDayList.size() > 0) calendarDayList.clear();
+                    if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
                     if (calHolidayList != null && calHolidayList.size() > 0) calHolidayList.clear();
 
                     try {
@@ -322,14 +318,20 @@ public class MenuScheduleActivity extends BaseActivity {
                             List<ScheduleData> getData = new ArrayList<>();
                             List<HolidayData> getHoliday = new ArrayList<>();
 
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(_selectedDate);
+
+                            int selYear = calendar.get(Calendar.YEAR);
+                            int selMonth = calendar.get(Calendar.MONTH) + 1;
+                            int selDay = calendar.get(Calendar.DATE);
+
                             if (response.body().data.scheduleList != null) {
                                 getData = response.body().data.scheduleList;
 
                                 if (!getData.isEmpty()) {
                                     mList.addAll(getData);
 
-                                    for (int i=0; i < getData.size(); i++) if (selDay == getData.get(i).day) mListDay.add(getData.get(i));
-                                    for (ScheduleData item : getData) calendarDayList.add(CalendarDay.from(item.year, item.month-1, item.day));
+                                    for (ScheduleData item : getData) calendarDaySet.add(CalendarDay.from(item.year, item.month-1, item.day));
 
                                     mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }
@@ -360,7 +362,6 @@ public class MenuScheduleActivity extends BaseActivity {
                     updateCalView();
 
                     if (mAdapter != null) mAdapter.notifyDataSetChanged();
-                    mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
                 }
 
                 @Override
@@ -371,7 +372,6 @@ public class MenuScheduleActivity extends BaseActivity {
                     } catch (Exception e) {
                     }
                     mCalendarView.invalidateDecorators();
-                    mTvListEmpty.setVisibility(mListDay.isEmpty() ? View.VISIBLE : View.GONE);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
 
                     updateCalView();
@@ -381,8 +381,9 @@ public class MenuScheduleActivity extends BaseActivity {
     }
 
     private void updateCalView(){
-        CalendarDay firstDay = CalendarDay.from(selYear, selMonth-1, selDay);
+        CalendarDay firstDay = CalendarDay.from(_selectedDate);
         mCalendarView.setSelectedDate(firstDay);
+        if(mAdapter != null) mAdapter.getFilter().filter(String.valueOf(firstDay.getDay()));
         setDeco();
         mCalendarView.invalidateDecorators();
     }

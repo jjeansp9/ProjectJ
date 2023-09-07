@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,24 +15,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 
-public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder> {
+public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder> implements Filterable {
 
     private final static String TAG = "ScheduleListAdapter";
 
-    public interface ItemClickListener{ public void onItemClick(ScheduleData item); }
+    public interface ItemClickListener{
+        void onItemClick(ScheduleData item);
+        void onFilteringCompleted();
+    }
 
     private Context mContext;
     private List<ScheduleData> mList;
+    private List<ScheduleData> _filteredList;
     private ItemClickListener _listener;
 
     private static boolean isWholeCampusMode = false;
@@ -39,6 +47,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
+        this._filteredList = mList;
     }
     public void setWholeCampusMode(boolean flag) {
         this.isWholeCampusMode = flag;
@@ -53,7 +62,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (position == NO_POSITION) return;
-        ScheduleData item = mList.get(position);
+        ScheduleData item = _filteredList.get(position);
 
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
         SimpleDateFormat outputFormat = new SimpleDateFormat("M.d (E)", Locale.KOREA);
@@ -99,8 +108,43 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
 
     @Override
     public int getItemCount() {
-        if (mList == null) return 0;
-        return mList.size();
+        if (_filteredList == null) return 0;
+        return _filteredList.size();
+    }
+
+    // TODO : filter 적용
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String trigger = charSequence.toString();
+                if (trigger.isEmpty()){
+                    _filteredList = mList;
+                }else {
+                    int selectedDate = 1;
+                    try {
+                        selectedDate = Integer.parseInt(trigger);
+                    }catch (NumberFormatException e){}
+                    List<ScheduleData> filteringList = new ArrayList<>();
+                    int finalSelecteDate = selectedDate;
+                    filteringList = mList.stream().filter(t -> t.day == finalSelecteDate).collect(Collectors.toList());
+                    _filteredList = filteringList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = _filteredList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                _filteredList = (List<ScheduleData>) filterResults.values;
+                LogMgr.e( "publishResult " + _filteredList.size());
+                notifyDataSetChanged();
+                if (_listener != null) _listener.onFilteringCompleted();
+            }
+        };
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -117,7 +161,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
+                if (position != NO_POSITION) if (_filteredList.size() > 0) _listener.onItemClick(_filteredList.get(position));
             });
         }
     }

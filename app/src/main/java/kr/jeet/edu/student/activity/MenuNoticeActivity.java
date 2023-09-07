@@ -81,6 +81,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private long currentMaxSeq = 0;
     private int systemCnt = 0;
     private int attendanceCnt = 0;
+    int mListIndex = 0;
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
@@ -153,29 +154,13 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             }
 
             runOnUiThread(() -> {
-                updateList(newMessage, isUpdate);
+                if (mList.size() > 0) mList.clear();
+                mList.addAll(newMessage);
+                mAdapter.notifyDataSetChanged();
+                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
                 if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
             });
         }).start();
-    }
-
-    int mListIndex = 0; // 페이징 관련 변수
-
-    private void updateList(List<PushMessage> newMessage, boolean isUpdate){
-        if (isUpdate){
-            for (int i = mList.size() - 1; i >= 0; i--) {
-                mList.remove(i);
-                mAdapter.notifyItemRemoved(i);
-            }
-            if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
-        }
-
-        //mListIndex = mList.size();
-        for (int i = 0; i < newMessage.size(); i++) {
-            mList.add(i, newMessage.get(i));
-            mAdapter.notifyItemInserted(i);
-            //mListIndex ++;
-        }
     }
 
     @Override
