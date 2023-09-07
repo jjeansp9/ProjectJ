@@ -47,7 +47,7 @@ public class TeacherListAdapter extends RecyclerView.Adapter<TeacherListAdapter.
         holder.tvClsName.setText(TextUtils.isEmpty(item.clsName) ? "" : item.clsName);
         holder.tvPhoneNum.setText(TextUtils.isEmpty(item.phoneNumber) ? "" : item.phoneNumber);
 
-        if (item.gender != null){
+        if (!TextUtils.isEmpty(item.gender)){
             if(item.gender.equals("M")) {
                 Glide.with(mContext).load(R.drawable.img_dot_man).into(holder.imgGender);
                 Glide.with(mContext).load(R.drawable.img_profile_man).into(holder.imgProfile);
