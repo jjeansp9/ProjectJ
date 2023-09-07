@@ -299,7 +299,7 @@
                             android:textColor="@color/font_color_default"
                             android:textSize="@dimen/font_size_small"
                             android:gravity="center"
-                            android:maxLines="4"
+                            android:maxLines="1"
                             android:ellipsize="end"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

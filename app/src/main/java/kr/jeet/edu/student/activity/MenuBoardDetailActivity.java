@@ -192,8 +192,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
             if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) requestNoticeDetail(_pushData.connSeq);
             else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) requestSystemDetail();
 
-        }else if (dataType == TYPE_SYSTEM || dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
+        }else if (dataType == TYPE_SYSTEM){
             requestSystemDetail();
+
+        }else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
+            requestNoticeDetail(_currentSeq);
         }
     }
 
