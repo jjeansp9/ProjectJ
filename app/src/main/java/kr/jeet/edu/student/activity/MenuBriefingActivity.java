@@ -2,10 +2,13 @@ package kr.jeet.edu.student.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.ComponentCallbacks;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -186,7 +189,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                 break;
 
             case R.id.btn_brf_next:
-                if (selYear <= Constants.PICKER_MAX_YEAR && selMonth >= 11) break;
+                if (selYear >= Constants.PICKER_MAX_YEAR && selMonth >= 11) break;
                 navigateMonth(1);
                 break;
         }

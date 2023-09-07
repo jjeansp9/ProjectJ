@@ -280,7 +280,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 break;
 
             case R.id.btn_notice_next:
-                if (Integer.parseInt(selYear) <= Constants.PICKER_MAX_YEAR && Integer.parseInt(selMonth) >= 12) break;
+                if (Integer.parseInt(selYear) >= Constants.PICKER_MAX_YEAR && Integer.parseInt(selMonth) >= 12) break;
                 navigateMonth(1);
                 break;
         }

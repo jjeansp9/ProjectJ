@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.adapter;
 
+import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -51,6 +52,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        if (position == NO_POSITION) return;
         ScheduleData item = mList.get(position);
 
         SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
