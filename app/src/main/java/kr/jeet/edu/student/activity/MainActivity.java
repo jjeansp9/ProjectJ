@@ -17,11 +17,13 @@ import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
+import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
@@ -75,7 +77,7 @@ public class MainActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private MainMenuListAdapter mAdapter;
     private ArrayList<MainMenuItemData> mList = new ArrayList<>();
-    private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember, mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti;
+    private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember, mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent;
     private ImageView imgStudentAttendance;
     private LinearLayoutCompat mLayoutBottom;
 
@@ -83,9 +85,10 @@ public class MainActivity extends BaseActivity {
 
     private final int CMD_GET_ACALIST = 1;  // ACA정보 가져오기
     private final int CMD_GET_MEMBER_INFO = 2;       // 자녀정보 가져오기
-    private final int CMD_GET_BOARD_ATTRIBUTE = 3;       // 게시판 속성 조회하기
-    private final int CMD_GET_SCHOOL_LIST = 4;       // 학교 목록 조회하기
-    private final int CMD_GET_LTC_LIST = 5;       // LTC 목록 가져오기
+    private final int CMD_GET_NOTIFY_INFO = 3;       // 공지사항 정보 가져오기
+    private final int CMD_GET_BOARD_ATTRIBUTE = 4;       // 게시판 속성 조회하기
+    private final int CMD_GET_SCHOOL_LIST = 5;       // 학교 목록 조회하기
+    private final int CMD_GET_LTC_LIST = 6;       // LTC 목록 가져오기
 
     private String _userType = "";
     private String _stName = "";
@@ -94,6 +97,8 @@ public class MainActivity extends BaseActivity {
     private int _stCode = 0;
     private String acaCode = "";
     private PushMessage _pushMessage;
+
+    private int announcementSeq = -1;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -105,6 +110,10 @@ public class MainActivity extends BaseActivity {
 
                 case CMD_GET_MEMBER_INFO:
                     requestMemberInfo(_stuSeq, _stCode);
+                    break;
+
+                case CMD_GET_NOTIFY_INFO:
+                    requestBoardList(acaCode);
                     break;
 
                 case CMD_GET_BOARD_ATTRIBUTE:
@@ -171,6 +180,7 @@ public class MainActivity extends BaseActivity {
         mTvAttendanceDate = findViewById(R.id.tv_attendance_date);
         mTvNonMember = findViewById(R.id.tv_non_member);
         mTvNonMemberNoti = findViewById(R.id.tv_non_member_notice);
+        mTvNotifyContent = findViewById(R.id.tv_notify_second);
 
         mLayoutBottom = findViewById(R.id.layout_bottom);
 
@@ -342,6 +352,12 @@ public class MainActivity extends BaseActivity {
         Intent intent = null;
 
         switch (view.getId()) {
+            case R.id.btn_notify:
+                Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
+                targetIntent.putExtra(IntentParams.PARAM_BOARD_SEQ, announcementSeq);
+                targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+                startActivity(targetIntent);
+                break;
 
         }
     }
@@ -535,7 +551,7 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                 }
 
                 @Override
@@ -544,7 +560,7 @@ public class MainActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                 }
             });
         }
@@ -589,6 +605,46 @@ public class MainActivity extends BaseActivity {
                     }catch (Exception e){ LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
 
                     mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
+                }
+            });
+        }
+    }
+
+
+    private void requestBoardList(String acaCodes) {
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getAnnouncementList(0, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
+                @Override
+                public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            String announcementTitle = "";
+
+                            if (response.body() != null) {
+                                announcementSeq = response.body().data.get(0).seq;
+                                announcementTitle = response.body().data.get(0).title;
+
+                                mTvNotifyContent.setText(TextUtils.isEmpty(announcementTitle) ? "" : announcementTitle);
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
+                    }
+
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                }
+
+                @Override
+                public void onFailure(Call<AnnouncementListResponse> call, Throwable t) {
+                    try {
+                        LogMgr.e(TAG, "requestBoardList() onFailure >> " + t.getMessage());
+                    } catch (Exception e) {
+                    }
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                 }
             });
         }

@@ -112,8 +112,6 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         return _filteredList.size();
     }
 
-    // TODO : filter 적용
-
     @Override
     public Filter getFilter() {
         return new Filter() {

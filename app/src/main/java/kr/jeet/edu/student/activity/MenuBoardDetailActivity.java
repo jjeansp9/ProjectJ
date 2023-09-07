@@ -53,7 +53,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
     AnnouncementData _currentData = null;
     PushMessage _pushData = null;
     SystemNoticeData _systemNoticeData = null;
-    private int _currentSeq = -1;   //PushMessage 용
+    private int _currentSeq = -1;
     private String title = "";
 
     @Override
@@ -71,7 +71,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     private final int TYPE_PUSH = 0;
     private final int TYPE_ANNOUNCEMENT = 1;
-    private final int TYPE_SYSTEM = 2;
+    private final int TYPE_ANNOUNCEMENT_FROM_MAIN = 2;
+    private final int TYPE_SYSTEM = 3;
 
     private void initIntentData(){
         Intent intent = getIntent();
@@ -96,6 +97,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
                 LogMgr.e("Event here1");
+            } else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
+                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
+                dataType = TYPE_ANNOUNCEMENT_FROM_MAIN;
+                LogMgr.e("Event here2");
             }
 
             if (extraKey != null) {
@@ -186,7 +192,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) requestNoticeDetail(_pushData.connSeq);
             else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) requestSystemDetail();
 
-        }else if (dataType == TYPE_SYSTEM){
+        }else if (dataType == TYPE_SYSTEM || dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
             requestSystemDetail();
         }
     }

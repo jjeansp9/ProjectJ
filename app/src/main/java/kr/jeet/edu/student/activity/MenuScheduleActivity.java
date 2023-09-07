@@ -83,9 +83,6 @@ public class MenuScheduleActivity extends BaseActivity {
     private String _userType = "";
 
     Date _selectedDate = new Date();
-//    private int selYear = 0;
-//    private int selMonth = 0;
-//    private int selDay = 0;
 
     EventDecorator eventDecorator = null;
     HolidayDecorator holidayDec = null;

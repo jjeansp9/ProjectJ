@@ -54,7 +54,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
     private TextView mTvListEmpty;
     private AnnouncementListAdapter mAdapter;
-    private RetrofitApi mRetrofitApi;
     private PowerSpinnerView mPowerSpinner;
     private SwipeRefreshLayout mSwipeRefresh;
 
@@ -167,9 +166,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
         if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
 
         if (RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
             int finalLastNoticeSeq = lastNoticeSeq;
-            mRetrofitApi.getAnnouncementList(lastNoticeSeq, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
+            RetrofitClient.getApiInterface().getAnnouncementList(lastNoticeSeq, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {
