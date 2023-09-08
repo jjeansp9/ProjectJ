@@ -14,28 +14,43 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75"/>
+        app:layout_constraintGuide_percent="0.77" />
 
     <TextView
-        android:id="@+id/tv_brf_title"
+        android:id="@+id/tv_brf_state"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/img_brf"
-        android:layout_marginEnd="8dp"
-        android:maxLines="2"
-        android:ellipsize="end"
-        android:hint="설명회 타이틀"
-        android:textColor="@color/font_color_default"
-        android:textStyle="bold"
-        android:textSize="@dimen/font_size_large"/>
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="2dp"
+        android:background="@drawable/bg_usergubun_parent"
+        android:text="상태"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size_xsmall"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tv_brf_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_brf_title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tv_brf_state"
+        app:layout_constraintEnd_toStartOf="@id/guideline"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:hint="설명회 날짜"
+        android:textSize="@dimen/font_size_small"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:id="@+id/tv_brf_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_brf_date"
         app:layout_constraintBottom_toTopOf="@id/tv_brf_campus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
@@ -43,9 +58,10 @@
         android:layout_marginEnd="8dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:hint="설명회 날짜"
-        android:textSize="@dimen/font_size"
-        android:textColor="@color/font_color_default"/>
+        android:hint="설명회 타이틀"
+        android:textColor="@color/font_color_default"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_size_large"/>
 
     <TextView
         android:id="@+id/tv_brf_campus"
@@ -58,22 +74,22 @@
         android:hint="캠퍼스"
         android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/font_color_555"
-        android:textSize="@dimen/font_size"/>
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size_small"/>
 
     <TextView
         android:id="@+id/tv_brf_location"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/guideline"
         android:layout_marginEnd="8dp"
+        android:ellipsize="end"
         android:hint="설명회 장소"
         android:maxLines="1"
-        android:ellipsize="end"
-        android:textColor="@color/font_color_555"
-        android:textSize="@dimen/font_size"/>
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent" />
 
 <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
 <!--        android:id="@+id/layout_photo"-->
@@ -113,32 +129,31 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toTopOf="@id/tv_brf_subscription"
-        app:layout_constraintDimensionRatio="W,1:1"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
-        app:layout_constraintTop_toTopOf="parent"
-        />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_brf_subscription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
-        android:hint="신청기간"
-        android:gravity="center"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textColor="@color/red"
-        android:textSize="@dimen/font_size_small"
-        app:autoSizeTextType="uniform"
-        app:autoSizeMinTextSize="8dp"
-        app:autoSizeMaxTextSize="@dimen/font_size_small"
-        app:autoSizeStepGranularity="1dp"
-        android:textStyle="bold"/>
+        app:layout_constraintDimensionRatio="W,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@id/guideline"
+        app:layout_constraintTop_toTopOf="parent" />
+
+<!--    <androidx.appcompat.widget.AppCompatTextView-->
+<!--        android:id="@+id/tv_brf_subscription"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="8dp"-->
+<!--        android:ellipsize="end"-->
+<!--        android:gravity="center"-->
+<!--        android:hint="신청기간"-->
+<!--        android:maxLines="1"-->
+<!--        android:textColor="@color/red"-->
+<!--        android:textSize="@dimen/font_size_small"-->
+<!--        android:textStyle="bold"-->
+<!--        app:autoSizeMaxTextSize="@dimen/font_size_small"-->
+<!--        app:autoSizeMinTextSize="8dp"-->
+<!--        app:autoSizeStepGranularity="1dp"-->
+<!--        app:autoSizeTextType="uniform"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/guideline" />-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

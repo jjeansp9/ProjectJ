@@ -291,20 +291,10 @@ public class Utils {
         int[] attrs = new int[]{android.R.attr.listDivider};
 
         TypedArray a = mContext.obtainStyledAttributes(attrs);
-        Drawable originalDivider = a.getDrawable(0);
-        originalDivider.getIntrinsicHeight();
-        a.recycle();
-
-        int dividerHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.7f, mContext.getResources().getDisplayMetrics());
-        Bitmap bitmap = Bitmap.createBitmap(originalDivider.getIntrinsicWidth(), dividerHeight, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        originalDivider.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        originalDivider.draw(canvas);
-
-        Drawable divider = new BitmapDrawable(mContext.getResources(), bitmap);
-
+        Drawable divider = a.getDrawable(0);
         int inset = mContext.getResources().getDimensionPixelSize(R.dimen.layout_margin);
         InsetDrawable insetDivider = new InsetDrawable(divider, inset, 0, inset, 0);
+        a.recycle();
 
         DividerItemDecoration itemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
         itemDecoration.setDrawable(insetDivider);

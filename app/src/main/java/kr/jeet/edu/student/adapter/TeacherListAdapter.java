@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -51,11 +54,13 @@ public class TeacherListAdapter extends RecyclerView.Adapter<TeacherListAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private ImageView imgProfile, imgLine;
         private TextView tvName, tvClsName, tvPhoneNum;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            imgProfile = itemView.findViewById(R.id.profileImg);
             tvName = itemView.findViewById(R.id.name);
             tvClsName = itemView.findViewById(R.id.tv_cls_name);
             tvPhoneNum = itemView.findViewById(R.id.tv_phone_num);

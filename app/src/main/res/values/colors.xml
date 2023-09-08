@@ -37,6 +37,7 @@
 
     <color name="student_list_gender_woman">#ff9289</color>
     <color name="student_list_gender_man">#82a4c4</color>
+    <color name="student_list_gender_teacher">#D3EFD0</color>
 
     <color name="settings_layout_stroke">#D5D5D5</color>
     <color name="campus_spinner_stroke">#D5D5D5</color>

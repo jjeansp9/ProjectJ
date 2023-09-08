@@ -111,11 +111,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mAdapter = new AnnouncementListAdapter(mContext, mList, this::startBoardDetailActivity);
         mRecyclerView.setAdapter(mAdapter);
         //mRecyclerView.setItemAnimator(null);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL);
-        Drawable dividerColor = new ColorDrawable(ContextCompat.getColor(this, R.color.line_2));
 
-        dividerItemDecoration.setDrawable(dividerColor);
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -178,14 +175,14 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()) {
                             List<AnnouncementData> getData = new ArrayList<>();
+                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
 
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
 
-                                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                     mList.addAll(getData);
-                                    mAdapter.notifyDataSetChanged();
+
 
                                     mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCodes));
 
@@ -202,6 +199,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mSwipeRefresh.setRefreshing(false);
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override

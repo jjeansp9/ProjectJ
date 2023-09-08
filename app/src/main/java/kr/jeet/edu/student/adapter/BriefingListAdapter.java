@@ -64,26 +64,28 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
             holder.tvLocation.setText(TextUtils.isEmpty(item.place) ? "" : item.place);
 
-            if (isWholeCampusMode) {
-                holder.tvCampus.setVisibility(View.VISIBLE);
-                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
-
-            } else {
-                holder.tvCampus.setVisibility(View.GONE);
-            }
+//            if (isWholeCampusMode) {
+//                holder.tvCampus.setVisibility(View.VISIBLE);
+//                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+//
+//            } else {
+//                holder.tvCampus.setVisibility(View.GONE);
+//            }
+            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 
             String cnt;
             if (item.reservationCnt >= item.participantsCnt) {
                 cnt = "신청마감";
-                int color = ContextCompat.getColor(mContext, R.color.font_color_bc);
-                holder.tvSubscription.setTextColor(color);
+//                int color = ContextCompat.getColor(mContext, R.color.font_color_bc);
+//                holder.tvState.setTextColor(color);
 
             } else {
-                cnt = item.reservationCnt + " / " + item.participantsCnt+"명";
-                int color = ContextCompat.getColor(mContext, R.color.font_color_red);
-                holder.tvSubscription.setTextColor(color);
+                //cnt = item.reservationCnt + " / " + item.participantsCnt+"명";
+                cnt = "예약";
+//                int color = ContextCompat.getColor(mContext, R.color.font_color_red);
+//                holder.tvState.setTextColor(color);
             }
-            holder.tvSubscription.setText(cnt);
+            holder.tvState.setText(cnt);
 
             if (item.fileList != null && item.fileList.size() > 0){
 
@@ -108,17 +110,17 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgBrf);
                     holder.imgBrf.setVisibility(View.INVISIBLE);
-                    setView(holder.tvTitle, holder.tvSubscription, IMG_IS_EMPTY);
+                    setView(holder.tvTitle, holder.tvState, IMG_IS_EMPTY);
 
                 }else{
                     holder.imgBrf.setVisibility(View.VISIBLE);
-                    setView(holder.tvTitle, holder.tvSubscription, IMG_IS_NOT_EMPTY);
+                    setView(holder.tvTitle, holder.tvState, IMG_IS_NOT_EMPTY);
                 }
             }
             else {
                 Glide.with(mContext).clear(holder.imgBrf);
                 holder.imgBrf.setVisibility(View.INVISIBLE);
-                setView(holder.tvTitle, holder.tvSubscription, IMG_IS_EMPTY);
+                setView(holder.tvTitle, holder.tvState, IMG_IS_EMPTY);
             }
 
         }catch (Exception e){
@@ -152,7 +154,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ConstraintLayout brfRoot;
         private ImageView imgBrf;
-        private TextView tvDate, tvTitle, tvLocation, tvSubscription, tvCampus;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -161,7 +163,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             tvDate = itemView.findViewById(R.id.tv_brf_date);
             tvTitle = itemView.findViewById(R.id.tv_brf_title);
             tvLocation = itemView.findViewById(R.id.tv_brf_location);
-            tvSubscription = itemView.findViewById(R.id.tv_brf_subscription);
+            tvState = itemView.findViewById(R.id.tv_brf_state);
             tvCampus = itemView.findViewById(R.id.tv_brf_campus);
             imgBrf = itemView.findViewById(R.id.img_brf);
 

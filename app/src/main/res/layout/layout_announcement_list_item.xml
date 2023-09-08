@@ -70,7 +70,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tv_announcement_name"
             app:layout_constraintStart_toStartOf="parent"
-            android:textSize="@dimen/font_size_xsmall"
+            android:textSize="@dimen/font_size_small"
             android:textColor="@color/font_color_999"
             android:maxLines="1"
             android:ellipsize="end"/>

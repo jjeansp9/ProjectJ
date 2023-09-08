@@ -91,13 +91,15 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             holder.tvName.setText(item.memberResponseVO.name);
             holder.tvDate.setText(item.insertDate);
 
-            if (isWholeCampusMode) {
-                holder.tvCampus.setVisibility(View.VISIBLE);
-                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+//            if (isWholeCampusMode) {
+//                holder.tvCampus.setVisibility(View.VISIBLE);
+//                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+//
+//            } else {
+//                holder.tvCampus.setVisibility(View.GONE);
+//            }
 
-            } else {
-                holder.tvCampus.setVisibility(View.GONE);
-            }
+            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());
         }

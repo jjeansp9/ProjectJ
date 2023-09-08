@@ -60,12 +60,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
             holder.tvType.setText("시스템알림");
             holder.btnNext.setVisibility(View.VISIBLE);
-            holder.tvAttState.setVisibility(View.GONE);
+            //holder.tvAttState.setVisibility(View.GONE);
         }
         else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
             holder.tvType.setText("출결현황");
             holder.btnNext.setVisibility(View.GONE);
-            holder.tvAttState.setVisibility(View.VISIBLE);
+            //holder.tvAttState.setVisibility(View.VISIBLE);
         }
         else {
             holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
@@ -74,6 +74,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         }
 
         holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
+        holder.tvTitle.setText(TextUtils.isEmpty(item.body) ? "" : item.body);
 
         Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
         holder.imgSenderAndReceiver.setVisibility(View.GONE);
@@ -87,7 +88,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView tvType, tvAttState, tvDate, tvReceiver;
+        private TextView tvType, tvAttState, tvDate, tvReceiver, tvTitle;
         private ImageView imgSenderAndReceiver;
         private ImageButton btnNext;
 
@@ -96,9 +97,10 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
             btnNext = itemView.findViewById(R.id.btn_notice_next);
             tvType = itemView.findViewById(R.id.tv_notice_type);
-            tvAttState = itemView.findViewById(R.id.tv_notice_attendance_state);
+            //tvAttState = itemView.findViewById(R.id.tv_notice_attendance_state);
             tvDate = itemView.findViewById(R.id.tv_notice_date);
             tvReceiver = itemView.findViewById(R.id.tv_notice_receiver);
+            tvTitle = itemView.findViewById(R.id.tv_system_notice_title);
             imgSenderAndReceiver = itemView.findViewById(R.id.img_notice_send_and_receiver);
 
             itemView.setOnClickListener(v -> {

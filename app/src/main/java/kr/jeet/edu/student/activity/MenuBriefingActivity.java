@@ -227,6 +227,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                             if (response.body() != null) {
 
                                 List<BriefingData> list = response.body().data;
+                                if (mList.size() > 0) mList.clear();
+
                                 if (list != null && !list.isEmpty()) {
                                     if (added){
                                         mList.set(position, list.get(position));
@@ -236,9 +238,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         added = false;
 
                                     }else{
-                                        if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
-                                        mAdapter.notifyDataSetChanged();
                                     }
 
                                     mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
@@ -254,6 +254,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                     //if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
+                    mAdapter.notifyDataSetChanged();
                 }
 
                 @Override

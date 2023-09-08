@@ -9,33 +9,45 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/layout_notice_state"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_notice_next"
+        android:layout_marginEnd="4dp">
         <TextView
             android:id="@+id/tv_notice_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="4dp"
-            android:background="@drawable/bg_usergubun_parent"
             android:paddingHorizontal="8dp"
             android:paddingVertical="2dp"
+            android:background="@drawable/bg_usergubun_parent"
             android:text="시스템알림"
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/font_size_xsmall"
             android:textStyle="bold"/>
+<!--        <TextView-->
+<!--            android:id="@+id/tv_notice_attendance_state"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:hint="출석현황 정보없음"-->
+<!--            android:textColor="@color/font_color_default"-->
+<!--            android:textSize="@dimen/font_size"-->
+<!--            android:visibility="gone"/>-->
+
         <TextView
-            android:id="@+id/tv_notice_attendance_state"
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_system_notice_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:hint="출석현황 정보없음"
             android:textColor="@color/font_color_default"
-            android:textSize="@dimen/font_size"/>
+            android:textSize="@dimen/font_size"
+            android:textStyle="bold"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat

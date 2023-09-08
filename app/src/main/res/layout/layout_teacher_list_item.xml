@@ -8,7 +8,7 @@
     android:gravity="center"
     android:layout_marginTop="@dimen/layout_margin_12"
     android:layout_marginHorizontal="@dimen/layout_margin_16"
-    >
+    android:elevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_teacher_info"
@@ -69,8 +69,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/profileImg"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginEnd="4dp"
                 android:textSize="@dimen/font_size"
                 android:textColor="@color/font_color_default" />
 
@@ -91,14 +92,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_cls_name"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/profileImg"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="2dp"
+                android:layout_marginEnd="4dp"
                 android:textSize="@dimen/font_size"
                 android:textColor="@color/font_color_default" />
+
+            <ImageView
+                android:id="@+id/profileImg"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/img_profile_teacher"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/img_line"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/bg_student_list_gender_teacher"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
