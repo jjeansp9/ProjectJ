@@ -20,10 +20,11 @@
         android:id="@+id/tv_brf_state"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_brf_date"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_date"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingHorizontal="8dp"
-        android:paddingVertical="2dp"
+        android:paddingVertical="1dp"
         android:background="@drawable/bg_usergubun_parent"
         android:text="상태"
         android:gravity="center"
@@ -44,7 +45,7 @@
         android:ellipsize="end"
         android:hint="설명회 날짜"
         android:textSize="@dimen/font_size_small"
-        android:textColor="@color/white"/>
+        android:textColor="@color/font_color_default"/>
 
     <TextView
         android:id="@+id/tv_brf_title"
