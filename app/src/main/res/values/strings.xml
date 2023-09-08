@@ -111,6 +111,7 @@
     <string name="write_empty">필수 입력 항목이 누락되었는지 확인해주세요</string>
     <string name="write_empty_2">항목에 입력해주세요</string>
     <string name="write_privacy_empty">동의항목에 체크해주세요</string>
+    <string name="write_check_email">이메일 형식을 확인해주세요</string>
 
     <string name="main_student">원생</string>
     <string name="main_student_sub">님</string>

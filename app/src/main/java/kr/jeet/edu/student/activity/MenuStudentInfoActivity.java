@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.activity;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ClipData;
@@ -7,6 +8,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,6 +78,19 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final String PREVIOUS = "CLICK_PREVIOUS";
 
     private static final String WEB_VIEW_URL = "https://www.shinhandamoa.com/common/login#payer";
+
+    private final int CMD_GET_TUITION_INFO = 0;
+
+    private Handler mHandler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+                case CMD_GET_TUITION_INFO:
+                    requestTuitionList(currentDate);
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +161,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvMonth.setText(strMonth);
 
         requestMemberInfo(_stuSeq, _stCode);
-        requestTuitionList(currentDate);
 
         mRecyclerView = findViewById(R.id.recycler_tuition);
         mAdapter = new TuitionListAdapter(mContext, mList, this::startWebView);
@@ -362,7 +378,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-
+                    mHandler.sendEmptyMessage(CMD_GET_TUITION_INFO);
                 }
 
                 @Override
@@ -371,6 +387,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    mHandler.sendEmptyMessage(CMD_GET_TUITION_INFO);
                 }
             });
         }

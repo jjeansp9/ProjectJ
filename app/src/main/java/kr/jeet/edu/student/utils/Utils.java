@@ -358,16 +358,16 @@ public class Utils {
      *
      * @param strEmail - 이메일 형식을 체크하고 싶은 텍스트
     * */
-    public static String checkEmailForm(String strEmail){
+    public static boolean checkEmailForm(String strEmail){
 
-        final String MATCH = "올바른 이메일 입니다.";
-        final String NOT_MATCH = "올바른 이메일을 입력해주세요.";
+//        final String MATCH = "올바른 이메일 입니다.";
+//        final String NOT_MATCH = "올바른 이메일을 입력해주세요.";
 
         Pattern pattern = Patterns.EMAIL_ADDRESS;
         Matcher matcher = pattern.matcher(strEmail);
 
-        if (matcher.find()) return MATCH;
-        else return NOT_MATCH;
+        if (matcher.find()) return true;
+        else return false;
     }
 }
 

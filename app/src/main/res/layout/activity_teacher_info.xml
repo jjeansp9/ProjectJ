@@ -23,7 +23,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:orientation="vertical"/>
+        android:orientation="vertical"
+        android:background="@color/bg_grey"/>
 
     <TextView
         android:id="@+id/tv_teacher_empty"

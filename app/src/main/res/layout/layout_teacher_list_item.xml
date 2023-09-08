@@ -4,11 +4,11 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/bg_student_info_list"
+    android:background="@drawable/bg_teacher_info_list"
     android:gravity="center"
     android:layout_marginTop="@dimen/layout_margin_12"
     android:layout_marginHorizontal="@dimen/layout_margin_16"
-    android:elevation="4dp">
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_teacher_info"
@@ -24,30 +24,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.10"/>
+            app:layout_constraintGuide_percent="0.05"/>
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_teacher_list_end"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.90"/>
-
-        <ImageView
-            android:id="@+id/imgGender"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            app:layout_constraintStart_toStartOf="@id/guideline_teacher_list_start"
-            app:layout_constraintTop_toTopOf="@id/name"
-            app:layout_constraintBottom_toBottomOf="@id/name" />
+            app:layout_constraintGuide_percent="0.95"/>
 
         <TextView
             android:id="@+id/name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imgGender"
+            app:layout_constraintStart_toStartOf="@id/guideline_teacher_list_start"
             app:layout_constraintEnd_toStartOf="@id/guideline_teacher_list_end"
-            android:layout_marginStart="@dimen/layout_margin_4"
             android:hint="@string/name"
             android:textColor="@color/font_color_default"
             android:textStyle="bold"
@@ -60,49 +51,54 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="@id/name"
-            app:layout_constraintEnd_toStartOf="@id/profileImg"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp">
+            app:layout_constraintEnd_toStartOf="@id/guideline_teacher_list_end"
+            android:layout_marginTop="8dp">
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_cls_name_sub"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                android:text="학급명 :"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:textColor="@color/font_color_default"/>-->
 
             <TextView
                 android:id="@+id/tv_cls_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:hint="학급명"
                 android:textSize="@dimen/font_size"
-                android:textColor="@color/black" />
+                android:textColor="@color/font_color_default" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/tv_phone_num_sub"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_cls_name"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:layout_marginTop="2dp"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:text="연락처 :"-->
+<!--                android:textColor="@color/font_color_default" />-->
 
             <TextView
                 android:id="@+id/tv_phone_num"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/tv_cls_name"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="2dp"
                 android:textSize="@dimen/font_size"
-                android:hint="연락처"
-                android:textColor="@color/black" />
+                android:textColor="@color/font_color_default" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/profileImg"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="@id/layout_cls_name"
-            app:layout_constraintEnd_toEndOf="@id/guideline_teacher_list_end"
-            />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/img_line_gender"
-        android:layout_width="match_parent"
-        android:layout_height="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

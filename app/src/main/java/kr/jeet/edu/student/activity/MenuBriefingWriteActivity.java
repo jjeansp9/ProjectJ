@@ -288,7 +288,10 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         }else if(!cbPrivacy.isChecked()){
             Toast.makeText(mContext, R.string.write_privacy_empty, Toast.LENGTH_SHORT).show();
             return false;
-        }else if (Integer.parseInt(mEtPersonnel.getText().toString()) < 1){
+        }else if(!Utils.checkEmailForm(mEtEmail.getText().toString())){
+            Toast.makeText(mContext, R.string.write_check_email, Toast.LENGTH_SHORT).show();
+            return false;
+        } else if (Integer.parseInt(mEtPersonnel.getText().toString()) < 1){
             Toast.makeText(mContext, R.string.briefing_write_please_per_cnt, Toast.LENGTH_SHORT).show();
             return false;
         }else{

@@ -281,7 +281,7 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private void requestTestReserve(){
-
+        showProgressDialog();
         requestData();
 
         if (!checked()) return;
@@ -310,14 +310,14 @@ public class InformedQuestionActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTestReserve() Exception : ", e.getMessage()); }
-
+                    hideProgressDialog();
                 }
 
                 @Override
                 public void onFailure(Call<BaseResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestTestReserve() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestTestReserve() Exception : ", e.getMessage()); }
-
+                    hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

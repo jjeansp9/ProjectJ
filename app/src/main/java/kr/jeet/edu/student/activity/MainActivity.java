@@ -23,6 +23,7 @@ import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
+import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
@@ -672,8 +673,12 @@ public class MainActivity extends BaseActivity {
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
                     try {
                         if (response.isSuccessful() && response.body() != null){
+
                             String str = response.body().data.get(0).sfName;
-                            mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님 〉");
+
+                            if (response.body().data.size() == 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님 〉");
+                            else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님 〉");
+
                         }else{
                             LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
                         }

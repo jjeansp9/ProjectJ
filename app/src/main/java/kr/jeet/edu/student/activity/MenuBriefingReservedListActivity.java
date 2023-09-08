@@ -1,12 +1,16 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -91,7 +95,12 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
 
         mAdapter = new BriefingReservedListAdapter(mContext, mList, v -> {});
         mRecyclerBrf.setAdapter(mAdapter);
-        mRecyclerBrf.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL);
+        Drawable dividerColor = new ColorDrawable(ContextCompat.getColor(this, R.color.line_2));
+
+        dividerItemDecoration.setDrawable(dividerColor);
+        mRecyclerBrf.addItemDecoration(dividerItemDecoration);
 
         mRecyclerBrf.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -106,10 +115,6 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
             }
         });
         mAdapter.notifyDataSetChanged();
-
-//        mSwipeRefresh.setOnRefreshListener( () -> {
-//            mSwipeRefresh.setRefreshing(false);
-//        } );
 
         String str = getString(R.string.briefing_write_personnel_cnt, rvCnt, ptCnt);
         mTvReservedCnt.setText(str);
