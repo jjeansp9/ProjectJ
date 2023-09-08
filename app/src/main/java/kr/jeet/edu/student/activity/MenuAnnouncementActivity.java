@@ -153,19 +153,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         for (ACAData data : spinList) acaNames.add(data.acaName);
 
-
-//        try{
-//            LogMgr.e("TEST", spinList.indexOf(selectedACA)+"");
-//            if (selectedACA != null) {
-//                int selIndex = spinList.indexOf(selectedACA);
-//                if(selIndex >= 0 && selIndex <= spinList.size()) {
-//                    mPowerSpinner.selectItemByIndex(selIndex + 1);
-//                }
-//            }else{
-//                mPowerSpinner.selectItemByIndex(0);
-//            }
-//        }catch (Exception e){}
-
         if (_userType.equals(Constants.MEMBER)) mPowerSpinner.setText(_acaName);
         else mPowerSpinner.setText(acaNames.get(0));
 

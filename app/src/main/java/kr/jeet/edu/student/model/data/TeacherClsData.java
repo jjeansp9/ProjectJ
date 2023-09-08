@@ -14,8 +14,4 @@ public class TeacherClsData {
 
     @SerializedName("clsName")
     public String clsName;
-
-    @SerializedName("gender")
-    public String gender;
-
 }
