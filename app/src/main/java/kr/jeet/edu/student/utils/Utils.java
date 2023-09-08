@@ -14,10 +14,14 @@ import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -287,10 +291,20 @@ public class Utils {
         int[] attrs = new int[]{android.R.attr.listDivider};
 
         TypedArray a = mContext.obtainStyledAttributes(attrs);
-        Drawable divider = a.getDrawable(0);
+        Drawable originalDivider = a.getDrawable(0);
+        originalDivider.getIntrinsicHeight();
+        a.recycle();
+
+        int dividerHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0.7f, mContext.getResources().getDisplayMetrics());
+        Bitmap bitmap = Bitmap.createBitmap(originalDivider.getIntrinsicWidth(), dividerHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        originalDivider.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        originalDivider.draw(canvas);
+
+        Drawable divider = new BitmapDrawable(mContext.getResources(), bitmap);
+
         int inset = mContext.getResources().getDimensionPixelSize(R.dimen.layout_margin);
         InsetDrawable insetDivider = new InsetDrawable(divider, inset, 0, inset, 0);
-        a.recycle();
 
         DividerItemDecoration itemDecoration = new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL);
         itemDecoration.setDrawable(insetDivider);

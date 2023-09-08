@@ -49,7 +49,7 @@ public class TeacherInfoActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.teacher_list_title);
+        customAppbar.setTitle(R.string.main_tv_my_teacher);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

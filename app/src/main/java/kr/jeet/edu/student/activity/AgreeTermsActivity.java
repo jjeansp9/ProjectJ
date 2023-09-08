@@ -104,6 +104,7 @@ public class AgreeTermsActivity extends BaseActivity {
                         mNaverLogin.setJoinProcess();
                         mNaverLogin.LoginProcess();
                     }
+                    break;
                 }
                 else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) {
                     if(mKakaoLogin != null) {
