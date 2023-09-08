@@ -89,4 +89,6 @@ public class Constants {
     public static final String TIME_FORMATTER_A_HH_MM = "a hh:mm";
     public static final String TIME_FORMATTER_HH_MM = "HH:mm";
     public static final String TIME_FORMATTER_M_D_E = "M월 d일 E요일";
+
+    public static final String ACTION_JEET_PUSH_MESSAGE_RECEIVED = "action_jeet_push_message_received";
 }

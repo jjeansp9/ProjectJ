@@ -124,6 +124,20 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         mContext = this;
         initAppbar();
         initView();
+
+        if (fromBottomMenu) changeMessageState2Read();
+    }
+
+    void changeMessageState2Read() {
+        new Thread(() -> {
+            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_ATTEND);
+            if(!pushMessages.isEmpty()) {
+                for(PushMessage message : pushMessages) {
+                    message.isRead = true;
+                    JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                }
+            }
+        }).start();
     }
 
     private void getListData(String selType, boolean isUpdate){
@@ -202,8 +216,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void setSpinner(){
-        if (fromBottomMenu) _spinnerType.setText(attendanceType);
-        else _spinnerType.setText(systemType);
+
 
         _spinnerType.setIsFocusable(true);
 
@@ -212,6 +225,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
+        if (fromBottomMenu) _spinnerType.selectItemByIndex(1);
+        else _spinnerType.selectItemByIndex(0);
     }
 
     private void setRecycler(){

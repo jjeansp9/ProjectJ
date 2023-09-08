@@ -70,4 +70,7 @@
     <color name="saturday_other_month">#CFECFF</color>
 
     <color name="bg_brf_detail_box">#F8F8F8</color>
+
+    <color name="color_main_notice_nor">#FFE9EA</color>
+    <color name="color_main_notice_sel">#FFCFD1</color>
 </resources>

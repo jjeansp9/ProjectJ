@@ -318,6 +318,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
                         }else{
+                            finish();
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
@@ -334,6 +335,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     }catch (Exception e){
                     }
                     hideProgressDialog();
+                    finish();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

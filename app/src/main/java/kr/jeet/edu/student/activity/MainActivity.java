@@ -13,6 +13,7 @@ import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
@@ -40,7 +41,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -59,6 +63,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexDirection;
@@ -83,6 +88,7 @@ public class MainActivity extends BaseActivity {
             mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName;
     private ImageView imgStudentAttendance;
     private LinearLayoutCompat mLayoutBottom;
+    private ConstraintLayout layoutAttend, layoutNotify;
 
     private RetrofitApi mRetrofitApi;
 
@@ -103,6 +109,40 @@ public class MainActivity extends BaseActivity {
     private PushMessage _pushMessage;
 
     private int announcementSeq = -1;
+
+    private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if(intent != null && Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED.equals(intent.getAction())){
+                LogMgr.w(TAG, "broadcast onReceived ");
+                if(intent.hasExtra(IntentParams.PARAM_ATTENDANCE_INFO)) {
+                    String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
+                    if(type.equals(MSG_TYPE_ATTEND)) {
+                        new Thread(() -> {
+                            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+                            if(pushMessages.isEmpty()) {
+                                setNewCounselContent(false);
+                            }else{
+                                setNewCounselContent(true);
+                            }
+                        }).start();
+                    }
+                }
+            }
+        }
+    };
+
+    void setNewCounselContent(boolean isNew) {
+        runOnUiThread(()->{
+            if(layoutNotify != null) {
+                if (isNew) {
+                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
+                } else {
+                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
+                }
+            }
+        });
+    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -174,6 +214,9 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_notify).setOnClickListener(this);
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
+
+        layoutAttend = findViewById(R.id.btn_attendance_state);
+        layoutNotify = findViewById(R.id.btn_notify);
 
         mTvStudentName = findViewById(R.id.tv_student_name);
         mTvStudentCampus = findViewById(R.id.tv_student_campus);
@@ -334,6 +377,29 @@ public class MainActivity extends BaseActivity {
         mHandler.sendEmptyMessage(CMD_GET_ACALIST);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
+        registerReceiver(pushNotificationReceiver, intentFilter);
+
+        new Thread(() -> {
+//            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlag(false);
+//            pushMessages.forEach(t-> LogMgr.e(TAG, "unread = " + t.title + "/"+ t.pushType + "/" + t.connSeq));
+//            if(pushMessages.stream().anyMatch(t->t.pushType.equals(MSG_TYPE_COUNSEL))) {
+//                setNewCounselContent(true);
+//            }else{
+//                setNewCounselContent(false);
+//            }
+            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+            if(pushMessages.isEmpty()) {
+                setNewCounselContent(false);
+            }else{
+                setNewCounselContent(true);
+            }
+        }).start();
+    }
+
     private void startDetailActivity(Intent intent, Class<?> targetActivity) {
         if (targetActivity != null) {
             Intent noticeIntent = new Intent(this, targetActivity);
@@ -348,6 +414,12 @@ public class MainActivity extends BaseActivity {
         String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
 
         return formattedDate;
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(pushNotificationReceiver);
+        super.onPause();
     }
 
     @Override

@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
@@ -56,6 +58,14 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private int _currentSeq = -1;
     private String title = "";
 
+    Parcelable result = null;
+    private int dataType = -1;
+
+    private final int TYPE_PUSH = 0;
+    private final int TYPE_ANNOUNCEMENT = 1;
+    private final int TYPE_ANNOUNCEMENT_FROM_MAIN = 2;
+    private final int TYPE_SYSTEM = 3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,15 +74,20 @@ public class MenuBoardDetailActivity extends BaseActivity {
         initIntentData();
         initView();
         initAppbar();
+        changeMessageState2Read();
     }
 
-    Parcelable result = null;
-    private int dataType = -1;
-
-    private final int TYPE_PUSH = 0;
-    private final int TYPE_ANNOUNCEMENT = 1;
-    private final int TYPE_ANNOUNCEMENT_FROM_MAIN = 2;
-    private final int TYPE_SYSTEM = 3;
+    void changeMessageState2Read() {
+        new Thread(() -> {
+            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
+            if(!pushMessages.isEmpty()) {
+                for(PushMessage message : pushMessages) {
+                    message.isRead = true;
+                    JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                }
+            }
+        }).start();
+    }
 
     private void initIntentData(){
         Intent intent = getIntent();
@@ -264,6 +279,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 }else LogMgr.e(TAG+" requestNoticeDetail is null");
                             }
                         }else{
+                            finish();
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
@@ -280,6 +296,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     }catch (Exception e){
                     }
                     hideProgressDialog();
+                    finish();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

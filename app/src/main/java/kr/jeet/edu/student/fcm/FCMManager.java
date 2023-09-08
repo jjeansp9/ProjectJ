@@ -19,6 +19,7 @@ import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.IntroActivity;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.response.BaseResponse;
@@ -120,6 +121,11 @@ public class FCMManager {
 //            _context.startActivity(intent);
 
         }
+        //sendBroadcast
+        Intent sendIntent = new Intent(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
+        sendIntent.putExtra(IntentParams.PARAM_ATTENDANCE_INFO, message.pushType);
+        _context.sendBroadcast(sendIntent);
+        LogMgr.e(TAG, "sendBroadcast ~ " + message.pushType);
     }
     public void requestPushReceivedToServer(List<String> pushId){
         if (RetrofitClient.getInstance() != null) {

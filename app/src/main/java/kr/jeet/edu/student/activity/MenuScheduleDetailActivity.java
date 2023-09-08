@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,8 +21,15 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
+import kr.jeet.edu.student.model.response.BriefingDetailResponse;
+import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
+import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuScheduleDetailActivity extends BaseActivity {
 
@@ -49,6 +57,19 @@ public class MenuScheduleDetailActivity extends BaseActivity {
             }else{
                 mInfo = intent.getParcelableExtra(IntentParams.PARAM_SCHEDULE_INFO);
             }
+
+            setView();
+
+        }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
+            PushMessage message = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+            }else{
+                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+            }
+            _currentSeq = message.connSeq;
+
+            if (_currentSeq != -1) requestScheduleDetail(_currentSeq);
         }
     }
 
@@ -64,14 +85,19 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     @Override
     void initView() {
 
-        initData();
-
         tvDate = findViewById(R.id.tv_sc_detail_date);
         tvCampus = findViewById(R.id.tv_sc_detail_campus);
         tvTarget = findViewById(R.id.tv_sc_detail_target);
         tvTitle = findViewById(R.id.tv_sc_detail_title);
         tvContent = findViewById(R.id.tv_sc_detail_content);
 
+        initData();
+
+
+        initAppbar();
+    }
+
+    private void setView(){
         try {
             SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
             SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일", Locale.KOREA);
@@ -94,12 +120,52 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
         viewVisibility(tvContent, str);
-
-        initAppbar();
     }
 
     private void viewVisibility(TextView tv, String str){
         if (!TextUtils.isEmpty(str)) tv.setText(str);
         else tv.setVisibility(View.GONE);
+    }
+
+    private void requestScheduleDetail(int ptSeq){
+        if (RetrofitClient.getInstance() != null){
+            showProgressDialog();
+            RetrofitClient.getApiInterface().getScheduleDetail(ptSeq).enqueue(new Callback<ScheduleDetailResponse>() {
+                @Override
+                public void onResponse(Call<ScheduleDetailResponse> call, Response<ScheduleDetailResponse> response) {
+                    try {
+                        if (response.isSuccessful()){
+
+                            if (response.body() != null) {
+
+                                ScheduleData data = response.body().data;
+                                if (data != null){
+                                    mInfo = data;
+                                    setView();
+                                }else LogMgr.e(TAG+" DetailData is null");
+                            }
+                        }else{
+                            finish();
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                        LogMgr.e(TAG + "requestScheduleDetail() Exception : ", e.getMessage());
+                    }
+
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<ScheduleDetailResponse> call, Throwable t) {
+                    try {
+                        LogMgr.e(TAG, "requestScheduleDetail() onFailure >> " + t.getMessage());
+                    }catch (Exception e){
+                    }
+                    hideProgressDialog();
+                    finish();
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 }

@@ -140,7 +140,7 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
                 _filteredList = (List<ScheduleData>) filterResults.values;
                 LogMgr.e( "publishResult " + _filteredList.size());
                 notifyDataSetChanged();
-                if (_listener != null) _listener.onFilteringCompleted();
+                _listener.onFilteringCompleted();
             }
         };
     }
