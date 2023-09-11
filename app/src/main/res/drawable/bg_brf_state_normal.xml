@@ -3,5 +3,4 @@
     android:shape="rectangle">
     <solid android:color="@color/blue_sub"/>
     <corners android:radius="@dimen/usergubun_badge_corner"/>
-
 </shape>

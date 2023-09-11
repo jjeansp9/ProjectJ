@@ -228,11 +228,13 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         if(!TextUtils.isEmpty(mInfo.gifted) && mInfo.grade.contains("중")) {
             str += "※ 지트 중등영재센터 입학 ";
             str += mInfo.gifted.equals("Y") ? "희망" : "미희망";
-            str += "\n\n";
+            if(!TextUtils.isEmpty(mInfo.etc)) str += "\n\n";
         }
         if(!TextUtils.isEmpty(mInfo.etc)) str += mInfo.etc;
         if(!str.isEmpty()) ((TextView)findViewById(R.id.txt_etc)).setText(str);
-        else ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
+        else {
+            ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
+        }
 
     }
 
