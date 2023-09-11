@@ -194,6 +194,7 @@ public class LoginActivity extends BaseActivity {
         if(mEditPw != null) mEditPw.setText("");
     }
 
+    //TODO : 동일한 번호로 관리자, 부모앱 2개 다 가입했을 때 어떤 Error Msg가 오는지 확인 필요
     private void requestLogin() {
         showProgressDialog();
         SigninRequest request = new SigninRequest();
