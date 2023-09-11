@@ -451,6 +451,7 @@
     <string name="briefing_write_please_per_cnt">참가인원은 1명 이상으로 입력해주세요.</string>
     <string name="briefing_write_success">설명회에 예약하였습니다.</string>
     <string name="briefing_write_finish">설명회 예약이 마감되었습니다.</string>
+    <string name="briefing_write_close">설명회 예약이 종료되었습니다.</string>
     <string name="briefing_privacy">개인정보 취급방침 동의</string>
     <string name="briefing_privacy_content">
         개인정보 취급방침 간소\n

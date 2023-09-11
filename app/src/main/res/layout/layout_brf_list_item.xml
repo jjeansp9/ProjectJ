@@ -14,7 +14,7 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.77" />
+        app:layout_constraintGuide_percent="0.70" />
 
     <TextView
         android:id="@+id/tv_brf_state"
@@ -52,7 +52,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_brf_date"
-        app:layout_constraintBottom_toTopOf="@id/tv_brf_campus"
+        app:layout_constraintBottom_toTopOf="@+id/tv_brf_campus"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintVertical_bias="1"
@@ -88,9 +88,23 @@
         android:maxLines="1"
         android:textColor="@color/font_color_default"
         android:textSize="@dimen/font_size_small"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_announcement_date"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_announcement_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="8dp"
+        android:textSize="@dimen/font_size_small"
+        android:textColor="@color/font_color_999"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"/>
 
 <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
 <!--        android:id="@+id/layout_photo"-->
@@ -130,11 +144,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
-        app:layout_constraintDimensionRatio="W,1:1"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_announcement_date"
+        app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintStart_toEndOf="@id/guideline"
         app:layout_constraintTop_toTopOf="parent" />
 
 <!--    <androidx.appcompat.widget.AppCompatTextView-->

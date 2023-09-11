@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +25,7 @@ import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementListAdapter.ViewHolder> {
 
@@ -33,6 +36,9 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     private Context mContext;
     private List<AnnouncementData> mList;
     private ItemClickListener _listener;
+
+    private final boolean IMG_IS_EMPTY = true;
+    private final boolean IMG_IS_NOT_EMPTY = false;
 
     private static boolean isWholeCampusMode = false;
 
@@ -47,7 +53,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_announcement_list_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_brf_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -55,9 +61,21 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AnnouncementData item = mList.get(position);
         try{
+            holder.tvState.setVisibility(View.GONE);
+            holder.tvDate.setVisibility(View.GONE);
+            holder.tvAnnouncementDate.setVisibility(View.VISIBLE);
+
+            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+            holder.tvLocation.setText(TextUtils.isEmpty(item.memberResponseVO.name) ? "" : item.memberResponseVO.name);
+            holder.tvAnnouncementDate.setText(TextUtils.isEmpty(item.insertDate) ? "" : item.insertDate);
+
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
+            layoutParams.guidePercent = 0.70f;
+            holder.guideline.setLayoutParams(layoutParams);
+
             if (item.fileList != null && item.fileList.size() > 0){
 
-                //String url = RetrofitApi.SERVER_BASE_URL + item.fileList.get(0).path + "/" + item.fileList.get(0).saveName;
                 boolean isContainImage = false;
 
                 for(FileData data : item.fileList) {
@@ -69,7 +87,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                         String url = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;
                         url = FileUtils.replaceMultipleSlashes(url);
 
-                        FileUtils.loadImage(mContext, url, holder.imgAnnouncement);
+                        FileUtils.loadImage(mContext, url, holder.imgBrf);
                         LogMgr.e(TAG+" UrlTest", url);
                         break;
                     }else{
@@ -77,33 +95,40 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                     }
                 }
                 if(!isContainImage) {
-                    Glide.with(mContext).clear(holder.imgAnnouncement);
-                    holder.imgAnnouncement.setVisibility(View.GONE);
+                    Glide.with(mContext).clear(holder.imgBrf);
+                    holder.imgBrf.setVisibility(View.INVISIBLE);
+                    setView(holder.tvTitle, IMG_IS_EMPTY);
+
                 }else{
-                    holder.imgAnnouncement.setVisibility(View.VISIBLE);
+                    holder.imgBrf.setVisibility(View.VISIBLE);
+                    setView(holder.tvTitle, IMG_IS_NOT_EMPTY);
                 }
             }
             else {
-                Glide.with(mContext).clear(holder.imgAnnouncement);
-                holder.imgAnnouncement.setVisibility(View.GONE);
+                Glide.with(mContext).clear(holder.imgBrf);
+                holder.imgBrf.setVisibility(View.INVISIBLE);
+                setView(holder.tvTitle, IMG_IS_EMPTY);
             }
-            holder.tvTitle.setText(item.title);
-            holder.tvName.setText(item.memberResponseVO.name);
-            holder.tvDate.setText(item.insertDate);
 
-//            if (isWholeCampusMode) {
-//                holder.tvCampus.setVisibility(View.VISIBLE);
-//                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
-//
-//            } else {
-//                holder.tvCampus.setVisibility(View.GONE);
-//            }
-
-            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
         }catch (Exception e){
             LogMgr.e("ListAdapter Exception : " + e.getMessage());
         }
 
+    }
+
+    private void setView(TextView tvTitle, boolean set){
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvTitle.getLayoutParams();
+
+        if (set){
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
+            layoutParams.endToStart = ConstraintLayout.LayoutParams.UNSET;
+
+        }else{
+            layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET;
+            layoutParams.endToStart = R.id.img_brf;
+
+        }
+        tvTitle.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -113,17 +138,23 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private ImageView imgAnnouncement;
-        private TextView tvTitle, tvName, tvDate, tvCampus;
+        private ConstraintLayout brfRoot;
+        private Guideline guideline;
+        private ImageView imgBrf;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvAnnouncementDate;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
-            tvTitle = itemView.findViewById(R.id.tv_announcement_title);
-            tvName = itemView.findViewById(R.id.tv_announcement_name);
-            tvDate = itemView.findViewById(R.id.tv_announcement_date);
-            tvCampus = itemView.findViewById(R.id.tv_announcement_campus);
-            imgAnnouncement = itemView.findViewById(R.id.img_announcement);
+            brfRoot = itemView.findViewById(R.id.brf_root);
+            tvDate = itemView.findViewById(R.id.tv_brf_date);
+            tvTitle = itemView.findViewById(R.id.tv_brf_title);
+            tvLocation = itemView.findViewById(R.id.tv_brf_location);
+            tvState = itemView.findViewById(R.id.tv_brf_state);
+            tvCampus = itemView.findViewById(R.id.tv_brf_campus);
+            imgBrf = itemView.findViewById(R.id.img_brf);
+            guideline = itemView.findViewById(R.id.guideline);
+            tvAnnouncementDate = itemView.findViewById(R.id.tv_announcement_date);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();

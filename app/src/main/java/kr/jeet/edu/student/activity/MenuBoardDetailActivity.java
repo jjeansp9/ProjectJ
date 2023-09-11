@@ -79,12 +79,16 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     void changeMessageState2Read() {
         new Thread(() -> {
-            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
-            if(!pushMessages.isEmpty()) {
-                for(PushMessage message : pushMessages) {
-                    message.isRead = true;
-                    JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+            try{
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
+                if(!pushMessages.isEmpty()) {
+                    for(PushMessage message : pushMessages) {
+                        message.isRead = true;
+                        JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                    }
                 }
+            }catch(Exception e){
+
             }
         }).start();
     }

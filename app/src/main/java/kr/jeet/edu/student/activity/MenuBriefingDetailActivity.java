@@ -277,7 +277,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     Calendar calCurrent = Calendar.getInstance();
 
                     if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) {
-                        Toast.makeText(mContext, R.string.briefing_write_finish, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.briefing_write_close, Toast.LENGTH_SHORT).show();
 
                     }else if (mInfo.reservationCnt >= mInfo.participantsCnt) {
                         Toast.makeText(mContext, R.string.briefing_write_finish, Toast.LENGTH_SHORT).show();

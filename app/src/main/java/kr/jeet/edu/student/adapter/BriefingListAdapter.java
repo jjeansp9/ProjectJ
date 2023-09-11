@@ -9,15 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.Guideline;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.BriefingData;
@@ -60,32 +66,30 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BriefingData item = mList.get(position);
         try{
+            String cnt;
+
+            String dateStr = item.date+item.ptTime;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.KOREA);
+
+            Date date = sdf.parse(dateStr);
+            Calendar calBrf = Calendar.getInstance();
+
+            if (date != null) calBrf.setTime(date);
+            Calendar calCurrent = Calendar.getInstance();
+
+            if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) cnt = "종료";
+            else if (item.reservationCnt >= item.participantsCnt) cnt = "마감";
+            else cnt = "예약";
+
+            holder.tvState.setText(cnt);
             holder.tvDate.setText(TextUtils.isEmpty(item.date) || TextUtils.isEmpty(item.ptTime) ? "" : Utils.formatDate(item.date, item.ptTime, false));
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
             holder.tvLocation.setText(TextUtils.isEmpty(item.place) ? "" : item.place);
-
-//            if (isWholeCampusMode) {
-//                holder.tvCampus.setVisibility(View.VISIBLE);
-//                holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
-//
-//            } else {
-//                holder.tvCampus.setVisibility(View.GONE);
-//            }
             holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 
-            String cnt;
-            if (item.reservationCnt >= item.participantsCnt) {
-                cnt = "신청마감";
-//                int color = ContextCompat.getColor(mContext, R.color.font_color_bc);
-//                holder.tvState.setTextColor(color);
-
-            } else {
-                //cnt = item.reservationCnt + " / " + item.participantsCnt+"명";
-                cnt = "예약";
-//                int color = ContextCompat.getColor(mContext, R.color.font_color_red);
-//                holder.tvState.setTextColor(color);
-            }
-            holder.tvState.setText(cnt);
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
+            layoutParams.guidePercent = 0.77f;
+            holder.guideline.setLayoutParams(layoutParams);
 
             if (item.fileList != null && item.fileList.size() > 0){
 
@@ -110,17 +114,17 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgBrf);
                     holder.imgBrf.setVisibility(View.INVISIBLE);
-                    setView(holder.tvTitle, holder.tvState, IMG_IS_EMPTY);
+                    setView(holder.tvTitle, IMG_IS_EMPTY);
 
                 }else{
                     holder.imgBrf.setVisibility(View.VISIBLE);
-                    setView(holder.tvTitle, holder.tvState, IMG_IS_NOT_EMPTY);
+                    setView(holder.tvTitle, IMG_IS_NOT_EMPTY);
                 }
             }
             else {
                 Glide.with(mContext).clear(holder.imgBrf);
                 holder.imgBrf.setVisibility(View.INVISIBLE);
-                setView(holder.tvTitle, holder.tvState, IMG_IS_EMPTY);
+                setView(holder.tvTitle, IMG_IS_EMPTY);
             }
 
         }catch (Exception e){
@@ -128,18 +132,16 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
         }
     }
 
-    private void setView(TextView tvTitle, TextView tvSub, boolean set){
+    private void setView(TextView tvTitle, boolean set){
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvTitle.getLayoutParams();
 
         if (set){
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID;
             layoutParams.endToStart = ConstraintLayout.LayoutParams.UNSET;
-            //tvSub.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
 
         }else{
             layoutParams.endToEnd = ConstraintLayout.LayoutParams.UNSET;
             layoutParams.endToStart = R.id.img_brf;
-            //tvSub.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         }
         tvTitle.setLayoutParams(layoutParams);
@@ -153,6 +155,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ConstraintLayout brfRoot;
+        private Guideline guideline;
         private ImageView imgBrf;
         private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus;
 
@@ -166,6 +169,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             tvState = itemView.findViewById(R.id.tv_brf_state);
             tvCampus = itemView.findViewById(R.id.tv_brf_campus);
             imgBrf = itemView.findViewById(R.id.img_brf);
+            guideline = itemView.findViewById(R.id.guideline);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();

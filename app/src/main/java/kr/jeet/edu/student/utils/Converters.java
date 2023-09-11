@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 
 import org.threeten.bp.LocalDateTime;
 import org.threeten.bp.format.DateTimeFormatter;
+import org.threeten.bp.format.DateTimeParseException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,7 +23,11 @@ public class Converters {
 
     @TypeConverter
     public static LocalDateTime fromString(String value) {
-        return value == null ? null : LocalDateTime.parse(value, dateFormatter);
+        try{
+            return value == null ? null : LocalDateTime.parse(value, dateFormatter);
+        }catch (DateTimeParseException e){
+            return null;
+        }
     }
 
     @TypeConverter
