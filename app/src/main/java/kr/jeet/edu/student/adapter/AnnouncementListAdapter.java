@@ -157,7 +157,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             tvAnnouncementDate = itemView.findViewById(R.id.tv_announcement_date);
 
             itemView.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
+                int position = getBindingAdapterPosition();
                 if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position));
             });
         }

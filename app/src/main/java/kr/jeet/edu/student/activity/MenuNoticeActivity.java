@@ -130,12 +130,16 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     void changeMessageState2Read() {
         new Thread(() -> {
-            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_ATTEND);
-            if(!pushMessages.isEmpty()) {
-                for(PushMessage message : pushMessages) {
-                    message.isRead = true;
-                    JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+            try {
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_ATTEND);
+                if(!pushMessages.isEmpty()) {
+                    for(PushMessage message : pushMessages) {
+                        message.isRead = true;
+                        JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                    }
                 }
+            }catch (Exception e){
+
             }
         }).start();
     }

@@ -227,9 +227,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                             if (response.body() != null) {
 
                                 List<BriefingData> list = response.body().data;
-                                if (mList.size() > 0) mList.clear();
 
-                                if (list != null && !list.isEmpty()) {
+                                if (list != null) {
                                     if (added){
                                         mList.set(position, list.get(position));
                                         mAdapter.notifyItemChanged(position);
@@ -238,6 +237,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         added = false;
 
                                     }else{
+                                        if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
                                     }
 

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/bg_grey"
+    android:background="@drawable/img_pattern"
     tools:context=".activity.MainActivity">
 
     <kr.jeet.edu.student.view.CustomAppbarLayout

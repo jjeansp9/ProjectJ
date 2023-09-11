@@ -119,11 +119,15 @@ public class MainActivity extends BaseActivity {
                     String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
                     if(type.equals(MSG_TYPE_ATTEND)) {
                         new Thread(() -> {
-                            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-                            if(pushMessages.isEmpty()) {
-                                setNewCounselContent(false);
-                            }else{
-                                setNewCounselContent(true);
+                            try {
+                                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+                                if(pushMessages.isEmpty()) {
+                                    setNewCounselContent(false);
+                                }else{
+                                    setNewCounselContent(true);
+                                }
+                            }catch(Exception e){
+
                             }
                         }).start();
                     }
@@ -384,18 +388,15 @@ public class MainActivity extends BaseActivity {
         registerReceiver(pushNotificationReceiver, intentFilter);
 
         new Thread(() -> {
-//            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlag(false);
-//            pushMessages.forEach(t-> LogMgr.e(TAG, "unread = " + t.title + "/"+ t.pushType + "/" + t.connSeq));
-//            if(pushMessages.stream().anyMatch(t->t.pushType.equals(MSG_TYPE_COUNSEL))) {
-//                setNewCounselContent(true);
-//            }else{
-//                setNewCounselContent(false);
-//            }
-            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-            if(pushMessages.isEmpty()) {
-                setNewCounselContent(false);
-            }else{
-                setNewCounselContent(true);
+            try {
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+                if(pushMessages.isEmpty()) {
+                    setNewCounselContent(false);
+                }else{
+                    setNewCounselContent(true);
+                }
+            }catch(Exception e){
+
             }
         }).start();
     }
@@ -435,7 +436,7 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.btn_teacher:
-                startActivityBottomMenu(TeacherInfoActivity.class);
+                if (teacherCnt > 0) startActivityBottomMenu(TeacherInfoActivity.class);
                 break;
         }
     }
@@ -736,6 +737,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    private int teacherCnt = 0;
+
     // 원생 학급 정보조회
     private void requestTeacherCls(){
         if(RetrofitClient.getInstance() != null) {
@@ -744,12 +747,18 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
                     try {
-                        if (response.isSuccessful() && response.body() != null){
+                        if (response.isSuccessful()){
 
-                            String str = response.body().data.get(0).sfName;
+                            TeacherClsResponse getData = response.body();
+                            if (getData != null && getData.data != null && !getData.data.isEmpty()){
+                                String str = getData.data.get(0).sfName;
+                                teacherCnt = getData.data.size();
 
-                            if (response.body().data.size() == 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님 〉");
-                            else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님 〉");
+                                if (getData.data.size() == 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님 〉");
+                                else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님 〉");
+                            }
+
+                            LogMgr.e(TAG, "TeacherCnt: " + teacherCnt);
 
                         }else{
                             LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
