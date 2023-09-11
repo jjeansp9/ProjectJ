@@ -100,7 +100,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             String extraKey = null;
 
             if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
-                LogMgr.w("param is recived");
+                LogMgr.w(TAG,"param is recived");
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 dataType = TYPE_ANNOUNCEMENT;
@@ -115,12 +115,13 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
-                LogMgr.e("Event here1");
+                LogMgr.e(TAG,"Event here1");
+
             } else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_ANNOUNCEMENT_FROM_MAIN;
-                LogMgr.e("Event here2");
+                LogMgr.e(TAG, "Event here2");
             }
 
             if (extraKey != null) {
@@ -132,7 +133,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         result = intent.getParcelableExtra(extraKey, PushMessage.class);
                     } else{
-                        LogMgr.e("Event here2");
+                        LogMgr.e(TAG,"Event here3");
                     }
 
                 } else {
