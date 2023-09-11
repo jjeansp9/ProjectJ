@@ -25,12 +25,12 @@
         app:layout_constraintStart_toStartOf="parent"
         android:paddingHorizontal="8dp"
         android:paddingVertical="1dp"
-        android:background="@drawable/bg_usergubun_parent"
+        android:background="@drawable/bg_brf_state_normal"
         android:text="상태"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_xsmall"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_brf_date"

@@ -77,11 +77,23 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             if (date != null) calBrf.setTime(date);
             Calendar calCurrent = Calendar.getInstance();
 
-            if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) cnt = "종료";
-            else if (item.reservationCnt >= item.participantsCnt) cnt = "마감";
-            else cnt = "예약";
+            int drawable = R.drawable.bg_brf_state_close;
 
+            if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) {
+                cnt = "종료";
+            }
+            else if (item.reservationCnt >= item.participantsCnt) {
+                cnt = "마감";
+                drawable = R.drawable.bg_brf_state_finish;
+            }
+            else {
+                cnt = "예약";
+                drawable = R.drawable.bg_brf_state_normal;
+            }
+
+            holder.tvState.setBackgroundResource(drawable);
             holder.tvState.setText(cnt);
+
             holder.tvDate.setText(TextUtils.isEmpty(item.date) || TextUtils.isEmpty(item.ptTime) ? "" : Utils.formatDate(item.date, item.ptTime, false));
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
             holder.tvLocation.setText(TextUtils.isEmpty(item.place) ? "" : item.place);

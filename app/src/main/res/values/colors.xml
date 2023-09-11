@@ -10,6 +10,8 @@
     <color name="red">#e51b23</color>
     <color name="red_sel">#b5141a</color>
     <color name="red_sub">#ff5959</color>
+    <color name="blue">#013fa6</color>
+    <color name="blue_sub">#1572d9</color>
 
     <color name="font_color_default">#333</color>
     <color name="font_color_555">#555</color>
