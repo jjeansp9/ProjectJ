@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import kr.jeet.edu.student.model.data.HolidayData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 
 public class ScheduleListResponse extends BaseResponse{

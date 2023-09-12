@@ -1,4 +1,4 @@
-package kr.jeet.edu.student.model.response;
+package kr.jeet.edu.student.model.data;
 
 public class HolidayData {
     public String month;  // 월

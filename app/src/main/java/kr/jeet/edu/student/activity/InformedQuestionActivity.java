@@ -85,9 +85,9 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private LevelTestRequest request;
     private String selDay = "";
-    private String selProcess1 = "";
-    private String selProcess2 = "";
-    private String selProcess3 = "";
+    private int selProcess1 = -1;
+    private int selProcess2 = -1;
+    private int selProcess3 = -1;
 
     private int _memberSeq = 0;
 
@@ -223,9 +223,22 @@ public class InformedQuestionActivity extends BaseActivity {
         mSpinnerProcess_2.setOnTouchListener(spinnerTouchListener);
         mSpinnerProcess_3.setOnTouchListener(spinnerTouchListener);
 
-        mSpinnerProcess_1.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> selProcess1 = newItem.toString());
-        mSpinnerProcess_2.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> selProcess2 = newItem.toString());
-        mSpinnerProcess_3.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> selProcess3 = newItem.toString());
+        mSpinnerProcess_1.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            //selProcess1 = newItem.toString();
+            if (newIndex > 0) selProcess1 = newIndex;
+            else selProcess1 = -1;
+            LogMgr.e("EVENT", selProcess1+"");
+        });
+        mSpinnerProcess_2.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            //selProcess2 = newItem.toString();
+            if (newIndex > 0) selProcess2 = newIndex;
+            else selProcess2 = -1;
+        });
+        mSpinnerProcess_3.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            //selProcess3 = newItem.toString();
+            if (newIndex > 0) selProcess3 = newIndex;
+            else selProcess3 = -1;
+        });
 
     }
 
@@ -275,7 +288,7 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                requestTestReserve();
+                if (checked()) requestTestReserve();
                 break;
         }
     }
@@ -283,8 +296,6 @@ public class InformedQuestionActivity extends BaseActivity {
     private void requestTestReserve(){
         showProgressDialog();
         requestData();
-
-        if (!checked()) return;
 
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
@@ -347,20 +358,20 @@ public class InformedQuestionActivity extends BaseActivity {
             if (rgSelDay.getVisibility() == View.VISIBLE) request.wish = selDay; // 희망요일
             else request.wish = "";
 
-            if (!selProcess1.equals(getString(R.string.select))
+            // TODO : 스피너에서 process를 선택 안했을 시 etProcess 빈값으로 보내기
+
+            if (!mSpinnerProcess_1.getText().toString().equals(getString(R.string.select))
                     || !mEtLearningProc1.getText().toString().equals("")){
                 request.process1 = selProcess1;
                 request.processEtc1 = mEtLearningProc1.getText().toString();
 
             }
-            if (!selProcess2.equals(getString(R.string.select))
-                    || !mEtLearningProc2.getText().toString().equals("")){
+            if (!mEtLearningProc2.getText().toString().equals("")){
                 request.process2 = selProcess2;
                 request.processEtc2 = mEtLearningProc2.getText().toString();
 
             }
-            if (!selProcess3.equals(getString(R.string.select))
-                    || !mEtLearningProc3.getText().toString().equals("")){
+            if (!mEtLearningProc3.getText().toString().equals("")){
                 request.process3 = selProcess3;
                 request.processEtc3 = mEtLearningProc3.getText().toString();
             }
@@ -454,21 +465,30 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private boolean checked(){
-        if (!mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
-                !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
-                !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
-                !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
-        ){
-
-            if (!mEtLearningProc1.getText().toString().equals("") ||
-                    !mEtLearningProc2.getText().toString().equals("") ||
-                    !mEtLearningProc3.getText().toString().equals("")){
-                return true;
-
-            }else {
-                Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
-                return false;
-            }
+//        if (!mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
+//                !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
+//                !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
+//                !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
+//        ){
+//
+//            if (!mEtLearningProc1.getText().toString().equals("") ||
+//                    !mEtLearningProc2.getText().toString().equals("") ||
+//                    !mEtLearningProc3.getText().toString().equals("")){
+//                return true;
+//
+//            }else {
+//                Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+//                return false;
+//            }
+//
+//        }else {
+//            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+        if (!mEtLearningProc1.getText().toString().equals("") ||
+                !mEtLearningProc2.getText().toString().equals("") ||
+                !mEtLearningProc3.getText().toString().equals("")){
+            return true;
 
         }else {
             Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();

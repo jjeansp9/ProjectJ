@@ -82,19 +82,19 @@ public class LevelTestRequest implements Parcelable {
     public String date4;
 
     @SerializedName("process1")
-    public String process1;
+    public int process1;
 
     @SerializedName("processEtc1")
     public String processEtc1;
 
     @SerializedName("process2")
-    public String process2;
+    public int process2;
 
     @SerializedName("processEtc2")
     public String processEtc2;
 
     @SerializedName("process3")
-    public String process3;
+    public int process3;
 
     @SerializedName("processEtc3")
     public String processEtc3;
@@ -155,11 +155,11 @@ public class LevelTestRequest implements Parcelable {
         date2 = in.readString();
         date3 = in.readString();
         date4 = in.readString();
-        process1 = in.readString();
+        process1 = in.readInt();
         processEtc1 = in.readString();
-        process2 = in.readString();
+        process2 = in.readInt();
         processEtc2 = in.readString();
-        process3 = in.readString();
+        process3 = in.readInt();
         processEtc3 = in.readString();
         wish = in.readString();
         study = in.readString();
@@ -216,11 +216,11 @@ public class LevelTestRequest implements Parcelable {
         dest.writeString(date2);
         dest.writeString(date3);
         dest.writeString(date4);
-        dest.writeString(process1);
+        dest.writeInt(process1);
         dest.writeString(processEtc1);
-        dest.writeString(process2);
+        dest.writeInt(process2);
         dest.writeString(processEtc2);
-        dest.writeString(process3);
+        dest.writeInt(process3);
         dest.writeString(processEtc3);
         dest.writeString(wish);
         dest.writeString(study);

@@ -393,7 +393,7 @@
 
     <string name="informed_question_title">사전질문</string>
     <string name="informed_question_no_1"><font color="@color/red">* </font>등원을 희망하시는 요일을 체크해주세요</string>
-    <string name="informed_question_no_2"><font color="@color/red">* </font>테스트 전까지 학습한 방법을 작성해주세요</string>
+    <string name="informed_question_no_2">테스트 전까지 학습한 방법을 작성해주세요</string>
     <string name="informed_question_no_3"><font color="@color/red">* </font>진도/심화학습 여부 (학습한 과정을 적어주세요)</string>
     <string name="informed_question_no_4">악어수학 입학 시 희망하시는 분야 (초등부만)</string>
     <string name="informed_question_no_5">입학 희망 고등학교를 선택해주세요</string>

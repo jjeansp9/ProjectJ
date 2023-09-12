@@ -34,7 +34,7 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.ScheduleData;
-import kr.jeet.edu.student.model.response.HolidayData;
+import kr.jeet.edu.student.model.data.HolidayData;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
