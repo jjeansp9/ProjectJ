@@ -52,6 +52,10 @@ public class Constants {
     public final static String POLICY_SERVICE = RetrofitApi.SERVER_BASE_URL+"web/api/policy/service"; // 이용약관 [회원가입, 설정]
     public final static String POLICY_PRIVACY = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacy"; // 개인정보취급방침 [회원가입, 설정]
     public final static String POLICY_PRIVACY_PT = RetrofitApi.SERVER_BASE_URL+"web/api/policy/privacyPT"; // 개인정보 취급방침 [설명회예약]
+    public final static String POLICY_PRIVACY_LEVEL_TEST_PRIVACY = RetrofitApi.SERVER_BASE_URL+"web/api/policy/leveltestPrivacy"; // 약관동의 [테스트예약]
+    public final static String POLICY_PRIVACY_LEVEL_TEST_PRIVACY2 = RetrofitApi.SERVER_BASE_URL+"web/api/policy/leveltestPrivacy2"; // 약관동의 [테스트예약]
+    public final static String POLICY_PRIVACY_LEVEL_TEST_PRIVACY3 = RetrofitApi.SERVER_BASE_URL+"web/api/policy/leveltestPrivacy3"; // 약관동의 [테스트예약]
+    public final static String POLICY_PRIVACY_LEVEL_TEST_PRIVACY4 = RetrofitApi.SERVER_BASE_URL+"web/api/policy/leveltestPrivacy4"; // 약관동의 [테스트예약]
 
     // -------------------------------------------------
 

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.InformedConsentActivity">
+    tools:context=".activity.InformedConsentActivity"
+    android:background="@color/bg_grey">
 
     <kr.jeet.edu.student.view.CustomAppbarLayout
         android:id="@+id/customAppbar"
@@ -25,8 +26,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/layout_margin"
-            android:background="@color/bg_grey">
+            android:padding="@dimen/layout_margin">
 
             <TextView
                 android:id="@+id/tv_informed_consent_notice"
@@ -85,7 +85,6 @@
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="12dp"
                     android:lineSpacingMultiplier="1.2"
-                    android:text="@string/informed_consent_notice"
                     android:textColor="@color/font_color_default"
                     android:textSize="@dimen/font_size_small" />
             </androidx.constraintlayout.widget.ConstraintLayout>

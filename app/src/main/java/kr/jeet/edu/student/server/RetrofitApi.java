@@ -35,6 +35,7 @@ import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
+import kr.jeet.edu.student.model.response.TestReserveNoticeResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -47,9 +48,9 @@ import retrofit2.http.Query;
 public interface RetrofitApi {
 
     //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     //public final static String SERVER_BASE_URL = "http://211.43.14.242:7777/"; // 이전 cloud local
-    public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
+    //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
     public final static String PREFIX = "mobile/api/";
     public final static String FILE_SUFFIX_URL = SERVER_BASE_URL + "attachFile/";
@@ -176,6 +177,10 @@ public interface RetrofitApi {
     // 레벨 테스트 이력 조회
     @GET("levelTest/member/{memberSeq}")
     Call<TestReserveListResponse> getTestReserveListResponse(@Path("memberSeq") int memberSeq);
+
+    // 레벨테스트 신규등록 공지사항
+    @GET("policy/leveltest/notice")
+    Call<TestReserveNoticeResponse> getLevelTestNotice();
 
     // 설명회 목록 조회
     @GET("pts")
