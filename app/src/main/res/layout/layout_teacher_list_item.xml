@@ -34,15 +34,24 @@
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline_teacher_list_start"
-            app:layout_constraintEnd_toStartOf="@id/guideline_teacher_list_end"
-            android:hint="@string/name"
             android:textColor="@color/font_color_default"
             android:textStyle="bold"
             android:textSize="@dimen/font_size_xlarge"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/name"
+            app:layout_constraintStart_toEndOf="@+id/name"
+            android:layout_marginStart="2dp"
+            android:text="선생님"
+            android:textColor="@color/font_color_default"
+            android:textSize="@dimen/font_size_large"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
