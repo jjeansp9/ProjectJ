@@ -436,6 +436,7 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.btn_teacher:
+                LogMgr.i(TAG, teacherCnt +"");
                 if (teacherCnt > 0) startActivityBottomMenu(TeacherInfoActivity.class);
                 break;
         }

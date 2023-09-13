@@ -352,7 +352,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
-                        LogMgr.e(TAG + "requestNoticeDetail() Exception : ", e.getMessage());
+                        LogMgr.e(TAG + "requestSystemDetail() Exception : ", e.getMessage());
                     }
 
                     hideProgressDialog();
@@ -361,7 +361,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<SystemNoticeResponse> call, Throwable t) {
                     try {
-                        LogMgr.e(TAG, "requestNoticeDetail() onFailure >> " + t.getMessage());
+                        LogMgr.e(TAG, "requestSystemDetail() onFailure >> " + t.getMessage());
                     }catch (Exception e){
                     }
                     hideProgressDialog();

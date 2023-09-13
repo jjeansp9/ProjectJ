@@ -359,6 +359,11 @@ public class Utils {
         if (matcher.find()) return true;
         else return false;
     }
+
+    public static String getStr(String s){
+        s = TextUtils.isEmpty(s) ? "" : s;
+        return s;
+    }
 }
 
 

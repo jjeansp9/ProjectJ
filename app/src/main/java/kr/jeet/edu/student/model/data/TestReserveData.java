@@ -35,10 +35,13 @@ public class TestReserveData implements Parcelable {
     public String date4;           // 기간4
     public String process1;        // 프로세스1
     public String processEtc1;     // 프로세스1 기타
+    public String processText1;     // 프로세스1 텍스트
     public String process2;        // 프로세스2
     public String processEtc2;     // 프로세스2 기타
+    public String processText2;     // 프로세스2 텍스트
     public String process3;        // 프로세스3
     public String processEtc3;     // 프로세스3 기타
+    public String processText3;     // 프로세스3 텍스트
 
     public String wish;            // 희망요일 (0: 월수금, 1: 화목토, 2: 실력 점검 후 결정, 3: 요일무관)
     public String study;           // 공부하고 싶은 분야 (응용^사고력…)
@@ -84,6 +87,9 @@ public class TestReserveData implements Parcelable {
         processEtc1 = in.readString();
         processEtc2 = in.readString();
         processEtc3 = in.readString();
+        processText1 = in.readString();
+        processText2 = in.readString();
+        processText3 = in.readString();
         study = in.readString();
         highSchool = in.readString();
         gifted = in.readString();
@@ -134,6 +140,9 @@ public class TestReserveData implements Parcelable {
         dest.writeString(processEtc1);
         dest.writeString(processEtc2);
         dest.writeString(processEtc3);
+        dest.writeString(processText1);
+        dest.writeString(processText2);
+        dest.writeString(processText3);
         dest.writeString(study);
         dest.writeString(highSchool);
         dest.writeString(gifted);

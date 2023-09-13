@@ -49,7 +49,7 @@ public class InformedConsentActivity extends BaseActivity {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
-            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && "finish_activity".equals(intent.getAction())) {
+            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
                 setResult(RESULT_OK, intent);
 

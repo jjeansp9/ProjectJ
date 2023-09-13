@@ -44,6 +44,7 @@ import java.util.Locale;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.ClassPathListAdapter;
 import kr.jeet.edu.student.adapter.PrefCheckListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ClassPathData;
 import kr.jeet.edu.student.model.data.PrefAreaData;
@@ -310,7 +311,7 @@ public class InformedQuestionActivity extends BaseActivity {
                             if (getData != null) LogMgr.i(TAG, getData);
 
                             Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent("finish_activity");
+                            Intent intent = new Intent(Constants.FINISH_COMPLETE);
                             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
                             setResult(RESULT_OK, intent);
                             finish();
@@ -358,23 +359,34 @@ public class InformedQuestionActivity extends BaseActivity {
             if (rgSelDay.getVisibility() == View.VISIBLE) request.wish = selDay; // 희망요일
             else request.wish = "";
 
-            // TODO : 스피너에서 process를 선택 안했을 시 etProcess 빈값으로 보내기
+//            if (!mSpinnerProcess_1.getText().toString().equals(getString(R.string.select))
+//                    || !mEtLearningProc1.getText().toString().equals("")){
+//                request.process1 = selProcess1;
+//                request.processEtc1 = mEtLearningProc1.getText().toString();
+//
+//            }
+//            if (!mEtLearningProc2.getText().toString().equals("")){
+//                request.process2 = selProcess2;
+//                request.processEtc2 = mEtLearningProc2.getText().toString();
+//
+//            }
+//            if (!mEtLearningProc3.getText().toString().equals("")){
+//                request.process3 = selProcess3;
+//                request.processEtc3 = mEtLearningProc3.getText().toString();
+//            }
 
-            if (!mSpinnerProcess_1.getText().toString().equals(getString(R.string.select))
-                    || !mEtLearningProc1.getText().toString().equals("")){
-                request.process1 = selProcess1;
-                request.processEtc1 = mEtLearningProc1.getText().toString();
+            request.process1 = selProcess1;
+            request.processEtc1 = mEtLearningProc1.getText().toString();
+            if (request.process1 == -1) request.processText1 = "미선택";
+            else request.processText1 = mSpinnerProcess_1.getText().toString();
 
-            }
-            if (!mEtLearningProc2.getText().toString().equals("")){
-                request.process2 = selProcess2;
-                request.processEtc2 = mEtLearningProc2.getText().toString();
+            request.process2 = selProcess2;
+            request.processEtc2 = mEtLearningProc2.getText().toString();
+            request.processText2 = mSpinnerProcess_2.getText().toString();
 
-            }
-            if (!mEtLearningProc3.getText().toString().equals("")){
-                request.process3 = selProcess3;
-                request.processEtc3 = mEtLearningProc3.getText().toString();
-            }
+            request.process3 = selProcess3;
+            request.processEtc3 = mEtLearningProc3.getText().toString();
+            request.processText3 = mSpinnerProcess_3.getText().toString();
 
             String strStudy = "";
             StringBuilder studyBuilder = new StringBuilder();
@@ -444,10 +456,13 @@ public class InformedQuestionActivity extends BaseActivity {
                         + "\n수강기간 구몬/눈높이/재능 : " + request.date4
                         + "\n진도 심화학습여부(1) 과정 : " + request.process1
                         + "\n진도 심화학습여부(1) 사용교재 : " + request.processEtc1
+                        + "\n진도 심화학습여부(1) 과정 텍스트 : " + request.processText1
                         + "\n진도 심화학습여부(2) 과정 : " + request.process2
                         + "\n진도 심화학습여부(2) 사용교재 : " + request.processEtc2
+                        + "\n진도 심화학습여부(2) 과정 텍스트 : " + request.processText2
                         + "\n진도 심화학습여부(3) 과정 : " + request.process3
                         + "\n진도 심화학습여부(3) 사용교재 : " + request.processEtc3
+                        + "\n진도 심화학습여부(3) 과정 텍스트 : " + request.processText3
                         + "\n희망분야 : " + request.study
                         + "\n희망학교 : " + request.highSchool
                         + "\n영재센터 입학희망 : " + request.gifted

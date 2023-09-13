@@ -23,7 +23,7 @@ import kr.jeet.edu.student.model.data.TestReserveData;
 
 public class TestReserveAdapter extends RecyclerView.Adapter<TestReserveAdapter.ViewHolder> {
 
-    public interface ItemClickListener{ public void onItemClick(TestReserveData item); }
+    public interface ItemClickListener{ public void onItemClick(TestReserveData item, int position); }
 
     private Context mContext;
     private ArrayList<TestReserveData> mList;
@@ -80,7 +80,7 @@ public class TestReserveAdapter extends RecyclerView.Adapter<TestReserveAdapter.
                 // getBindingAdapterPosition() : 터치한 Adapter 내에서의 위치 1을 반환 ex) 2개의 Adapter는 각각의 position을 반환
                 // getAbsoluteAdapterPosition() : RecyclereView에서의 절대 위치 1을 반환 ex) 2개의 Adapter을 하나로 인식하여 절대 위치의 position을 반환
                 int position = getAbsoluteAdapterPosition();
-                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position));
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position), position);
             });
         }
     }

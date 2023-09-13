@@ -55,6 +55,8 @@ public class MenuTestReserveActivity extends BaseActivity {
     private TestReserveAdapter mAdapter;
     private TextView txtEmpty;
 
+    private int position = -1;
+
     private final ArrayList<TestReserveData> mList = new ArrayList<>();
     private int _memberSeq = 0;
 
@@ -63,9 +65,14 @@ public class MenuTestReserveActivity extends BaseActivity {
         if(result.getResultCode() != RESULT_CANCELED) {
             Intent intent = result.getData();
             if (intent!= null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED)) {
-                LogMgr.e(TAG, "resultLauncher Event");
+                LogMgr.e(TAG, "resultLauncher Event ADD");
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
                 if (added) requestTestReserveList();
+
+            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED)){
+                LogMgr.e(TAG, "resultLauncher Event EDIT");
+                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
+                if (edited) requestTestReserveList();
             }
         }
     });
@@ -113,11 +120,13 @@ public class MenuTestReserveActivity extends BaseActivity {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
     }
 
-    private void startActivity(TestReserveData item){
+    private void startActivity(TestReserveData item, int position){
         if (item != null){
+            this.position = position;
+
             Intent intent = new Intent(mContext, MenuTestReserveDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
-            startActivity(intent);
+            resultLauncher.launch(intent);
         }else LogMgr.e("item is null ");
     }
 

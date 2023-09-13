@@ -87,17 +87,26 @@ public class LevelTestRequest implements Parcelable {
     @SerializedName("processEtc1")
     public String processEtc1;
 
+    @SerializedName("processText1")
+    public String processText1;
+
     @SerializedName("process2")
     public int process2;
 
     @SerializedName("processEtc2")
     public String processEtc2;
 
+    @SerializedName("processText2")
+    public String processText2;
+
     @SerializedName("process3")
     public int process3;
 
     @SerializedName("processEtc3")
     public String processEtc3;
+
+    @SerializedName("processText3")
+    public String processText3;
 
     @SerializedName("wish")
     public String wish;
@@ -157,10 +166,13 @@ public class LevelTestRequest implements Parcelable {
         date4 = in.readString();
         process1 = in.readInt();
         processEtc1 = in.readString();
+        processText1 = in.readString();
         process2 = in.readInt();
         processEtc2 = in.readString();
+        processText2 = in.readString();
         process3 = in.readInt();
         processEtc3 = in.readString();
+        processText3 = in.readString();
         wish = in.readString();
         study = in.readString();
         highSchool = in.readString();
@@ -218,10 +230,13 @@ public class LevelTestRequest implements Parcelable {
         dest.writeString(date4);
         dest.writeInt(process1);
         dest.writeString(processEtc1);
+        dest.writeString(processText1);
         dest.writeInt(process2);
         dest.writeString(processEtc2);
+        dest.writeString(processText2);
         dest.writeInt(process3);
         dest.writeString(processEtc3);
+        dest.writeString(processText3);
         dest.writeString(wish);
         dest.writeString(study);
         dest.writeString(highSchool);

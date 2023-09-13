@@ -1,22 +1,30 @@
 package kr.jeet.edu.student.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.List;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.response.LTCListResponse;
+import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 
@@ -27,6 +35,20 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
     private TestReserveData mInfo;
 
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        LogMgr.w("result =" + result);
+        if(result.getResultCode() != RESULT_CANCELED) {
+            Intent intent = result.getData();
+            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())){
+                LogMgr.e(TAG, "resultLauncher Event EDIT");
+                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
+                if (edited) {
+                    //requestTestReserveList();
+                }
+            }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +57,15 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if(intent != null) {
             if(intent.hasExtra(IntentParams.PARAM_LIST_ITEM)) {
-                mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                }else{
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                }
             }
         }
-        if(mInfo == null) {
-            finish();
-        }
+
+        if(mInfo == null) finish();
 
         initAppbar();
         initView();
@@ -183,17 +208,17 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         {   // 진도/심화학습
             str = "";
             String subStr = "";
-            if(!TextUtils.isEmpty(mInfo.process1)) subStr += "["+mInfo.process1+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText1)) subStr += "["+mInfo.processText1+"] ";
             if(!TextUtils.isEmpty(mInfo.processEtc1)) subStr += mInfo.processEtc1;
             str += subStr.isEmpty() ? "" : subStr;
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.process2)) subStr += "["+mInfo.process2+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText2)) subStr += "["+mInfo.processText2+"] ";
             if(!TextUtils.isEmpty(mInfo.processEtc2)) subStr += mInfo.processEtc2;
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.process3)) subStr += "["+mInfo.process3+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText3)) subStr += "["+mInfo.processText3+"] ";
             if(!TextUtils.isEmpty(mInfo.processEtc3)) subStr += mInfo.processEtc3;
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 
@@ -236,6 +261,27 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_edit:
+                Intent editIntent = new Intent(mContext, MenuTestReserveWriteActivity.class);
+                editIntent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+                editIntent.putExtra(IntentParams.PARAM_WRITE_MODE, Constants.WRITE_EDIT);
+                resultLauncher.launch(editIntent);
+                return true;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

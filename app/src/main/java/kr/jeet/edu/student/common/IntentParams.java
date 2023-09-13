@@ -25,6 +25,8 @@ public class IntentParams {
     public final static String PARAM_CHILD_STUDENT_INFO = "childStudentInfo";  // 자녀원생 정보
     public final static String PARAM_ANNOUNCEMENT_INFO = "announcementInfo";  // 선택한 공지사항 정보
 
+    public final static String PARAM_WRITE_MODE = "writeMode";  // 작성모드
+
     public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG = "announcementDetailImg";  // 공지사항 상세화면 이미지 item
     public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG_POSITION = "announcementDetailImgPosition";  // 공지사항 상세화면 이미지 item position
 
@@ -36,6 +38,7 @@ public class IntentParams {
     public final static String PARAM_LIST_ITEM = "listItem"; // 리스트 내의 Model Info Key
 
     public final static String PARAM_TEST_RESERVE_ADDED = "testReserveAdded"; // 테스트 예약 등록 resultLauncher
+    public final static String PARAM_TEST_RESERVE_EDITED = "testReserveEdited"; // 테스트 예약 수정 resultLauncher
 
     public final static String PARAM_BRIEFING_INFO = "briefingInfo";  // 선택한 설명회 정보
     public final static String PARAM_BRIEFING_PARTICIPANTS_CNT = "briefingParticipantsCnt";  // 참가인원

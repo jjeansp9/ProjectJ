@@ -46,11 +46,13 @@ import java.util.List;
 import java.util.Locale;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
+import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -91,15 +93,22 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String middleSchool = "중학교";
     private String highSchool = "고등";
 
-    private LevelTestRequest request = new LevelTestRequest();
+    private LevelTestRequest request;
     private SearchAddressDialog mDialog = null;
+
+    private TestReserveData mInfo;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
-            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && "finish_activity".equals(intent.getAction())) {
+            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                setResult(RESULT_OK, intent);
+                finish();
+
+            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
+                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -116,6 +125,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         initAppbar();
     }
 
+    private String writeMode = "";
+
     private void initData(){
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -125,10 +136,16 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         try {
 
             Intent intent= getIntent();
-            request = intent.getParcelableExtra(IntentParams.PARAM_TEST_RESERVE_WRITE);
-
-            if (request != null) {
-
+            if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_WRITE)){
+                request = intent.getParcelableExtra(IntentParams.PARAM_TEST_RESERVE_WRITE);
+            }
+            if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE) && intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                }else{
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                }
+                writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
             }
 
         }catch (Exception e) {
@@ -166,10 +183,58 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
         mSpinnerTestClass = findViewById(R.id.spinner_reserve_test_class);
 
+        if (writeMode.equals(Constants.WRITE_EDIT)) {
+            setView();
+        } else{
+            mGenderRbMale.setChecked(true);
+            mGenderRbFemale.setChecked(false);
+        }
         setSpinner();
+    }
 
-        mGenderRbMale.setChecked(true);
-        mGenderRbFemale.setChecked(false);
+    private void setView(){
+        if (mInfo == null) finish();
+
+        String str = "";
+
+        mEtName.setText(Utils.getStr(mInfo.name));
+        mEtName.setEnabled(false);
+
+        if (mInfo.sex.equals("M")) {
+            mGenderRbMale.setChecked(true);
+            mGenderRbFemale.setChecked(false);
+        }else{
+            mGenderRbMale.setChecked(false);
+            mGenderRbFemale.setChecked(true);
+        }
+
+        mTvAddress.setText(Utils.getStr(mInfo.address));
+        mEtAddressDetail.setText(Utils.getStr(mInfo.addressSub));
+        mTvBirthDate.setText(Utils.getStr(mInfo.birth));
+
+        str = Utils.getStr(mInfo.grade)+"학년";
+        _stGrade = Utils.getStr(mInfo.grade);
+        mSpinnerGrade.setText(str);
+
+        for(SchoolData info : DataManager.getInstance().getSchoolList()) {
+            if(mInfo.scCode == info.scCode) {
+                LogMgr.i(TAG, "scName: " + info.scName);
+                mSpinnerSchool.setText(Utils.getStr(info.scName));
+                break;
+            }
+        }
+
+//        List<SchoolData> schoolList =  DataManager.getInstance().getSchoolList();
+//
+//        for (int i = 0; i < schoolList.size(); i++){
+//            if(mInfo.scCode == DataManager.getInstance().getSchoolList().get(i).scCode) {
+//                mSpinnerSchool.selectItemByIndex(i);
+//                LogMgr.i(TAG, "TEST: "+ i +", " + schoolList.size());
+//            }
+//        }
+
+        LogMgr.i(TAG, "scName: " + mSpinnerSchool.getText().toString());
+
     }
 
     @Override
@@ -206,11 +271,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 if(mDialog != null) mDialog.dismiss();
                 mDialog = SearchAddressDialog.newInstance();
                 mDialog.showDialog(this, address -> {
+                    if (address != null) runOnUiThread(() -> mTvAddress.setText(address));
 
-                    runOnUiThread(() -> mTvAddress.setText(address));
-                    mDialog.dismiss();
-
-                    mDialog = null;
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                        mDialog = null;
+                    }
                 });
                 break;
         }
@@ -268,12 +334,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _stGrade = newItem.toString();
             _scCode = 0;
-            setSchoolSpinner();
         });
 
         mSpinnerFunnel.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _stReason = newItem.toString();
         });
+
+        setSchoolSpinner();
 
         mSpinnerTestClass.setOnTouchListener(spinnerTouchListener);
         mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
@@ -391,7 +458,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             }
         }
 
-        mSpinnerSchool.setText("");
+        if (!writeMode.equals(Constants.WRITE_EDIT)) mSpinnerSchool.setText("");
         mSpinnerSchool.setItems(scNames);
         mSpinnerSchool.setSpinnerPopupHeight(800);
 
@@ -407,6 +474,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         if (mGenderRbMale.isChecked()) gender = 1;
         else gender =2;
+
+        if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
 
         request.name = mEtName.getText().toString(); // 학생이름 [필수]
         request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]
@@ -457,7 +526,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 request.bigo.equals("") || request.address.equals("") || request.reason.equals("")){
             Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
             return;
+        }else if (request.parentPhoneNumber.length() < 11){
+            Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
+            return;
         }
+
 
         Intent intent = new Intent(mContext, InformedQuestionActivity.class);
         intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);

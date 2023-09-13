@@ -160,25 +160,25 @@ public class SettingsActivity extends BaseActivity {
             case R.id.sw_set_announcement_state:
                 if (mSwAnnouncement.isChecked()) pushAnnouncement = CHECKED_OK;
                 else pushAnnouncement = CHECKED_CANCEL;
-                requestUpdatePush();
+                requestUpdatePush(true);
                 break;
 
             case R.id.sw_set_information_session_state:
                 if (mSwInformationSession.isChecked()) pushInformationSession = CHECKED_OK;
                 else pushInformationSession = CHECKED_CANCEL;
-                requestUpdatePush();
+                requestUpdatePush(false);
                 break;
 
             case R.id.sw_set_attendance_state:
                 if (mSwAttendance.isChecked()) pushAttendance = CHECKED_OK;
                 else pushAttendance = CHECKED_CANCEL;
-                requestUpdatePush();
+                requestUpdatePush(false);
                 break;
 
             case R.id.sw_set_system_state:
                 if (mSwSystem.isChecked()) pushSystem = CHECKED_OK;
                 else pushSystem = CHECKED_CANCEL;
-                requestUpdatePush();
+                requestUpdatePush(false);
                 break;
 
             case R.id.layout_set_operation_policy:
@@ -262,7 +262,7 @@ public class SettingsActivity extends BaseActivity {
         }
     }
 
-    private void requestUpdatePush(){
+    private void requestUpdatePush(boolean isUpdateSubscribeTopic){
         updatePushStatus.seq = pushSeq;
         updatePushStatus.pushNotice = pushAnnouncement;
         updatePushStatus.pushInformationSession = pushInformationSession;
@@ -284,7 +284,9 @@ public class SettingsActivity extends BaseActivity {
                         PreferenceUtil.setNotificationAttendance(SettingsActivity.this, pushAttendance.equals("Y"));
                         //시스템알림
                         PreferenceUtil.setNotificationSystem(SettingsActivity.this, pushSystem.equals("Y"));
-                        Utils.requestUpdatePushTopic(mContext, _memberSeq);
+//                        if(isUpdateSubscribeTopic) {
+//                            Utils.requestUpdatePushTopic(mContext, _memberSeq);
+//                        }
                     }
                 }
 

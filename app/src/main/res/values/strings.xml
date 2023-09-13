@@ -58,6 +58,7 @@
     <string name="select">선택</string>
     <string name="next">다음</string>
     <string name="complete">완료</string>
+
     <string name="terms_agree">약관동의</string>
     <string name="terms_agree_all">전체 동의</string>
     <string name="terms_agreement">이용약관</string>
@@ -109,6 +110,7 @@
     <string name="loading">로딩중</string>
     <string name="requesting">요청중</string>
     <string name="write_empty">필수 입력 항목이 누락되었는지 확인해주세요</string>
+    <string name="write_phone_impossible">연락처 항목이 올바르게 입력되었는지 확인해주세요</string>
     <string name="write_empty_2">항목에 입력해주세요</string>
     <string name="write_privacy_empty">동의항목에 체크해주세요</string>
     <string name="write_check_email">이메일 형식을 확인해주세요</string>
@@ -176,6 +178,7 @@
 
     <string name="menu_item_settings">설정</string>
     <string name="menu_item_complete">완료</string>
+    <string name="menu_item_edit">수정</string>
     <string name="menu_item_reserve">예약</string>
     <string name="announcement_spinner_default_text">전체</string>
     <string name="announcement_list_empty">공지사항 목록에 글이 없습니다</string>

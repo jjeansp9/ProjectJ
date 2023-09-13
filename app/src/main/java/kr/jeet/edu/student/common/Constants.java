@@ -95,4 +95,9 @@ public class Constants {
     public static final String TIME_FORMATTER_M_D_E = "M월 d일 E요일";
 
     public static final String ACTION_JEET_PUSH_MESSAGE_RECEIVED = "action_jeet_push_message_received";
+
+    public static final String FINISH_COMPLETE = "finish_activity";
+
+    public static final String WRITE_ADD = "ADD";
+    public static final String WRITE_EDIT = "Edit";
 }
