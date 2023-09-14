@@ -22,6 +22,7 @@ public class TestReserveData implements Parcelable {
     public String cashReceiptNumber; // 현금 영수증 번호
     public String reason;          // 유입 경로
     public String bigo;            // 비고 (캠퍼스)
+    public String bigoText;        // 비고 (캠퍼스 Text)
     public String reservationDate; // 예약일
     public String registerDate;    // 등록일
 
@@ -71,6 +72,7 @@ public class TestReserveData implements Parcelable {
         cashReceiptNumber = in.readString();
         reason = in.readString();
         bigo = in.readString();
+        bigoText = in.readString();
         reservationDate = in.readString();
         wish = in.readString();
         time1 = in.readString();
@@ -124,6 +126,7 @@ public class TestReserveData implements Parcelable {
         dest.writeString(cashReceiptNumber);
         dest.writeString(reason);
         dest.writeString(bigo);
+        dest.writeString(bigoText);
         dest.writeString(reservationDate);
         dest.writeString(wish);
         dest.writeString(time1);

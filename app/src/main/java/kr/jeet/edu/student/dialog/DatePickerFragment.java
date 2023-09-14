@@ -3,13 +3,17 @@ package kr.jeet.edu.student.dialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.view.KeyboardShortcutGroup;
+import android.view.Menu;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
+import java.util.List;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private OnDateSetListener listener;
@@ -17,6 +21,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     private int month = 0;
     private int dateOfMonth = 0;
     private boolean setDate = false;
+    private boolean isBirth = false;
     private int minYear = 0;
     private int maxYear = 0;
     private final int SET_MIN = Calendar.getInstance().get(Calendar.MONTH);
@@ -27,6 +32,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         this.setDate = setDate;
         this.minYear = minYear;
         this.maxYear = maxYear;
+    }
+    public DatePickerFragment(OnDateSetListener listener, boolean setDate, int minYear, int maxYear, boolean isBirth) {
+        this.listener = listener;
+        this.setDate = setDate;
+        this.minYear = minYear;
+        this.maxYear = maxYear;
+        this.isBirth = isBirth;
     }
 
     public interface OnDateSetListener {
@@ -48,7 +60,13 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         int month = (this.month == 0) ? calendar.get(Calendar.MONTH) : this.month;
         int day = (this.dateOfMonth == 0) ? calendar.get(Calendar.DAY_OF_MONTH) : this.dateOfMonth;
 
-        DatePickerDialog dialog = new DatePickerDialog(requireContext(), this, year, month, day);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext(), android.R.style.Theme_Holo_Light_Dialog);
+
+        DatePickerDialog dialog;
+
+        if (isBirth) dialog = new DatePickerDialog(builder.getContext(), this, year, month, day);
+        else dialog = new DatePickerDialog(requireContext(), this, year, month, day);
+
         //최소날짜
         Calendar minDate = Calendar.getInstance();
         if (setDate) minDate.set(minYear, SET_MIN, SET_DAY);
@@ -58,6 +76,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         Calendar maxDate = Calendar.getInstance();
         maxDate.set(maxYear, 12, 31);
         dialog.getDatePicker().setMaxDate(maxDate.getTime().getTime());
+
         return dialog;
     }
 

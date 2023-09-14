@@ -2,17 +2,11 @@ package kr.jeet.edu.student.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
+import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,7 +28,6 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.ParseException;
@@ -55,7 +48,6 @@ import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.utils.LogMgr;
-import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.dialog.SearchAddressDialog;
@@ -65,11 +57,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private static final String TAG = "MenuTestReserveWriteActivity";
 
     private TextView mTvReserveDate, mTvBirthDate, mTvAddress;
-    private EditText mEtName, mEtAddressDetail, mEtStuContact, mEtParentName, mEtparentContact, mEtCashReceipt;
+    private EditText mEtName, mEtAddressDetail, mEtStuPhone, mEtParentName, mEtparentPhone, mEtCashReceipt;
     private EditText[] mEditList;
     private RadioGroup mRgGender;
     private RadioButton mGenderRbMale, mGenderRbFemale;
-    private PowerSpinnerView mSpinnerSchool, mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestClass, mSpinnerTestDay, mSpinnerTestTime;
+    private PowerSpinnerView mSpinnerSchool, mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime;
 
     private String _stuGender = "";
     private String _ltcCode = "";
@@ -98,6 +90,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
     private TestReserveData mInfo;
 
+    private String writeMode = "";
+
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
@@ -124,8 +118,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         initView();
         initAppbar();
     }
-
-    private String writeMode = "";
 
     private void initData(){
         _selectedDate = new Date();
@@ -160,6 +152,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         findViewById(R.id.root_reserve_write).setOnClickListener(this);
         findViewById(R.id.btn_test_reserve_write_next).setOnClickListener(this);
         findViewById(R.id.btn_address_search).setOnClickListener(this);
+        findViewById(R.id.tv_reserve_address_result).setOnClickListener(this);
 
         mTvReserveDate = findViewById(R.id.tv_reserve_test_date_cal);
         mTvBirthDate = findViewById(R.id.tv_reserve_birth_date_cal);
@@ -167,11 +160,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         mEtName = (EditText) findViewById(R.id.et_reserve_name);
         mEtAddressDetail = (EditText) findViewById(R.id.et_reserve_address_detail);
-        mEtStuContact = (EditText) findViewById(R.id.et_reserve_stu_contact);
+        mEtStuPhone = (EditText) findViewById(R.id.et_reserve_stu_contact);
         mEtParentName = (EditText) findViewById(R.id.et_reserve_parent_name);
-        mEtparentContact = (EditText) findViewById(R.id.et_reserve_parent_contact);
+        mEtparentPhone = (EditText) findViewById(R.id.et_reserve_parent_contact);
         mEtCashReceipt = (EditText) findViewById(R.id.et_reserve_cash_receipts);
-        mEditList = new EditText[]{mEtName, mEtAddressDetail, mEtStuContact, mEtParentName, mEtparentContact, mEtCashReceipt};
+        mEditList = new EditText[]{mEtName, mEtAddressDetail, mEtStuPhone, mEtParentName, mEtparentPhone, mEtCashReceipt};
 
         mRgGender = (RadioGroup) findViewById(R.id.rg_test_reserve_gender);
         mGenderRbMale = (RadioButton) findViewById(R.id.rb_test_reserve_male);
@@ -181,7 +174,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
         mSpinnerFunnel = findViewById(R.id.spinner_reserve_funnel);
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
-        mSpinnerTestClass = findViewById(R.id.spinner_reserve_test_class);
+        mSpinnerTestTime = findViewById(R.id.spinner_reserve_test_class);
 
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
@@ -200,6 +193,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mEtName.setText(Utils.getStr(mInfo.name));
         mEtName.setEnabled(false);
 
+        LogMgr.i(TAG, "gender: " + mInfo.sex);
         if (mInfo.sex.equals("M")) {
             mGenderRbMale.setChecked(true);
             mGenderRbFemale.setChecked(false);
@@ -218,29 +212,33 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         for(SchoolData info : DataManager.getInstance().getSchoolList()) {
             if(mInfo.scCode == info.scCode) {
-                LogMgr.i(TAG, "scName: " + info.scName);
                 mSpinnerSchool.setText(Utils.getStr(info.scName));
+                _scCode = info.scCode;
                 break;
             }
         }
-
-//        List<SchoolData> schoolList =  DataManager.getInstance().getSchoolList();
-//
-//        for (int i = 0; i < schoolList.size(); i++){
-//            if(mInfo.scCode == DataManager.getInstance().getSchoolList().get(i).scCode) {
-//                mSpinnerSchool.selectItemByIndex(i);
-//                LogMgr.i(TAG, "TEST: "+ i +", " + schoolList.size());
-//            }
-//        }
-
-        LogMgr.i(TAG, "scName: " + mSpinnerSchool.getText().toString());
+        mEtStuPhone.setText(Utils.getStr(mInfo.phoneNumber));
+        mEtStuPhone.setEnabled(false);
+        mEtParentName.setText(Utils.getStr(mInfo.parentName));
+        mEtParentName.setEnabled(false);
+        mEtparentPhone.setText(Utils.getStr(mInfo.parentPhoneNumber));
+        mEtparentPhone.setEnabled(false);
+        mEtCashReceipt.setText(Utils.getStr(mInfo.cashReceiptNumber));
+        mSpinnerFunnel.setText(Utils.getStr(mInfo.reason));
+        _stReason = Utils.getStr(mInfo.reason);
+        mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
+        _ltcCode = Utils.getStr(mInfo.bigo);
+        _ltcName = Utils.getStr(mInfo.bigoText);
+        mTvReserveDate.setText(Utils.getStr(mInfo.reservationDate));
+        //mSpinnerTestTime.setText(Utils.getStr(mInfo));
 
     }
 
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.test_reserve_write_title);
+        if (writeMode.equals(Constants.WRITE_EDIT)) customAppbar.setTitle(R.string.test_reserve_update_title);
+        else customAppbar.setTitle(R.string.test_reserve_write_title);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -251,16 +249,17 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.root_reserve_write:
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
+                clearFocusAndHideKeyboard();
                 break;
 
             case R.id.layout_reserve_birth:
-                showDatePicker(mTvBirthDate, false, birthMinYear, birthMaxYear);
+                clearFocusAndHideKeyboard();
+                showDatePicker(mTvBirthDate, false, birthMinYear, birthMaxYear, true);
                 break;
 
             case R.id.layout_reserve_test_date:
-                showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear);
+                clearFocusAndHideKeyboard();
+                showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
                 break;
 
             case R.id.btn_test_reserve_write_next:
@@ -268,26 +267,58 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 break;
 
             case R.id.btn_address_search:
-                if(mDialog != null) mDialog.dismiss();
-                mDialog = SearchAddressDialog.newInstance();
-                mDialog.showDialog(this, address -> {
-                    if (address != null) runOnUiThread(() -> mTvAddress.setText(address));
-
-                    if (mDialog != null) {
-                        mDialog.dismiss();
-                        mDialog = null;
-                    }
-                });
+            case R.id.tv_reserve_address_result:
+                clearFocusAndHideKeyboard();
+                searchAddress();
                 break;
         }
     }
 
-    void showDatePicker(TextView tv, boolean setDate, int minYear, int maxYear) {
+    private void clearFocusAndHideKeyboard(){
+        Utils.clearFocus(mEditList);
+        Utils.hideKeyboard(mContext, mEditList);
+    }
+
+    private void searchAddress(){
+        dialogDismiss();
+        mDialog = SearchAddressDialog.newInstance();
+        mDialog.showDialog(this, address -> {
+            if (address != null) runOnUiThread(() -> mTvAddress.setText(address));
+            dialogDismiss();
+        });
+    }
+
+    private void dialogDismiss(){
+        if (mDialog != null) {
+            mDialog.dismiss();
+            mDialog = null;
+        }
+    }
+
+    DatePickerFragment datePickerDialog = null;
+
+    void showDatePicker(TextView tv, boolean setDate, int minYear, int maxYear, boolean isBirth) {
+        if (datePickerDialog != null){
+            datePickerDialog.dismiss();
+            datePickerDialog = null;
+        }
         DatePickerFragment.OnDateSetListener listener = (year, month, day) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(year, month, day);
             String formattedDate = String.format(Locale.KOREA, "%d-%02d-%02d", year, month + 1, day);
-            tv.setText(formattedDate);
+            if (setDate){
+                if (selectedDate.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                    tv.setText(formattedDate);
+                    setTestTime();
+                }else{
+                    Toast.makeText(mContext, R.string.test_reserve_sunday_impossible_sel, Toast.LENGTH_SHORT).show();
+                    showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
+                }
+            }else{
+                tv.setText(formattedDate);
+            }
         };
-        DatePickerFragment datePickerDialog = new DatePickerFragment(listener, setDate, minYear, maxYear);
+        datePickerDialog = new DatePickerFragment(listener, setDate, minYear, maxYear, isBirth);
 
         Calendar calendar = Calendar.getInstance();
         String strDate = tv.getText().toString();
@@ -307,6 +338,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 e.printStackTrace();
             }
         }
+
         datePickerDialog.setDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show(getSupportFragmentManager(), "date");
     }
@@ -315,7 +347,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private void setSpinner(){
         mSpinnerCampus.setIsFocusable(true);
         mSpinnerSchool.setIsFocusable(true);
-        mSpinnerTestClass.setIsFocusable(true);
+        mSpinnerTestTime.setIsFocusable(true);
         mSpinnerGrade.setIsFocusable(true);
         mSpinnerFunnel.setIsFocusable(true);
 
@@ -334,6 +366,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _stGrade = newItem.toString();
             _scCode = 0;
+            if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
+            mSpinnerSchool.setText("");
         });
 
         mSpinnerFunnel.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -342,7 +376,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         setSchoolSpinner();
 
-        mSpinnerTestClass.setOnTouchListener(spinnerTouchListener);
         mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
         mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
@@ -350,7 +383,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             switch (event.getAction()){
                 case MotionEvent.ACTION_UP:
                     if (mSpinnerGrade.getText().toString().equals("")) {
+                        mSpinnerGrade.performClick();
                         Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
+                        mSpinnerSchool.dismiss();
                     }
                     Utils.clearFocus(mEditList);
                     Utils.hideKeyboard(mContext, mEditList);
@@ -359,10 +394,50 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             return false;
         });
 
-        testTime = new ArrayList<>();
+        mSpinnerTestTime.setOnTouchListener((v, event) -> {
+            switch (event.getAction()){
+                case MotionEvent.ACTION_UP:
+                    if (TextUtils.isEmpty(mTvReserveDate.getText().toString())) {
+                        showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
+                        Toast.makeText(mContext, R.string.test_reserve_campus_sel_please, Toast.LENGTH_SHORT).show();
+                        mSpinnerTestTime.dismiss();
+                    }
+                    Utils.clearFocus(mEditList);
+                    Utils.hideKeyboard(mContext, mEditList);
+                    break;
+            }
+            return false;
+        });
 
+        mSpinnerTestTime.setSpinnerPopupHeight(500);
+
+        // 초등 index : 0, 중등 : 5, 고등 : 10
+        mSpinnerTestTime.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())){
+
+                if (newIndex == 0){
+                    strTestTime = testTime.get(newIndex + 1).toString();
+                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+
+                }else if (newIndex == 5){
+                    strTestTime = testTime.get(newIndex + 1).toString();
+                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+
+                }else if (newIndex == 10){
+                    strTestTime = testTime.get(newIndex + 1).toString();
+                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+                }
+            }else{
+                strTestTime = "";
+                mSpinnerTestTime.setText("");
+            }
+        });
+
+        if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())) setTestTime();
+    }
+
+    private void setTestTime(){
         ArrayList<SpannableString> testTime = new ArrayList<>();
-
 
         int redColor;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -379,55 +454,46 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         SpannableString highSchool = new SpannableString("고등");
         highSchool.setSpan(new ForegroundColorSpan(redColor), 0, highSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
+        String dateString = mTvReserveDate.getText().toString();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+        try {
+            Date date = dateFormat.parse(dateString);
+            Calendar calendar = Calendar.getInstance();
+            if (date != null) calendar.setTime(date);
 
-        testTime.add(elementary);
-        testTime.add(new SpannableString("평일 오후 05:00"));
-        testTime.add(new SpannableString("평일 오후 07:00"));
-        testTime.add(new SpannableString("토요일 오전 11:00"));
-        testTime.add(new SpannableString("토요일 오후 01:00"));
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-        testTime.add(middleSchool);
-        testTime.add(new SpannableString("평일 오후 05:00"));
-        testTime.add(new SpannableString("평일 오후 07:00"));
-        testTime.add(new SpannableString("토요일 오전 11:00"));
-        testTime.add(new SpannableString("토요일 오후 01:00"));
+            if (dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.SATURDAY) {
+                testTime.add(elementary);
+                testTime.add(new SpannableString("평일 오후 05:00"));
+                testTime.add(new SpannableString("평일 오후 07:00"));
+                testTime.add(middleSchool);
+                testTime.add(new SpannableString("평일 오후 05:00"));
+                testTime.add(new SpannableString("평일 오후 07:00"));
+                testTime.add(highSchool);
+                testTime.add(new SpannableString("평일 오후 04:00"));
+                testTime.add(new SpannableString("평일 오후 07:00"));
 
-        testTime.add(highSchool);
-        testTime.add(new SpannableString("평일 오후 04:00"));
-        testTime.add(new SpannableString("평일 오후 07:00"));
-        testTime.add(new SpannableString("토요일 오후 03:00"));
-        testTime.add(new SpannableString("토요일 오후 07:00"));
+            }else if (dayOfWeek == Calendar.SATURDAY){
+                testTime.add(elementary);
+                testTime.add(new SpannableString("토요일 오전 11:00"));
+                testTime.add(new SpannableString("토요일 오후 01:00"));
 
-        mSpinnerTestClass.setItems(testTime);
-        mSpinnerTestClass.setSpinnerPopupHeight(500);
+                testTime.add(middleSchool);
+                testTime.add(new SpannableString("토요일 오전 11:00"));
+                testTime.add(new SpannableString("토요일 오후 01:00"));
 
-        // 초등 index : 0, 중등 : 5, 고등 : 10
-        mSpinnerTestClass.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex == 0){
-                strTestTime = testTime.get(newIndex + 1).toString();
-                mSpinnerTestClass.setText(testTime.get(newIndex + 1));
-
-            }else if (newIndex == 5){
-                strTestTime = testTime.get(newIndex + 1).toString();
-                mSpinnerTestClass.setText(testTime.get(newIndex + 1));
-
-            }else if (newIndex == 10){
-                strTestTime = testTime.get(newIndex + 1).toString();
-                mSpinnerTestClass.setText(testTime.get(newIndex + 1));
+                testTime.add(highSchool);
+                testTime.add(new SpannableString("토요일 오후 03:00"));
+                testTime.add(new SpannableString("토요일 오후 07:00"));
             }
-        });
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_UP:
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-        return false;
-    };
+
+        mSpinnerTestTime.setItems(testTime);
+    }
 
     private void setSchoolSpinner(){
 
@@ -465,6 +531,28 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerSchool.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _scCode = scCodes.get(newIndex);
 
+            if (_stGrade.contains(getString(R.string.informed_question_elementary))){
+                for (SchoolData data : schoolList) {
+                    if (!data.scName.contains(middleSchool) && !data.scName.contains(highSchool)){
+                        scNames.add(data.scName);
+                        scCodes.add(data.scCode);
+                    }
+                }
+            }else if (_stGrade.contains(getString(R.string.informed_question_middle))){
+                for (SchoolData data : schoolList) {
+                    if (!data.scName.contains(elementary) && !data.scName.contains(highSchool)){
+                        scNames.add(data.scName);
+                        scCodes.add(data.scCode);
+                    }
+                }
+            }else{
+                for (SchoolData data : schoolList) {
+                    if (!data.scName.contains(elementary) && !data.scName.contains(middleSchool)){
+                        scNames.add(data.scName);
+                        scCodes.add(data.scCode);
+                    }
+                }
+            }
         });
     }
 
@@ -484,8 +572,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.addressSub = mEtAddressDetail.getText().toString(); // 상세주소 [선택]
         request.scCode = _scCode; // 학교코드 [필수]
         request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), ""); // 학년 [필수]
-        request.phoneNumber = mEtStuContact.getText().toString(); // 학생 전화번호 [선택]
-        request.parentPhoneNumber = mEtparentContact.getText().toString(); // 학부모 연락처 [필수]
+        request.phoneNumber = mEtStuPhone.getText().toString(); // 학생 전화번호 [선택]
+        request.parentPhoneNumber = mEtparentPhone.getText().toString(); // 학부모 연락처 [필수]
         request.parentName = mEtParentName.getText().toString(); // 학부모 성함 [필수]
         request.reason = _stReason; // 유입경로 [선택]
         request.reservationDate = mTvReserveDate.getText().toString(); // 테스트예약일 [필수]
@@ -522,20 +610,34 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 //        4. 휴대전화번호 : 010 **** 1234
 
         if (request.name.equals("") || request.birth.equals("") || request.grade.equals("") || mSpinnerSchool.getText().toString().equals("") ||
-                request.parentPhoneNumber.equals("") || request.parentName.equals("") || request.reservationDate.equals("") ||
+                request.parentPhoneNumber.equals("") || request.phoneNumber.equals("") || request.parentName.equals("") || request.reservationDate.equals("") ||
                 request.bigo.equals("") || request.address.equals("") || request.reason.equals("")){
             Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
             return;
-        }else if (request.parentPhoneNumber.length() < 11){
+        }else if (request.parentPhoneNumber.length() < 11 || request.phoneNumber.length() < 11){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
             return;
         }
 
-
         Intent intent = new Intent(mContext, InformedQuestionActivity.class);
         intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
+        intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
+        if (writeMode.equals(Constants.WRITE_EDIT)) {
+            intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+        }
         resultLauncher.launch(intent);
     }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_UP:
+                Utils.clearFocus(mEditList);
+                Utils.hideKeyboard(mContext, mEditList);
+                break;
+        }
+        return false;
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -360,10 +360,7 @@ public class Utils {
         else return false;
     }
 
-    public static String getStr(String s){
-        s = TextUtils.isEmpty(s) ? "" : s;
-        return s;
-    }
+    public static String getStr(String s){ return TextUtils.isEmpty(s) ? "" : s; }
 }
 
 

@@ -25,6 +25,9 @@
             android:orientation="vertical"
             android:padding="@dimen/layout_margin">
 
+<!--            android:focusable="true"-->
+<!--            android:focusableInTouchMode="true"-->
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -99,7 +102,7 @@
                         android:padding="@dimen/editbox_padding"
                         android:textColor="@color/font_color_default"
                         android:textColorHint="@color/font_color_999"
-                        android:textSize="@dimen/font_size" />
+                        android:textSize="@dimen/font_size"/>
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_login"

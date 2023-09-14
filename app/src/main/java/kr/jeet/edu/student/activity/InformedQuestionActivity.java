@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -37,6 +38,7 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +50,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ClassPathData;
 import kr.jeet.edu.student.model.data.PrefAreaData;
+import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -78,8 +81,9 @@ public class InformedQuestionActivity extends BaseActivity {
     private PrefCheckListAdapter mAdapterArea, mAdapterSchool;
 
     private ArrayList<ClassPathData> mListClass = new ArrayList<>();
-    private ArrayList<PrefAreaData> mListArea = new ArrayList<>();
-    private ArrayList<PrefAreaData> mListSchool = new ArrayList<>();
+    private ArrayList<String> mListArea = new ArrayList<>();
+    private ArrayList<String> mListSchool = new ArrayList<>();
+    
     private List<String> clsPath;
 
     private RetrofitApi mRetrofitApi;
@@ -95,6 +99,9 @@ public class InformedQuestionActivity extends BaseActivity {
     private static final String PREF= "Y";
     private static final String NON_PREF= "N";
 
+    private TestReserveData mInfo;
+    private String writeMode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,26 +113,55 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private void initData(){
-
         try {
-
             if(mListArea != null) mListArea.clear();
             String[] areas = {"응용", "심화", "사고력", "극심화", "경시", "교과연계학습"};
-            for (String area : areas) mListArea.add(new PrefAreaData(area));
+            for (String area : areas)
+                if (mListArea != null) {
+                    mListArea.add(area);
+                }
 
             if(mListSchool != null) mListSchool.clear();
             String[] schools = {"영재학교", "북과학고", "특성화고", "국제고", "외고", "일반고", "외대부고", "자사고", "기타"};
-            for (String school : schools) mListSchool.add(new PrefAreaData(school));
+            for (String school : schools) {
+                assert mListSchool != null;
+                mListSchool.add(school);
+            }
+
+            _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
             Intent intent= getIntent();
+
             if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_WRITE)){
                 request = intent.getParcelableExtra(IntentParams.PARAM_TEST_RESERVE_WRITE);
             }
-            _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
+            if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE)){
+                writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
+
+                if (writeMode.equals(Constants.WRITE_EDIT)){
+                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                        }else{
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                        }
+                    }
+                }
+            }
         }catch (Exception e) {
             LogMgr.e(TAG, e.getMessage());
         }
+    }
+
+    @Override
+    void initAppbar() {
+        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
+        if (writeMode.equals(Constants.WRITE_EDIT)) customAppbar.setTitle(R.string.informed_question_update_title);
+        else customAppbar.setTitle(R.string.informed_question_title);
+        setSupportActionBar(customAppbar.getToolbar());
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -170,6 +206,8 @@ public class InformedQuestionActivity extends BaseActivity {
         mSpinnerProcess_2 = findViewById(R.id.spinner_learning_process_2);
         mSpinnerProcess_3 = findViewById(R.id.spinner_learning_process_3);
 
+        if (writeMode.equals(Constants.WRITE_EDIT)) setView();
+
         setRecycler();
         setSpinner();
 
@@ -205,20 +243,83 @@ public class InformedQuestionActivity extends BaseActivity {
         }
     }
 
-    @Override
-    void initAppbar() {
-        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.informed_question_title);
-        setSupportActionBar(customAppbar.getToolbar());
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    private void setView(){
+        if (mInfo == null) finish();
+
+        rbList = new RadioButton[]{rbSelDay1, rbSelDay2, rbSelDay3, rbSelDay4};
+
+        CompoundButton.OnCheckedChangeListener listener = (buttonView, isChecked) -> {
+            if (isChecked) for (RadioButton rb : rbList) if (buttonView != rb) rb.setChecked(false);
+        };
+
+        for (RadioButton rb : rbList) rb.setOnCheckedChangeListener(listener);
+
+        switch (mInfo.wish) {
+            case "0":
+                rbSelDay1.setChecked(true);
+                break;
+            case "1":
+                rbSelDay2.setChecked(true);
+                break;
+            case "2":
+                rbSelDay3.setChecked(true);
+                break;
+            case "3":
+                rbSelDay4.setChecked(true);
+                break;
+        }
+
+        mEtStTime1.setText(Utils.getStr(mInfo.time1));
+        mEtStTime2.setText(Utils.getStr(mInfo.time2));
+        mEtStTime3.setText(Utils.getStr(mInfo.time3));
+        mEtStTime4.setText(Utils.getStr(mInfo.time4));
+
+        mEtStDate1.setText(Utils.getStr(mInfo.date1));
+        mEtStDate2.setText(Utils.getStr(mInfo.date2));
+        mEtStDate3.setText(Utils.getStr(mInfo.date3));
+        mEtStDate4.setText(Utils.getStr(mInfo.date4));
+
+        mSpinnerProcess_1.setText(isNotSel(Utils.getStr(mInfo.processText1)));
+        mSpinnerProcess_2.setText(isNotSel(Utils.getStr(mInfo.processText2)));
+        mSpinnerProcess_3.setText(isNotSel(Utils.getStr(mInfo.processText3)));
+
+        selProcess1 = Integer.parseInt(mInfo.process1);
+        selProcess2 = Integer.parseInt(mInfo.process2);
+        selProcess3 = Integer.parseInt(mInfo.process3);
+
+        mEtLearningProc1.setText(Utils.getStr(mInfo.processEtc1));
+        mEtLearningProc2.setText(Utils.getStr(mInfo.processEtc2));
+        mEtLearningProc3.setText(Utils.getStr(mInfo.processEtc3));
+
+//        for (PrefAreaData item : mListArea){
+//            if (Utils.getStr(mInfo.study).contains(item.preference))
+//        }
+
+        // TODO : 희망분야, 희망고등학교 데이터 설정
+
+//        List<PrefAreaData> mList = new ArrayList<>();
+//
+//        String[] parts = Utils.getStr(mInfo.study).split("\\^");
+//
+//        Collections.addAll(mListArea, parts);
+
+        if (mInfo.gifted.equals("Y")) rbGiftedPref.setChecked(true);
+        else rbGiftedNonPref.setChecked(true);
+
+        mEtAnyQuestion.setText(Utils.getStr(mInfo.etc));
+    }
+    private String isNotSel(String s){
+        if (s.equals("미선택")) s = s.replace("미", "");
+        return s;
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinner(){
-        mSpinnerProcess_1.setText(getString(R.string.select));
-        mSpinnerProcess_2.setText(getString(R.string.select));
-        mSpinnerProcess_3.setText(getString(R.string.select));
+        if (!writeMode.equals(Constants.WRITE_EDIT)){
+            mSpinnerProcess_1.setText(getString(R.string.select));
+            mSpinnerProcess_2.setText(getString(R.string.select));
+            mSpinnerProcess_3.setText(getString(R.string.select));
+        }
 
         mSpinnerProcess_1.setOnTouchListener(spinnerTouchListener);
         mSpinnerProcess_2.setOnTouchListener(spinnerTouchListener);
@@ -240,7 +341,6 @@ public class InformedQuestionActivity extends BaseActivity {
             if (newIndex > 0) selProcess3 = newIndex;
             else selProcess3 = -1;
         });
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -268,12 +368,12 @@ public class InformedQuestionActivity extends BaseActivity {
         mRecyclerArea.setLayoutManager(fblManager);
         mRecyclerSchool.setLayoutManager(fblManagers);
 
-        for (PrefAreaData item : mListArea) areaCheckList.add("");
+        for (String item : mListArea) areaCheckList.add("");
         mAdapterArea = new PrefCheckListAdapter( mContext, mListArea, (item, position) -> areaCheckList.set(position, item) );
         mRecyclerArea.setAdapter(mAdapterArea);
 
-        for (PrefAreaData item : mListSchool) SchoolCheckList.add("");
-        mAdapterSchool = new PrefCheckListAdapter(mContext, mListSchool, (item, position) -> SchoolCheckList.set(position, item) );
+        for (String item : mListSchool) SchoolCheckList.add("");
+        mAdapterSchool = new PrefCheckListAdapter( mContext, mListSchool, (item, position) -> SchoolCheckList.set(position, item) );
         mRecyclerSchool.setAdapter(mAdapterSchool);
     }
 
@@ -289,7 +389,8 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                if (checked()) requestTestReserve();
+                //if (checked()) requestTestReserve();
+                requestData();
                 break;
         }
     }
@@ -300,7 +401,12 @@ public class InformedQuestionActivity extends BaseActivity {
 
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.requestLevelTest(request).enqueue(new Callback<BaseResponse>() {
+            Call<BaseResponse> putDataToServer;
+
+            if (writeMode.equals(Constants.WRITE_EDIT)) putDataToServer = mRetrofitApi.updateLevelTest(request);
+            else putDataToServer = mRetrofitApi.requestLevelTest(request);
+
+            putDataToServer.enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     try {
@@ -310,9 +416,15 @@ public class InformedQuestionActivity extends BaseActivity {
 
                             if (getData != null) LogMgr.i(TAG, getData);
 
-                            Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(Constants.FINISH_COMPLETE);
-                            intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+
+                            if (writeMode.equals(Constants.WRITE_EDIT)){
+                                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
+                            }else{
+                                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+                                Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
+                            }
                             setResult(RESULT_OK, intent);
                             finish();
 
@@ -382,11 +494,13 @@ public class InformedQuestionActivity extends BaseActivity {
 
             request.process2 = selProcess2;
             request.processEtc2 = mEtLearningProc2.getText().toString();
-            request.processText2 = mSpinnerProcess_2.getText().toString();
+            if (request.process2 == -1) request.processText2 = "미선택";
+            else request.processText2 = mSpinnerProcess_2.getText().toString();
 
             request.process3 = selProcess3;
             request.processEtc3 = mEtLearningProc3.getText().toString();
-            request.processText3 = mSpinnerProcess_3.getText().toString();
+            if (request.process3 == -1) request.processText3 = "미선택";
+            else request.processText3 = mSpinnerProcess_3.getText().toString();
 
             String strStudy = "";
             StringBuilder studyBuilder = new StringBuilder();
@@ -427,6 +541,13 @@ public class InformedQuestionActivity extends BaseActivity {
 
                     request.etc = mEtAnyQuestion.getText().toString();
             request.registerDate = currentDate();
+
+            if (writeMode.equals(Constants.WRITE_EDIT)){
+                request.check1 = mInfo.check1;
+                request.check2 = mInfo.check2;
+                request.check3 = mInfo.check3;
+                request.check4 = mInfo.check4;
+            }
 
             if (request != null){
                 LogMgr.i(TAG+ "putData", "\nmemberSeq : " + request.memberSeq

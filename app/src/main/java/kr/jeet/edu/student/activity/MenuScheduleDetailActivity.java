@@ -98,18 +98,12 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     }
 
     private void setView(){
-        try {
-            SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyyMd", Locale.KOREA);
-            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 M월 d일 E요일", Locale.KOREA);
+        String str = TextUtils.isEmpty(String.valueOf(mInfo.year)) ? "" : mInfo.year+"년 ";
+        str += TextUtils.isEmpty(String.valueOf(mInfo.month)) ? "" : mInfo.month+"월 ";
+        str += TextUtils.isEmpty(String.valueOf(mInfo.day)) ? "" : mInfo.day+"일";
+        tvDate.setText(str);
 
-            String getDate = String.format(Locale.KOREA, "%d%d%d", mInfo.year, mInfo.month, mInfo.day);
-            Date date = inputDateFormat.parse(getDate);
-
-            if (date != null) tvDate.setText(outputFormat.format(date));
-
-        } catch (ParseException e) { e.printStackTrace(); }
-
-        String str = TextUtils.isEmpty(mInfo.acaName) ? "" : mInfo.acaName;
+        str = TextUtils.isEmpty(mInfo.acaName) ? "" : mInfo.acaName;
         tvCampus.setText(str);
 
         str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;

@@ -134,7 +134,7 @@ public class MenuTestReserveActivity extends BaseActivity {
         showProgressDialog();
 
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getTestReserveListResponse(_memberSeq).enqueue(new Callback<TestReserveListResponse>() {
+            RetrofitClient.getApiInterface().getTestReserveListResponse(_memberSeq, 0, 0).enqueue(new Callback<TestReserveListResponse>() {
                 @Override
                 public void onResponse(Call<TestReserveListResponse> call, Response<TestReserveListResponse> response) {
                     mList.clear();

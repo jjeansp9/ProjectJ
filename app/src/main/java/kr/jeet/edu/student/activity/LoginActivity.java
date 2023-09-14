@@ -8,6 +8,7 @@ import android.os.Message;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,6 +39,8 @@ import retrofit2.Response;
 public class LoginActivity extends BaseActivity {
 
     private String TAG = LoginActivity.class.getSimpleName();
+
+    private LinearLayout loginRoot;
 
     private EditText mEditId, mEditPw;
     private CheckBox mAutoLoginCb;
@@ -95,6 +98,8 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.checkbox_text).setOnClickListener(this);
 
+        loginRoot = findViewById(R.id.login_root);
+
         mAutoLoginCb = (CheckBox) findViewById(R.id.checkbox_login);
         mAutoLoginCb.setChecked(PreferenceUtil.getAutoLogin(mContext));
 
@@ -121,7 +126,6 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_naver:
-
                 if(mAutoLoginCb.isChecked()) {
                     PreferenceUtil.setAutoLogin(mContext, true);
                 }

@@ -29,10 +29,10 @@ public class PrefCheckListAdapter extends RecyclerView.Adapter<PrefCheckListAdap
     }
 
     private Context mContext;
-    private List<PrefAreaData> mList = new ArrayList<PrefAreaData>();
+    private List<String> mList = new ArrayList<String>();
     private ItemClickListener _listener;
 
-    public PrefCheckListAdapter(Context mContext, List<PrefAreaData> mList, ItemClickListener listener){
+    public PrefCheckListAdapter(Context mContext, List<String> mList, ItemClickListener listener){
         this.mContext = mContext;
         this.mList = mList;
         this._listener = listener;
@@ -49,13 +49,13 @@ public class PrefCheckListAdapter extends RecyclerView.Adapter<PrefCheckListAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         try{
             if(position >= 0) {
-                PrefAreaData item = mList.get(position);
+                String item = mList.get(position);
 
-                holder.cbPref.setText(item.preference);
+                holder.cbPref.setText(item);
 
                 holder.cbPref.setOnClickListener(v -> {
                     if (holder.cbPref.isChecked()){
-                        _listener.onItemClick(item.preference, position);
+                        _listener.onItemClick(item, position);
                     }else{
                         _listener.onItemClick("", position);
                     }

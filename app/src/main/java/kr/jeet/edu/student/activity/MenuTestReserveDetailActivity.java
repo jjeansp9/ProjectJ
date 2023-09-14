@@ -34,6 +34,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
 
     private TestReserveData mInfo;
+    boolean edited = false;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -41,9 +42,12 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             Intent intent = result.getData();
             if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())){
                 LogMgr.e(TAG, "resultLauncher Event EDIT");
-                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
+                edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
                 if (edited) {
                     //requestTestReserveList();
+//                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+//                    setResult(RESULT_OK, intent);
+//                    finish();
                 }
             }
         }
@@ -88,7 +92,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
         str = "";
         if(mInfo.sex != null) {
-            str = mInfo.sex.equals("Y") ? getString(R.string.male) : getString(R.string.female);
+            str = mInfo.sex.equals("M") ? getString(R.string.male) : getString(R.string.female);
         }
         ((TextView)findViewById(R.id.txt_gender)).setText(str);
 
@@ -261,6 +265,19 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        LogMgr.i(TAG, "Edited"+edited+"");
+        if (edited) {
+            Intent intent = getIntent();
+            intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+            setResult(RESULT_OK, intent);
+            finish();
+            return;
+        }
+        super.onBackPressed();
     }
 
     @Override

@@ -303,7 +303,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:src="@drawable/bt_calendar_nor"
-                    android:layout_marginEnd="@dimen/layout_margin_16"/>
+                    android:layout_marginEnd="@dimen/layout_margin_12"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -672,7 +672,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:src="@drawable/bt_calendar_nor"
-                    android:layout_marginEnd="@dimen/layout_margin_16"/>
+                    android:layout_marginEnd="@dimen/layout_margin_12"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -734,57 +734,6 @@
                 android:textSize="@dimen/font_size_small"
                 android:textColor="@color/font_color_default"
                 android:gravity="end"/>
-
-            <!--            <com.skydoves.powerspinner.PowerSpinnerView-->
-<!--                android:id="@+id/spinner_reserve_test_day"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/spinner_reserve_test_class"-->
-<!--                app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/spinner_reserve_test_time"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:layout_marginBottom="@dimen/tv_test_reserve_write"-->
-<!--                android:layout_marginEnd="2dp"-->
-<!--                android:paddingHorizontal="@dimen/editbox_padding"-->
-<!--                android:paddingVertical="@dimen/editbox_padding_vertical"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/font_size"-->
-<!--                app:spinner_arrow_gravity="end"-->
-<!--                app:spinner_arrow_tint="@color/blackgray"-->
-<!--                app:spinner_divider_color="@color/line"-->
-<!--                app:spinner_divider_show="true"-->
-<!--                app:spinner_divider_size="0.4dp"-->
-<!--                app:spinner_popup_focusable="true"-->
-<!--                app:spinner_popup_animation="normal"-->
-<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
-<!--                app:spinner_popup_elevation="2dp"-->
-<!--                android:background="@drawable/bg_edittext"/>-->
-
-<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
-<!--                android:id="@+id/spinner_reserve_test_time"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/spinner_reserve_test_class"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@id/spinner_reserve_test_day"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:layout_marginBottom="@dimen/tv_test_reserve_write"-->
-<!--                android:layout_marginStart="2dp"-->
-<!--                android:paddingHorizontal="@dimen/editbox_padding"-->
-<!--                android:paddingVertical="@dimen/editbox_padding_vertical"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/font_size"-->
-<!--                app:spinner_arrow_gravity="end"-->
-<!--                app:spinner_arrow_tint="@color/blackgray"-->
-<!--                app:spinner_divider_color="@color/line"-->
-<!--                app:spinner_divider_show="true"-->
-<!--                app:spinner_divider_size="0.4dp"-->
-<!--                app:spinner_popup_focusable="true"-->
-<!--                app:spinner_popup_animation="normal"-->
-<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
-<!--                app:spinner_popup_elevation="2dp"-->
-<!--                android:background="@drawable/bg_edittext"/>-->
 
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinner_reserve_test_class"
