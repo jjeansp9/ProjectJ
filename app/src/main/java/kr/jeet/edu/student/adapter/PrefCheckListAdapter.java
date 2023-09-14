@@ -30,11 +30,13 @@ public class PrefCheckListAdapter extends RecyclerView.Adapter<PrefCheckListAdap
 
     private Context mContext;
     private List<String> mList = new ArrayList<String>();
+    private List<String> checkList = new ArrayList<String>();
     private ItemClickListener _listener;
 
-    public PrefCheckListAdapter(Context mContext, List<String> mList, ItemClickListener listener){
+    public PrefCheckListAdapter(Context mContext, List<String> mList, List<String> checkList, ItemClickListener listener){
         this.mContext = mContext;
         this.mList = mList;
+        this.checkList = checkList;
         this._listener = listener;
     }
 
@@ -44,27 +46,46 @@ public class PrefCheckListAdapter extends RecyclerView.Adapter<PrefCheckListAdap
         View view = LayoutInflater.from(mContext).inflate(R.layout.layout_pref_sel_list_item, parent, false);
         return new ViewHolder(view);
     }
-
+    int count = 0;
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        try{
-            if(position >= 0) {
+        try {
+            if (position >= 0) {
                 String item = mList.get(position);
 
                 holder.cbPref.setText(item);
 
+                LogMgr.i("checkTest", checkList.toString() + "," + checkList.size());
+//                for (String check : checkList){
+//                    if (checkList.get(i).equals(mList.get(position))) {
+//                        LogMgr.i("CHECKEVENT", i + "," + count);
+//                        LogMgr.i("CHECKEVENT", checkList.get(i) + "," + mList.get(position));
+//                        holder.cbPref.setChecked(true);
+//                        break;
+//                    }
+//                }
+                for (int i = 0; i < checkList.size(); i++) {
+                    if (checkList.get(i).equals(mList.get(position))) {
+                        LogMgr.i("CHECKEVENT", i + "," + count);
+                        LogMgr.i("CHECKEVENT", checkList.get(i) + "," + mList.get(position));
+                        holder.cbPref.setChecked(true);
+                        break;
+                    }
+                }
+
                 holder.cbPref.setOnClickListener(v -> {
-                    if (holder.cbPref.isChecked()){
+                    if (holder.cbPref.isChecked()) {
+                        count++;
                         _listener.onItemClick(item, position);
-                    }else{
+                    } else {
+                        count--;
                         _listener.onItemClick("", position);
                     }
                 });
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LogMgr.e("Pref Check Adapter Exception : " + e.getMessage());
         }
-
     }
 
     @Override

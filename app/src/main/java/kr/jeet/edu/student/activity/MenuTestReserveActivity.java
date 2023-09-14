@@ -60,6 +60,7 @@ public class MenuTestReserveActivity extends BaseActivity {
     private final ArrayList<TestReserveData> mList = new ArrayList<>();
     private int _memberSeq = 0;
 
+    // 등록했을 때 result =ActivityResult{resultCode=RESULT_CANCELED, data=null}
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if(result.getResultCode() != RESULT_CANCELED) {

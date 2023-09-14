@@ -83,7 +83,10 @@ public class InformedQuestionActivity extends BaseActivity {
     private ArrayList<ClassPathData> mListClass = new ArrayList<>();
     private ArrayList<String> mListArea = new ArrayList<>();
     private ArrayList<String> mListSchool = new ArrayList<>();
-    
+
+    private ArrayList<String> areaCheckList = new ArrayList<>();
+    private ArrayList<String> SchoolCheckList = new ArrayList<>();
+
     private List<String> clsPath;
 
     private RetrofitApi mRetrofitApi;
@@ -206,9 +209,8 @@ public class InformedQuestionActivity extends BaseActivity {
         mSpinnerProcess_2 = findViewById(R.id.spinner_learning_process_2);
         mSpinnerProcess_3 = findViewById(R.id.spinner_learning_process_3);
 
-        if (writeMode.equals(Constants.WRITE_EDIT)) setView();
-
         setRecycler();
+        if (writeMode.equals(Constants.WRITE_EDIT)) setView();
         setSpinner();
 
         mEditList = new EditText[]{mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
@@ -294,14 +296,23 @@ public class InformedQuestionActivity extends BaseActivity {
 //        for (PrefAreaData item : mListArea){
 //            if (Utils.getStr(mInfo.study).contains(item.preference))
 //        }
+        int count = 0;
+        // TODO : 희망분야, 희망고등학교 데이터 전달
+        for (String item : mListArea) areaCheckList.add("");
+        String[] parts = Utils.getStr(mInfo.study).split("\\^");
+        for (int i = 0; i < areaCheckList.size(); i++) {
+            if (mListArea.get(i).equals(parts[count])){
+                areaCheckList.set(i, parts[count]);
+                count++;
+            }
+        }
+        mAdapterArea.notifyDataSetChanged();
 
-        // TODO : 희망분야, 희망고등학교 데이터 설정
-
-//        List<PrefAreaData> mList = new ArrayList<>();
 //
-//        String[] parts = Utils.getStr(mInfo.study).split("\\^");
-//
-//        Collections.addAll(mListArea, parts);
+        for (String item : mListSchool) SchoolCheckList.add("");
+//        String[] parts2 = Utils.getStr(mInfo.highSchool).split("\\^");
+//        for (int i = 0; i < Math.min(parts2.length, SchoolCheckList.size()); i++) SchoolCheckList.set(i, parts2[i]);
+//        mAdapterSchool.notifyDataSetChanged();
 
         if (mInfo.gifted.equals("Y")) rbGiftedPref.setChecked(true);
         else rbGiftedNonPref.setChecked(true);
@@ -350,9 +361,6 @@ public class InformedQuestionActivity extends BaseActivity {
         return false;
     };
 
-    private ArrayList<String> areaCheckList = new ArrayList<>();
-    private ArrayList<String> SchoolCheckList = new ArrayList<>();
-
     private void setRecycler(){
 
         FlexboxLayoutManager fblManager = new FlexboxLayoutManager(mContext);
@@ -368,12 +376,12 @@ public class InformedQuestionActivity extends BaseActivity {
         mRecyclerArea.setLayoutManager(fblManager);
         mRecyclerSchool.setLayoutManager(fblManagers);
 
-        for (String item : mListArea) areaCheckList.add("");
-        mAdapterArea = new PrefCheckListAdapter( mContext, mListArea, (item, position) -> areaCheckList.set(position, item) );
+        if (!writeMode.equals(Constants.WRITE_EDIT)) for (String item : mListArea) areaCheckList.add("");
+        mAdapterArea = new PrefCheckListAdapter( mContext, mListArea, areaCheckList, (item, position) -> areaCheckList.set(position, item) );
         mRecyclerArea.setAdapter(mAdapterArea);
 
-        for (String item : mListSchool) SchoolCheckList.add("");
-        mAdapterSchool = new PrefCheckListAdapter( mContext, mListSchool, (item, position) -> SchoolCheckList.set(position, item) );
+        if (!writeMode.equals(Constants.WRITE_EDIT)) for (String item : mListSchool) SchoolCheckList.add("");
+        mAdapterSchool = new PrefCheckListAdapter( mContext, mListSchool, SchoolCheckList, (item, position) -> SchoolCheckList.set(position, item) );
         mRecyclerSchool.setAdapter(mAdapterSchool);
     }
 
@@ -419,11 +427,11 @@ public class InformedQuestionActivity extends BaseActivity {
                             Intent intent = new Intent(Constants.FINISH_COMPLETE);
 
                             if (writeMode.equals(Constants.WRITE_EDIT)){
-                                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
-                                Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
-                            }else{
                                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
+                            }else{
+                                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             }
                             setResult(RESULT_OK, intent);
                             finish();
@@ -517,6 +525,8 @@ public class InformedQuestionActivity extends BaseActivity {
 
             String strHighSchool = "";
             StringBuilder schoolBuilder = new StringBuilder();
+
+            LogMgr.i(TAG, "areaList: " + areaCheckList.toString() + "\nscList: " + SchoolCheckList.toString());
 
             for (String value : SchoolCheckList) {
                 if (value != null && !value.isEmpty()) {

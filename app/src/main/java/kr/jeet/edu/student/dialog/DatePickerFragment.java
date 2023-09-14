@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.KeyboardShortcutGroup;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,8 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 import java.util.List;
+
+import kr.jeet.edu.student.R;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private OnDateSetListener listener;
@@ -72,6 +75,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         if (setDate) minDate.set(minYear, SET_MIN, SET_DAY);
         else minDate.set(minYear, 1, 1);
         dialog.getDatePicker().setMinDate(minDate.getTime().getTime());
+
         //최대날짜
         Calendar maxDate = Calendar.getInstance();
         maxDate.set(maxYear, 12, 31);
