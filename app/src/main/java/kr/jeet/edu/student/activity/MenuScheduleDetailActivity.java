@@ -1,7 +1,5 @@
 package kr.jeet.edu.student.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,22 +8,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
-import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.ScheduleData;
-import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
-import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,7 +98,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;
         tvTitle.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.target) ? "" : "["+mInfo.target+"]";
+        str = TextUtils.isEmpty(mInfo.targetCode) ? "" : "["+mInfo.targetCode +"]";
         viewVisibility(tvTarget, str);
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.utils.LogMgr;
-import kr.jeet.edu.student.utils.Utils;
 
 public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapter.ViewHolder> implements Filterable {
 
@@ -89,9 +88,9 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
         holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 
-        String str = TextUtils.isEmpty(item.target) ? "" : "["+item.target+"]";
+        String str = TextUtils.isEmpty(item.targetCode) ? "" : "["+item.targetCode +"]";
 
-        if (!TextUtils.isEmpty(item.target)){
+        if (!TextUtils.isEmpty(item.targetCode)){
             holder.tvTarget.setText(str);
             holder.tvTarget.setVisibility(View.VISIBLE);
         }
