@@ -397,8 +397,7 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                //if (checked()) requestTestReserve();
-                requestData();
+                if (checked()) requestTestReserve();
                 break;
         }
     }
