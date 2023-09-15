@@ -113,7 +113,7 @@ public class Utils {
                             LogMgr.e("preference put : " + token);
                             PreferenceUtil.setPrefPushToken(context, token);
                         }
-                        requestUpdatePushTopic(context, memberSeq);
+                        //requestUpdatePushTopic(context, memberSeq);
                     } else {
                         LogMgr.e("updatePushToken() errBody : " + response.errorBody().toString());
                         Toast.makeText(context, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -130,36 +130,36 @@ public class Utils {
 
     }
     // Push Topic update
-    public static void requestUpdatePushTopic(Context context, int memberSeq){
-
-        if (RetrofitClient.getInstance() != null){
-            RetrofitApi retrofitApi = RetrofitClient.getApiInterface();
-            String token = PreferenceUtil.getPrefPushToken(context);
-            retrofitApi.updateSubscribePushTopic(memberSeq, token).enqueue(new Callback<BaseResponse>() {
-                @Override
-                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
-                    try {
-                        if (response.isSuccessful()){
-                            LogMgr.e("requestUpdatePushTopic() success");
-
-                        }else{
-                            Toast.makeText(context, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e){
-                        LogMgr.e(e.getMessage());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<BaseResponse> call, Throwable t) {
-                    try {
-                        LogMgr.e("requestUpdatePushTopic() onFailure >> " + t.getMessage());
-                    }catch (Exception e){
-                    }
-                }
-            });
-        }
-    }
+//    public static void requestUpdatePushTopic(Context context, int memberSeq){
+//
+//        if (RetrofitClient.getInstance() != null){
+//            RetrofitApi retrofitApi = RetrofitClient.getApiInterface();
+//            String token = PreferenceUtil.getPrefPushToken(context);
+//            retrofitApi.updateSubscribePushTopic(memberSeq, token).enqueue(new Callback<BaseResponse>() {
+//                @Override
+//                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+//                    try {
+//                        if (response.isSuccessful()){
+//                            LogMgr.e("requestUpdatePushTopic() success");
+//
+//                        }else{
+//                            Toast.makeText(context, R.string.server_fail, Toast.LENGTH_SHORT).show();
+//                        }
+//                    }catch (Exception e){
+//                        LogMgr.e(e.getMessage());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<BaseResponse> call, Throwable t) {
+//                    try {
+//                        LogMgr.e("requestUpdatePushTopic() onFailure >> " + t.getMessage());
+//                    }catch (Exception e){
+//                    }
+//                }
+//            });
+//        }
+//    }
     /**
      * ID찾기에서 문자열 blind 처리 ( 1/2 ceil)
      * @param sourceString 원본 문자열
@@ -200,6 +200,13 @@ public class Utils {
         InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager == null) return;
         inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+    }
+
+    public static void showKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
     }
 
     /**
@@ -312,6 +319,14 @@ public class Utils {
         String lastPart = number.substring(number.length() - 2);  // Extracts the last two digits
 
         return firstPart + blind + lastPart;
+    }
+
+    /**
+    * 휴대폰번호 유효성검사
+    * */
+    public static boolean checkPhoneNumber(String str) {
+        if(TextUtils.isEmpty(str)) return false;
+        return Pattern.matches("^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$", str);
     }
 
     /**

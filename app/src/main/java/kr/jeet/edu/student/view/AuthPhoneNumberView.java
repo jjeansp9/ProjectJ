@@ -97,7 +97,7 @@ public class AuthPhoneNumberView extends LinearLayout implements View.OnClickLis
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 if(charSequence!= null) {
-                    if(charSequence.length() >=11) {
+                    if(Utils.checkPhoneNumber(charSequence.toString().trim())) {
                         btnCheckNumber.setEnabled(true);
                     }else{
                         btnCheckNumber.setEnabled(false);

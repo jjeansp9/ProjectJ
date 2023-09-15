@@ -108,7 +108,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     }
 
     private void setListRecycler(){
-        mAdapter = new AnnouncementListAdapter(mContext, mList, this::startBoardDetailActivity);
+        mAdapter = new AnnouncementListAdapter(mContext, mList, false, this::startBoardDetailActivity);
         mRecyclerView.setAdapter(mAdapter);
         //mRecyclerView.setItemAnimator(null);
 

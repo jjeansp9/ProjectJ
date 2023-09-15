@@ -22,6 +22,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -104,6 +105,8 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private TestReserveData mInfo;
     private String writeMode = "";
+
+    private final String NOT_SEL = "선택";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -297,7 +300,6 @@ public class InformedQuestionActivity extends BaseActivity {
 //            if (Utils.getStr(mInfo.study).contains(item.preference))
 //        }
         int count = 0;
-        // TODO : 희망분야, 희망고등학교 데이터 전달
         for (String item : mListArea) areaCheckList.add("");
         String[] parts = Utils.getStr(mInfo.study).split("\\^");
         for (int i = 0; i < areaCheckList.size(); i++) {
@@ -308,11 +310,17 @@ public class InformedQuestionActivity extends BaseActivity {
         }
         mAdapterArea.notifyDataSetChanged();
 
-//
+        count = 0;
+
         for (String item : mListSchool) SchoolCheckList.add("");
-//        String[] parts2 = Utils.getStr(mInfo.highSchool).split("\\^");
-//        for (int i = 0; i < Math.min(parts2.length, SchoolCheckList.size()); i++) SchoolCheckList.set(i, parts2[i]);
-//        mAdapterSchool.notifyDataSetChanged();
+        parts = Utils.getStr(mInfo.highSchool).split("\\^");
+        for (int i = 0; i < SchoolCheckList.size(); i++) {
+            if (mListSchool.get(i).equals(parts[count])){
+                SchoolCheckList.set(i, parts[count]);
+                count++;
+            }
+        }
+        mAdapterSchool.notifyDataSetChanged();
 
         if (mInfo.gifted.equals("Y")) rbGiftedPref.setChecked(true);
         else rbGiftedNonPref.setChecked(true);
@@ -397,7 +405,8 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                if (checked()) requestTestReserve();
+                //if (checked()) requestTestReserve();
+                checked();
                 break;
         }
     }
@@ -610,35 +619,67 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private boolean checked(){
-//        if (!mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
-//                !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
-//                !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
-//                !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
-//        ){
-//
-//            if (!mEtLearningProc1.getText().toString().equals("") ||
-//                    !mEtLearningProc2.getText().toString().equals("") ||
-//                    !mEtLearningProc3.getText().toString().equals("")){
-//                return true;
-//
-//            }else {
-//                Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
-//                return false;
-//            }
-//
-//        }else {
-//            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
-        if (!mEtLearningProc1.getText().toString().equals("") ||
-                !mEtLearningProc2.getText().toString().equals("") ||
-                !mEtLearningProc3.getText().toString().equals("")){
-            return true;
+        if (!mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
+                !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
+                !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
+                !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
+        ){
+            if (!mEtLearningProc1.getText().toString().equals("") ||
+                    !mEtLearningProc2.getText().toString().equals("") ||
+                    !mEtLearningProc3.getText().toString().equals("")
+            ){
+                return true;
+            }else{
+                if (mEtLearningProc1.getText().toString().equals("")){
+                    mEtLearningProc1.requestFocus();
+                    Utils.showKeyboard(mContext, mEtLearningProc1);
 
-        }else {
-            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+                } else if (mEtLearningProc2.getText().toString().equals("")){
+                    mEtLearningProc2.requestFocus();
+                    Utils.showKeyboard(mContext, mEtLearningProc2);
+
+                } else if (mEtLearningProc3.getText().toString().equals("")){
+                    mEtLearningProc3.requestFocus();
+                    Utils.showKeyboard(mContext, mEtLearningProc3);
+                }
+                Toast.makeText(mContext, R.string.write_process_empty, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+        }else{
+            if (mEtStTime1.getText().toString().equals("")) {
+                checkEtStudy(mEtStTime1);
+
+            } else if (mEtStDate1.getText().toString().equals("")){
+                checkEtStudy(mEtStDate1);
+
+            } else if (mEtStTime2.getText().toString().equals("")) {
+                checkEtStudy(mEtStTime2);
+
+            } else if (mEtStDate2.getText().toString().equals("")){
+                checkEtStudy(mEtStDate2);
+
+            } else if (mEtStTime3.getText().toString().equals("")) {
+                checkEtStudy(mEtStTime3);
+
+            }else if(mEtStDate3.getText().toString().equals("")){
+                checkEtStudy(mEtStDate3);
+
+            } else if (mEtStTime4.getText().toString().equals("")) {
+                checkEtStudy(mEtStTime4);
+
+            }else if (mEtStDate4.getText().toString().equals("")){
+                checkEtStudy(mEtStDate4);
+
+            }
+            Toast.makeText(mContext, R.string.write_before_study_empty, Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private void checkEtStudy(View view){
+        view.requestFocus();
+        Utils.showKeyboard(mContext, view);
     }
 
     private String currentDate(){
@@ -648,6 +689,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
         return formattedDate;
     }
+    // 이름, 성별, 생일, 전화번호
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -673,7 +715,7 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.action_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                requestTestReserve();
+                if (checked()) requestTestReserve();
                 return true;
         }
         return super.onOptionsItemSelected(item);

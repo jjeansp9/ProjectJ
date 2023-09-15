@@ -9,6 +9,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
@@ -37,6 +38,7 @@ import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import kr.jeet.edu.student.view.decoration.LastIndexDeleteDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +47,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -64,6 +67,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexDirection;
@@ -81,11 +87,13 @@ public class MainActivity extends BaseActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
 
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView, announceRecycler;
     private MainMenuListAdapter mAdapter;
+    private AnnouncementListAdapter announceAdapter;
     private ArrayList<MainMenuItemData> mList = new ArrayList<>();
+    private ArrayList<AnnouncementData> announceList = new ArrayList<>();
     private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember,
-            mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName;
+            mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty;
     private ImageView imgStudentAttendance;
     private LinearLayoutCompat mLayoutBottom;
     private ConstraintLayout layoutAttend, layoutNotify;
@@ -107,8 +115,6 @@ public class MainActivity extends BaseActivity {
     private int _stCode = 0;
     private String acaCode = "";
     private PushMessage _pushMessage;
-
-    private int announcementSeq = -1;
 
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
@@ -215,12 +221,10 @@ public class MainActivity extends BaseActivity {
     }
     @Override
     void initView() {
-        findViewById(R.id.btn_notify).setOnClickListener(this);
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
 
         layoutAttend = findViewById(R.id.btn_attendance_state);
-        layoutNotify = findViewById(R.id.btn_notify);
 
         mTvStudentName = findViewById(R.id.tv_student_name);
         mTvStudentCampus = findViewById(R.id.tv_student_campus);
@@ -230,12 +234,13 @@ public class MainActivity extends BaseActivity {
         mTvAttendanceDate = findViewById(R.id.tv_attendance_date);
         mTvNonMember = findViewById(R.id.tv_non_member);
         mTvNonMemberNoti = findViewById(R.id.tv_non_member_notice);
-        mTvNotifyContent = findViewById(R.id.tv_notify_second);
         mTvTeacherName = findViewById(R.id.tv_teacher_name);
+        mTvListEmpty = findViewById(R.id.tv_main_empty_list);
 
         mLayoutBottom = findViewById(R.id.layout_bottom);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_menu);
+        announceRecycler = (RecyclerView) findViewById(R.id.recycler_announcement);
 
         FlexboxLayoutManager fblManager = new FlexboxLayoutManager(mContext);
         fblManager.setFlexWrap(FlexWrap.WRAP);
@@ -245,6 +250,27 @@ public class MainActivity extends BaseActivity {
 
         mAdapter= new MainMenuListAdapter(mContext, mList, this::startMenuActivity);
         mRecyclerView.setAdapter(mAdapter);
+
+        setAnnounceRecycler();
+    }
+
+    private void setAnnounceRecycler(){
+        announceAdapter = new AnnouncementListAdapter(mContext, announceList, true, this::startBoardDetailActivity);
+        announceRecycler.setAdapter(announceAdapter);
+
+        Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.bg_line);
+        LastIndexDeleteDecoration dividerItemDecoration = new LastIndexDeleteDecoration(dividerDrawable);
+        announceRecycler.addItemDecoration(dividerItemDecoration);
+    }
+
+    private void startBoardDetailActivity(AnnouncementData clickItem){
+        if (clickItem != null){
+            Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
+            targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
+            targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+            startActivity(targetIntent);
+
+        }else LogMgr.e("clickItem is null ");
     }
 
     private void startMenuActivity(MainMenuItemData clickItem){
@@ -427,10 +453,6 @@ public class MainActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.btn_notify:
-                if (announcementSeq != -1) startActivityBottomMenu(MenuBoardDetailActivity.class);
-                break;
-
             case R.id.btn_attendance_state:
                 startActivityBottomMenu(MenuNoticeActivity.class);
                 break;
@@ -445,12 +467,7 @@ public class MainActivity extends BaseActivity {
     private void startActivityBottomMenu(Class<?> cls){
         Intent targetIntent = new Intent(mContext, cls);
 
-        if (cls == MenuBoardDetailActivity.class){
-            targetIntent.putExtra(IntentParams.PARAM_BOARD_SEQ, announcementSeq);
-            targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-            startActivity(targetIntent);
-
-        }else if (cls == MenuNoticeActivity.class){
+        if (cls == MenuNoticeActivity.class){
             targetIntent.putExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, true);
             startActivity(targetIntent);
 
@@ -631,6 +648,7 @@ public class MainActivity extends BaseActivity {
                                 PreferenceUtil.setStuGender(mContext, getData.gender);
                                 PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                 PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
+                                PreferenceUtil.setStuBirth(mContext, getData.birth);
 
                                 if (getData.scName.equals("")) mTvSchoolAndGradeName.setText(getData.stGrade);
                                 else if (getData.stGrade.equals("")) mTvSchoolAndGradeName.setText(getData.scName);
@@ -710,27 +728,33 @@ public class MainActivity extends BaseActivity {
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {
                         if (response.isSuccessful()) {
-                            String announcementTitle = "";
+                            List<AnnouncementData> getData = new ArrayList<>();
+                            if (announceList.size() > 0) announceList.clear();
 
                             if (response.body() != null) {
-                                announcementSeq = response.body().data.get(0).seq;
-                                announcementTitle = response.body().data.get(0).title;
+                                getData = response.body().data;
+                                if (getData != null && !getData.isEmpty()) {
+                                    for (int i = 0; i < 3; i++) announceList.add(getData.get(i));
 
-                                mTvNotifyContent.setText(TextUtils.isEmpty(announcementTitle) ? "" : announcementTitle);
+                                } else {
+                                    LogMgr.e(TAG, "ListData is null");
+                                }
                             }
                         }
+
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
+                    mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
+                    announceAdapter.notifyDataSetChanged();
 
                     mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                 }
 
                 @Override
                 public void onFailure(Call<AnnouncementListResponse> call, Throwable t) {
-                    try {
-                        LogMgr.e(TAG, "requestBoardList() onFailure >> " + t.getMessage());
-                    } catch (Exception e) {}
+                    mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
+                    announceAdapter.notifyDataSetChanged();
 
                     mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                 }

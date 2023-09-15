@@ -41,11 +41,13 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     private final boolean IMG_IS_NOT_EMPTY = false;
 
     private static boolean isWholeCampusMode = false;
+    private static boolean isMain = false;
 
-    public AnnouncementListAdapter(Context mContext, List<AnnouncementData> mList, AnnouncementListAdapter.ItemClickListener listener) {
+    public AnnouncementListAdapter(Context mContext, List<AnnouncementData> mList, boolean isMain, AnnouncementListAdapter.ItemClickListener listener) {
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
+        this.isMain = isMain;
     }
     public void setWholeCampusMode(boolean flag) {
         this.isWholeCampusMode = flag;
@@ -61,6 +63,8 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AnnouncementData item = mList.get(position);
         try{
+            if (isMain) holder.brfRoot.setForeground(null);
+
             holder.tvState.setVisibility(View.GONE);
             holder.tvDate.setVisibility(View.GONE);
             holder.tvAnnouncementDate.setVisibility(View.VISIBLE);

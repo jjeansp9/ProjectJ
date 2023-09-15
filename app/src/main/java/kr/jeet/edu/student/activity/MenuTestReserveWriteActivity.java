@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -48,6 +50,7 @@ import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.dialog.SearchAddressDialog;
@@ -119,11 +122,22 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         initAppbar();
     }
 
+    private String _stName = "";
+    private String _stPhone = "";
+    private String _stParentPhone = "";
+    private String _birth = "";
+
     private void initData(){
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
         testDateMinYear = calendar.get(Calendar.YEAR);
         birthMaxYear = calendar.get(Calendar.YEAR);
+
+        _stName = PreferenceUtil.getStName(mContext);
+        _stuGender = PreferenceUtil.getStuGender(mContext);
+        _birth = PreferenceUtil.getStuBirth(mContext);
+        _stPhone = PreferenceUtil.getStuPhoneNum(mContext);
+        _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
 
         try {
 
@@ -176,11 +190,19 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
         mSpinnerTestTime = findViewById(R.id.spinner_reserve_test_class);
 
+
+        LogMgr.e(TAG, "Gender: " + _stuGender);
+
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
         } else{
-            mGenderRbMale.setChecked(true);
-            mGenderRbFemale.setChecked(false);
+            if (_stuGender.equals("M")) mGenderRbMale.setChecked(true);
+            else mGenderRbFemale.setChecked(true);
+
+            mEtName.setText(Utils.getStr(_stName));
+            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
+            mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
+            mTvBirthDate.setText(Utils.getStr(_birth));
         }
         setSpinner();
     }
@@ -263,6 +285,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 break;
 
             case R.id.btn_test_reserve_write_next:
+                clearFocusAndHideKeyboard();
                 startQuestionActivity();
                 break;
 
@@ -310,10 +333,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 if (selectedDate.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                     tv.setText(formattedDate);
                     setTestTime();
+                    strTestTime = "";
+                    mSpinnerTestTime.setText("");
+                    mSpinnerTestTime.show();
                 }else{
                     Toast.makeText(mContext, R.string.test_reserve_sunday_impossible_sel, Toast.LENGTH_SHORT).show();
                     showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
                 }
+
             }else{
                 tv.setText(formattedDate);
             }
@@ -411,7 +438,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         mSpinnerTestTime.setSpinnerPopupHeight(500);
 
-        // 초등 index : 0, 중등 : 5, 고등 : 10
+        // 초등 index : 0, 중등 : 3, 고등 : 6
         mSpinnerTestTime.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())){
 
@@ -419,11 +446,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
 
-                }else if (newIndex == 5){
+                }else if (newIndex == 3){
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
 
-                }else if (newIndex == 10){
+                }else if (newIndex == 6){
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
                 }
@@ -609,23 +636,85 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 //        3. 사업자등록번호 : 12* ** *1234
 //        4. 휴대전화번호 : 010 **** 1234
 
-        if (request.name.equals("") || request.birth.equals("") || request.grade.equals("") || mSpinnerSchool.getText().toString().equals("") ||
-                request.parentPhoneNumber.equals("") || request.phoneNumber.equals("") || request.parentName.equals("") || request.reservationDate.equals("") ||
-                request.bigo.equals("") || request.address.equals("") || request.reason.equals("")){
-            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
-            return;
-        }else if (request.parentPhoneNumber.length() < 11 || request.phoneNumber.length() < 11){
-            Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (request.name.equals("") || request.birth.equals("") || request.grade.equals("") || mSpinnerSchool.getText().toString().equals("") ||
+//                request.parentPhoneNumber.equals("") || request.phoneNumber.equals("") || request.parentName.equals("") || request.reservationDate.equals("") ||
+//                request.bigo.equals("") || request.address.equals("") || request.reason.equals("")){
+//            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
 
-        Intent intent = new Intent(mContext, InformedQuestionActivity.class);
-        intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
-        intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
-        if (writeMode.equals(Constants.WRITE_EDIT)) {
-            intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+        if (request.name.equals("")) {
+            Toast.makeText(mContext, R.string.stu_name_empty, Toast.LENGTH_SHORT).show();
+            mEtName.requestFocus();
+            Utils.showKeyboard(mContext, mEtName);
+
+        } else if (request.address.equals("")) {
+            Toast.makeText(mContext, R.string.address_empty, Toast.LENGTH_SHORT).show();
+
+        } else if (request.addressSub.equals("")) {
+            Toast.makeText(mContext, R.string.address_sub_empty, Toast.LENGTH_SHORT).show();
+            mEtAddressDetail.requestFocus();
+            Utils.showKeyboard(mContext, mEtAddressDetail);
+
+        } else if (request.birth.equals("")) {
+            Toast.makeText(mContext, R.string.birth_empty, Toast.LENGTH_SHORT).show();
+            showDatePicker(mTvBirthDate, false, birthMinYear, birthMaxYear, true);
+
+        } else if (request.grade.equals("")) {
+            Toast.makeText(mContext, R.string.grade_empty, Toast.LENGTH_SHORT).show();
+            if (mSpinnerGrade != null) mSpinnerGrade.show();
+
+        } else if (mSpinnerSchool.getText().toString().equals("")) {
+            Toast.makeText(mContext, R.string.school_empty, Toast.LENGTH_SHORT).show();
+            if (mSpinnerSchool != null) mSpinnerSchool.show();
+
+        } else if (request.phoneNumber.equals("")) {
+            Toast.makeText(mContext, R.string.phone_empty, Toast.LENGTH_SHORT).show();
+            mEtStuPhone.requestFocus();
+            Utils.showKeyboard(mContext, mEtStuPhone);
+
+        } else if (!Utils.checkPhoneNumber(request.phoneNumber)){
+            Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
+            mEtStuPhone.requestFocus();
+            Utils.showKeyboard(mContext, mEtStuPhone);
+
+        } else if (request.parentName.equals("")) {
+            Toast.makeText(mContext, R.string.parent_name_empty, Toast.LENGTH_SHORT).show();
+            mEtParentName.requestFocus();
+            Utils.showKeyboard(mContext, mEtParentName);
+
+        } else if (request.parentPhoneNumber.equals("")) {
+            Toast.makeText(mContext, R.string.parent_phone_empty, Toast.LENGTH_SHORT).show();
+            mEtparentPhone.requestFocus();
+            Utils.showKeyboard(mContext, mEtparentPhone);
+
+        } else if (!Utils.checkPhoneNumber(request.parentPhoneNumber)){
+            Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
+            mEtparentPhone.requestFocus();
+            Utils.showKeyboard(mContext, mEtparentPhone);
+
+        } else if (request.reason.equals("")) {
+            Toast.makeText(mContext, R.string.reason_empty, Toast.LENGTH_SHORT).show();
+            if (mSpinnerFunnel != null) mSpinnerFunnel.show();
+
+        } else if (request.bigo.equals("")) {
+            Toast.makeText(mContext, R.string.bigo_empty, Toast.LENGTH_SHORT).show();
+            if (mSpinnerCampus != null) mSpinnerCampus.show();
+
+        } else if (request.reservationDate.equals("")) {
+            Toast.makeText(mContext, R.string.reservation_date_empty, Toast.LENGTH_SHORT).show();
+            showDatePicker(mTvReserveDate, true, birthMinYear, birthMaxYear, false);
+
+        }else{
+            // TODO : 체크리스트에 테스트시간 값도 입력여부 체크하기
+            Intent intent = new Intent(mContext, InformedQuestionActivity.class);
+            intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
+            intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
+            if (writeMode.equals(Constants.WRITE_EDIT)) {
+                intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+            }
+            resultLauncher.launch(intent);
         }
-        resultLauncher.launch(intent);
     }
 
     @SuppressLint("ClickableViewAccessibility")

@@ -283,6 +283,7 @@
                     android:id="@+id/line_system_first"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginHorizontal="1dp"
                     app:layout_constraintTop_toBottomOf="@id/layout_set_operation_policy"
                     android:background="@color/line_set"/>
 
@@ -315,6 +316,7 @@
                     android:id="@+id/line_system_second"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginHorizontal="1dp"
                     app:layout_constraintTop_toBottomOf="@id/layout_set_PI_use_consent"
                     android:background="@color/line_set"/>
                 

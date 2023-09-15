@@ -31,7 +31,6 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingHorizontal="@dimen/layout_margin"
                 android:id="@+id/layout_inform_question">
 
                 <TextView
@@ -41,6 +40,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_1"
                     android:textColor="@color/black"
@@ -53,6 +53,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_question_no_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:orientation="vertical">
                     <LinearLayout
@@ -111,6 +112,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/rg_informed_question_sel_day"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_2"
                     android:textColor="@color/black"
@@ -123,6 +125,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_question_no_2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:background="@drawable/bg_layout_class_path"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:paddingVertical="8dp">
@@ -183,6 +186,7 @@
                     app:layout_constraintTop_toBottomOf="@id/layout_class_path_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:background="@drawable/bg_layout_class_path"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:paddingVertical="8dp">
@@ -243,6 +247,7 @@
                     app:layout_constraintTop_toBottomOf="@id/layout_class_path_2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:background="@drawable/bg_layout_class_path"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:paddingVertical="8dp">
@@ -303,6 +308,7 @@
                     app:layout_constraintTop_toBottomOf="@id/layout_class_path_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:background="@drawable/bg_layout_class_path"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:paddingVertical="8dp">
@@ -363,6 +369,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/layout_class_path_4"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_3"
                     android:textColor="@color/black"
@@ -376,6 +383,7 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_question_no_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/et_learning_process_1"
+                    android:layout_marginStart="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:paddingHorizontal="@dimen/editbox_padding"
                     android:paddingVertical="@dimen/editbox_padding_vertical"
@@ -402,6 +410,7 @@
                     app:layout_constraintTop_toTopOf="@id/spinner_learning_process_1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_learning_process_1"
+                    android:layout_marginEnd="@dimen/layout_margin"
                     android:layout_marginStart="4dp"
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
@@ -419,6 +428,7 @@
                     app:layout_constraintTop_toBottomOf="@id/et_learning_process_1"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/et_learning_process_2"
+                    android:layout_marginStart="@dimen/layout_margin"
                     android:layout_marginTop="8dp"
                     android:paddingHorizontal="@dimen/editbox_padding"
                     android:paddingVertical="@dimen/editbox_padding_vertical"
@@ -445,6 +455,7 @@
                     app:layout_constraintTop_toTopOf="@id/spinner_learning_process_2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_learning_process_2"
+                    android:layout_marginEnd="@dimen/layout_margin"
                     android:layout_marginStart="4dp"
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
@@ -462,6 +473,7 @@
                     app:layout_constraintTop_toBottomOf="@id/et_learning_process_2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/et_learning_process_3"
+                    android:layout_marginStart="@dimen/layout_margin"
                     android:layout_marginTop="8dp"
                     android:paddingHorizontal="@dimen/editbox_padding"
                     android:paddingVertical="@dimen/editbox_padding_vertical"
@@ -488,6 +500,7 @@
                     app:layout_constraintTop_toTopOf="@id/spinner_learning_process_3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_learning_process_3"
+                    android:layout_marginEnd="@dimen/layout_margin"
                     android:layout_marginStart="4dp"
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
@@ -504,6 +517,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/et_learning_process_3"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_4"
                     android:textColor="@color/black"
@@ -528,6 +542,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/recycler_pref_area"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_5"
                     android:textColor="@color/black"
@@ -552,6 +567,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/recycler_pref_school"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_6"
                     android:textColor="@color/black"
@@ -564,6 +580,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_question_no_6"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:orientation="horizontal">
 
                     <RadioButton
@@ -594,6 +611,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/rg_gifted_center_pref_area"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_sub_title_margin_top"
                     android:text="@string/informed_question_no_7"
                     android:textColor="@color/black"
@@ -607,6 +625,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:layout_marginBottom="@dimen/informed_question_sub_title_margin_top"
                     android:background="@drawable/bg_edittext"

@@ -110,6 +110,8 @@
     <string name="loading">로딩중</string>
     <string name="requesting">요청중</string>
     <string name="write_empty">필수 입력 항목이 누락되었는지 확인해주세요</string>
+    <string name="write_before_study_empty">테스트 전까지 학습한 방법을 입력해주세요</string>
+    <string name="write_process_empty">진도/심화학습 여부를 입력해주세요</string>
     <string name="write_phone_impossible">연락처 항목이 올바르게 입력되었는지 확인해주세요</string>
     <string name="write_empty_2">항목에 입력해주세요</string>
     <string name="write_privacy_empty">동의항목에 체크해주세요</string>
@@ -220,6 +222,18 @@
     <string name="menu_test_reserve_campus_test_date">캠퍼스&amp;테스트일시</string>
     <string name="menu_test_reserve_campus_test">캠퍼스</string>
     <string name="menu_test_reserve_campus_date">테스트일시</string>
+    <string name="stu_name_empty">학생 이름을 입력해주세요.</string>
+    <string name="birth_empty">생년월일을 입력해주세요.</string>
+    <string name="grade_empty">학년을 입력해주세요.</string>
+    <string name="school_empty">학교를 선택해주세요.</string>
+    <string name="parent_phone_empty">부모님 연락처를 입력해주세요.</string>
+    <string name="phone_empty">학생 전화번호를 입력해주세요.</string>
+    <string name="parent_name_empty">부모님 성함을 입력해주세요.</string>
+    <string name="reservation_date_empty">테스트 예약일을 입력해주세요.</string>
+    <string name="bigo_empty">캠퍼스 비고를 입력해주세요.</string>
+    <string name="address_empty">주소를 입력해주세요.</string>
+    <string name="address_sub_empty">상세주소를 입력해주세요.</string>
+    <string name="reason_empty">유입 경로를 입력해주세요.</string>
 
     <string name="informed_consent_title">사전동의</string>
     <string name="informed_consent_notice">

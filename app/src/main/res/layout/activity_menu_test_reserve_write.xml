@@ -200,10 +200,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/tv_reserve_address"
-                app:layout_constraintBottom_toBottomOf="@id/tv_reserve_address"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
                 android:background="@drawable/bg_edittext"
+                android:layout_marginTop="4dp"
                 android:textSize="@dimen/font_size"
                 android:textColor="@color/font_color_default"
                 android:paddingHorizontal="@dimen/editbox_padding"
@@ -214,11 +214,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@+id/tv_reserve_address"
+                app:layout_constraintTop_toBottomOf="@+id/tv_reserve_address_result"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
-                app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth">
-
-
+                app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
+                android:layout_marginTop="8dp">
 
                 <EditText
                     android:id="@+id/et_reserve_address_detail"
@@ -228,7 +227,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/btn_address_search"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:background="@drawable/bg_edittext"
                     android:hint="@string/test_reserve_write_address_detail"

@@ -193,7 +193,8 @@
                 android:layout_height="match_parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
-                tools:listitem="@layout/layout_brf_list_item"/>
+                tools:listitem="@layout/layout_brf_list_item"
+                android:background="@color/white"/>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
