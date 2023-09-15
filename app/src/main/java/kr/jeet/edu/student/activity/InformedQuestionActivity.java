@@ -405,8 +405,7 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                //if (checked()) requestTestReserve();
-                checked();
+                if (checked()) requestTestReserve();
                 break;
         }
     }
@@ -419,7 +418,10 @@ public class InformedQuestionActivity extends BaseActivity {
             mRetrofitApi = RetrofitClient.getApiInterface();
             Call<BaseResponse> putDataToServer;
 
-            if (writeMode.equals(Constants.WRITE_EDIT)) putDataToServer = mRetrofitApi.updateLevelTest(request);
+            if (writeMode.equals(Constants.WRITE_EDIT)) {
+                request.seq = mInfo.seq;
+                putDataToServer = mRetrofitApi.updateLevelTest(request);
+            }
             else putDataToServer = mRetrofitApi.requestLevelTest(request);
 
             putDataToServer.enqueue(new Callback<BaseResponse>() {

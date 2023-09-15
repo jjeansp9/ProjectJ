@@ -38,6 +38,7 @@ import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import kr.jeet.edu.student.view.decoration.GridSpaceItemDecoration;
 import kr.jeet.edu.student.view.decoration.LastIndexDeleteDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -194,7 +195,6 @@ public class MainActivity extends BaseActivity {
         mContext = this;
         initAppbar();
         initView();
-        initData();
     }
 
     @Override
@@ -241,6 +241,8 @@ public class MainActivity extends BaseActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_menu);
         announceRecycler = (RecyclerView) findViewById(R.id.recycler_announcement);
+
+        initData();
 
         FlexboxLayoutManager fblManager = new FlexboxLayoutManager(mContext);
         fblManager.setFlexWrap(FlexWrap.WRAP);

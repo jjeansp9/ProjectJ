@@ -6,6 +6,9 @@ import android.os.Parcelable;
 import com.google.gson.annotations.SerializedName;
 
 public class LevelTestRequest implements Parcelable {
+    @SerializedName("seq")
+    public int seq;
+
     @SerializedName("memberSeq")
     public int memberSeq;
 
@@ -139,6 +142,7 @@ public class LevelTestRequest implements Parcelable {
     }
 
     protected LevelTestRequest(Parcel in) {
+        seq = in.readInt();
         memberSeq = in.readInt();
         name = in.readString();
         birth = in.readString();
@@ -204,6 +208,7 @@ public class LevelTestRequest implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(memberSeq);
+        dest.writeInt(seq);
         dest.writeString(name);
         dest.writeString(birth);
         dest.writeInt(sex);

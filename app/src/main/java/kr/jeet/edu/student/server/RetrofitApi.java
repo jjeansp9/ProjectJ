@@ -175,7 +175,7 @@ public interface RetrofitApi {
     Call<BaseResponse> requestLevelTest(@Body LevelTestRequest request);
 
     // 레벨테스트 수정
-    @PATCH("levelTest")
+    @POST("levelTest")
     Call<BaseResponse> updateLevelTest(@Body LevelTestRequest request);
 
     // 레벨 테스트 이력 조회
