@@ -138,6 +138,9 @@ public class LevelTestRequest implements Parcelable {
     @SerializedName("check4")
     public String check4;
 
+    @SerializedName("isSendNoti")
+    public String isSendNoti;
+
     public LevelTestRequest() {
     }
 
@@ -186,6 +189,7 @@ public class LevelTestRequest implements Parcelable {
         check2 = in.readString();
         check3 = in.readString();
         check4 = in.readString();
+        isSendNoti = in.readString();
     }
 
     public static final Creator<LevelTestRequest> CREATOR = new Creator<LevelTestRequest>() {
@@ -251,5 +255,6 @@ public class LevelTestRequest implements Parcelable {
         dest.writeString(check2);
         dest.writeString(check3);
         dest.writeString(check4);
+        dest.writeString(isSendNoti);
     }
 }

@@ -82,8 +82,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String _stGrade = "";
     private String _stReason = "";
 
-    private List<String> testTime;
-    private String strTestTime = "";
     Date _selectedDate;
     private int birthMinYear = 1950;
     private int birthMaxYear = 0;
@@ -102,6 +100,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private TestReserveData mInfo;
 
     private String writeMode = "";
+
+    private ArrayList<Integer> gradeIndex = new ArrayList<>();
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -240,7 +240,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _stGrade = Utils.getStr(mInfo.grade);
         mSpinnerGrade.setText(str);
 
-        mSpinnerGrade.setHeight(500);
+        mSpinnerGrade.setSpinnerPopupHeight(500);
 
         for(SchoolData info : DataManager.getInstance().getSchoolList()) {
             if(mInfo.scCode == info.scCode) {
@@ -342,8 +342,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             if (setDate){
                 if (selectedDate.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                     tv.setText(formattedDate);
-                    setTestTime();
-                    strTestTime = "";
+                    requestTestTime();
                     mSpinnerTestTime.setText("");
                     mSpinnerTestTime.show();
                 }else{
@@ -448,90 +447,28 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         mSpinnerTestTime.setSpinnerPopupHeight(500);
 
-        // 초등 index : 0, 중등 : 3, 고등 : 6
         mSpinnerTestTime.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())){
 
-                if (newItem.equals(new SpannableString("초등"))){
-                    strTestTime = testTime.get(newIndex + 1).toString();
-                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+                if (newIndex == gradeIndex.get(0)){
+                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
+                    else mSpinnerTestTime.setText("");
 
-                }else if (newItem.equals(new SpannableString("중등"))){
-                    strTestTime = testTime.get(newIndex + 1).toString();
-                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+                }else if (newIndex == gradeIndex.get(1)){
+                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
+                    else mSpinnerTestTime.setText("");
 
-                }else if (newItem.equals(new SpannableString("고등"))){
-                    strTestTime = testTime.get(newIndex + 1).toString();
-                    mSpinnerTestTime.setText(testTime.get(newIndex + 1));
+                }else if (newIndex == gradeIndex.get(2)){
+                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
+                    else mSpinnerTestTime.setText("");
                 }
+
             }else{
-                strTestTime = "";
                 mSpinnerTestTime.setText("");
             }
         });
 
-        if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())) setTestTime();
-    }
-
-    private void setTestTime(){
-//        ArrayList<SpannableString> testTime = new ArrayList<>();
-//
-//        int redColor;
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//            redColor = getResources().getColor(R.color.red, null);
-//        } else {
-//            redColor = getResources().getColor(R.color.red);
-//        }
-//
-//        SpannableString elementary = new SpannableString("초등");
-//        elementary.setSpan(new ForegroundColorSpan(redColor), 0, elementary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        SpannableString middleSchool = new SpannableString("중등");
-//        middleSchool.setSpan(new ForegroundColorSpan(redColor), 0, middleSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        SpannableString highSchool = new SpannableString("고등");
-//        highSchool.setSpan(new ForegroundColorSpan(redColor), 0, highSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
-//        String dateString = mTvReserveDate.getText().toString();
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-//        try {
-//            Date date = dateFormat.parse(dateString);
-//            Calendar calendar = Calendar.getInstance();
-//            if (date != null) calendar.setTime(date);
-//
-//            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-//
-//            if (dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.SATURDAY) {
-//                testTime.add(elementary);
-//                testTime.add(new SpannableString("평일 오후 05:00"));
-//                testTime.add(new SpannableString("평일 오후 07:00"));
-//                testTime.add(middleSchool);
-//                testTime.add(new SpannableString("평일 오후 05:00"));
-//                testTime.add(new SpannableString("평일 오후 07:00"));
-//                testTime.add(highSchool);
-//                testTime.add(new SpannableString("평일 오후 04:00"));
-//                testTime.add(new SpannableString("평일 오후 07:00"));
-//
-//            }else if (dayOfWeek == Calendar.SATURDAY){
-//                testTime.add(elementary);
-//                testTime.add(new SpannableString("토요일 오전 11:00"));
-//                testTime.add(new SpannableString("토요일 오후 01:00"));
-//
-//                testTime.add(middleSchool);
-//                testTime.add(new SpannableString("토요일 오전 11:00"));
-//                testTime.add(new SpannableString("토요일 오후 01:00"));
-//
-//                testTime.add(highSchool);
-//                testTime.add(new SpannableString("토요일 오후 03:00"));
-//                testTime.add(new SpannableString("토요일 오후 07:00"));
-//            }
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        mSpinnerTestTime.setItems(testTime);
-
-        requestTestTime();
+        if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())) requestTestTime();
     }
 
     private void setSchoolSpinner(){
@@ -599,6 +536,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         Utils.clearFocus(mEditList);
         Utils.hideKeyboard(mContext, mEditList);
 
+        String str = "";
+
         if (mGenderRbMale.isChecked()) gender = 1;
         else gender =2;
 
@@ -615,12 +554,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.parentPhoneNumber = mEtparentPhone.getText().toString(); // 학부모 연락처 [필수]
         request.parentName = mEtParentName.getText().toString(); // 학부모 성함 [필수]
         request.reason = _stReason; // 유입경로 [선택]
-        request.reservationDate = mTvReserveDate.getText().toString(); // 테스트예약일 [필수]
+        str = mTvReserveDate.getText().toString() + " " + mSpinnerTestTime.getText().toString();
+        request.reservationDate = str; // 테스트예약일 [필수]
         request.bigo = _ltcCode; // 캠퍼스 비고 [필수]
         request.bigoText = _ltcName; // 캠퍼스 비고(캠퍼스 이름) [필수]
         request.cashReceiptNumber = TextUtils.isEmpty(mEtCashReceipt.getText().toString()) ? "010-000-1234" : mEtCashReceipt.getText().toString(); // 현금영수증 (010-000-1234) [선택]
         //request.cashReceiptNumber = Utils.formatNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
-        // TODO 테스트시간 파라미터 추가되면 데이터 만들기
 
         LogMgr.i(TAG+ "putData","\n학생이름 : " + request.name
                 + "\n생년월일 : " + request.birth
@@ -718,7 +657,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             showDatePicker(mTvReserveDate, true, birthMinYear, birthMaxYear, false);
 
         }else{
-            // TODO : 체크리스트에 테스트시간 값도 입력여부 체크하기
             Intent intent = new Intent(mContext, InformedQuestionActivity.class);
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
             intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
@@ -729,17 +667,18 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
     }
 
+    ArrayList<SpannableString> testTimeList = new ArrayList<>();
+
     private void requestTestTime() {
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
                 @Override
                 public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
-
+                    if (testTimeList!=null && testTimeList.size() > 0) testTimeList.clear();
                     try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 ArrayList<TestTimeData> getData = response.body().data;
-                                ArrayList<SpannableString> testTimeList = new ArrayList<>();
 
                                 int redColor;
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -747,10 +686,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                 } else {
                                     redColor = getResources().getColor(R.color.red);
                                 }
-
-                                SpannableString elementary = createColoredSpan("초등", redColor);
-                                SpannableString middleSchool = createColoredSpan("중등", redColor);
-                                SpannableString highSchool = createColoredSpan("고등", redColor);
 
                                 LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
 
@@ -763,14 +698,23 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
-                                    addTestTimes(testTimeList, getData, redColor, dayOfWeek);
+                                    ArrayList<String> grades = new ArrayList<>();
+                                    for (TestTimeData item : getData) grades.add(item.grade);
+
+                                    int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
+
+                                    for (String grade : grades) {
+                                        SpannableString gradeSpan = createColoredSpan(grade, redColor);
+                                        testTimeList.add(gradeSpan);
+                                        int lastIndex = testTimeList.lastIndexOf(gradeSpan);
+                                        gradeIndex.add(lastIndex);
+                                        getTestTime(testTimeList, getData, grade, weekend);
+                                    }
+
                                     mSpinnerTestTime.setItems(testTimeList);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-
-
-                                mSpinnerTestTime.setItems(testTimeList);
 
                             }
                         } else {
@@ -796,24 +740,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         return spannableString;
     }
 
-    private void addTestTimes(ArrayList<SpannableString> testTimeList, ArrayList<TestTimeData> getData, int redColor, int dayOfWeek) {
-
-        ArrayList<String> grades = new ArrayList<>();
-        for (TestTimeData item : getData) grades.add(item.grade);
-
-        int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
-
-        for (String grade : grades) {
-            SpannableString gradeSpan = createColoredSpan(grade, redColor);
-            testTimeList.add(gradeSpan);
-            getTestTime(testTimeList, getData, grade, weekend);
-        }
-    }
-
     private void getTestTime(ArrayList<SpannableString> testTimeList, ArrayList<TestTimeData> getData, String grade, int weekend) {
         for (TestTimeData item : getData) {
             if (grade.equals(item.grade) && item.weekend == weekend) {
                 SpannableString timeSpan = new SpannableString(item.time);
+
+//                if (item.weekend == 0) timeSpan = new SpannableString("평일 "+ item.time);
+//                else timeSpan = new SpannableString("토요일 "+ item.time);
+
                 testTimeList.add(timeSpan);
             }
         }
