@@ -113,7 +113,6 @@ public class InformedQuestionActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informed_question);
         mContext = this;
-        initData();
         initView();
         initAppbar();
     }
@@ -172,6 +171,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
     @Override
     void initView() {
+        initData();
         findViewById(R.id.root_inform_question).setOnClickListener(this);
         findViewById(R.id.btn_informed_question_complete).setOnClickListener(this);
         //findViewById(R.id.btn_class_path_add).setOnClickListener(this);
@@ -296,14 +296,12 @@ public class InformedQuestionActivity extends BaseActivity {
         mEtLearningProc2.setText(Utils.getStr(mInfo.processEtc2));
         mEtLearningProc3.setText(Utils.getStr(mInfo.processEtc3));
 
-//        for (PrefAreaData item : mListArea){
-//            if (Utils.getStr(mInfo.study).contains(item.preference))
-//        }
+
         int count = 0;
         for (String item : mListArea) areaCheckList.add("");
         String[] parts = Utils.getStr(mInfo.study).split("\\^");
-        for (int i = 0; i < areaCheckList.size(); i++) {
-            if (mListArea.get(i).equals(parts[count])){
+        for (int i = 0; i < mListArea.size(); i++) {
+            if (count < parts.length && mListArea.get(i).equals(parts[count])){
                 areaCheckList.set(i, parts[count]);
                 count++;
             }
@@ -315,7 +313,7 @@ public class InformedQuestionActivity extends BaseActivity {
         for (String item : mListSchool) SchoolCheckList.add("");
         parts = Utils.getStr(mInfo.highSchool).split("\\^");
         for (int i = 0; i < SchoolCheckList.size(); i++) {
-            if (mListSchool.get(i).equals(parts[count])){
+            if (count < parts.length && mListSchool.get(i).equals(parts[count])) {
                 SchoolCheckList.set(i, parts[count]);
                 count++;
             }

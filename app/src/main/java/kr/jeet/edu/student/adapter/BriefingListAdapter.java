@@ -91,13 +91,19 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 drawable = R.drawable.bg_brf_state_normal;
             }
 
+            holder.tvCampus.setVisibility(View.VISIBLE);
+            holder.tvLocation.setVisibility(View.VISIBLE);
+            holder.tvRdCnt.setVisibility(View.VISIBLE);
+            holder.imgRdCnt.setVisibility(View.VISIBLE);
+
             holder.tvState.setBackgroundResource(drawable);
             holder.tvState.setText(cnt);
 
             holder.tvDate.setText(TextUtils.isEmpty(item.date) || TextUtils.isEmpty(item.ptTime) ? "" : Utils.formatDate(item.date, item.ptTime, false));
-            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
-            holder.tvLocation.setText(TextUtils.isEmpty(item.place) ? "" : item.place);
-            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
+            holder.tvTitle.setText(Utils.getStr(item.title));
+            holder.tvLocation.setText(Utils.getStr(item.place));
+            holder.tvCampus.setText(Utils.getStr(item.acaName));
+            holder.tvRdCnt.setText(Utils.getStr(String.valueOf(item.rdcnt)));
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
             layoutParams.guidePercent = 0.77f;
@@ -168,8 +174,8 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ConstraintLayout brfRoot;
         private Guideline guideline;
-        private ImageView imgBrf;
-        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus;
+        private ImageView imgBrf, imgRdCnt;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvRdCnt;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -182,6 +188,8 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             tvCampus = itemView.findViewById(R.id.tv_brf_campus);
             imgBrf = itemView.findViewById(R.id.img_brf);
             guideline = itemView.findViewById(R.id.guideline);
+            tvRdCnt = itemView.findViewById(R.id.tv_brf_rd_cnt);
+            imgRdCnt = itemView.findViewById(R.id.img_brf_rd_cnt);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();

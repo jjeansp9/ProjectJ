@@ -43,6 +43,8 @@ public class AnnouncementData implements Parcelable {
     public AnnouncementData(Parcel in) {
         readFromParcel(in);
     }
+    public AnnouncementData() {
+    }
 
     public static final Creator<AnnouncementData> CREATOR = new Creator<AnnouncementData>() {
         @Override

@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -231,6 +232,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         str = Utils.getStr(mInfo.grade)+"학년";
         _stGrade = Utils.getStr(mInfo.grade);
         mSpinnerGrade.setText(str);
+
+        mSpinnerGrade.setHeight(500);
 
         for(SchoolData info : DataManager.getInstance().getSchoolList()) {
             if(mInfo.scCode == info.scCode) {

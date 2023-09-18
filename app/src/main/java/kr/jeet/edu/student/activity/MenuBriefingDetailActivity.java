@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private final static String TAG = "BriefingDetailActivity";
 
-    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt;
+    private ImageView mImgRdCnt;
+    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt, mTvRdCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
     private RelativeLayout layoutStartReserve;
 
@@ -106,8 +108,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if (added) {
             intent.putExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, added);
-            setResult(RESULT_OK, intent);
+        }else{
+            intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         }
+        setResult(RESULT_OK, intent);
         finish();
     }
 
@@ -157,6 +161,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         mTvPersonnel = findViewById(R.id.tv_brf_detail_personnel);
         mTvContent = findViewById(R.id.tv_brf_detail_content);
         mTvCnt = findViewById(R.id.tv_brf_cnt);
+        mTvRdCnt = findViewById(R.id.tv_rd_cnt);
+        mImgRdCnt = findViewById(R.id.img_rd_cnt);
 
         mRecyclerViewImages = findViewById(R.id.recycler_brf_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_brf_file);
@@ -170,23 +176,24 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     private void initData() {
         if (mInfo != null) {
 
-            if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
-                new Thread(() -> {
-                    for(FileData data : mInfo.fileList) {
-                        String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
-                        LogMgr.w(data.saveName + " / " + mimeType);
-
-                        // mimeType is checked for null here.
-                        if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-                        else mFileList.add(data);
-                    }
-                }).start();
-            }
-            runOnUiThread(() -> {
-                setView();
-                if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
-                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
-            });
+//            if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
+//                new Thread(() -> {
+//                    for(FileData data : mInfo.fileList) {
+//                        String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+//                        LogMgr.w(data.saveName + " / " + mimeType);
+//
+//                        // mimeType is checked for null here.
+//                        if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
+//                        else mFileList.add(data);
+//                    }
+//                }).start();
+//            }
+//            runOnUiThread(() -> {
+//                setView();
+//                if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
+//                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
+//            });
+            requestBrfDetail(mInfo.seq);
         }else if(_currentSeq != -1) {
             requestBrfDetail(_currentSeq);
         }
@@ -194,20 +201,18 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private void setView(){
 
-        String str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;
-        mTvTitle.setText(str);
+        String str = "";
+        mTvTitle.setText(Utils.getStr(mInfo.title));
 
         str = TextUtils.isEmpty(mInfo.date) || TextUtils.isEmpty(mInfo.ptTime) ? "" : Utils.formatDate(mInfo.date, mInfo.ptTime, true);
         mTvDate.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.place) ? "" : mInfo.place;
-        mTvLoc.setText(str);
+        mTvLoc.setText(Utils.getStr(mInfo.place));
 
         str = mInfo.participantsCnt+"명";
         mTvPersonnel.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;
-        mTvContent.setText(str);
+        mTvContent.setText(Utils.getStr(mInfo.content));
 
         str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "" : "("+mInfo.reservationCnt+")";
         if (mInfo.reservationCnt < 1) {
@@ -217,6 +222,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             mTvCnt.setVisibility(View.VISIBLE);
             mTvCnt.setText(str);
         }
+
+        mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(mInfo.rdcnt)));
     }
 
     private void setImageRecycler(){

@@ -53,4 +53,6 @@ public class IntentParams {
 
     public final static String PARAM_ATTENDANCE_INFO = "attendanceInfo"; // Main에서 출석현황 클릭 시 전달
     public final static String PARAM_TEACHER_INFO = "teacherInfo";  // Main에서 지도강사 클릭 시 전달
+
+    public final static String PARAM_RD_CNT_ADD = "rdCntAdd";  // 게시글 조회수
 }

@@ -42,7 +42,6 @@
         android:layout_marginEnd="8dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:hint="설명회 날짜"
         android:textSize="@dimen/font_size_small"
         android:textColor="@color/font_color_default"/>
 
@@ -58,7 +57,6 @@
         android:layout_marginEnd="8dp"
         android:maxLines="1"
         android:ellipsize="end"
-        android:hint="설명회 타이틀"
         android:textColor="@color/font_color_default"
         android:textStyle="bold"
         android:textSize="@dimen/font_size_large"/>
@@ -71,34 +69,83 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         android:layout_marginEnd="8dp"
-        android:hint="캠퍼스"
         android:maxLines="1"
         android:ellipsize="end"
         android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size_small"/>
+        android:textSize="@dimen/font_size_small"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_brf_location"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
-        android:hint="설명회 장소"
         android:maxLines="1"
         android:textColor="@color/font_color_default"
         android:textSize="@dimen/font_size_small"
         app:layout_constraintBottom_toTopOf="@id/tv_announcement_date"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/tv_announcement_date"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginEnd="8dp"
+        android:textSize="@dimen/font_size_small"
+        android:textColor="@color/font_color_999"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/img_rd_cnt"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_rd_cnt"
+        app:layout_constraintTop_toTopOf="@+id/tv_rd_cnt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_announcement_date"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_rd_cnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_announcement_date"
+        app:layout_constraintStart_toEndOf="@+id/img_rd_cnt"
+        android:layout_marginStart="3dp"
+        android:textSize="@dimen/font_size_small"
+        android:textColor="@color/font_color_999"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/img_brf_rd_cnt"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:src="@drawable/ic_rd_cnt"
+        app:layout_constraintTop_toTopOf="@+id/tv_brf_location"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
+        app:layout_constraintStart_toEndOf="@+id/tv_brf_location"
+        android:layout_marginStart="8dp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_brf_rd_cnt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/tv_brf_location"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_brf_location"
+        app:layout_constraintStart_toEndOf="@+id/img_brf_rd_cnt"
+        android:layout_marginStart="3dp"
         android:textSize="@dimen/font_size_small"
         android:textColor="@color/font_color_999"
         android:maxLines="1"

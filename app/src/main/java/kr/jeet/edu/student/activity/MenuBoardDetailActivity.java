@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,7 +46,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     private String TAG = MenuBoardDetailActivity.class.getSimpleName();
 
-    private TextView mTvTitle, mTvName, mTvDate, mTvContent;
+    private ImageView mImgRdCnt;
+    private TextView mTvTitle, mTvName, mTvDate, mTvContent, mTvRdCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
     private BoardDetailImageListAdapter mImageAdapter;
     private BoardDetailFileListAdapter mFileAdapter;
@@ -117,12 +121,13 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 dataType = TYPE_SYSTEM;
                 LogMgr.e(TAG,"Event here1");
 
-            } else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
-                _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
-                dataType = TYPE_ANNOUNCEMENT_FROM_MAIN;
-                LogMgr.e(TAG, "Event here2");
             }
+//            else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
+//                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+//                _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
+//                dataType = TYPE_ANNOUNCEMENT_FROM_MAIN;
+//                LogMgr.e(TAG, "Event here2");
+//            }
 
             if (extraKey != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -176,6 +181,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
         mTvName = findViewById(R.id.tv_board_detail_name);
         mTvDate = findViewById(R.id.tv_board_detail_write_date);
         mTvContent = findViewById(R.id.tv_board_detail_content);
+        mTvRdCnt = findViewById(R.id.tv_rd_cnt);
+        mImgRdCnt = findViewById(R.id.img_rd_cnt);
 
         mRecyclerViewImages = findViewById(R.id.recycler_board_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_board_files);
@@ -187,26 +194,29 @@ public class MenuBoardDetailActivity extends BaseActivity {
     }
     private void initData() {
         if (_currentData != null) {
-            LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
-            mTvTitle.setText(_currentData.title); // 제목
-            mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
-            mTvDate.setText(_currentData.insertDate); // 작성날짜
-            mTvContent.setText(_currentData.content); // 내용
-
-            if(_currentData.fileList != null && _currentData.fileList.size() > 0) {
-
-                for(FileData data : _currentData.fileList) {
-                    String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
-                    LogMgr.w(data.saveName + " / " + mimeType);
-
-                    // mimeType is checked for null here.
-                    if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-                    else mFileList.add(data);
-
-                }
-            }
-            if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
-            if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
+//            LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
+//            mTvTitle.setText(_currentData.title); // 제목
+//            mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
+//            mTvDate.setText(_currentData.insertDate); // 작성날짜
+//            mTvContent.setText(_currentData.content); // 내용
+//
+//            if(_currentData.fileList != null && _currentData.fileList.size() > 0) {
+//
+//                for(FileData data : _currentData.fileList) {
+//                    String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+//                    LogMgr.w(data.saveName + " / " + mimeType);
+//
+//                    // mimeType is checked for null here.
+//                    if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
+//                    else mFileList.add(data);
+//
+//                }
+//            }
+//            if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
+//            if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
+            mImgRdCnt.setVisibility(View.VISIBLE);
+            mTvRdCnt.setVisibility(View.VISIBLE);
+            requestNoticeDetail(_currentData.seq);
 
         }else if (dataType == TYPE_PUSH){
             if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) requestNoticeDetail(_pushData.connSeq);
@@ -218,6 +228,30 @@ public class MenuBoardDetailActivity extends BaseActivity {
         }else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
             requestNoticeDetail(_currentSeq);
         }
+    }
+
+    private void setView(){
+        LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
+        mTvTitle.setText(_currentData.title); // 제목
+        mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
+        mTvDate.setText(_currentData.insertDate); // 작성날짜
+        mTvContent.setText(_currentData.content); // 내용
+        mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(_currentData.rdcnt)));
+
+        if(_currentData.fileList != null && _currentData.fileList.size() > 0) {
+
+            for(FileData data : _currentData.fileList) {
+                String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+                LogMgr.w(data.saveName + " / " + mimeType);
+
+                // mimeType is checked for null here.
+                if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
+                else mFileList.add(data);
+
+            }
+        }
+        if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
+        if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
     }
 
     private void setImageRecycler(){
@@ -279,7 +313,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 AnnouncementData data = response.body().data;
                                 if (data != null){
                                     _currentData = data;
-                                    initData();
+                                    //initData();
+                                    setView();
 
                                 }else LogMgr.e(TAG+" requestNoticeDetail is null");
                             }
@@ -381,5 +416,14 @@ public class MenuBoardDetailActivity extends BaseActivity {
             }
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
+        setResult(RESULT_OK, intent);
+        finish();
+        super.onBackPressed();
     }
 }

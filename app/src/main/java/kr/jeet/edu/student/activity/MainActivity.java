@@ -117,6 +117,8 @@ public class MainActivity extends BaseActivity {
     private String acaCode = "";
     private PushMessage _pushMessage;
 
+    private boolean isMain = true;
+
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -185,7 +187,17 @@ public class MainActivity extends BaseActivity {
     };
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-        if (result.getResultCode() != RESULT_CANCELED) mHandler.sendEmptyMessage(CMD_GET_ACALIST);
+        Intent intent = result.getData();
+        if (intent != null && result.getResultCode() != RESULT_CANCELED) {
+            if(intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
+                isMain = true;
+                announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
+                announceRecycler.setAdapter(announceAdapter);
+                boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
+                if(added) requestBoardList(acaCode);
+            }
+            //mHandler.sendEmptyMessage(CMD_GET_ACALIST);
+        }
     });
 
     @Override
@@ -257,7 +269,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void setAnnounceRecycler(){
-        announceAdapter = new AnnouncementListAdapter(mContext, announceList, true, this::startBoardDetailActivity);
+        announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
         announceRecycler.setAdapter(announceAdapter);
 
         Drawable dividerDrawable = ContextCompat.getDrawable(mContext, R.drawable.bg_line);
@@ -270,7 +282,7 @@ public class MainActivity extends BaseActivity {
             Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-            startActivity(targetIntent);
+            resultLauncher.launch(targetIntent);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -278,7 +290,8 @@ public class MainActivity extends BaseActivity {
     private void startMenuActivity(MainMenuItemData clickItem){
         if(clickItem.getTargetClass() != null) {
             Intent targetIntent = new Intent(mContext, clickItem.getTargetClass());
-            startActivity(targetIntent);
+            //startActivity(targetIntent);
+            resultLauncher.launch(targetIntent);
         }else{
             LogMgr.d("targetIntent is null at " + getString(clickItem.getTitleRes()));
         }
@@ -433,7 +446,7 @@ public class MainActivity extends BaseActivity {
         if (targetActivity != null) {
             Intent noticeIntent = new Intent(this, targetActivity);
             noticeIntent.putExtras(intent);
-            startActivity(noticeIntent);
+            resultLauncher.launch(noticeIntent);
         }
     }
 
@@ -731,12 +744,21 @@ public class MainActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()) {
                             List<AnnouncementData> getData = new ArrayList<>();
+
                             if (announceList.size() > 0) announceList.clear();
 
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
-                                    for (int i = 0; i < 3; i++) announceList.add(getData.get(i));
+                                    for (int i = 0; i < 3; i++) {
+                                        AnnouncementData item = new AnnouncementData();
+                                        item.seq = getData.get(i).seq;
+                                        item.rdcnt = getData.get(i).rdcnt;
+                                        item.title = getData.get(i).title;
+                                        item.insertDate = getData.get(i).insertDate;
+                                        item.fileList = getData.get(i).fileList;
+                                        announceList.add(item);
+                                    }
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");
@@ -748,6 +770,7 @@ public class MainActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
                     mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
+                    LogMgr.e(TAG, "ListData is null4: " +announceList.get(0).insertDate);
                     announceAdapter.notifyDataSetChanged();
 
                     mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
@@ -781,8 +804,8 @@ public class MainActivity extends BaseActivity {
                                 String str = getData.data.get(0).sfName;
                                 teacherCnt = getData.data.size();
 
-                                if (getData.data.size() == 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님 〉");
-                                else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님 〉");
+                                if (teacherCnt <= 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님");
+                                else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님");
                             }
 
                             LogMgr.e(TAG, "TeacherCnt: " + teacherCnt);

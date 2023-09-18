@@ -77,7 +77,10 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
                 if(added) requestBrfList(_acaCode);
             }
-
+            else if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
+                boolean rdCntAdd = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
+                if(rdCntAdd) requestBrfList(_acaCode);
+            }
         }
     });
 

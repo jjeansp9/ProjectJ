@@ -64,6 +64,17 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private String _acaName = "";
     String _userType = "";
 
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        LogMgr.w("result =" + result);
+        Intent intent = result.getData();
+        if(result.getResultCode() != RESULT_CANCELED) {
+            if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
+                boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
+                if(added) requestBoardList(_acaCode);
+            }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,7 +145,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
             Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-            startActivity(targetIntent);
+            resultLauncher.launch(targetIntent);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -216,5 +227,14 @@ public class MenuAnnouncementActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
+        setResult(RESULT_OK, intent);
+        finish();
+        super.onBackPressed();
     }
 }

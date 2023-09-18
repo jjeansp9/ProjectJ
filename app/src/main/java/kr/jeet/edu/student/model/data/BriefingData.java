@@ -17,6 +17,7 @@ public class BriefingData implements Parcelable {
     public String place; // 장소
     public int participantsCnt; // 참가인원
     public int reservationCnt; // 현재예약수
+    public int rdcnt; // 조회수
     public String fileId; // 파일 ID
     public List<FileData> fileList; // 파일목록
 
@@ -34,6 +35,7 @@ public class BriefingData implements Parcelable {
         place = in.readString();
         participantsCnt = in.readInt();
         reservationCnt = in.readInt();
+        rdcnt = in.readInt();
         fileId = in.readString();
         fileList = in.createTypedArrayList(FileData.CREATOR);
     }
@@ -68,6 +70,7 @@ public class BriefingData implements Parcelable {
         dest.writeString(place);
         dest.writeInt(participantsCnt);
         dest.writeInt(reservationCnt);
+        dest.writeInt(rdcnt);
         dest.writeString(fileId);
         dest.writeTypedList(fileList);
     }

@@ -63,16 +63,28 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AnnouncementData item = mList.get(position);
         try{
-            if (isMain) holder.brfRoot.setForeground(null);
+            LogMgr.e("isMain: " + isMain);
+            if (isMain) {
+                holder.brfRoot.setForeground(null);
+                holder.tvRdCnt.setVisibility(View.GONE);
+                holder.imgRdCnt.setVisibility(View.GONE);
+            }else{
+                holder.tvRdCnt.setVisibility(View.VISIBLE);
+                holder.imgRdCnt.setVisibility(View.VISIBLE);
+                holder.tvCampus.setVisibility(View.VISIBLE);
+                holder.tvLocation.setVisibility(View.VISIBLE);
+
+                holder.tvCampus.setText(Utils.getStr(item.acaName));
+                holder.tvLocation.setText(Utils.getStr(item.memberResponseVO.name));
+            }
 
             holder.tvState.setVisibility(View.GONE);
             holder.tvDate.setVisibility(View.GONE);
             holder.tvAnnouncementDate.setVisibility(View.VISIBLE);
 
-            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
-            holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
-            holder.tvLocation.setText(TextUtils.isEmpty(item.memberResponseVO.name) ? "" : item.memberResponseVO.name);
-            holder.tvAnnouncementDate.setText(TextUtils.isEmpty(item.insertDate) ? "" : item.insertDate);
+            holder.tvTitle.setText(Utils.getStr(item.title));
+            holder.tvAnnouncementDate.setText(Utils.getStr(item.insertDate));
+            holder.tvRdCnt.setText(Utils.getStr(Utils.decimalFormat(item.rdcnt)));
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
             layoutParams.guidePercent = 0.70f;
@@ -144,8 +156,8 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ConstraintLayout brfRoot;
         private Guideline guideline;
-        private ImageView imgBrf;
-        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvAnnouncementDate;
+        private ImageView imgBrf, imgRdCnt;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvAnnouncementDate, tvRdCnt;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -159,6 +171,8 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             imgBrf = itemView.findViewById(R.id.img_brf);
             guideline = itemView.findViewById(R.id.guideline);
             tvAnnouncementDate = itemView.findViewById(R.id.tv_announcement_date);
+            tvRdCnt = itemView.findViewById(R.id.tv_rd_cnt);
+            imgRdCnt = itemView.findViewById(R.id.img_rd_cnt);
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();
