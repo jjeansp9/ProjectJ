@@ -36,6 +36,7 @@ import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TestReserveNoticeResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -181,6 +182,10 @@ public interface RetrofitApi {
     // 레벨 테스트 이력 조회
     @GET("levelTests")
     Call<TestReserveListResponse> getTestReserveListResponse(@Query("memberSeq") int memberSeq, @Query("ltcCode") int ltcCode, @Query("lastSeq") int lastSeq);
+
+    // 레벨 테스트 테스트시간 조회
+    @GET("levelTest/testTimes")
+    Call<TestTimeResponse> getTestTime();
 
     // 레벨테스트 신규등록 공지사항
     @GET("policy/leveltest/notice")

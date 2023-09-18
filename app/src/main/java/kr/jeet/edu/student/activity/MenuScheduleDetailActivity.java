@@ -98,7 +98,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;
         tvTitle.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.targetCode) ? "" : "["+mInfo.targetCode +"]";
+        str = TextUtils.isEmpty(mInfo.target) ? "" : "["+mInfo.target +"]";
         viewVisibility(tvTarget, str);
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;

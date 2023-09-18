@@ -88,9 +88,9 @@ public class ScheduleListAdapter extends RecyclerView.Adapter<ScheduleListAdapte
         holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
         holder.tvCampus.setText(TextUtils.isEmpty(item.acaName) ? "" : item.acaName);
 
-        String str = TextUtils.isEmpty(item.targetCode) ? "" : "["+item.targetCode +"]";
+        String str = TextUtils.isEmpty(item.target) ? "" : "["+item.target +"]";
 
-        if (!TextUtils.isEmpty(item.targetCode)){
+        if (!TextUtils.isEmpty(item.target)){
             holder.tvTarget.setText(str);
             holder.tvTarget.setVisibility(View.VISIBLE);
         }

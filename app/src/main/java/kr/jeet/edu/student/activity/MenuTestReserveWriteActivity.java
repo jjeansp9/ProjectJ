@@ -49,12 +49,19 @@ import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
+import kr.jeet.edu.student.model.response.TestReserveListResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
+import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.dialog.SearchAddressDialog;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuTestReserveWriteActivity extends BaseActivity {
 
@@ -445,15 +452,15 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerTestTime.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())){
 
-                if (newIndex == 0){
+                if (newItem.equals(new SpannableString("초등"))){
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
 
-                }else if (newIndex == 3){
+                }else if (newItem.equals(new SpannableString("중등"))){
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
 
-                }else if (newIndex == 6){
+                }else if (newItem.equals(new SpannableString("고등"))){
                     strTestTime = testTime.get(newIndex + 1).toString();
                     mSpinnerTestTime.setText(testTime.get(newIndex + 1));
                 }
@@ -467,62 +474,64 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     }
 
     private void setTestTime(){
-        ArrayList<SpannableString> testTime = new ArrayList<>();
+//        ArrayList<SpannableString> testTime = new ArrayList<>();
+//
+//        int redColor;
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            redColor = getResources().getColor(R.color.red, null);
+//        } else {
+//            redColor = getResources().getColor(R.color.red);
+//        }
+//
+//        SpannableString elementary = new SpannableString("초등");
+//        elementary.setSpan(new ForegroundColorSpan(redColor), 0, elementary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        SpannableString middleSchool = new SpannableString("중등");
+//        middleSchool.setSpan(new ForegroundColorSpan(redColor), 0, middleSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//        SpannableString highSchool = new SpannableString("고등");
+//        highSchool.setSpan(new ForegroundColorSpan(redColor), 0, highSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
+//        String dateString = mTvReserveDate.getText().toString();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+//        try {
+//            Date date = dateFormat.parse(dateString);
+//            Calendar calendar = Calendar.getInstance();
+//            if (date != null) calendar.setTime(date);
+//
+//            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+//
+//            if (dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.SATURDAY) {
+//                testTime.add(elementary);
+//                testTime.add(new SpannableString("평일 오후 05:00"));
+//                testTime.add(new SpannableString("평일 오후 07:00"));
+//                testTime.add(middleSchool);
+//                testTime.add(new SpannableString("평일 오후 05:00"));
+//                testTime.add(new SpannableString("평일 오후 07:00"));
+//                testTime.add(highSchool);
+//                testTime.add(new SpannableString("평일 오후 04:00"));
+//                testTime.add(new SpannableString("평일 오후 07:00"));
+//
+//            }else if (dayOfWeek == Calendar.SATURDAY){
+//                testTime.add(elementary);
+//                testTime.add(new SpannableString("토요일 오전 11:00"));
+//                testTime.add(new SpannableString("토요일 오후 01:00"));
+//
+//                testTime.add(middleSchool);
+//                testTime.add(new SpannableString("토요일 오전 11:00"));
+//                testTime.add(new SpannableString("토요일 오후 01:00"));
+//
+//                testTime.add(highSchool);
+//                testTime.add(new SpannableString("토요일 오후 03:00"));
+//                testTime.add(new SpannableString("토요일 오후 07:00"));
+//            }
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        mSpinnerTestTime.setItems(testTime);
 
-        int redColor;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            redColor = getResources().getColor(R.color.red, null);
-        } else {
-            redColor = getResources().getColor(R.color.red);
-        }
-
-        SpannableString elementary = new SpannableString("초등");
-        elementary.setSpan(new ForegroundColorSpan(redColor), 0, elementary.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        SpannableString middleSchool = new SpannableString("중등");
-        middleSchool.setSpan(new ForegroundColorSpan(redColor), 0, middleSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        SpannableString highSchool = new SpannableString("고등");
-        highSchool.setSpan(new ForegroundColorSpan(redColor), 0, highSchool.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
-        String dateString = mTvReserveDate.getText().toString();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-        try {
-            Date date = dateFormat.parse(dateString);
-            Calendar calendar = Calendar.getInstance();
-            if (date != null) calendar.setTime(date);
-
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-            if (dayOfWeek != Calendar.SUNDAY && dayOfWeek != Calendar.SATURDAY) {
-                testTime.add(elementary);
-                testTime.add(new SpannableString("평일 오후 05:00"));
-                testTime.add(new SpannableString("평일 오후 07:00"));
-                testTime.add(middleSchool);
-                testTime.add(new SpannableString("평일 오후 05:00"));
-                testTime.add(new SpannableString("평일 오후 07:00"));
-                testTime.add(highSchool);
-                testTime.add(new SpannableString("평일 오후 04:00"));
-                testTime.add(new SpannableString("평일 오후 07:00"));
-
-            }else if (dayOfWeek == Calendar.SATURDAY){
-                testTime.add(elementary);
-                testTime.add(new SpannableString("토요일 오전 11:00"));
-                testTime.add(new SpannableString("토요일 오후 01:00"));
-
-                testTime.add(middleSchool);
-                testTime.add(new SpannableString("토요일 오전 11:00"));
-                testTime.add(new SpannableString("토요일 오후 01:00"));
-
-                testTime.add(highSchool);
-                testTime.add(new SpannableString("토요일 오후 03:00"));
-                testTime.add(new SpannableString("토요일 오후 07:00"));
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        mSpinnerTestTime.setItems(testTime);
+        requestTestTime();
     }
 
     private void setSchoolSpinner(){
@@ -717,6 +726,96 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
             }
             resultLauncher.launch(intent);
+        }
+    }
+
+    private void requestTestTime() {
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
+                @Override
+                public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
+
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                ArrayList<TestTimeData> getData = response.body().data;
+                                ArrayList<SpannableString> testTimeList = new ArrayList<>();
+
+                                int redColor;
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                    redColor = getResources().getColor(R.color.red, null);
+                                } else {
+                                    redColor = getResources().getColor(R.color.red);
+                                }
+
+                                SpannableString elementary = createColoredSpan("초등", redColor);
+                                SpannableString middleSchool = createColoredSpan("중등", redColor);
+                                SpannableString highSchool = createColoredSpan("고등", redColor);
+
+                                LogMgr.i(TAG, "reserveDate : " + mTvReserveDate.getText().toString());
+
+                                String dateString = mTvReserveDate.getText().toString();
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+                                try {
+                                    Date date = dateFormat.parse(dateString);
+                                    Calendar calendar = Calendar.getInstance();
+                                    if (date != null) calendar.setTime(date);
+
+                                    int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+                                    addTestTimes(testTimeList, getData, redColor, dayOfWeek);
+                                    mSpinnerTestTime.setItems(testTimeList);
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                                mSpinnerTestTime.setItems(testTimeList);
+
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TestTimeResponse> call, Throwable t) {
+
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private SpannableString createColoredSpan(String text, int color) {
+        SpannableString spannableString = new SpannableString(text);
+        spannableString.setSpan(new ForegroundColorSpan(color), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+    private void addTestTimes(ArrayList<SpannableString> testTimeList, ArrayList<TestTimeData> getData, int redColor, int dayOfWeek) {
+
+        ArrayList<String> grades = new ArrayList<>();
+        for (TestTimeData item : getData) grades.add(item.grade);
+
+        int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
+
+        for (String grade : grades) {
+            SpannableString gradeSpan = createColoredSpan(grade, redColor);
+            testTimeList.add(gradeSpan);
+            getTestTime(testTimeList, getData, grade, weekend);
+        }
+    }
+
+    private void getTestTime(ArrayList<SpannableString> testTimeList, ArrayList<TestTimeData> getData, String grade, int weekend) {
+        for (TestTimeData item : getData) {
+            if (grade.equals(item.grade) && item.weekend == weekend) {
+                SpannableString timeSpan = new SpannableString(item.time);
+                testTimeList.add(timeSpan);
+            }
         }
     }
 
