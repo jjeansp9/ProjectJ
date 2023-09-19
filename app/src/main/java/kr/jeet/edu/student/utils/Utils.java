@@ -379,6 +379,7 @@ public class Utils {
 
     /**
     * 현재날짜 가져오기
+    * pattern : 날짜 형식 입력 ex) "yyyy.MM.dd HH:ss"
     * */
     public static String currentDate(String pattern){
         Date currentDate = new Date(); // 현재 날짜 가져오기

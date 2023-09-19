@@ -3,18 +3,11 @@ package kr.jeet.edu.student.model.data;
 import com.google.gson.annotations.SerializedName;
 
 public class TuitionData {
-    @SerializedName("acaName")
-    public String acaName;
+    public String acaName;    // 캠퍼스명
+    public String clsName;    // 학급명
+    public String payment;    // 금액
+    public String accountNO;  // 가상 계좌번호
+    public String gubun;      // 수강료 구분
+    public String payDate;    // 수강 날짜
 
-    @SerializedName("clsName")
-    public String clsName;
-
-    @SerializedName("payment")
-    public String payment;
-
-    @SerializedName("accountNO")
-    public String accountNO;
-
-    @SerializedName("gubun")
-    public String gubun;
 }

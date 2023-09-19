@@ -10,7 +10,8 @@ public class ScheduleData implements Parcelable {
     public int seq;          // 글 seq
     public String title;     // 제목
     public String content;   // 내용
-    public String target;    // 대상
+    public String target;    // 부서
+    public String targetCode;    // 부서 코드
     public String acaCode;   // 캠퍼스 코드
     public String acaName;   // 캠퍼스 명
     public int year;         // 년
@@ -26,6 +27,7 @@ public class ScheduleData implements Parcelable {
         title = in.readString();
         content = in.readString();
         target = in.readString();
+        targetCode = in.readString();
         acaCode = in.readString();
         acaName = in.readString();
         year = in.readInt();
@@ -59,6 +61,7 @@ public class ScheduleData implements Parcelable {
         dest.writeString(title);
         dest.writeString(content);
         dest.writeString(target);
+        dest.writeString(targetCode);
         dest.writeString(acaCode);
         dest.writeString(acaName);
         dest.writeInt(year);

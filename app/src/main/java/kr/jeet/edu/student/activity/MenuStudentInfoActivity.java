@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -74,10 +73,10 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private final String TAG = "studentInfo Activity";
 
     private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum, mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty;
-    private ImageView mImgStuProfile, imgBack, imgNext;
+    private ImageView mImgStuProfile;
 
-    private RecyclerView mRecyclerView;
-    private TuitionListAdapter mAdapter;
+    private RecyclerView mRecyclerTuition, mRecyclerBookPay;
+    private TuitionListAdapter mTuitionAdapter, mBookPayAdapter;
     private RetrofitApi mRetrofitApi;
     private MaterialCalendarView _calendarView;
     private ChipGroup chipGroupLegend;  //범례
@@ -87,7 +86,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
     String strMonth = "";
     private SimpleDateFormat yearFormat, monthFormat;
 
-    private ArrayList<TuitionData> mList = new ArrayList<>();
+    private ArrayList<TuitionData> mTuitionList = new ArrayList<>();
+    private ArrayList<TuitionData> mBookPayList = new ArrayList<>();
 
     private String _userType = "";
     private String _stName = "";
@@ -162,11 +162,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mList != null && mList.size() > 0) {
-            LogMgr.e("requestTuitionList Event");
-            requestTuitionList(currentDate);
-        }
+        requestTuitionList(currentDate);
     }
 
     private void initData(){
@@ -211,13 +207,13 @@ public class MenuStudentInfoActivity extends BaseActivity {
     @Override
     void initView() {
         findViewById(R.id.btn_consultation_request).setOnClickListener(this);
-        findViewById(R.id.layout_year_month).setOnClickListener(this);
-        findViewById(R.id.img_tuition_back).setOnClickListener(this);
-        findViewById(R.id.img_tuition_next).setOnClickListener(this);
+//        findViewById(R.id.layout_year_month).setOnClickListener(this);
+//        findViewById(R.id.img_tuition_back).setOnClickListener(this);
+//        findViewById(R.id.img_tuition_next).setOnClickListener(this);
 
-        mTvTotalPayment = findViewById(R.id.tv_total_payment);
-        mTvYear = findViewById(R.id.tv_year);
-        mTvMonth = findViewById(R.id.tv_month);
+//        mTvTotalPayment = findViewById(R.id.tv_total_payment);
+//        mTvYear = findViewById(R.id.tv_year);
+//        mTvMonth = findViewById(R.id.tv_month);
         mTvStuName = findViewById(R.id.tv_stu_info_name);
         mTvStuBirth = findViewById(R.id.tv_stu_info_birth);
         mTvStuCampus = findViewById(R.id.tv_stu_info_campus);
@@ -229,21 +225,22 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
-        imgBack = findViewById(R.id.img_tuition_back);
-        imgNext = findViewById(R.id.img_tuition_next);
 
         strYear = currentYear + getString(R.string.year);
         strMonth = currentMonth + getString(R.string.month);
 
-        mTvYear.setText(strYear);
-        mTvMonth.setText(strMonth);
+//        mTvYear.setText(strYear);
+//        mTvMonth.setText(strMonth);
 
         requestMemberInfo(_stuSeq, _stCode);
 
-        mRecyclerView = findViewById(R.id.recycler_tuition);
-        mAdapter = new TuitionListAdapter(mContext, mList, this::startWebView);
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+        mRecyclerTuition = findViewById(R.id.recycler_tuition);
+        mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
+        mRecyclerTuition.setAdapter(mTuitionAdapter);
+
+        mRecyclerBookPay = findViewById(R.id.recycler_book_pay);
+        mBookPayAdapter = new TuitionListAdapter(mContext, mBookPayList, this::startWebView);
+        mRecyclerBookPay.setAdapter(mBookPayAdapter);
 
         setCalendar();
         initChipGroup();
@@ -379,17 +376,17 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 startActivity(new Intent(mContext, ConsultationRequestActivity.class));
                 break;
 
-            case R.id.layout_year_month:
-                Utils.yearMonthPicker(mContext, (month, year) -> selectYearMonth(year, month+1), Integer.parseInt(currentYear), Integer.parseInt(currentMonth)-1);
-                break;
-
-            case R.id.img_tuition_back:
-                nextOrPrevious(SUBTRACT, PREVIOUS);
-                break;
-
-            case R.id.img_tuition_next:
-                nextOrPrevious(ADD, NEXT);
-                break;
+//            case R.id.layout_year_month:
+//                Utils.yearMonthPicker(mContext, (month, year) -> selectYearMonth(year, month+1), Integer.parseInt(currentYear), Integer.parseInt(currentMonth)-1);
+//                break;
+//
+//            case R.id.img_tuition_back:
+//                nextOrPrevious(SUBTRACT, PREVIOUS);
+//                break;
+//
+//            case R.id.img_tuition_next:
+//                nextOrPrevious(ADD, NEXT);
+//                break;
         }
     }
 
@@ -445,10 +442,11 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         if (RetrofitClient.getInstance() != null){
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getTuitionList(yearMonth, _stCode).enqueue(new Callback<TuitionResponse>() {
+            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
                 @Override
                 public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
-                    if (mList != null && mList.size() > 0) mList.clear();
+                    if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
+                    if (mBookPayList != null && mBookPayList.size() > 0) mBookPayList.clear();
                     try {
                         if (response.isSuccessful()) {
 
@@ -462,16 +460,16 @@ public class MenuStudentInfoActivity extends BaseActivity {
                                         int payment = Integer.parseInt(data.payment);
                                         addPayment += payment;
                                         data.payment = Utils.decimalFormat(payment);
-                                        mList.add(data);
+                                        mTuitionList.add(data);
 
                                     } catch (NumberFormatException e) {
                                         LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);
                                     }
                                 }
-                                LogMgr.e("mListSize", mList.size()+"");
+                                LogMgr.e("mListSize", mTuitionList.size()+"");
 
                                 String totalPayment = Utils.decimalFormat(addPayment) + getString(R.string.won);
-                                mTvTotalPayment.setText(totalPayment);
+                                //mTvTotalPayment.setText(totalPayment);
 
                             } else {
                                 LogMgr.e(TAG, "Response or ListData is null");
@@ -482,14 +480,14 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTuitionList() Exception: ", e.getMessage());
                     }
-                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
-                    mTvTuitionEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
                 }
 
                 @Override
                 public void onFailure(Call<TuitionResponse> call, Throwable t) {
-                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
-                    mTvTuitionEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
                     try {
                         LogMgr.e(TAG, "requestTuitionList() onFailure >> " + t.getMessage());
                     } catch (Exception e) {
