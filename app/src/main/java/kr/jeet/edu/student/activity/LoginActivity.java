@@ -40,8 +40,6 @@ public class LoginActivity extends BaseActivity {
 
     private String TAG = LoginActivity.class.getSimpleName();
 
-    private LinearLayout loginRoot;
-
     private EditText mEditId, mEditPw;
     private CheckBox mAutoLoginCb;
     private RetrofitApi mRetrofitApi;
@@ -97,8 +95,6 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.btn_google).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.checkbox_text).setOnClickListener(this);
-
-        loginRoot = findViewById(R.id.login_root);
 
         mAutoLoginCb = (CheckBox) findViewById(R.id.checkbox_login);
         mAutoLoginCb.setChecked(PreferenceUtil.getAutoLogin(mContext));

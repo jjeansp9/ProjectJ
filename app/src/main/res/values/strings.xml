@@ -207,6 +207,7 @@
     <string name="menu_stu_info_tuition_empty">미납 내역이 없습니다</string>
     <string name="menu_stu_info_impossible_sel_previous">1999년 이전의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_impossible_sel_next">2099년 이후의 날짜는 선택이 불가능합니다</string>
+    <string name="menu_stu_info_attendance">출석부</string>
     <string name="won">원</string>
     <string name="year">년</string>
     <string name="month">월</string>
@@ -229,7 +230,8 @@
     <string name="parent_phone_empty">부모님 연락처를 입력해주세요.</string>
     <string name="phone_empty">학생 전화번호를 입력해주세요.</string>
     <string name="parent_name_empty">부모님 성함을 입력해주세요.</string>
-    <string name="reservation_date_empty">테스트 예약일을 입력해주세요.</string>
+    <string name="reservation_date_empty">테스트 예약일을 선택해주세요.</string>
+    <string name="reservation_time_empty">테스트 시간을 선택해주세요.</string>
     <string name="bigo_empty">캠퍼스 비고를 입력해주세요.</string>
     <string name="address_empty">주소를 입력해주세요.</string>
     <string name="address_sub_empty">상세주소를 입력해주세요.</string>

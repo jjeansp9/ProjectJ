@@ -57,7 +57,7 @@
     <dimen name="informed_question_margin_top">12dp</dimen>
     <dimen name="informed_question_sub_title_margin_top">24dp</dimen>
 
-    <dimen name="test_reserve_detail_item_margin">8dp</dimen>
+    <dimen name="test_reserve_detail_item_margin">12dp</dimen>
     <dimen name="test_reserve_detail_item_title_margin">4dp</dimen>
 
     <dimen name="line_red_margin_horizontal">20dp</dimen>

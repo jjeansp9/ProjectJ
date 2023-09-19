@@ -98,9 +98,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private SearchAddressDialog mDialog = null;
 
     private TestReserveData mInfo;
-
     private String writeMode = "";
-
     private ArrayList<Integer> gradeIndex = new ArrayList<>();
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -114,6 +112,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
             }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+                intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -240,8 +239,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _stGrade = Utils.getStr(mInfo.grade);
         mSpinnerGrade.setText(str);
 
-        mSpinnerGrade.setSpinnerPopupHeight(500);
-
         for(SchoolData info : DataManager.getInstance().getSchoolList()) {
             if(mInfo.scCode == info.scCode) {
                 mSpinnerSchool.setText(Utils.getStr(info.scName));
@@ -261,9 +258,21 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
         _ltcCode = Utils.getStr(mInfo.bigo);
         _ltcName = Utils.getStr(mInfo.bigoText);
-        mTvReserveDate.setText(Utils.getStr(mInfo.reservationDate));
-        //mSpinnerTestTime.setText(Utils.getStr(mInfo));
 
+        String[] dateTimeParts = mInfo.reservationDate.split(" ");
+
+        String date = "";
+        String time = "";
+
+        if (dateTimeParts.length == 1) {
+            date = dateTimeParts[0]; // 날짜
+
+        } else if (dateTimeParts.length > 1){
+            date = dateTimeParts[0]; // 날짜
+            time = dateTimeParts[1]; // 시간
+        }
+        mTvReserveDate.setText(Utils.getStr(date)); // yyyy-MM-dd
+        mSpinnerTestTime.setText(Utils.getStr(time)); // HH:mm
     }
 
     @Override
@@ -533,8 +542,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     }
 
     private void startQuestionActivity(){
-        Utils.clearFocus(mEditList);
-        Utils.hideKeyboard(mContext, mEditList);
 
         String str = "";
 
@@ -613,10 +620,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.grade.equals("")) {
             Toast.makeText(mContext, R.string.grade_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerGrade.setSpinnerPopupHeight(600);
             if (mSpinnerGrade != null) mSpinnerGrade.show();
 
         } else if (mSpinnerSchool.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.school_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerSchool.setSpinnerPopupHeight(600);
             if (mSpinnerSchool != null) mSpinnerSchool.show();
 
         } else if (request.phoneNumber.equals("")) {
@@ -646,15 +655,22 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.reason.equals("")) {
             Toast.makeText(mContext, R.string.reason_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerFunnel.setSpinnerPopupHeight(500);
             if (mSpinnerFunnel != null) mSpinnerFunnel.show();
 
         } else if (request.bigo.equals("")) {
             Toast.makeText(mContext, R.string.bigo_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerCampus.setSpinnerPopupHeight(500);
             if (mSpinnerCampus != null) mSpinnerCampus.show();
 
-        } else if (request.reservationDate.equals("")) {
+        } else if (mTvReserveDate.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.reservation_date_empty, Toast.LENGTH_SHORT).show();
             showDatePicker(mTvReserveDate, true, birthMinYear, birthMaxYear, false);
+
+        }else if (mSpinnerTestTime.getText().toString().equals("")) {
+            Toast.makeText(mContext, R.string.reservation_time_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerTestTime.setSpinnerPopupHeight(500);
+            if (mSpinnerTestTime != null) mSpinnerTestTime.show();
 
         }else{
             Intent intent = new Intent(mContext, InformedQuestionActivity.class);
@@ -675,6 +691,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 @Override
                 public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
                     if (testTimeList!=null && testTimeList.size() > 0) testTimeList.clear();
+                    if (gradeIndex!=null && gradeIndex.size() > 0) gradeIndex.clear();
+
                     try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
@@ -699,7 +717,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
                                     ArrayList<String> grades = new ArrayList<>();
-                                    for (TestTimeData item : getData) grades.add(item.grade);
+                                    for (TestTimeData item : getData) if (!grades.contains(item.grade)) grades.add(item.grade);
 
                                     int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
 
@@ -711,7 +729,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                         getTestTime(testTimeList, getData, grade, weekend);
                                     }
 
-                                    mSpinnerTestTime.setItems(testTimeList);
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -720,6 +737,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                         } else {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
+
+                        mSpinnerTestTime.setItems(testTimeList);
+
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
                     }
@@ -727,7 +747,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<TestTimeResponse> call, Throwable t) {
-
+                    mSpinnerTestTime.setItems(testTimeList);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -786,6 +806,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_next:
+                clearFocusAndHideKeyboard();
                 startQuestionActivity();
                 return true;
         }

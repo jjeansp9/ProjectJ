@@ -115,6 +115,7 @@ public class MainActivity extends BaseActivity {
     private int _userGubun = 0;
     private int _stCode = 0;
     private String acaCode = "";
+    private int teacherCnt = 0;
     private PushMessage _pushMessage;
 
     private boolean isMain = true;
@@ -786,8 +787,6 @@ public class MainActivity extends BaseActivity {
             });
         }
     }
-
-    private int teacherCnt = 0;
 
     // 원생 학급 정보조회
     private void requestTeacherCls(){

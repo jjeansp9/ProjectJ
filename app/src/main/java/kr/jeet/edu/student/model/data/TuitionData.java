@@ -3,6 +3,9 @@ package kr.jeet.edu.student.model.data;
 import com.google.gson.annotations.SerializedName;
 
 public class TuitionData {
+    @SerializedName("acaName")
+    public String acaName;
+
     @SerializedName("clsName")
     public String clsName;
 
@@ -11,4 +14,7 @@ public class TuitionData {
 
     @SerializedName("accountNO")
     public String accountNO;
+
+    @SerializedName("gubun")
+    public String gubun;
 }

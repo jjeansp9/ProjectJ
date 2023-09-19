@@ -56,6 +56,8 @@ public class TestReserveData implements Parcelable {
     public String check4;          // 개인정보 동의 4 (마케팅 활용 동의 - Y/N)
     public String insertDate;
 
+    public TestReserveData() {}
+
     protected TestReserveData(Parcel in) {
         seq = in.readInt();
         memberSeq = in.readInt();

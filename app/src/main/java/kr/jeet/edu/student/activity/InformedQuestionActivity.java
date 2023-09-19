@@ -413,16 +413,10 @@ public class InformedQuestionActivity extends BaseActivity {
         requestData();
 
         if(RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            Call<BaseResponse> putDataToServer;
 
-            if (writeMode.equals(Constants.WRITE_EDIT)) {
-                request.seq = mInfo.seq;
-                putDataToServer = mRetrofitApi.updateLevelTest(request);
-            }
-            else putDataToServer = mRetrofitApi.requestLevelTest(request);
+            if (writeMode.equals(Constants.WRITE_EDIT)) request.seq = mInfo.seq;
 
-            putDataToServer.enqueue(new Callback<BaseResponse>() {
+            RetrofitClient.getApiInterface().requestLevelTest(request).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     try {
@@ -436,6 +430,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
                             if (writeMode.equals(Constants.WRITE_EDIT)){
                                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+                                intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
                             }else{
                                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
@@ -569,6 +564,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
             if (request != null){
                 LogMgr.i(TAG+ "putData", "\nmemberSeq : " + request.memberSeq
+                        + "\nseq : " + request.seq
                         + "\n학생이름 : " + request.name
                         + "\n생년월일 : " + request.birth
                         + "\n성별 : " + request.sex

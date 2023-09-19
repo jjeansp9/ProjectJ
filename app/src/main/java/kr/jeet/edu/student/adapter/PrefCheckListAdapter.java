@@ -55,12 +55,8 @@ public class PrefCheckListAdapter extends RecyclerView.Adapter<PrefCheckListAdap
 
                 holder.cbPref.setText(item);
 
-                LogMgr.i("checkTest", checkList.toString() + "," + checkList.size());
-
                 for (int i = 0; i < checkList.size(); i++) {
                     if (checkList.get(i).equals(mList.get(position))) {
-                        LogMgr.i("CHECKEVENT", i + "," + count);
-                        LogMgr.i("CHECKEVENT", checkList.get(i) + "," + mList.get(position));
                         holder.cbPref.setChecked(true);
                         break;
                     }

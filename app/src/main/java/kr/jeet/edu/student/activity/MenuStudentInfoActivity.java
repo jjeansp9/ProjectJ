@@ -130,6 +130,27 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
     }
 
+    private void startWebView(TuitionData item) {
+
+        ClipboardManager clipMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Account No Clipboard", item.accountNO);
+        clipMgr.setPrimaryClip(clipData);
+
+        Intent intent = new Intent(mContext, WebViewActivity.class);
+        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+        startActivity(intent);
+
+    }
+
+    @Override
+    void initAppbar() {
+        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
+        customAppbar.setTitle(R.string.main_menu_student_info);
+        setSupportActionBar(customAppbar.getToolbar());
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
     @Override
     void initView() {
         findViewById(R.id.btn_consultation_request).setOnClickListener(this);
@@ -166,27 +187,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mAdapter = new TuitionListAdapter(mContext, mList, this::startWebView);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-    }
-
-    private void startWebView(TuitionData item) {
-
-        ClipboardManager clipMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("Account No Clipboard", item.accountNO);
-        clipMgr.setPrimaryClip(clipData);
-
-        Intent intent = new Intent(mContext, WebViewActivity.class);
-        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
-        startActivity(intent);
-
-    }
-
-    @Override
-    void initAppbar() {
-        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.main_menu_student_info);
-        setSupportActionBar(customAppbar.getToolbar());
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override

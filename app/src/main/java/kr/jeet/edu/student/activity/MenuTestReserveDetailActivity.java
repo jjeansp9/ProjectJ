@@ -23,6 +23,7 @@ import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
@@ -34,6 +35,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
 
     private TestReserveData mInfo;
+    private LevelTestRequest updateInfo;
     boolean edited = false;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -44,10 +46,14 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
                 LogMgr.e(TAG, "resultLauncher Event EDIT");
                 edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
                 if (edited) {
-                    //requestTestReserveList();
-//                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
-//                    setResult(RESULT_OK, intent);
-//                    finish();
+//                    if(intent.hasExtra(IntentParams.PARAM_SUCCESS_DATA)) {
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                            updateInfo = intent.getParcelableExtra(IntentParams.PARAM_SUCCESS_DATA, LevelTestRequest.class);
+//                        }else{
+//                            updateInfo = intent.getParcelableExtra(IntentParams.PARAM_SUCCESS_DATA);
+//                        }
+//                        initView();
+//                    }
                 }
             }
         }
@@ -86,6 +92,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
     @Override
     void initView() {
+
         String str = "";
 
         ((TextView)findViewById(R.id.txt_st_nm)).setText(TextUtils.isEmpty(mInfo.name) ? "" : mInfo.name);
@@ -269,7 +276,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        LogMgr.i(TAG, "Edited"+edited+"");
+        LogMgr.i(TAG, "Edited is true? : "+edited);
         if (edited) {
             Intent intent = getIntent();
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);

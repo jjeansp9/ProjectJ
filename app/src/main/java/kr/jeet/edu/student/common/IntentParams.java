@@ -36,6 +36,7 @@ public class IntentParams {
     public final static String PARAM_TEST_RESERVE_WRITE = "testReserveWrite";  // 테스트예약 등록 항목
 
     public final static String PARAM_LIST_ITEM = "listItem"; // 리스트 내의 Model Info Key
+    public final static String PARAM_SUCCESS_DATA = "successData"; // 글을 수정했을 때 데이터 전달하기 위한 key
 
     public final static String PARAM_TEST_RESERVE_ADDED = "testReserveAdded"; // 테스트 예약 등록 resultLauncher
     public final static String PARAM_TEST_RESERVE_EDITED = "testReserveEdited"; // 테스트 예약 수정 resultLauncher
