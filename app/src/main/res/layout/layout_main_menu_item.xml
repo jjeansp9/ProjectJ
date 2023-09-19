@@ -6,6 +6,7 @@
     android:orientation="horizontal"
     android:stateListAnimator="@xml/animate_button_push"
     android:id="@+id/root"
+    android:layout_marginVertical="@dimen/layout_margin_8"
     android:background="@color/white">
 
     <ImageView

@@ -54,6 +54,9 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 //                        }
 //                        initView();
 //                    }
+                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
             }
         }

@@ -376,6 +376,17 @@ public class Utils {
     }
 
     public static String getStr(String s){ return TextUtils.isEmpty(s) ? "" : s; }
+
+    /**
+    * 현재날짜 가져오기
+    * */
+    public static String currentDate(String pattern){
+        Date currentDate = new Date(); // 현재 날짜 가져오기
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.getDefault()); // 날짜 형식 지정
+        String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
+
+        return formattedDate;
+    }
 }
 
 

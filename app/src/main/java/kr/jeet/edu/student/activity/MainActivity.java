@@ -37,6 +37,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.view.decoration.GridSpaceItemDecoration;
 import kr.jeet.edu.student.view.decoration.LastIndexDeleteDecoration;
@@ -451,14 +452,6 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private String currentDate(){
-        Date currentDate = new Date(); // 현재 날짜 가져오기
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yy.MM.dd", Locale.getDefault()); // 날짜 형식 지정 (yy.MM.dd)
-        String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
-
-        return formattedDate;
-    }
-
     @Override
     protected void onPause() {
         unregisterReceiver(pushNotificationReceiver);
@@ -643,7 +636,7 @@ public class MainActivity extends BaseActivity {
 
                                 }else mTvStudentName.setText(getData.name); // 원생 오리지널 이름
 
-                                if (currentDate() != null) mTvAttendanceDate.setText(currentDate());
+                                mTvAttendanceDate.setText(Utils.currentDate("yy.MM.dd"));
 
                                 if (getData.acaName != null) { // 캠퍼스명
                                     PreferenceUtil.setAcaName(mContext, getData.acaName);
@@ -792,7 +785,7 @@ public class MainActivity extends BaseActivity {
     private void requestTeacherCls(){
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.requestTeacherCls(_stCode).enqueue(new Callback<TeacherClsResponse>() {
+            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
                 @Override
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
                     try {

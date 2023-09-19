@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.TeacherClsData;
+import kr.jeet.edu.student.utils.Utils;
 
 public class TeacherListAdapter extends RecyclerView.Adapter<TeacherListAdapter.ViewHolder>{
 
@@ -42,9 +43,9 @@ public class TeacherListAdapter extends RecyclerView.Adapter<TeacherListAdapter.
         if (position == NO_POSITION) return;
         TeacherClsData item = mList.get(position);
 
-        holder.tvName.setText(TextUtils.isEmpty(item.sfName) ? "" : item.sfName);
-        holder.tvClsName.setText(TextUtils.isEmpty(item.clsName) ? "" : item.clsName);
-        holder.tvPhoneNum.setText(TextUtils.isEmpty(item.phoneNumber) ? "" : item.phoneNumber);
+        holder.tvName.setText(Utils.getStr(item.sfName));
+        holder.tvClsName.setText(Utils.getStr(item.clsName));
+        holder.tvPhoneNum.setText(Utils.getStr(item.extNumber));
     }
 
     @Override

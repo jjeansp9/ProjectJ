@@ -1,5 +1,15 @@
 package kr.jeet.edu.student.common;
 
+import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+
+import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.server.RetrofitApi;
 
 public class Constants {
@@ -100,4 +110,62 @@ public class Constants {
 
     public static final String WRITE_ADD = "ADD";
     public static final String WRITE_EDIT = "Edit";
+
+    public enum AttendanceStatus{
+        UNSET(9, "미지정", R.color.gray),
+        ATTENDANCE(0, "출석", R.color.color_attendance),
+        ABSENCE(1, "결석", R.color.color_absence),
+        EARLY_LEAVE(2, "조퇴", R.color.color_early_leave),
+        TARDY(3, "지각", R.color.color_tardy),
+        MAKEUP_CLASS(4,"보충", R.color.color_makeup_class),
+        ONLINE_LECTURE(5, "인강", R.color.color_online_lecture);
+
+        private int attendanceCode;
+        private String attendanceNameKor;
+        private int colorRes;
+        private AttendanceStatus(int code, String name, int colorRes) {
+            this.attendanceCode = code;
+            this.attendanceNameKor = name;
+            this.colorRes = colorRes;
+        }
+        public int getCode() {
+            return attendanceCode;
+        }
+        public String getName() {
+            return attendanceNameKor;
+        }
+        public int getColorRes(){ return colorRes; }
+        public static AttendanceStatus getByCode(int code) {
+            for (AttendanceStatus status : AttendanceStatus.values()) {
+                if (status.getCode() == code) {
+                    return status;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static AttendanceStatus getByName(String name) {
+            for (AttendanceStatus status : AttendanceStatus.values()) {
+                if (status.getName().equals(name)) {
+                    return status;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static List<String> getNameList() {
+            List<String> nameList = new ArrayList<>();
+            for (AttendanceStatus status : AttendanceStatus.values()) {
+                nameList.add(status.getName());
+            }
+            return nameList;
+        }
+        public static List<SpannableString> getColoredNameList(Context context) {
+            List<SpannableString> coloredNameList = new ArrayList<>();
+            for(AttendanceStatus status : AttendanceStatus.values()) {
+                SpannableString span = new SpannableString(status.getName());
+                span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, status.colorRes)), 0, span.length(), 0);
+                coloredNameList.add(span);
+            }
+            return coloredNameList;
+        }
+    }
 }

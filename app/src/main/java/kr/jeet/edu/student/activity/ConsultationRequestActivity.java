@@ -288,7 +288,7 @@ public class ConsultationRequestActivity extends BaseActivity {
     private void requestTeacherCls(){
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.requestTeacherCls(_stCode).enqueue(new Callback<TeacherClsResponse>() {
+            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
                 @Override
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
                     try {

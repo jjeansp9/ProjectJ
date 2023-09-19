@@ -24,6 +24,7 @@ import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.model.response.FindIDResponse;
 import kr.jeet.edu.student.model.response.FindPWResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
+import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
@@ -48,8 +49,8 @@ import retrofit2.http.Query;
 
 public interface RetrofitApi {
 
-    public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
+    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     //public final static String SERVER_BASE_URL = "http://211.43.14.242:7777/"; // 이전 cloud local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
@@ -163,9 +164,13 @@ public interface RetrofitApi {
     @GET("tuition/{tuitionDate}/st/{stCode}")
     Call<TuitionResponse> getTuitionList(@Path("tuitionDate") String tuitionDate, @Path("stCode") int stCode);
 
+    // Get-Student-Attendance (출결 조회 - 월별)
+    @GET("attendance/{attendanceDate}/cls/{clsCode}/st/{stCode}")
+    Call<GetAttendanceInfoResponse> getMonthlyAttendanceInfo(@Path("attendanceDate") String attendanceDate, @Path("clsCode") int clsCode, @Path("stCode") int stCode);
+
     // 원생 학급 정보 조회
-    @GET("member/st/{stCode}/class")
-    Call<TeacherClsResponse> requestTeacherCls(@Path("stCode") int stCode);
+    @GET("member/st/{stCode}/clsDate/{clsDate}/class")
+    Call<TeacherClsResponse> requestTeacherCls(@Path("stCode") int stCode, @Path("clsDate") String clsDate);
 
     // 상담요청
     @POST("counsel")

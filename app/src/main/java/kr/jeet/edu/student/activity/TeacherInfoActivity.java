@@ -23,6 +23,7 @@ import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,7 +73,7 @@ public class TeacherInfoActivity extends BaseActivity {
         int stCode = PreferenceUtil.getUserSTCode(mContext);
 
         if(RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().requestTeacherCls(stCode).enqueue(new Callback<TeacherClsResponse>() {
+            RetrofitClient.getApiInterface().requestTeacherCls(stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
                 @Override
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
                     try {
