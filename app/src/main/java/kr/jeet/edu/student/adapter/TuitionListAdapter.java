@@ -19,6 +19,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.TuitionData;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class TuitionListAdapter extends RecyclerView.Adapter<TuitionListAdapter.ViewHolder>{
 
@@ -48,11 +49,11 @@ public class TuitionListAdapter extends RecyclerView.Adapter<TuitionListAdapter.
         try{
             if (item != null){
 
-                String payment = item.payment + mContext.getString(R.string.won);
+                String payment = Utils.getStr(item.payment) + mContext.getString(R.string.won);
 
-                holder.tvClstName.setText(item.clsName);
+                holder.tvClstName.setText(Utils.getStr(item.clsName));
                 holder.tvPayment.setText(payment);
-                holder.tvAccountNo.setText(item.accountNO);
+                holder.tvAccountNo.setText(Utils.getStr(item.accountNO));
             }
         }catch (Exception e){
             LogMgr.e("Tuition Adapter Exception : " + e.getMessage());

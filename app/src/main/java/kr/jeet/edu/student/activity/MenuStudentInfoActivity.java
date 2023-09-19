@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -23,6 +24,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,9 +45,11 @@ import kr.jeet.edu.student.model.data.AttendanceData;
 import kr.jeet.edu.student.model.data.AttendanceSummaryData;
 import kr.jeet.edu.student.model.data.HolidayData;
 import kr.jeet.edu.student.model.data.StudentInfo;
+import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TuitionData;
 import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
+import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -79,6 +83,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private TuitionListAdapter mTuitionAdapter, mBookPayAdapter;
     private RetrofitApi mRetrofitApi;
     private MaterialCalendarView _calendarView;
+    private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
 
     private Calendar calendar;
@@ -95,6 +100,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private int _userGubun = 0;
     private int _stCode = 0;
     private int _clsCode = 0;
+    private String _clsName = "";
 
     private final String MAN = "M";
     private final String WOMAN = "F";
@@ -110,7 +116,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     private static final String WEB_VIEW_URL = "https://www.shinhandamoa.com/common/login#payer";
 
-    ArrayList<AttendanceData> _attendanceList = new ArrayList<>();
+    private ArrayList<AttendanceData> _attendanceList = new ArrayList<>();
+    private ArrayList<TeacherClsData> mListCls = new ArrayList<>();
     SimpleDateFormat _dateTransferFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD);
     //calendar
     private Set<AttendanceSummaryData> calendarDaySet = new HashSet<>();
@@ -134,16 +141,20 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final int CMD_GET_STU_INFO = 1;
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
+    private static final int CMD_GET_CLS_INFO = 4;
 
     private Handler _handler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
-                case CMD_GET_TUITION_INFO:
-                    requestTuitionList(currentDate);
-                    break;
                 case CMD_GET_ATTENDANCE_INFO:
                     requestGetAttendanceList();
+                    break;
+                case CMD_GET_CLS_INFO:
+                    requestCls();
+                    break;
+                case CMD_GET_TUITION_INFO:
+                    requestTuitionList(currentDate);
                     break;
             }
         }
@@ -225,6 +236,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
+
+        mSpinnerCls = findViewById(R.id.spinner_cls);
+        mSpinnerCls.setIsFocusable(true);
 
         strYear = currentYear + getString(R.string.year);
         strMonth = currentMonth + getString(R.string.month);
@@ -438,11 +452,12 @@ public class MenuStudentInfoActivity extends BaseActivity {
         requestTuitionList(currentDate);
     }
 
+    // 수강료, 교재비 조회
     private void requestTuitionList(String yearMonth){
 
         if (RetrofitClient.getInstance() != null){
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
+            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), 58516).enqueue(new Callback<TuitionResponse>() {
                 @Override
                 public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
                     if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
@@ -455,7 +470,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                             if (response.body() != null && response.body().data != null) {
 
                                 for (TuitionData data : response.body().data) {
-
                                     try {
                                         int payment = Integer.parseInt(data.payment);
                                         addPayment += payment;
@@ -558,7 +572,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+                    _handler.sendEmptyMessage(CMD_GET_CLS_INFO);
                 }
 
                 @Override
@@ -567,7 +581,64 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+                    _handler.sendEmptyMessage(CMD_GET_CLS_INFO);
+                }
+            });
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void setSpinnerTeacher(){
+        try {
+            List<String> sfNames = new ArrayList<>();
+
+            for (TeacherClsData data : mListCls) sfNames.add(data.sfName + " / " + data.clsName);
+
+            if (sfNames.size() > 0 && sfNames != null) mSpinnerCls.setText(sfNames.get(0));
+            mSpinnerCls.setItems(sfNames);
+            _clsName = mListCls.get(0).clsName;
+            _clsCode = mListCls.get(0).clsCode;
+            _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+
+            mSpinnerCls.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+                _clsName = mListCls.get(newIndex).clsName;
+                _clsCode = mListCls.get(newIndex).clsCode;
+                LogMgr.e(TAG,
+                                "\nclsName:" + _clsName +
+                                "\nclsCode:" + _clsCode
+                );
+                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+            });
+        }catch (Exception e){}
+    }
+
+    // 원생 학급 정보 조회
+    private void requestCls(){
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
+                @Override
+                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null){
+                            mListCls.addAll(response.body().data);
+                            setSpinnerTeacher();
+                        }else{
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
+                        }
+
+                    }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+                    _handler.sendEmptyMessage(CMD_GET_TUITION_INFO);
+                }
+
+                @Override
+                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
+                    try { LogMgr.e(TAG, "requestCls() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    _handler.sendEmptyMessage(CMD_GET_TUITION_INFO);
                 }
             });
         }
@@ -579,8 +650,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
         String date = mFormat.format(_selectedDate);
 
         if (RetrofitClient.getInstance() != null){
-
-            RetrofitClient.getApiInterface().getMonthlyAttendanceInfo(date, 183162, _stCode).enqueue(new Callback<GetAttendanceInfoResponse>() {
+            LogMgr.e(TAG, "clsCode: " + _clsCode);
+            RetrofitClient.getApiInterface().getMonthlyAttendanceInfo(date, _clsCode, _stCode).enqueue(new Callback<GetAttendanceInfoResponse>() {
                 @Override
                 public void onResponse(Call<GetAttendanceInfoResponse> call, Response<GetAttendanceInfoResponse> response) {
                     try {
@@ -627,6 +698,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     private void updateCalView(){
         LogMgr.e(TAG, "updateCalView");
+        if (calendarDaySet != null && calendarDaySet.size() > 0) calendarDaySet.clear();
         for(AttendanceData item : _attendanceList) {
             AttendanceSummaryData summaryData = new AttendanceSummaryData();
             summaryData.attendGubun = item.attendGubun;

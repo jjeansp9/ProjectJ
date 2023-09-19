@@ -262,11 +262,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:orientation="horizontal"
-                    app:layout_constraintGuide_begin="50dp"
+                    app:layout_constraintGuide_begin="60dp"
                     tools:ignore="DuplicateIds" />
                 <TextView
                     android:id="@+id/tv_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/menu_stu_info_attendance"
                     app:layout_constraintTop_toTopOf="parent"
@@ -277,6 +277,28 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_large"/>
+
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/spinner_cls"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/line_attendance_state"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="@dimen/layout_margin_12"
+                    android:paddingHorizontal="@dimen/layout_margin_16"
+                    android:paddingVertical="@dimen/layout_margin_12"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size"
+                    app:spinner_arrow_gravity="end"
+                    app:spinner_arrow_tint="@color/blackgray"
+                    app:spinner_divider_color="@color/line"
+                    app:spinner_divider_show="true"
+                    app:spinner_divider_size="0.4dp"
+                    app:spinner_popup_animation="dropdown"
+                    app:spinner_popup_background="@drawable/selector_spinner_item"
+                    app:spinner_popup_elevation="2dp"
+                    android:background="@drawable/bg_campus_spinner"/>
+
                 <View
                     android:id="@+id/line_attendance_state"
                     android:layout_width="match_parent"
@@ -289,7 +311,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line_attendance_state"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_cls"
+                    android:layout_marginTop="4dp"
                     android:background="@color/white"
                     app:mcv_dateTextAppearance="@style/CalendarDateTextAppearance"
                     app:mcv_leftArrowMask="@drawable/selector_month_back"

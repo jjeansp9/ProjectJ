@@ -1,7 +1,5 @@
 package kr.jeet.edu.student.model.data;
 
-import com.google.gson.annotations.SerializedName;
-
 public class TuitionData {
     public String acaName;    // 캠퍼스명
     public String clsName;    // 학급명
