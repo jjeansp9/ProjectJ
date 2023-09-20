@@ -201,7 +201,7 @@
     <string name="menu_stu_info_consultation_request">선생님 상담요청</string>
     <string name="menu_stu_info_consultation_request_header">상담요청</string>
     <string name="menu_stu_info_attendance_sheet">출석표</string>
-    <string name="menu_stu_info_tuition">수강료</string>
+    <string name="menu_stu_info_tuition">미납 내역</string>
     <string name="menu_stu_info_book_pay">교재비</string>
     <string name="menu_stu_info_unpaid_amount">미납 금액</string>
     <string name="menu_stu_info_empty">정보 없음</string>
@@ -209,6 +209,7 @@
     <string name="menu_stu_info_impossible_sel_previous">1999년 이전의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_impossible_sel_next">2099년 이후의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_attendance">출석부</string>
+    <string name="menu_stu_info_get_clipboard">납부 계좌번호를 클립보드에 복사하였습니다.</string>
     <string name="won">원</string>
     <string name="year">년</string>
     <string name="month">월</string>

@@ -375,7 +375,7 @@ public class MainActivity extends BaseActivity {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
                                 List<String> list = new ArrayList<>();
                                 list.add(_pushMessage.pushId);
-                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
                             }
                             pushPopupDialog.dismiss();
                         });

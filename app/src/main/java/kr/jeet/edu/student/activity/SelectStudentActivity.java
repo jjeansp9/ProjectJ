@@ -31,6 +31,7 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
+import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -116,9 +117,13 @@ public class SelectStudentActivity extends BaseActivity {
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
+
+                                PushConfirmRequest request = new PushConfirmRequest();
+
                                 List<String> list = new ArrayList<>();
                                 list.add(_pushMessage.pushId);
-                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
+
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
                             }
                             pushPopupDialog.dismiss();
                         });

@@ -267,6 +267,9 @@ public class MenuScheduleActivity extends BaseActivity {
             otherSaturdayDec.setSelectedDay(date);
             holidayDec.setSelectedDay(date);
 
+            setDeco();
+            view.invalidateDecorators();
+
             LogMgr.i(TAG, "DateTestMonth >> " + _selectedDate);
             _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
         });

@@ -168,4 +168,46 @@ public class Constants {
             return coloredNameList;
         }
     }
+
+    // 수강료 타입
+    public enum PayType {
+        TUITION(0, "수강료"),
+        BOOK_PAY(1, "교재비");
+
+        private int code;
+        private String nameKor;
+        private PayType(int code, String name) {
+            this.code = code;
+            this.nameKor = name;
+        }
+        public int getCode() {
+            return code;
+        }
+        public String getNameKor() {
+            return nameKor;
+        }
+        public static PayType getByCode(int code) {
+            for (PayType type : PayType.values()) {
+                if (type.getCode() == code) {
+                    return type;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static PayType getByName(String name) {
+            for (PayType status : PayType.values()) {
+                if (status.getNameKor().equals(name)) {
+                    return status;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static List<String> getNameList() {
+            List<String> nameList = new ArrayList<>();
+            for (PayType status : PayType.values()) {
+                nameList.add(status.getNameKor());
+            }
+            return nameList;
+        }
+    }
 }

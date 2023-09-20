@@ -7,4 +7,5 @@ public class ReceiverData {
     public int userGubun;              // JEET 회원 구분값
     public String acaCode;             // 캠퍼스 코드
     public String acaName;             // 캠퍼스 이름
+    public String isRead;              // 확인여부
 }

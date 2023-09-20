@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingVertical="8dp">
+
+    <TextView
+        android:id="@+id/tv_tuition_header_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/layout_margin_2"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="@dimen/font_size"/>
+
+    <TextView
+        android:id="@+id/tv_tuition_header_acaName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/tv_tuition_header_badge"
+        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
+        app:layout_constraintStart_toEndOf="@id/tv_tuition_header_badge"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        android:gravity="start"/>
+
+    <TextView
+        android:id="@+id/tv_tuition_header_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_tuition_header_badge"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="4dp"
+        android:text="미납 총액"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tv_tuition_header_pay_total"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tv_tuition_header_badge"
+        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
+        app:layout_constraintStart_toEndOf="@id/tv_tuition_header_pay"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="100,000원"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        android:gravity="start"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_account_header_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="납부하기"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_size"
+        android:textStyle="bold"
+        android:background="@drawable/selector_bt_account_link"
+        android:stateListAnimator="@xml/animate_button_push"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

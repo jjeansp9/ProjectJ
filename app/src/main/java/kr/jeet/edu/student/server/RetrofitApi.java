@@ -7,6 +7,7 @@ import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.BriefingReserveRequest;
 import kr.jeet.edu.student.model.request.CounselRequest;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
+import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.request.SignupRequest;
 import kr.jeet.edu.student.model.request.SignupSNSRequest;
 import kr.jeet.edu.student.model.request.SmsRequest;
@@ -49,8 +50,8 @@ import retrofit2.http.Query;
 
 public interface RetrofitApi {
 
-    //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     //public final static String SERVER_BASE_URL = "http://211.43.14.242:7777/"; // 이전 cloud local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
@@ -111,7 +112,7 @@ public interface RetrofitApi {
 
     //푸쉬 확인처리
     @POST("push/confirm")
-    Call<BaseResponse> pushConfirmed(@Query("pushId") List<String> pushId);
+    Call<BaseResponse> pushConfirmed(@Body PushConfirmRequest request);
     // 학부모의 자녀 원생 정보 조회
     @GET("member/{parentMemberSeq}/students")
     Call<SearchChildStudentsResponse> searchChildStudents(@Path("parentMemberSeq") int parentMemberSeq);

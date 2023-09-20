@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -78,23 +79,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
         initIntentData();
         initView();
         initAppbar();
-        changeMessageState2Read();
-    }
-
-    void changeMessageState2Read() {
-        new Thread(() -> {
-            try{
-                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
-                if(!pushMessages.isEmpty()) {
-                    for(PushMessage message : pushMessages) {
-                        message.isRead = true;
-                        JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
-                    }
-                }
-            }catch(Exception e){
-
-            }
-        }).start();
     }
 
     private void initIntentData(){
@@ -136,17 +120,23 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         result = intent.getParcelableExtra(extraKey, AnnouncementData.class);
 
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
-                        result = intent.getParcelableExtra(extraKey, PushMessage.class);
+                        _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
+                        new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+
                     } else{
                         LogMgr.e(TAG,"Event here3");
                     }
 
                 } else {
 
-                    if (extraKey.equals(IntentParams.PARAM_ANNOUNCEMENT_INFO) || extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
+                    if (extraKey.equals(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
                         result = intent.getParcelableExtra(extraKey);
 
-                    }else{
+                    } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
+                        _pushData = intent.getParcelableExtra(extraKey);
+                        new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+
+                    } else{
                         LogMgr.e("Event here2");
                     }
                 }
@@ -217,16 +207,25 @@ public class MenuBoardDetailActivity extends BaseActivity {
             mImgRdCnt.setVisibility(View.VISIBLE);
             mTvRdCnt.setVisibility(View.VISIBLE);
             requestNoticeDetail(_currentData.seq);
+            Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
 
         }else if (dataType == TYPE_PUSH){
-            if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) requestNoticeDetail(_pushData.connSeq);
-            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) requestSystemDetail();
+            if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
+                requestNoticeDetail(_pushData.connSeq);
+                Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
+            }
+            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                requestSystemDetail();
+                Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
+            }
 
         }else if (dataType == TYPE_SYSTEM){
             requestSystemDetail();
+            Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
 
         }else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
             requestNoticeDetail(_currentSeq);
+            Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
         }
     }
 

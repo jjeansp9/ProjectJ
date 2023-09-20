@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -47,6 +49,7 @@ import kr.jeet.edu.student.model.data.HolidayData;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TuitionData;
+import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
@@ -76,7 +79,13 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     private final String TAG = "studentInfo Activity";
 
-    private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum, mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty;
+    public interface PayListItem extends Comparable<PayListItem> {
+        boolean isHeader();
+        Constants.PayType getPay();
+    }
+
+    private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum,
+            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty;
     private ImageView mImgStuProfile;
 
     private RecyclerView mRecyclerTuition, mRecyclerBookPay;
@@ -91,8 +100,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     String strMonth = "";
     private SimpleDateFormat yearFormat, monthFormat;
 
-    private ArrayList<TuitionData> mTuitionList = new ArrayList<>();
-    private ArrayList<TuitionData> mBookPayList = new ArrayList<>();
+    private ArrayList<PayListItem> mTuitionList = new ArrayList<>();
 
     private String _userType = "";
     private String _stName = "";
@@ -173,7 +181,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        requestTuitionList(currentDate);
+        //requestTuitionList(currentDate);
     }
 
     private void initData(){
@@ -194,11 +202,17 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
     }
 
-    private void startWebView(TuitionData item) {
+    private void startWebView(PayListItem item) {
 
         ClipboardManager clipMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("Account No Clipboard", item.accountNO);
-        clipMgr.setPrimaryClip(clipData);
+        ClipData clipData = ClipData.newPlainText("Account No Clipboard", ((TuitionData)item).accountNO);
+        if (clipMgr != null) {
+            clipMgr.setPrimaryClip(clipData);
+            Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+        }
+//        else {
+//            Toast.makeText(mContext, "error: 클립보드 서비스를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+//        }
 
         Intent intent = new Intent(mContext, WebViewActivity.class);
         intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
@@ -234,6 +248,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvStuPhoneNum = findViewById(R.id.tv_stu_info_stu_phone_num);
         mTvParentPhoneNum = findViewById(R.id.tv_stu_info_parent_phone_num);
         mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
+        //mTvBookPayEmpty = findViewById(R.id.tv_book_pay_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
 
@@ -249,12 +264,12 @@ public class MenuStudentInfoActivity extends BaseActivity {
         requestMemberInfo(_stuSeq, _stCode);
 
         mRecyclerTuition = findViewById(R.id.recycler_tuition);
-        mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
+        mTuitionAdapter = new TuitionListAdapter(mContext, groupedAndSortedData, this::startWebView);
         mRecyclerTuition.setAdapter(mTuitionAdapter);
 
-        mRecyclerBookPay = findViewById(R.id.recycler_book_pay);
-        mBookPayAdapter = new TuitionListAdapter(mContext, mBookPayList, this::startWebView);
-        mRecyclerBookPay.setAdapter(mBookPayAdapter);
+        //mRecyclerBookPay = findViewById(R.id.recycler_book_pay);
+//        mBookPayAdapter = new TuitionListAdapter(mContext, mBookPayList, this::startWebView);
+//        mRecyclerBookPay.setAdapter(mBookPayAdapter);
 
         setCalendar();
         initChipGroup();
@@ -347,6 +362,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
             if(attendance == null) break;
             Chip chip = new Chip(MenuStudentInfoActivity.this);
             chip.setText(attendance.getName());
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10F);
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.bg_white)));
             chip.setChipStrokeWidth(0);
             chip.setCloseIconVisible(false);
@@ -361,7 +377,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
             chip.setChipIconSize(getResources().getDimensionPixelSize(R.dimen.dot_sex_size));
             chipGroupLegend.addView(chip);
         }
-
     }
 
     private void setDeco(){
@@ -452,6 +467,31 @@ public class MenuStudentInfoActivity extends BaseActivity {
         requestTuitionList(currentDate);
     }
 
+    private Set<TuitionData> acaName = new HashSet<>();
+
+    private void initHeaderData(ArrayList<TuitionData> item) {
+        acaName.addAll(item);
+
+        for (TuitionData data : acaName) {
+            LogMgr.e(TAG, "acaName: " + data.acaName);
+            if (!TextUtils.isEmpty(data.acaName)){
+                TuitionHeaderData headerData = new TuitionHeaderData();
+
+                headerData.acaName = data.acaName;
+                headerData.accountNO = data.accountNO;
+                headerData.gubun = Constants.PayType.TUITION.getNameKor();
+                mTuitionList.add(headerData);
+            }else{
+                TuitionHeaderData headerData = new TuitionHeaderData();
+
+                headerData.acaName = data.acaName;
+                headerData.accountNO = data.accountNO;
+                headerData.gubun = Constants.PayType.BOOK_PAY.getNameKor();
+                mTuitionList.add(headerData);
+            }
+        }
+    }
+
     // 수강료, 교재비 조회
     private void requestTuitionList(String yearMonth){
 
@@ -461,47 +501,245 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 @Override
                 public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
                     if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
-                    if (mBookPayList != null && mBookPayList.size() > 0) mBookPayList.clear();
-                    try {
-                        if (response.isSuccessful()) {
+                    //if (mBookPayList != null && mBookPayList.size() > 0) mBookPayList.clear();
+                    if (response.isSuccessful()) {
 
-                            int addPayment = 0;
+                        TuitionData tuitionData1 = new TuitionData();
+                        tuitionData1.acaName = "지트에듀케이션학원";
+                        tuitionData1.clsName = "초4-SI-C1반(4) 지트수강";
+                        tuitionData1.payment = "125000";
+                        tuitionData1.accountNO = "56214899724005";
+                        tuitionData1.gubun = "수강료";
+                        tuitionData1.payDate = "2023-10";
 
-                            if (response.body() != null && response.body().data != null) {
+                        TuitionData tuitionData2 = new TuitionData();
+                        tuitionData2.acaName = "";
+                        tuitionData2.clsName = "악어수학 4-2 Orange 통합본 v3.2 교재2";
+                        tuitionData2.payment = "23000";
+                        tuitionData2.accountNO = "56214627944803";
+                        tuitionData2.gubun = "교재비";
+                        tuitionData2.payDate = "2023-09-06";
 
-                                for (TuitionData data : response.body().data) {
-                                    try {
-                                        int payment = Integer.parseInt(data.payment);
-                                        addPayment += payment;
-                                        data.payment = Utils.decimalFormat(payment);
-                                        mTuitionList.add(data);
+                        TuitionData tuitionData3 = new TuitionData();
+                        tuitionData3.acaName = "";
+                        tuitionData3.clsName = "악어수학 창의융합수학 4호 v2.0 교재1";
+                        tuitionData3.payment = "13000";
+                        tuitionData3.accountNO = "56214627944803";
+                        tuitionData3.gubun = "교재비";
+                        tuitionData3.payDate = "2023-09-05";
 
-                                    } catch (NumberFormatException e) {
-                                        LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);
+                        TuitionData tuitionData4 = new TuitionData();
+                        tuitionData4.acaName = "지트에듀케이션학원";
+                        tuitionData4.clsName = "악어수학 창의융합수학 4호 v2.0 지트수강";
+                        tuitionData4.payment = "13000";
+                        tuitionData4.accountNO = "56214899724005";
+                        tuitionData4.gubun = "수강료";
+                        tuitionData4.payDate = "2023-09-01";
+
+                        TuitionData tuitionData5 = new TuitionData();
+                        tuitionData5.acaName = "광교학원";
+                        tuitionData5.clsName = "악어수학 창의융합수학 54호 v2.0 광교수강";
+                        tuitionData5.payment = "11000";
+                        tuitionData5.accountNO = "56214345244803";
+                        tuitionData5.gubun = "수강료";
+                        tuitionData5.payDate = "2023-09-16";
+
+                        TuitionData tuitionData6 = new TuitionData();
+                        tuitionData6.acaName = "광교학원";
+                        tuitionData6.clsName = "악어수학eee v2.0 광교수강";
+                        tuitionData6.payment = "485000";
+                        tuitionData6.accountNO = "56214345244803";
+                        tuitionData6.gubun = "수강료";
+                        tuitionData6.payDate = "2023-09-11";
+
+                        ArrayList<TuitionData> tuitionList = new ArrayList<>();
+                        tuitionList.add(tuitionData1);
+                        tuitionList.add(tuitionData2);
+                        tuitionList.add(tuitionData3);
+                        tuitionList.add(tuitionData4);
+                        tuitionList.add(tuitionData5);
+                        tuitionList.add(tuitionData6);
+                        tuitionList.add(tuitionData2);
+                        tuitionList.add(tuitionData2);
+                        tuitionList.add(tuitionData6);
+
+                        int addPayment = 0;
+
+                        if (response.body() != null && response.body().data != null) {
+
+                            mTuitionList.clear();
+
+                            LogMgr.e(TAG, "data:" + tuitionList.size());
+
+                            ArrayList<TuitionData> getData = response.body().data;
+                            //initHeaderData(tuitionList);
+                            tuitionList.forEach(t -> t.isHeader());
+
+                            LogMgr.e(TAG, "data2:" + tuitionList.size());
+
+//                                for (TuitionData data : tuitionList) {
+//                                    try {
+//                                        int payment = Integer.parseInt(data.payment);
+//                                        addPayment += payment;
+//                                        data.payment = Utils.decimalFormat(payment);
+//
+//                                        mTuitionList.add(data);
+//
+//                                        LogMgr.e(TAG, "data: " + data.payment);
+//
+//                                    } catch (NumberFormatException e) {
+//                                        LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);
+//                                    }
+//                                }
+
+//                            for (MenuStudentInfoActivity.PayListItem item : tuitionList) {
+//                                if (item instanceof TuitionData) {
+//                                    TuitionData tuition = (TuitionData) item;
+//                                    // "수강료" 항목인 경우
+//                                    if ("수강료".equals(tuition.gubun)) {
+//                                        // 현재 헤더와 비교
+//                                        if (currentHeader == null || !currentHeader.acaName.equals(tuition.acaName)) {
+//                                            // 새로운 그룹 시작
+//                                            if (currentHeader != null) {
+//                                                // 이전 그룹의 항목을 추가
+//                                                groupedAndSortedData.add(currentHeader);
+//                                                groupedAndSortedData.addAll(mTuitionList);
+//                                            }
+//                                            // 새로운 헤더 생성
+//                                            currentHeader = new TuitionHeaderData();
+//                                            currentHeader.acaName = tuition.acaName;
+//                                            currentHeader.gubun = "수강료";
+//                                            mTuitionList.clear();
+//                                        }
+//                                        // 그룹에 속한 "수강료" 항목 추가
+//                                        mTuitionList.add(tuition);
+//                                    } else {
+//                                        // "교재비" 항목인 경우
+//                                        TuitionHeaderData headerData = new TuitionHeaderData();
+//                                        headerData.gubun = "교재비";
+//                                        mTuitionList.add(headerData);
+//                                        mTuitionList.add(tuition);
+//                                    }
+//                                } else {
+//                                    // 헤더 항목은 그대로 추가
+//                                    groupedAndSortedData.add(item);
+//                                }
+//                            }
+
+                            // TODO: 아래 코드는 플랜A
+//                            for (MenuStudentInfoActivity.PayListItem item : tuitionList) {
+//                                if (item instanceof TuitionData) {
+//                                    TuitionData tuition = (TuitionData) item;
+//                                    if ("수강료".equals(tuition.gubun)) {
+//                                        if (currentTuitionHeader == null || !currentTuitionHeader.acaName.equals(tuition.acaName)) {
+//                                            if (currentTuitionHeader != null) {
+//                                                groupedAndSortedData.add(currentTuitionHeader);
+//                                                groupedAndSortedData.addAll(mTuitionList);
+//                                            }
+//                                            currentTuitionHeader = new TuitionHeaderData();
+//                                            currentTuitionHeader.acaName = tuition.acaName;
+//                                            currentTuitionHeader.gubun = "수강료";
+//                                            mTuitionList.clear();
+//                                        }
+//                                        mTuitionList.add(tuition);
+//                                    } else if ("교재비".equals(tuition.gubun)) {
+//                                        if (currentBookHeader == null || !currentBookHeader.acaName.equals(tuition.acaName)) {
+//                                            if (currentBookHeader != null) {
+//                                                groupedAndSortedData.add(currentBookHeader);
+//                                                groupedAndSortedData.addAll(mTuitionList);
+//                                            }
+//                                            currentBookHeader = new TuitionHeaderData();
+//                                            currentBookHeader.acaName = tuition.acaName;
+//                                            currentBookHeader.gubun = "교재비";
+//                                            mTuitionList.clear();
+//                                        }
+//                                        mTuitionList.add(tuition);
+//                                    }
+//                                } else {
+//                                    groupedAndSortedData.add(item);
+//                                }
+//                            }
+//
+//                            if (currentTuitionHeader != null) {
+//                                groupedAndSortedData.add(currentTuitionHeader);
+//                                groupedAndSortedData.addAll(mTuitionList);
+//                            }
+//
+//                            if (currentBookHeader != null) {
+//                                groupedAndSortedData.add(currentBookHeader);
+//                                groupedAndSortedData.addAll(mTuitionList);
+//                            }
+
+                            // TODO : 아래 주석코드는 플랜B
+                            for (MenuStudentInfoActivity.PayListItem item : tuitionList) {
+                                if (item instanceof TuitionData) {
+                                    TuitionData tuition = (TuitionData) item;
+                                    if ("수강료".equals(tuition.gubun)) {
+                                        if (currentTuitionHeader == null || !currentTuitionHeader.acaName.equals(tuition.acaName)) {
+                                            if (currentTuitionHeader != null) {
+                                                groupedAndSortedData.add(currentTuitionHeader);
+                                                groupedAndSortedData.addAll(mTuitionList);
+                                                mTuitionList.clear();
+                                            }
+                                            currentTuitionHeader = new TuitionHeaderData();
+                                            currentTuitionHeader.acaName = tuition.acaName;
+                                            currentTuitionHeader.gubun = "수강료";
+                                        }
+                                        mTuitionList.add(tuition);
+                                    } else if ("교재비".equals(tuition.gubun)) {
+                                        if (currentBookHeader == null || !currentBookHeader.acaName.equals(tuition.acaName)) {
+                                            if (currentBookHeader != null) {
+                                                groupedAndSortedData.add(currentBookHeader);
+                                                groupedAndSortedData.addAll(mTuitionList);
+                                                mTuitionList.clear();
+                                            }
+                                            currentBookHeader = new TuitionHeaderData();
+                                            currentBookHeader.acaName = tuition.acaName;
+                                            currentBookHeader.gubun = "교재비";
+                                        }
+                                        mTuitionList.add(tuition);
                                     }
                                 }
-                                LogMgr.e("mListSize", mTuitionList.size()+"");
-
-                                String totalPayment = Utils.decimalFormat(addPayment) + getString(R.string.won);
-                                //mTvTotalPayment.setText(totalPayment);
-
-                            } else {
-                                LogMgr.e(TAG, "Response or ListData is null");
                             }
+
+//                            if (currentTuitionHeader != null) {
+//                                groupedAndSortedData.add(currentTuitionHeader);
+//                                groupedAndSortedData.addAll(mTuitionList);
+//                            }
+//
+//                            if (currentBookHeader != null) {
+//                                groupedAndSortedData.add(currentBookHeader);
+//                                groupedAndSortedData.addAll(mTuitionList);
+//                            }
+
+                            LogMgr.i("Grouped and Sorted : " + groupedAndSortedData.size());
+
+//                                Collections.sort(mTuitionList);
+//                                Collections.sort(mTuitionList, new TuitionComparator());
+
+                            LogMgr.e("mListSize", mTuitionList.size()+"");
+
+                            String totalPayment = Utils.decimalFormat(addPayment) + getString(R.string.won);
+                            //mTvTotalPayment.setText(totalPayment);
+
                         } else {
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            LogMgr.e(TAG, "Response or ListData is null");
                         }
-                    } catch (Exception e) {
-                        LogMgr.e(TAG + "requestTuitionList() Exception: ", e.getMessage());
+                    } else {
+                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                     }
                     if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+                    //if (mBookPayAdapter != null) mBookPayAdapter.notifyDataSetChanged();
                     mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
+                    //mTvBookPayEmpty.setVisibility(mBookPayList.isEmpty() ? View.VISIBLE : View.GONE);
                 }
 
                 @Override
                 public void onFailure(Call<TuitionResponse> call, Throwable t) {
                     if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+                    //if (mBookPayAdapter != null) mBookPayAdapter.notifyDataSetChanged();
                     mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
+                    //mTvBookPayEmpty.setVisibility(mBookPayList.isEmpty() ? View.VISIBLE : View.GONE);
                     try {
                         LogMgr.e(TAG, "requestTuitionList() onFailure >> " + t.getMessage());
                     } catch (Exception e) {
@@ -510,6 +748,34 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    List<MenuStudentInfoActivity.PayListItem> groupedAndSortedData = new ArrayList<>();
+    TuitionHeaderData currentTuitionHeader = null;
+    TuitionHeaderData currentBookHeader = null;
+
+    public static class TuitionComparator implements Comparator<PayListItem> {
+        @Override
+        public int compare(MenuStudentInfoActivity.PayListItem item1, MenuStudentInfoActivity.PayListItem item2) {
+            // TuitionHeaderData와 TuitionData 둘 다 아니면 비교할 수 없음
+            if (!(item1 instanceof TuitionData) || !(item2 instanceof TuitionData)) {
+                return 0;
+            }
+
+            TuitionData data1 = (TuitionData) item1;
+            TuitionData data2 = (TuitionData) item2;
+
+            // gubun이 "수강료"인 경우와 acaName이 같은 경우를 찾아서 그룹화
+            if (data1.gubun.equals("수강료") && data2.gubun.equals("수강료") && data1.acaName.equals(data2.acaName)) {
+                // acaName이 같으므로 동일한 그룹으로 묶음
+                LogMgr.i("Event1", data1.acaName + "," + data2.acaName);
+                return 0;
+            } else {
+                // 다른 경우 그냥 비교
+                LogMgr.i("Event2", data1.acaName + "," + data2.acaName);
+                return data1.compareTo(data2);
+            }
         }
     }
 
@@ -592,7 +858,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         try {
             List<String> sfNames = new ArrayList<>();
 
-            for (TeacherClsData data : mListCls) sfNames.add(data.sfName + " / " + data.clsName);
+            for (TeacherClsData data : mListCls) sfNames.add(data.clsName);
 
             if (sfNames.size() > 0 && sfNames != null) mSpinnerCls.setText(sfNames.get(0));
             mSpinnerCls.setItems(sfNames);
@@ -629,7 +895,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
-                    _handler.sendEmptyMessage(CMD_GET_TUITION_INFO);
                 }
 
                 @Override
@@ -638,7 +903,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    _handler.sendEmptyMessage(CMD_GET_TUITION_INFO);
+                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
                 }
             });
         }

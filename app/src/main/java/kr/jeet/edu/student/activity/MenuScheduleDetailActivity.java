@@ -11,10 +11,12 @@ import android.widget.Toast;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,6 +38,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_menu_schedule_detail);
         mContext = this;
         initView();
+        Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_ACA_SCHEDULE);
     }
 
     private void initData(){
@@ -59,6 +62,8 @@ public class MenuScheduleDetailActivity extends BaseActivity {
             _currentSeq = message.connSeq;
 
             if (_currentSeq != -1) requestScheduleDetail(_currentSeq);
+
+            new FCMManager(mContext).requestPushConfirmToServer(message);
         }
     }
 

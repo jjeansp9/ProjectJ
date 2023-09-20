@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -44,7 +45,10 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -387,6 +391,23 @@ public class Utils {
         String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
 
         return formattedDate;
+    }
+
+    public static void changeMessageState2Read(Context getAppContext, String Type) {
+        new Thread(() -> {
+            try{
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getAppContext).pushMessageDao().getMessageByReadFlagNType(false, Type);
+                if(!pushMessages.isEmpty()) {
+                    for(PushMessage message : pushMessages) {
+                        message.isRead = true;
+                        JeetDatabase.getInstance(getAppContext).pushMessageDao().update(message);
+                        LogMgr.i("pushMsgDB isRead : ", message.isRead + "");
+                    }
+                }
+            }catch(Exception e){
+
+            }
+        }).start();
     }
 }
 

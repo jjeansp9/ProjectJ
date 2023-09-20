@@ -38,6 +38,7 @@ import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.FileData;
@@ -101,6 +102,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         initIntentData();
         initView();
         initAppbar();
+        Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_PT);
     }
 
     @Override
@@ -133,6 +135,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
                 }
                 _currentSeq = message.connSeq;
+
+                new FCMManager(mContext).requestPushConfirmToServer(message);
             }
 
         }

@@ -22,6 +22,7 @@ import kr.jeet.edu.student.activity.IntroActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -157,10 +158,30 @@ public class FCMManager {
         }
 
     }
-    public void requestPushConfirmToServer(List<String> pushId){
+    public void requestPushConfirmToServer(PushMessage pushMsg){
+
+        PushConfirmRequest request = new PushConfirmRequest();
+
+        List<String> list = new ArrayList<>();
+        list.add(pushMsg.pushId);
+
+        request.pushId = list;
+        request.pushType = pushMsg.pushType;
+        request.seq = pushMsg.connSeq;
+        request.stCode = PreferenceUtil.getUserSTCode(_context);
+        request.userGubun = PreferenceUtil.getUserGubun(_context);
+
+        LogMgr.i(TAG, "pushConfirm" +
+                        "\npushId: " + request.pushId.toString() +
+                        "\npushType: " + request.pushType +
+                        "\nseq: " + request.seq +
+                        "\nstCode: " + request.stCode +
+                        "\nuserGubun: " + request.userGubun
+                );
+
         if (RetrofitClient.getInstance() != null) {
             RetrofitApi mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.pushConfirmed(pushId).enqueue(new Callback<BaseResponse>() {
+            mRetrofitApi.pushConfirmed(request).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     try {
