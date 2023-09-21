@@ -455,7 +455,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         if (RetrofitClient.getInstance() != null){
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), 58516).enqueue(new Callback<TuitionResponse>() {
+            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
                 @Override
                 public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
                     if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
