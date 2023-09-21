@@ -41,30 +41,39 @@ public class TuitionData implements MenuStudentInfoActivity.PayListItem {
         if (gubunComparison != 0){
             return gubunComparison;
         }else{
-            if (this.isHeader() && !item.isHeader()) {
-                return -1;
-            } else if (!this.isHeader() && item.isHeader()) {
-                return 1;
-            }else{
-                if (item instanceof TuitionData){
-                    TuitionData data = (TuitionData) item;
-                    int accountNoComparison = this.acaName.compareTo(data.acaName);
-                    if (accountNoComparison != 0){
-                        return accountNoComparison;
+
+            if (item instanceof TuitionData){
+                TuitionData data = (TuitionData) item;
+                int accountNoComparison = this.acaName.compareTo(data.acaName);
+                if (accountNoComparison != 0){
+                    LogMgr.e("compare7", "return weekendComparison " + accountNoComparison);
+                    return accountNoComparison;
+                }else{
+                    if (!item.isHeader()) {
+                        LogMgr.e("compare8", "return weekendComparison " + this.payDate.compareTo(data.payDate));
+                        return this.payDate.compareTo(data.payDate);
                     }else{
-//                        try {
-////                            this.payDate = dateFormat.parse(this.time);
-////                            data.payDate = dateFormat.parse(data.time);
-//                            //return this.payDate.compareTo(data.payDate);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
-                        LogMgr.e("compare8", "return weekendComparison " + accountNoComparison);
                         return 0;
                     }
                 }
+            }else{
+                TuitionHeaderData data = (TuitionHeaderData) item;
+                int accountNoComparison = this.acaName.compareTo(data.acaName);
+                if (accountNoComparison != 0){
+                    LogMgr.e("compare7", "return weekendComparison " + accountNoComparison);
+                    return accountNoComparison;
+                }else{
+                    if (item.isHeader()) {
+                        LogMgr.e("compare10", "return weekendComparison ");
+                        return 1;
+
+                    }else{
+                        return 0;
+                    }
+
+                    //return 0;
+                }
             }
-            return 0;
         }
     }
 

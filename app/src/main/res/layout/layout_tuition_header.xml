@@ -2,73 +2,102 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingVertical="8dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/tv_tuition_header_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_tuition_header_account_no"
+        app:layout_constraintBottom_toBottomOf="@id/tv_tuition_header_account_no"
+        android:text="수강료"
+        android:paddingVertical="2dp"
+        android:paddingHorizontal="8dp"
         android:layout_marginStart="@dimen/layout_margin_2"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/bg_tuition_badge"
         android:textColor="@color/black"
         android:textStyle="bold"
+        android:textSize="@dimen/font_size_xsmall"/>
+
+    <TextView
+        android:id="@+id/tv_tuition_header_account_no"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
+        app:layout_constraintStart_toEndOf="@id/tv_tuition_header_badge"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        android:gravity="start"/>
+
+    <TextView
+        android:id="@+id/tv_tuition_header_aca_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
+        app:layout_constraintTop_toBottomOf="@+id/tv_tuition_header_badge"
+        android:layout_marginEnd="8dp"
+        android:textColor="@color/font_color_default" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/btn_account_header_link"
+        app:layout_constraintEnd_toStartOf="@id/tv_tuition_header_total"
+        android:layout_marginEnd="4dp"
+        android:textColor="@color/font_color_default"
+        android:textSize="@dimen/font_size"
+        android:text="총"/>
+
+    <TextView
+        android:id="@+id/tv_tuition_header_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/tv_tuition_header_won"
+        app:layout_constraintBottom_toBottomOf="@id/btn_account_header_link"
+        android:layout_marginEnd="2dp"
+        android:text="0"
+        android:textStyle="bold"
+        android:textColor="@color/red_sub"
         android:textSize="@dimen/font_size"/>
 
     <TextView
-        android:id="@+id/tv_tuition_header_acaName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/tv_tuition_header_badge"
-        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
-        app:layout_constraintStart_toEndOf="@id/tv_tuition_header_badge"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size"
-        android:gravity="start"/>
-
-    <TextView
-        android:id="@+id/tv_tuition_header_pay"
+        android:id="@+id/tv_tuition_header_won"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_tuition_header_badge"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="4dp"
-        android:text="미납 총액"
-        android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tv_tuition_header_pay_total"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_tuition_header_badge"
-        app:layout_constraintEnd_toStartOf="@+id/btn_account_header_link"
-        app:layout_constraintStart_toEndOf="@id/tv_tuition_header_pay"
-        android:layout_marginTop="4dp"
-        android:layout_marginStart="8dp"
+        app:layout_constraintEnd_toStartOf="@id/btn_account_header_link"
+        app:layout_constraintBottom_toBottomOf="@id/btn_account_header_link"
         android:layout_marginEnd="8dp"
-        android:text="100,000원"
+        android:text="원"
         android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size"
-        android:gravity="start"/>
+        android:textSize="@dimen/font_size"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_account_header_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        app:layout_constraintTop_toTopOf="@id/tv_tuition_header_badge"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="납부하기"
+        android:text="계좌\n연동"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size"
         android:textStyle="bold"
         android:background="@drawable/selector_bt_account_link"
         android:stateListAnimator="@xml/animate_button_push"/>
+
+    <View
+        android:id="@+id/line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintTop_toBottomOf="@id/btn_account_header_link"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/line_2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,6 +2,7 @@ package kr.jeet.edu.student.model.data;
 
 import kr.jeet.edu.student.activity.MenuStudentInfoActivity;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.utils.LogMgr;
 
 public class TuitionHeaderData implements MenuStudentInfoActivity.PayListItem {
     public String acaName;    // 캠퍼스명
@@ -37,12 +38,37 @@ public class TuitionHeaderData implements MenuStudentInfoActivity.PayListItem {
         if (gubunComparison != 0){
             return gubunComparison;
         }else{
-            if (this.isHeader() && !item.isHeader()) {
-                return -1;
-            } else if (!this.isHeader() && item.isHeader()) {
-                return 1;
+//            if (this.isHeader() && !item.isHeader()) {
+//                return -1;
+//            } else if (!this.isHeader() && item.isHeader()) {
+//                return 1;
+//            }
+
+            if (item instanceof TuitionData){
+                TuitionData data = (TuitionData) item;
+                int accountNoComparison = this.acaName.compareTo(data.acaName);
+                if (accountNoComparison != 0){
+                    LogMgr.e("compare7", "return weekendComparison " + accountNoComparison);
+                    return accountNoComparison;
+                }else{
+                    return 0;
+                }
+            }else{
+                TuitionHeaderData data = (TuitionHeaderData) item;
+                int accountNoComparison = this.acaName.compareTo(data.acaName);
+                if (accountNoComparison != 0){
+                    LogMgr.e("compare7", "return weekendComparison " + accountNoComparison);
+                    return accountNoComparison;
+                }else{
+                    if (item.isHeader()) {
+                        LogMgr.e("compare10", "return weekendComparison ");
+                        return 1;
+
+                    }else{
+                        return 0;
+                    }
+                }
             }
         }
-        return 0;
     }
 }

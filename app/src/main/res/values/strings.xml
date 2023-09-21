@@ -9,6 +9,7 @@
     <!--fcm channel id -->
     <string name="default_notification_channel_id">jeet_education_app_channel_id</string>
     <string name="default_notification_headup_channel_id">jeet_education_app_channel_id_headup</string>
+    <string name="consult_notification_headup_channel_id">jeet_education_app_channel_id_headup_consult</string>
     <!--  intro request permission  -->
     <string name="msg_intro_request_permission">앱의 기능을 정상적으로 사용하기 위해 권한이 필요합니다. 안내되는 권한을 허용해 주세요.</string>
     <string name="msg_intro_denied_permission">설정 > 권한 에서 권한을 허용할 수 있습니다.</string>
@@ -201,7 +202,7 @@
     <string name="menu_stu_info_consultation_request">선생님 상담요청</string>
     <string name="menu_stu_info_consultation_request_header">상담요청</string>
     <string name="menu_stu_info_attendance_sheet">출석표</string>
-    <string name="menu_stu_info_tuition">미납 내역</string>
+    <string name="menu_stu_info_tuition">수강료 안내</string>
     <string name="menu_stu_info_book_pay">교재비</string>
     <string name="menu_stu_info_unpaid_amount">미납 금액</string>
     <string name="menu_stu_info_empty">정보 없음</string>

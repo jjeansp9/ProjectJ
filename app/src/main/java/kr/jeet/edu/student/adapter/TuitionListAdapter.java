@@ -3,6 +3,8 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.os.Build;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +32,8 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public interface ItemClickListener{ public void onItemClick(MenuStudentInfoActivity.PayListItem item); }
 
-    private static final int LAYOUT_HEADER = 0;
-    private static final int LAYOUT_CONTENT = 1;
+    public static int LAYOUT_HEADER = 0;
+    public static int LAYOUT_CONTENT = 1;
 
     private Context mContext;
     private List<MenuStudentInfoActivity.PayListItem> mList;
@@ -76,15 +78,53 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             TuitionHeaderData headerItem = (TuitionHeaderData) item;
 
             headerHolder.tvGubunBadge.setText(Utils.getStr(headerItem.gubun));
+            headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
             headerHolder.tvHeaderAcaName.setText(Utils.getStr(headerItem.acaName));
+
+            headerHolder.tvPayTotal.setText(headerItem.payment);
 
         }else {
             ContentViewHolder contentHolder = (ContentViewHolder) holder;
             TuitionData contentItem = (TuitionData) item;
 
-            contentHolder.tvContentPay.setText(Utils.getStr(contentItem.payment));
+            contentHolder.tvContentPay.setText(Utils.getStr(contentItem.payment+"원"));
             contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
             contentHolder.tvContentDate.setText(Utils.getStr(contentItem.payDate));
+
+//            // 마지막 아이템 체크
+//            if (position == mList.size() - 1) {
+//                // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
+//                contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+//            } else {
+//                // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
+//                contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
+//            }
+
+            // 현재 아이템의 ViewType이 Content인 경우에만 다음 아이템의 ViewType을 확인
+//            if (holder.getItemViewType() == LAYOUT_CONTENT) {
+//                int nextItemType = getItemViewType(position + 1);
+//                if (nextItemType != LAYOUT_HEADER) {
+//                    // 다음 아이템의 ViewType이 Header가 아닌 경우, contentHolder.line을 invisible로 설정
+//                    contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+//                } else {
+//                    // 다음 아이템의 ViewType이 Header인 경우, contentHolder.line을 visible로 설정
+//                    contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
+//                }
+//            }
+
+            // 마지막 아이템 체크
+            if (position == mList.size() - 1) {
+                // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
+                contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+            } else {
+                // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
+                int nextPosition = position + 1;
+                if (nextPosition < mList.size() && getItemViewType(nextPosition) == LAYOUT_HEADER) {
+                    contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
+                } else {
+                    contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+                }
+            }
         }
     }
 
@@ -96,12 +136,14 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         private AppCompatButton btnAccountLink;
-        private TextView tvGubunBadge, tvHeaderAcaName;
+        private TextView tvGubunBadge, tvHeaderAcaName, tvAccountNo, tvPayTotal;
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             btnAccountLink = itemView.findViewById(R.id.btn_account_header_link);
             tvGubunBadge = itemView.findViewById(R.id.tv_tuition_header_badge);
-            tvHeaderAcaName = itemView.findViewById(R.id.tv_tuition_header_acaName);
+            tvAccountNo = itemView.findViewById(R.id.tv_tuition_header_account_no);
+            tvHeaderAcaName = itemView.findViewById(R.id.tv_tuition_header_aca_name);
+            tvPayTotal = itemView.findViewById(R.id.tv_tuition_header_total);
 
             btnAccountLink.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
@@ -111,12 +153,14 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
     public class ContentViewHolder extends RecyclerView.ViewHolder{
         private TextView tvContentPay, tvContentClsName, tvContentDate;
+        private View lineContentBottom;
 
         public ContentViewHolder(@NonNull View itemView){
             super(itemView);
             tvContentPay = itemView.findViewById(R.id.tv_tuition_content_pay);
             tvContentClsName = itemView.findViewById(R.id.tv_tuition_content_cls_name);
             tvContentDate = itemView.findViewById(R.id.tv_tuition_content_date);
+            lineContentBottom = itemView.findViewById(R.id.line_content_bottom);
         }
     }
 }

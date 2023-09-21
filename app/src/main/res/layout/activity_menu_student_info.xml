@@ -249,10 +249,10 @@
                 android:id="@+id/layout_attendance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/layout_consultation_request"
+                app:layout_constraintTop_toBottomOf="@id/layout_tuition"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:paddingHorizontal="@dimen/layout_margin_16"
                 android:paddingBottom="@dimen/layout_margin_8"
                 android:layout_marginTop="@dimen/layout_margin_12"
                 android:layout_marginBottom="@dimen/layout_margin_16"
@@ -285,6 +285,7 @@
                     app:layout_constraintTop_toBottomOf="@id/line_attendance_state"
                     app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginTop="@dimen/layout_margin_12"
+                    android:layout_marginHorizontal="@dimen/layout_margin_16"
                     android:paddingHorizontal="@dimen/layout_margin_16"
                     android:paddingVertical="@dimen/layout_margin_12"
                     android:textColor="@color/black"
@@ -303,6 +304,7 @@
                     android:id="@+id/line_attendance_state"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/layout_margin_16"
                     app:layout_constraintTop_toBottomOf="@id/guide_h50dp"
                     android:background="@color/line_set"/>
                 <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -339,12 +341,10 @@
                 android:id="@+id/layout_tuition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/layout_attendance"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_consultation_request"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_12"
-                android:layout_marginBottom="@dimen/layout_margin_16"
                 android:paddingHorizontal="@dimen/layout_margin_16"
                 android:background="@drawable/bg_menu_student_info_layout">
 
@@ -375,132 +375,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     app:layout_constraintTop_toBottomOf="@id/guide_tuition"
-                    android:background="@color/line_set"/>
-
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_tuition"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:layout_marginHorizontal="@dimen/layout_margin_16">-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/img_tuition_back"-->
-<!--                        android:layout_width="@dimen/calendar_arrow_size"-->
-<!--                        android:layout_height="@dimen/calendar_arrow_size"-->
-<!--                        app:layout_constraintEnd_toStartOf="@id/layout_year_month"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        android:layout_marginEnd="12dp"-->
-<!--                        android:padding="4dp"-->
-<!--                        android:src="@drawable/bt_month_back_nor"-->
-<!--                        android:stateListAnimator="@xml/animate_button_push"/>-->
-
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:id="@+id/layout_year_month"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        android:stateListAnimator="@xml/animate_button_push"-->
-<!--                        android:padding="8dp">-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_year"-->
-<!--                            android:layout_width="0dp"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layout_constraintEnd_toStartOf="@id/tv_month"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            android:gravity="center"-->
-<!--                            android:textSize="@dimen/font_size"-->
-<!--                            android:textColor="@color/font_color_default"-->
-<!--                            android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_month"-->
-<!--                            android:layout_width="0dp"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layout_constraintStart_toEndOf="@id/tv_year"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            android:layout_marginStart="6dp"-->
-<!--                            android:gravity="center"-->
-<!--                            android:textSize="@dimen/font_size"-->
-<!--                            android:textColor="@color/font_color_default"-->
-<!--                            android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
-
-<!--                        <ImageView-->
-<!--                            android:id="@+id/img_icon_calender"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layout_constraintStart_toEndOf="@id/tv_month"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            android:layout_marginStart="@dimen/layout_margin_8"-->
-<!--                            android:src="@drawable/bt_calendar_nor"/>-->
-
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--                    <ImageView-->
-<!--                        android:id="@+id/img_tuition_next"-->
-<!--                        android:layout_width="@dimen/calendar_arrow_size"-->
-<!--                        android:layout_height="@dimen/calendar_arrow_size"-->
-<!--                        app:layout_constraintStart_toEndOf="@id/layout_year_month"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        android:layout_marginStart="12dp"-->
-<!--                        android:padding="4dp"-->
-<!--                        android:src="@drawable/bt_month_next_nor"-->
-<!--                        android:stateListAnimator="@xml/animate_button_push"/>-->
-
-<!--                    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                        android:id="@+id/layout_total_unpaid"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        app:layout_constraintTop_toBottomOf="@+id/layout_year_month"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        android:layout_marginTop="8dp">-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_total_amount"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            android:text="@string/menu_stu_info_unpaid_amount"-->
-<!--                            android:textColor="@color/font_color_default"-->
-<!--                            android:textSize="@dimen/font_size"-->
-<!--                            android:textStyle="bold"/>-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_total_payment"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"-->
-<!--                            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                            android:hint="없음"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textSize="@dimen/font_size_large"-->
-<!--                            android:textStyle="bold"/>-->
-
-<!--                    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--                    <View-->
-<!--                        android:id="@+id/line_tuition"-->
-<!--                        android:layout_width="match_parent"-->
-<!--                        android:layout_height="1dp"-->
-<!--                        android:background="@color/line_2"-->
-<!--                        app:layout_constraintTop_toBottomOf="@id/layout_total_unpaid"-->
-<!--                        android:layout_marginTop="@dimen/layout_margin_8"/>-->
-
-<!--                    -->
-
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+                    android:background="@color/line_set"
+                    android:visibility="invisible"/>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_tuition"
@@ -509,7 +385,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/line_tuition"
+                    app:layout_constraintTop_toBottomOf="@id/tv_tuition"
+                    android:layout_marginBottom="8dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     android:orientation="vertical"
                     android:nestedScrollingEnabled="false"/>
@@ -518,7 +395,7 @@
                     android:id="@+id/tv_tuition_empty"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@id/line_tuition"
+                    app:layout_constraintTop_toBottomOf="@id/tv_tuition"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

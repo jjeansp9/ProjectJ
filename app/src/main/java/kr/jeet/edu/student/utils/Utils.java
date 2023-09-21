@@ -13,6 +13,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -20,6 +24,9 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.InsetDrawable;
+import android.media.AudioManager;
+import android.media.RingtoneManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -32,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
 import com.bumptech.glide.Glide;
@@ -409,6 +417,49 @@ public class Utils {
             }
         }).start();
     }
+
+//    public static void createNotification(Context _context, String title, String content){
+//        PendingIntent pendingIntent;
+////        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+////            pendingIntent = PendingIntent.getActivity(_context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+////        }else{
+////            pendingIntent = PendingIntent.getActivity(_context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
+////        }
+//        String channelId = _context.getString(R.string.consult_notification_headup_channel_id);
+//        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(_context, channelId)
+////                .setTicker(tickerText)
+//                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setContentTitle(title)
+//                .setContentText(content)
+//                .setAutoCancel(true)
+//                .setPriority(NotificationCompat.PRIORITY_HIGH)
+//                .setCategory(NotificationCompat.CATEGORY_ALARM);
+//                //.setContentIntent(pendingIntent);
+////                .setFullScreenIntent(pendingIntent, true);
+//        AudioManager audioManager = (AudioManager) _context.getSystemService(Context.AUDIO_SERVICE);
+//        if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
+//            notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
+//        }else {
+//            notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND);
+//
+//        }
+//        notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+//        NotificationManager notificationManager = (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(channelId, "jeet_notification", NotificationManager.IMPORTANCE_HIGH);
+//            channel.setDescription("jeet");
+//            channel.setShowBadge(true);
+//            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmssSS", Locale.getDefault());
+//        String currentTimeStamp = dateFormat.format(new Date());
+//
+//        int _notifyID = Integer.parseInt(currentTimeStamp);
+//
+//        notificationManager.notify(_notifyID, notificationBuilder.build());
+//    }
 }
 
 
