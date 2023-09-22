@@ -67,6 +67,7 @@ public class ConsultationRequestActivity extends BaseActivity {
     private int _sfCode = 0;
     private String _clsName = "";
     private String _memberName = "";
+    private String _writerName = "";
     private int _userGubun = 0;
     private String _phoneNumber = "";
     private String _managerPhoneNumber = "";
@@ -92,16 +93,20 @@ public class ConsultationRequestActivity extends BaseActivity {
         _acaTel = PreferenceUtil.getAcaTel(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
-
         _userGubun = PreferenceUtil.getUserGubun(mContext);
+
+        // 부모일 떄 : memberName - 김민결  //  writerName - 김민정
+        // 학생일 때 : memberName - 김민결  //  writerName - 김민결
 
         if (_userGubun == Constants.USER_TYPE_PARENTS) {
             _phoneNumber = PreferenceUtil.getParentPhoneNum(mContext);
+            _memberName = PreferenceUtil.getStName(mContext);
             requestMemberInfo(_memberSeq, _stCodeParent);
         }
         else {
             _phoneNumber = PreferenceUtil.getStuPhoneNum(mContext);
             _memberName = PreferenceUtil.getStName(mContext);
+            _writerName = PreferenceUtil.getStName(mContext);
         }
 
         _selectedDate = new Date();
@@ -216,9 +221,10 @@ public class ConsultationRequestActivity extends BaseActivity {
         LogMgr.e(TAG + "putConsultRequest >> ", "content : " + content + "\n acaCode : " + _acaCode);
 
         CounselRequest request = new CounselRequest();
-        request.memberSeq = _memberSeq; // ??
-        //request.memberSeq = PreferenceUtil.getUserSeq(mContext); // ??
+        request.memberSeq = _memberSeq;
         request.memberName = _memberName;
+        request.userGubun = _userGubun;
+        request.writerName = _writerName;
         request.counselDate = mTvCal.getText().toString();
         request.acaCode = _acaCode;
         request.acaName = _acaName;
@@ -233,6 +239,8 @@ public class ConsultationRequestActivity extends BaseActivity {
         LogMgr.d(TAG + "requestData",
                 "\nmemberSeq: " + request.memberSeq +
                 "\nmemberName: " + request.memberName +
+                "\nwriterName: " + request.writerName +
+                "\nuserGubun: " + request.userGubun +
                 "\ncounselDate: " + request.counselDate +
                 "\nacaCode: " + request.acaCode +
                 "\nacaName: " + request.acaName +
@@ -326,7 +334,8 @@ public class ConsultationRequestActivity extends BaseActivity {
                             StudentInfo getData = new StudentInfo();
                             getData = response.body().data;
 
-                            _memberName = getData.name;
+                            //_memberName = getData.name;
+                            _writerName = getData.name;
 
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

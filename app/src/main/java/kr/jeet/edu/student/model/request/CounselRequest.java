@@ -7,7 +7,13 @@ public class CounselRequest {
     public int memberSeq;
 
     @SerializedName("memberName")
-    public String memberName;
+    public String memberName;     // 학생명
+
+    @SerializedName("userGubun")
+    public int userGubun;
+
+    @SerializedName("writerName")
+    public String writerName;     // 작성자명
 
     @SerializedName("counselDate")
     public String counselDate;
