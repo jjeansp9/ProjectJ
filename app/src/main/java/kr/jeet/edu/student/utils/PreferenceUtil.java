@@ -26,6 +26,7 @@ public class PreferenceUtil {
     public static final String PREF_USER_GENDER = "user_gender"; // 자녀원생 성별
     public static final String PREF_STU_SEQ = "stu_seq"; // 원생 seq
     public static final String PREF_ST_NAME = "user_stname"; // 자녀원생 이름
+    public static final String PREF_PARENT_NAME = "user_parentname"; // 부모님 이름
     public static final String PREF_STU_GENDER = "user_stu_gender"; // 자녀원생 성별
     public static final String PREF_NUMBER_OF_CHILD = "number_of_child"; // 자녀 인원 수(1명인 경우 HeaderView에 자녀선택화면 아이콘 숨기기)
     public static final String PREF_STU_BIRTH = "stu_birth"; // 자녀 생일
@@ -224,6 +225,17 @@ public class PreferenceUtil {
     public static String getStName(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
         return pref.getString(PREF_ST_NAME, "");
+    }
+
+    // PREF_PARENT_NAME
+    public static void setParentName(Context context, String parentName) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putString(PREF_PARENT_NAME, parentName).apply();
+    }
+
+    public static String getParentName(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return pref.getString(PREF_PARENT_NAME, "");
     }
 
     // PREF_USER_STCODE

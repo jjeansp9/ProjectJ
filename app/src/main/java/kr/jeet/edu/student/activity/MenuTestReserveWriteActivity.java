@@ -82,6 +82,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String _stGrade = "";
     private String _stReason = "";
 
+    private String _stName = "";
+    private String _stPhone = "";
+    private String _stParentName = "";
+    private String _stParentPhone = "";
+    private String _birth = "";
+
     Date _selectedDate;
     private int birthMinYear = 1950;
     private int birthMaxYear = 0;
@@ -124,15 +130,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_test_reserve_write);
         mContext = this;
-        initData();
         initView();
         initAppbar();
     }
-
-    private String _stName = "";
-    private String _stPhone = "";
-    private String _stParentPhone = "";
-    private String _birth = "";
 
     private void initData(){
         _selectedDate = new Date();
@@ -145,6 +145,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _birth = PreferenceUtil.getStuBirth(mContext);
         _stPhone = PreferenceUtil.getStuPhoneNum(mContext);
         _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
+        _stParentName = PreferenceUtil.getParentName(mContext);
 
         try {
 
@@ -168,6 +169,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
     @Override
     void initView() {
+
+        initData();
+
         findViewById(R.id.layout_reserve_birth).setOnClickListener(this);
         findViewById(R.id.layout_reserve_test_date).setOnClickListener(this);
         findViewById(R.id.root_reserve_write).setOnClickListener(this);
@@ -197,7 +201,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
         mSpinnerTestTime = findViewById(R.id.spinner_reserve_test_class);
 
-
         LogMgr.e(TAG, "Gender: " + _stuGender);
 
         if (writeMode.equals(Constants.WRITE_EDIT)) {
@@ -206,12 +209,50 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             if (_stuGender.equals("M")) mGenderRbMale.setChecked(true);
             else mGenderRbFemale.setChecked(true);
 
-            mEtName.setText(Utils.getStr(_stName));
-            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
-            mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
+//            mEtName.setText(Utils.getStr(_stName));
+//            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
+//            mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
+//            mTvBirthDate.setText(Utils.getStr(_birth));
+
+            if (!TextUtils.isEmpty(_stName)) {
+                mEtName.setText(Utils.getStr(_stName));
+                mEtName.setEnabled(false);
+            }
+            Log.i(TAG, "stPhone: " + _stPhone);
+            if (!TextUtils.isEmpty(_stPhone)) {
+                mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
+                mEtStuPhone.setEnabled(false);
+            }
+            if (!TextUtils.isEmpty(_stParentPhone)){
+                mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
+                mEtparentPhone.setEnabled(false);
+            }
+            if (!TextUtils.isEmpty(_stParentName)){
+                mEtParentName.setText(Utils.getStr(_stParentName));
+                mEtParentName.setEnabled(false);
+            }
+
             mTvBirthDate.setText(Utils.getStr(_birth));
+
         }
         setSpinner();
+    }
+
+    private void setTvText(){
+        if (!TextUtils.isEmpty(_stName)) {
+            mEtName.setText(Utils.getStr(_stName));
+            mEtName.setEnabled(false);
+        }
+        if (!TextUtils.isEmpty(_stPhone)) {
+            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
+            mEtStuPhone.setEnabled(false);
+        }
+        if (!TextUtils.isEmpty(_stParentPhone)){
+            mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
+            mEtParentName.setEnabled(false);
+        }
+
+        mTvBirthDate.setText(Utils.getStr(_birth));
     }
 
     private void setView(){

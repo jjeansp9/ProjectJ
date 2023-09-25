@@ -347,6 +347,8 @@ public class SetAccountActivity extends BaseActivity {
                             PreferenceUtil.setParentPhoneNum(mContext, "");
                             PreferenceUtil.setStuGender(mContext, "");
                             PreferenceUtil.setStuBirth(mContext, "");
+                            PreferenceUtil.setStName(mContext, "");
+                            PreferenceUtil.setParentName(mContext, "");
                             PreferenceUtil.setAutoLogin(mContext, false);
                             Intent intent = new Intent(mContext, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

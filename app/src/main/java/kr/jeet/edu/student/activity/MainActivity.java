@@ -55,6 +55,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -117,6 +118,9 @@ public class MainActivity extends BaseActivity {
     private int _stCode = 0;
     private String acaCode = "";
     private int teacherCnt = 0;
+    private int _memberSeq = 0;
+    private int stCodeParent = 0;
+
     private PushMessage _pushMessage;
 
     private boolean isMain = true;
@@ -168,8 +172,10 @@ public class MainActivity extends BaseActivity {
                     break;
                 case CMD_GET_MEMBER_INFO:
                     requestMemberInfo(_stuSeq, _stCode);
+                    if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
                     break;
                 case CMD_GET_NOTIFY_INFO:
+                    Log.i(TAG, "acaCode: " + acaCode);
                     requestBoardList(acaCode);
                     break;
                 case CMD_GET_BOARD_ATTRIBUTE:
@@ -317,6 +323,7 @@ public class MainActivity extends BaseActivity {
 //            }
         }
 
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _userType = PreferenceUtil.getUserType(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
@@ -655,9 +662,22 @@ public class MainActivity extends BaseActivity {
                                 }
 
                                 PreferenceUtil.setStuGender(mContext, getData.gender);
-                                PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
-                                PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
+                                //PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                 PreferenceUtil.setStuBirth(mContext, getData.birth);
+
+                                if (_userGubun == Constants.USER_TYPE_PARENTS){
+                                    if (stCode == 0) {
+                                        PreferenceUtil.setParentName(mContext, getData.name);
+                                        PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+                                    }else{
+                                        PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                        PreferenceUtil.setStName(mContext, getData.name);
+                                    }
+                                }else{
+                                    PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
+                                    PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                    PreferenceUtil.setStName(mContext, getData.name);
+                                }
 
                                 if (getData.scName.equals("")) mTvSchoolAndGradeName.setText(getData.stGrade);
                                 else if (getData.stGrade.equals("")) mTvSchoolAndGradeName.setText(getData.scName);

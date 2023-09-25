@@ -132,17 +132,17 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 if(!isContainImage) {
                     Glide.with(mContext).clear(holder.imgBrf);
                     holder.imgBrf.setVisibility(View.INVISIBLE);
-                    setView(holder.tvTitle, IMG_IS_EMPTY);
+                    setView(holder.tvTitle, holder.tvLocation, IMG_IS_EMPTY);
 
                 }else{
                     holder.imgBrf.setVisibility(View.VISIBLE);
-                    setView(holder.tvTitle, IMG_IS_NOT_EMPTY);
+                    setView(holder.tvTitle, holder.tvLocation, IMG_IS_NOT_EMPTY);
                 }
             }
             else {
                 Glide.with(mContext).clear(holder.imgBrf);
                 holder.imgBrf.setVisibility(View.INVISIBLE);
-                setView(holder.tvTitle, IMG_IS_EMPTY);
+                setView(holder.tvTitle, holder.tvLocation, IMG_IS_EMPTY);
             }
 
         }catch (Exception e){
@@ -150,7 +150,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
         }
     }
 
-    private void setView(TextView tvTitle, boolean set){
+    private void setView(TextView tvTitle, TextView tvLoc, boolean set){
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) tvTitle.getLayoutParams();
 
         if (set){

@@ -228,6 +228,21 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
 
         mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(mInfo.rdcnt)));
+
+        if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
+
+            for(FileData data : mInfo.fileList) {
+                String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+                LogMgr.w(data.saveName + " / " + mimeType);
+
+                // mimeType is checked for null here.
+                if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
+                else mFileList.add(data);
+
+            }
+        }
+        if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
+        if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
     }
 
     private void setImageRecycler(){
