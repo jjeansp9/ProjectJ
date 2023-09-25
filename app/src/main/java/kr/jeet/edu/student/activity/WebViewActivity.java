@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import java.io.File;
 import java.net.URISyntaxException;
 
 import kr.jeet.edu.student.R;
@@ -74,7 +76,6 @@ public class WebViewActivity extends BaseActivity {
         wv = findViewById(R.id.web_view);
 
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-        wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         WebSettings webSettings = wv.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -82,12 +83,45 @@ public class WebViewActivity extends BaseActivity {
         webSettings.setUseWideViewPort(true);        //html viewport 메타태그 지원
         webSettings.setSupportMultipleWindows(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         wv.setWebViewClient(new MyWebViewClient(mActivity, wv));
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 
+        wv.clearCache(true);
+        wv.clearHistory();
+
+        File cacheDir = getCacheDir();
+        clearAppCache(mContext, cacheDir);
+
         if (url != null) wv.loadUrl(url);
     }
+
+    public void clearAppCache(Context mContext, java.io.File _oDir)
+    {
+        java.io.File _oFile = _oDir;
+
+        if(_oFile==null)
+            _oFile = mContext.getCacheDir();
+        if(_oFile==null)
+            return;
+
+        java.io.File[] _oChildrenFile = _oFile.listFiles();
+        try
+        {
+            for(int i=0;i<_oChildrenFile.length;i++)
+            {
+                if(_oChildrenFile[i].isDirectory())
+                    clearAppCache(mContext, _oChildrenFile[i]);
+                else
+                    _oChildrenFile[i].delete();
+            }
+        }
+        catch(Exception e)
+        {
+        }
+    }
+
 
     @Override
     void initAppbar() {}

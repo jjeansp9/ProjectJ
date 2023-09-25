@@ -69,6 +69,8 @@ public class MyWebViewClient extends WebViewClient {
                 }
             }
         } else {
+            view.clearCache(true);
+            view.clearHistory();
             view.loadUrl(request.getUrl().toString());
         }
 
