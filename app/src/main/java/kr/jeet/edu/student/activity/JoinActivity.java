@@ -287,7 +287,7 @@ public class JoinActivity extends BaseActivity {
         if(RetrofitClient.getInstance() != null) {
             showProgressDialog();
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.singUp(request).enqueue(new Callback<BaseResponse>() {
+            mRetrofitApi.signUp(request).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     hideProgressDialog();

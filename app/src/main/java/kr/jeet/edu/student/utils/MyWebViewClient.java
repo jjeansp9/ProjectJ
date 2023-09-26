@@ -123,23 +123,9 @@ public class MyWebViewClient extends WebViewClient {
 //                "  $('.second-row-input').placeholder('1234');" +
 //                "});";
 //
-//        view.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
-//            @Override
-//            public void onReceiveValue(String value) {
-//                // JavaScript 코드 실행 결과 처리
-//                if ("null".equals(value)) {
-//                    // JavaScript 코드가 아무런 결과를 반환하지 않은 경우
-//                    LogMgr.e(TAG, "JavaScript execution result is null");
-//                } else {
-//                    // JavaScript 코드가 결과를 반환한 경우
-//                    LogMgr.e(TAG, "JavaScript execution result: " + value);
-//                }
-//
-//                // 이후에 필요한 작업을 수행할 수 있습니다.
-//                hideProgressDialog();
-//                wv.setVisibility(View.VISIBLE);
-//            }
-//        });
+//        view.evaluateJavascript(javascriptCode, null);
+
+        view.loadUrl("javascript:$('.second-row-input').attr('placeholder', '1234');");
 
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);

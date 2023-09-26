@@ -203,7 +203,7 @@ public class LoginActivity extends BaseActivity {
 
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.singIn(request.id, request.pw).enqueue(new Callback<LoginResponse>() {
+            mRetrofitApi.signIn(request.id, request.pw).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if(response.isSuccessful()) {

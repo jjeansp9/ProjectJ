@@ -590,6 +590,16 @@
                         tools:ignore="DuplicateIds" />
 
                     <TextView
+                        android:id="@+id/txt_study_column"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/hint_test_reserve_detail_study"
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
                         android:id="@+id/txt_study"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -599,7 +609,7 @@
                         android:textSize="@dimen/font_size"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toBottomOf="@id/txt_study_column" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -195,25 +195,25 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             str = "학원 : ";
             String subStr = "";
             if(!TextUtils.isEmpty(mInfo.time1)) subStr += mInfo.time1;
-            if(!TextUtils.isEmpty(mInfo.date1)) subStr += (subStr.isEmpty()?"":", ") + mInfo.date1;
+            if(!TextUtils.isEmpty(mInfo.date1)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date1;
             str += subStr.isEmpty() ? "-" : subStr;
 
             str += "\n과외 : ";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time2)) subStr += mInfo.time2;
-            if(!TextUtils.isEmpty(mInfo.date2)) subStr += (subStr.isEmpty()?"":", ") + mInfo.date2;
+            if(!TextUtils.isEmpty(mInfo.date2)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date2;
             str += subStr.isEmpty() ? "-" : subStr;
 
             str += "\n가정학습(자기주도) : ";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time3)) subStr += mInfo.time3;
-            if(!TextUtils.isEmpty(mInfo.date3)) subStr += (subStr.isEmpty()?"":", ") + mInfo.date3;
+            if(!TextUtils.isEmpty(mInfo.date3)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date3;
             str += subStr.isEmpty() ? "-" : subStr;
 
             str += "\n구몬/눈높이/재능 : ";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time4)) subStr += mInfo.time4;
-            if(!TextUtils.isEmpty(mInfo.date4)) subStr += (subStr.isEmpty()?"":", ") + mInfo.date4;
+            if(!TextUtils.isEmpty(mInfo.date4)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date4;
             str += subStr.isEmpty() ? "-" : subStr;
 
             ((TextView)findViewById(R.id.txt_study)).setText(str);

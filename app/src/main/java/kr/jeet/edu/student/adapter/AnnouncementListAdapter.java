@@ -66,8 +66,8 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             LogMgr.e("isMain: " + isMain);
             if (isMain) {
                 holder.brfRoot.setForeground(null);
-                holder.tvRdCnt.setVisibility(View.GONE);
-                holder.imgRdCnt.setVisibility(View.GONE);
+                holder.tvRdCnt.setVisibility(View.VISIBLE);
+                holder.imgRdCnt.setVisibility(View.VISIBLE);
             }else{
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);

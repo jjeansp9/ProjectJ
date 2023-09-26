@@ -78,6 +78,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String _ltcCode = "";
     private String _ltcName = "";
     private String _scName = "";
+    private int _userGubun = -1;
     private int _scCode = 0;
     private String _stGrade = "";
     private String _stReason = "";
@@ -139,7 +140,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         testDateMinYear = calendar.get(Calendar.YEAR);
         birthMaxYear = calendar.get(Calendar.YEAR);
-
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stName = PreferenceUtil.getStName(mContext);
         _stuGender = PreferenceUtil.getStuGender(mContext);
         _birth = PreferenceUtil.getStuBirth(mContext);
@@ -293,7 +294,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mEtParentName.setEnabled(false);
         mEtparentPhone.setText(Utils.getStr(mInfo.parentPhoneNumber));
         mEtparentPhone.setEnabled(false);
-        mEtCashReceipt.setText(Utils.getStr(mInfo.cashReceiptNumber));
+        mEtCashReceipt.setText(Utils.getStr(mInfo.cashReceiptNumber.replace("-", "")));
         mSpinnerFunnel.setText(Utils.getStr(mInfo.reason));
         _stReason = Utils.getStr(mInfo.reason);
         mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
@@ -590,7 +591,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
-
+        request.userGubun = _userGubun;
         request.name = mEtName.getText().toString(); // 학생이름 [필수]
         request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]
         request.sex = gender; // 성별 (1 남자, 2 여자) [필수]
@@ -606,8 +607,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.reservationDate = str; // 테스트예약일 [필수]
         request.bigo = _ltcCode; // 캠퍼스 비고 [필수]
         request.bigoText = _ltcName; // 캠퍼스 비고(캠퍼스 이름) [필수]
-        request.cashReceiptNumber = TextUtils.isEmpty(mEtCashReceipt.getText().toString()) ? "010-000-1234" : mEtCashReceipt.getText().toString(); // 현금영수증 (010-000-1234) [선택]
-        //request.cashReceiptNumber = Utils.formatNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
+        //request.cashReceiptNumber = TextUtils.isEmpty(mEtCashReceipt.getText().toString()) ? "010-000-1234" : mEtCashReceipt.getText().toString(); // 현금영수증 (010-000-1234) [선택]
+        request.cashReceiptNumber = Utils.formatNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
 
         LogMgr.i(TAG+ "putData","\n학생이름 : " + request.name
                 + "\n생년월일 : " + request.birth

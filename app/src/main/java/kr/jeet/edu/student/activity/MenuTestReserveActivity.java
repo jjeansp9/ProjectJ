@@ -24,6 +24,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +56,7 @@ public class MenuTestReserveActivity extends BaseActivity {
     private SwipeRefreshLayout mSwipeRefresh;
     private TestReserveAdapter mAdapter;
     private TextView txtEmpty;
+    private Button btnReserve;
 
     private int position = -1;
 
@@ -68,12 +71,18 @@ public class MenuTestReserveActivity extends BaseActivity {
             if (intent!= null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED)) {
                 LogMgr.e(TAG, "resultLauncher Event ADD");
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
-                if (added) requestTestReserveList();
+                if (added) {
+                    requestTestReserveList();
+                    Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
+                }
 
             }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED)){
                 LogMgr.e(TAG, "resultLauncher Event EDIT");
                 boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
-                if (edited) requestTestReserveList();
+                if (edited) {
+                    requestTestReserveList();
+                    Utils.createNotification(mContext, "수정완료", getString(R.string.informed_question_update_success));
+                }
             }
         }
     });
@@ -107,7 +116,8 @@ public class MenuTestReserveActivity extends BaseActivity {
         mSwipeRefresh = findViewById(R.id.refresh_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_test_reserve);
         txtEmpty = (TextView) findViewById(R.id.tv_empty_list);
-
+        btnReserve = findViewById(R.id.btn_reserve);
+        btnReserve.setOnClickListener(this);
         setRecycler();
 
         mSwipeRefresh.setOnRefreshListener( this::requestTestReserveList );
@@ -204,9 +214,15 @@ public class MenuTestReserveActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onClick(View view) {
+        if(view == btnReserve) {
+            Intent intent = new Intent(mContext, InformedConsentActivity.class);
+            resultLauncher.launch(intent);
+        }
+    }
 }
-
-
 
 
 

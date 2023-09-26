@@ -147,7 +147,7 @@
                     app:layout_constraintStart_toEndOf="@id/tv_brf_detail_personnel_sub"
                     app:layout_constraintEnd_toStartOf="@+id/img_rd_cnt"
                     app:layout_constraintTop_toBottomOf="@id/tv_brf_detail_loc"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="@dimen/layout_margin_12"
                     android:layout_marginTop="4dp"
                     android:hint="정보 없음"
                     android:textColor="@color/font_color_default"
@@ -161,7 +161,7 @@
                     app:layout_constraintTop_toTopOf="@id/tv_rd_cnt"
                     app:layout_constraintEnd_toStartOf="@+id/tv_rd_cnt"
                     app:layout_constraintBottom_toBottomOf="@+id/tv_rd_cnt"
-                    android:layout_marginEnd="3dp"/>
+                    android:layout_marginEnd="4dp"/>
 
                 <TextView
                     android:id="@+id/tv_rd_cnt"

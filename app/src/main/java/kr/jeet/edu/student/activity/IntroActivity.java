@@ -263,7 +263,7 @@ public class IntroActivity extends BaseActivity {
         if(RetrofitClient.getInstance() != null) {
             showProgressDialog();
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.singIn(request.id, request.pw).enqueue(new Callback<LoginResponse>() {
+            mRetrofitApi.signIn(request.id, request.pw).enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     hideProgressDialog();

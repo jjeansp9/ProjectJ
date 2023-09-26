@@ -68,11 +68,11 @@ public interface RetrofitApi {
 
     // 회원가입
     @POST("member/signUp")
-    Call<BaseResponse> singUp(@Body SignupRequest signUpRequest);
+    Call<BaseResponse> signUp(@Body SignupRequest signUpRequest);
 
     // 로그인(일반)
     @POST("member/signIn")
-    Call<LoginResponse> singIn(@Query("id") String id, @Query("pw") String pw);
+    Call<LoginResponse> signIn(@Query("id") String id, @Query("pw") String pw);
 
     // 로그아웃
     @POST("member/logout")

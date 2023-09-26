@@ -33,6 +33,7 @@
     <string name="ok">확인</string>
 
     <string name="title_main_school">학교</string>
+    <string name="title_memo">메모</string>
 
     <string name="dialog_title_alarm">알림</string>
     <string name="dialog_title_notice">공지</string>
@@ -413,6 +414,7 @@
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
     <string name="test_reserve_detail_wish_day_week">등원희망요일</string>
     <string name="test_reserve_detail_study">이전학습방법</string>
+    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>
     <string name="test_reserve_detail_process">진도/심화학습</string>
     <string name="test_reserve_detail_option">희망분야</string>
     <string name="test_reserve_detail_high_school">희망고등학교</string>
@@ -545,8 +547,6 @@
         시행일 개인정보보호정책은 2018년 11월 30일부터 시행합니다.
     </string>
 
-	라. 타인의 명예를 손상시키거나 불이익을 주는 경우
-	마. 같은 사용자가 다른 ID로 이중 등록을 한 경우
     <string name="pvy_terms_agree">
 <font color="@color/red">* 학원일정(학원방학/간담회/워크숍), 공휴일 및 대체공휴일, 국경일은 수강료 차감되지 않습니다.\n</font>
 <font color="@color/red">* 최초 학원등록시 월초변경 원칙으로 진행됩니다.\n\n</font>
@@ -605,6 +605,8 @@
 	가. 공공 질서 및 미풍 양속에 반하는 경우
 	나. 범죄적 행위에 관련되는 경우
 	다. 타인의 ID 및 비밀번호를 도용한 경우
+	라. 타인의 명예를 손상시키거나 불이익을 주는 경우
+	마. 같은 사용자가 다른 ID로 이중 등록을 한 경우
 	바. 서비스에 위해를 가하는 등 건전한 이용을 저해하는 경우
 	아. 기타 관련 법령이나 지트에듀케이션에서 정한 이용조건에 위배되는 경우
 

@@ -89,7 +89,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             if(intent != null && intent.hasExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED)) {
                 added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
-                if(added) requestBrfDetail(mInfo.seq);
+                if(added) {
+                    requestBrfDetail(mInfo.seq);
+                    Utils.createNotification(mContext, "예약완료", getString(R.string.briefing_write_success));
+                }
             }
         }
     });
