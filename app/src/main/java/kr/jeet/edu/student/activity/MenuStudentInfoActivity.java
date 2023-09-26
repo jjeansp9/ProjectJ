@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -86,9 +87,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
     }
 
     private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum,
-            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty;
+            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty, mTvAttendanceEmpty;
     private ImageView mImgStuProfile;
-
+    private AppCompatButton mBtnConsultation;
     private RecyclerView mRecyclerTuition;
     private TuitionListAdapter mTuitionAdapter;
     private RetrofitApi mRetrofitApi;
@@ -233,7 +234,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         initData();
 
-        findViewById(R.id.btn_consultation_request).setOnClickListener(this);
+        mBtnConsultation = findViewById(R.id.btn_consultation_request);
+        mBtnConsultation.setOnClickListener(this);
 //        findViewById(R.id.layout_year_month).setOnClickListener(this);
 //        findViewById(R.id.img_tuition_back).setOnClickListener(this);
 //        findViewById(R.id.img_tuition_next).setOnClickListener(this);
@@ -250,6 +252,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvStuPhoneNum = findViewById(R.id.tv_stu_info_stu_phone_num);
         mTvParentPhoneNum = findViewById(R.id.tv_stu_info_parent_phone_num);
         mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
+        mTvAttendanceEmpty = findViewById(R.id.tv_attendance_empty);
         //mTvBookPayEmpty = findViewById(R.id.tv_book_pay_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
@@ -269,6 +272,20 @@ public class MenuStudentInfoActivity extends BaseActivity {
         setCalendar();
         initChipGroup();
         setSpinnerTeacher();
+
+        if (mListCls.size() == 0) {
+            _calendarView.setVisibility(View.GONE);
+            mSpinnerCls.setVisibility(View.GONE);
+            chipGroupLegend.setVisibility(View.GONE);
+            mTvAttendanceEmpty.setVisibility(View.VISIBLE);
+            mBtnConsultation.setBackgroundResource(R.drawable.bt_menu_stu_info_consultation_request_disabled);
+        }else{
+            _calendarView.setVisibility(View.VISIBLE);
+            mSpinnerCls.setVisibility(View.VISIBLE);
+            chipGroupLegend.setVisibility(View.VISIBLE);
+            mTvAttendanceEmpty.setVisibility(View.GONE);
+            mBtnConsultation.setBackgroundResource(R.drawable.selector_bt_stu_info_consultation_request);
+        }
     }
 
     private void setCalendar() {

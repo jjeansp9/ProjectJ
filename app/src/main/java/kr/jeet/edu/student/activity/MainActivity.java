@@ -815,7 +815,7 @@ public class MainActivity extends BaseActivity {
 
                             TeacherClsResponse getData = response.body();
                             if (getData != null && getData.data != null && !getData.data.isEmpty()){
-                                DataManager.getInstance().initClsListMap(getData.data);
+                                //DataManager.getInstance().initClsListMap(getData.data);
                                 String str = getData.data.get(0).sfName;
                                 teacherCnt = getData.data.size();
 

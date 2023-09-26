@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
+import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -96,7 +97,6 @@ public class MyWebViewClient extends WebViewClient {
         super.onPageStarted(view, url, favicon);
         LogMgr.e(TAG, "onPageStarted() : " + url);
         if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
-            // JavaScript를 사용하여 원하는 URL로 리디렉션
             view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
         }
         showProgressDialog();
@@ -108,7 +108,6 @@ public class MyWebViewClient extends WebViewClient {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
         if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
-            // JavaScript를 사용하여 원하는 URL로 리디렉션
             view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
         }
     }
@@ -117,16 +116,46 @@ public class MyWebViewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
+
+        String javascriptCode = "";
+
+        // 예제 1: #payer-login-method 요소의 change 이벤트를 트리거하여 원하는 동작 수행
+        javascriptCode += "$('#payer-login-method').val('bank-number').trigger('change');";
+
+        // 예제 2: #by-account 요소의 click 이벤트를 트리거하여 원하는 동작 수행
+        javascriptCode += "$('#by-account').prop('checked', true).trigger('click');";
+
+        // 예제 3: .second-row-input 요소에 값을 추가
+        javascriptCode += "$('.second-row-input').val('1234');";
+
+
+        view.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
+            @Override
+            public void onReceiveValue(String value) {
+                // JavaScript 코드 실행 결과 처리
+                if ("null".equals(value)) {
+                    // JavaScript 코드가 아무런 결과를 반환하지 않은 경우
+                    LogMgr.e(TAG, "JavaScript execution result is null");
+                } else {
+                    // JavaScript 코드가 결과를 반환한 경우
+                    LogMgr.e(TAG, "JavaScript execution result: " + value);
+                }
+
+                // 이후에 필요한 작업을 수행할 수 있습니다.
+                hideProgressDialog();
+                wv.setVisibility(View.VISIBLE);
+            }
+        });
+
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
-
     }
 
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
         Toast.makeText(activity, R.string.server_error, Toast.LENGTH_SHORT).show();
-
+        LogMgr.e(TAG, "onReceivedError() : " + error);
         // 오류가 났을 때 대체 페이지 로드
         //wv.loadUrl("");
     }

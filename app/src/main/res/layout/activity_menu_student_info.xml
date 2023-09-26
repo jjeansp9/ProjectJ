@@ -334,6 +334,21 @@
                     app:chipSpacingHorizontal="0dp"
                     />
 
+                <TextView
+                    android:id="@+id/tv_attendance_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/spinner_cls"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="@string/menu_stu_info_attendance_empty"
+                    android:textColor="@color/font_color_bc"
+                    android:textSize="@dimen/font_size_large"
+                    android:textStyle="bold"
+                    android:padding="30dp"
+                    android:visibility="gone"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
