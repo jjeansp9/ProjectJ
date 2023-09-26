@@ -30,6 +30,7 @@ import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
+import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
@@ -37,6 +38,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
@@ -76,7 +78,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_board_detail);
         mContext = this;
-        initIntentData();
         initView();
         initAppbar();
     }
@@ -101,8 +102,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                _pushData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
+                new FCMManager(mContext).requestPushConfirmToServer(_pushData);
                 LogMgr.e(TAG,"Event here1");
 
             }
@@ -122,7 +125,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
-
+                        LogMgr.e(TAG,"Event here3-1");
                     } else{
                         LogMgr.e(TAG,"Event here3");
                     }
@@ -133,8 +136,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         result = intent.getParcelableExtra(extraKey);
 
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
+
                         _pushData = intent.getParcelableExtra(extraKey);
+                        _currentSeq = _pushData.connSeq;
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+                        LogMgr.e("Event here2-1");
 
                     } else{
                         LogMgr.e("Event here2");
@@ -166,7 +172,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     @Override
     void initView() {
-
+        initIntentData();
         mTvTitle = findViewById(R.id.tv_board_detail_title);
         mTvName = findViewById(R.id.tv_board_detail_name);
         mTvDate = findViewById(R.id.tv_board_detail_write_date);

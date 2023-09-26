@@ -117,35 +117,29 @@ public class MyWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
 
-        String javascriptCode = "";
-
-        // 예제 1: #payer-login-method 요소의 change 이벤트를 트리거하여 원하는 동작 수행
-        javascriptCode += "$('#payer-login-method').val('bank-number').trigger('change');";
-
-        // 예제 2: #by-account 요소의 click 이벤트를 트리거하여 원하는 동작 수행
-        javascriptCode += "$('#by-account').prop('checked', true).trigger('click');";
-
-        // 예제 3: .second-row-input 요소에 값을 추가
-        javascriptCode += "$('.second-row-input').val('1234');";
-
-
-        view.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
-            @Override
-            public void onReceiveValue(String value) {
-                // JavaScript 코드 실행 결과 처리
-                if ("null".equals(value)) {
-                    // JavaScript 코드가 아무런 결과를 반환하지 않은 경우
-                    LogMgr.e(TAG, "JavaScript execution result is null");
-                } else {
-                    // JavaScript 코드가 결과를 반환한 경우
-                    LogMgr.e(TAG, "JavaScript execution result: " + value);
-                }
-
-                // 이후에 필요한 작업을 수행할 수 있습니다.
-                hideProgressDialog();
-                wv.setVisibility(View.VISIBLE);
-            }
-        });
+//        String javascriptCode = "$(document).ready(function () { " +
+//                "  $('#payer-login-method').val('bank-number').trigger('change');" +
+//                "  $('#by-account').prop('checked', true).trigger('click');" +
+//                "  $('.second-row-input').placeholder('1234');" +
+//                "});";
+//
+//        view.evaluateJavascript(javascriptCode, new ValueCallback<String>() {
+//            @Override
+//            public void onReceiveValue(String value) {
+//                // JavaScript 코드 실행 결과 처리
+//                if ("null".equals(value)) {
+//                    // JavaScript 코드가 아무런 결과를 반환하지 않은 경우
+//                    LogMgr.e(TAG, "JavaScript execution result is null");
+//                } else {
+//                    // JavaScript 코드가 결과를 반환한 경우
+//                    LogMgr.e(TAG, "JavaScript execution result: " + value);
+//                }
+//
+//                // 이후에 필요한 작업을 수행할 수 있습니다.
+//                hideProgressDialog();
+//                wv.setVisibility(View.VISIBLE);
+//            }
+//        });
 
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
@@ -184,4 +178,51 @@ public class MyWebViewClient extends WebViewClient {
             LogMgr.e("hideProgressDialog()", e.getMessage());
         }
     }
+
+//    $(document).ready(function () {
+//
+//        // 로그인 박스
+//        $("#payer-login-method").on('change', function () {
+//            if ($(this).val() == "bank-number") {
+//                $(".second-row-input").attr({
+//                        "name": "bank-number",
+//                        "type": "tel",
+//                        "placeholder": "납부계좌번호 (-)제외"
+//            }).val("1234");
+//
+//                $("#contact").slideUp();
+//            } else if ($(this).val() == "payer-info") {
+//                $(".second-row-input").attr({
+//                        "name": "institute",
+//                        "type": "text",
+//                        "placeholder": "이용기관명"
+//            });
+//
+//                $("#contact").slideDown();
+//            }
+//
+//            $(".second-row-input").val('');
+//        });
+//
+//        $("#payer-login-method .form-check-input").on('click', function () {
+//            if ($("#by-account").is(":checked") == true) {
+//                $(".variable-row-input").attr({
+//                        "name": "bank-number",
+//                        "type": "tel",
+//                        "placeholder": "납부계좌번호 (-)제외"
+//            }).val("1234");
+//
+//                $("#contact").slideUp("fast");
+//
+//            } else if ($("#by-account").is(":checked") == false) {
+//                $(".variable-row-input").attr({
+//                        "name": "institute",
+//                        "type": "text",
+//                        "placeholder": "이용기관명"
+//            });
+//
+//                $("#contact").slideDown("fast");
+//            }
+//        });
+//    });
 }

@@ -82,7 +82,7 @@ public class ClearableTextView extends LinearLayoutCompat implements View.OnClic
         String text = typedArray.getString(R.styleable.DeletableTextView_android_text);
         setText(text);
         String hint = typedArray.getString(R.styleable.DeletableTextView_android_hint);
-        tvContent.setHint(hint);
+        //tvContent.setHint(hint);
     }
     public void setText(String text) {
         tvContent.setText(text);
