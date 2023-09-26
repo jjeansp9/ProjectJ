@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TuitionListAdapter;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.AttendanceData;
 import kr.jeet.edu.student.model.data.AttendanceSummaryData;
@@ -149,7 +150,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final int CMD_GET_STU_INFO = 1;
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
-    private static final int CMD_GET_CLS_INFO = 4;
 
     private Handler _handler = new Handler(Looper.getMainLooper()){
         @Override
@@ -158,9 +158,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 case CMD_GET_ATTENDANCE_INFO:
                     requestGetAttendanceList();
                     break;
-                case CMD_GET_CLS_INFO:
-                    requestCls();
-                    break;
+
                 case CMD_GET_TUITION_INFO:
                     requestTuitionList(currentDate);
                     break;
@@ -173,7 +171,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_student_info);
         mContext = this;
-        initData();
         initAppbar();
         initView();
     }
@@ -200,6 +197,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
+
+        mListCls.addAll(DataManager.getInstance().getClsListMap().values());
     }
 
     private void startWebView(PayListItem item) {
@@ -231,6 +230,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     @Override
     void initView() {
+
+        initData();
+
         findViewById(R.id.btn_consultation_request).setOnClickListener(this);
 //        findViewById(R.id.layout_year_month).setOnClickListener(this);
 //        findViewById(R.id.img_tuition_back).setOnClickListener(this);
@@ -266,6 +268,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         setCalendar();
         initChipGroup();
+        setSpinnerTeacher();
     }
 
     private void setCalendar() {
@@ -572,7 +575,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-                    _handler.sendEmptyMessage(CMD_GET_CLS_INFO);
                 }
 
                 @Override
@@ -581,7 +583,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    _handler.sendEmptyMessage(CMD_GET_CLS_INFO);
                 }
             });
         }
@@ -613,35 +614,35 @@ public class MenuStudentInfoActivity extends BaseActivity {
     }
 
     // 원생 학급 정보 조회
-    private void requestCls(){
-        if(RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
-                @Override
-                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
-                    try {
-                        if (response.isSuccessful() && response.body() != null){
-                            mListCls.addAll(response.body().data);
-                            setSpinnerTeacher();
-                        }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                            LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
-                        }
-
-                    }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
-                }
-
-                @Override
-                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
-                    try { LogMgr.e(TAG, "requestCls() onFailure >> " + t.getMessage()); }
-                    catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
-
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
-                }
-            });
-        }
-    }
+//    private void requestCls(){
+//        if(RetrofitClient.getInstance() != null) {
+//            mRetrofitApi = RetrofitClient.getApiInterface();
+//            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
+//                @Override
+//                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
+//                    try {
+//                        if (response.isSuccessful() && response.body() != null){
+//                            mListCls.addAll(response.body().data);
+//                            setSpinnerTeacher();
+//                        }else{
+//                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+//                            LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
+//                        }
+//
+//                    }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
+//                    try { LogMgr.e(TAG, "requestCls() onFailure >> " + t.getMessage()); }
+//                    catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+//
+//                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+//                }
+//            });
+//        }
+//    }
 
     // 출결조회 (월별)
     private void requestGetAttendanceList(){

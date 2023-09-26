@@ -32,6 +32,8 @@
     <string name="cancel">취소</string>
     <string name="ok">확인</string>
 
+    <string name="title_main_school">학교</string>
+
     <string name="dialog_title_alarm">알림</string>
     <string name="dialog_title_notice">공지</string>
     <string name="dialog_title_error">오류</string>
@@ -445,6 +447,7 @@
     <string name="informed_question_class_path_4">구몬\n눈높이\n재능</string>
     <string name="informed_question_success">레벨테스트를 예약하였습니다.</string>
     <string name="informed_question_update_success">레벨테스트를 수정하였습니다.</string>
+    <string name="title_search_school">학교 검색</string>
 
 
     <string name="elementary_school"><font color="@color/red">초등</font></string>

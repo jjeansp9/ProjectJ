@@ -96,7 +96,7 @@ public class MainActivity extends BaseActivity {
     private ArrayList<MainMenuItemData> mList = new ArrayList<>();
     private ArrayList<AnnouncementData> announceList = new ArrayList<>();
     private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember,
-            mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty;
+            mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty, mTvNameSub;
     private ImageView imgStudentAttendance;
     private LinearLayoutCompat mLayoutBottom;
     private ConstraintLayout layoutAttend, layoutNotify;
@@ -256,6 +256,7 @@ public class MainActivity extends BaseActivity {
         mTvNonMemberNoti = findViewById(R.id.tv_non_member_notice);
         mTvTeacherName = findViewById(R.id.tv_teacher_name);
         mTvListEmpty = findViewById(R.id.tv_main_empty_list);
+        mTvNameSub = findViewById(R.id.tv_name_sub);
 
         mLayoutBottom = findViewById(R.id.layout_bottom);
 
@@ -342,9 +343,9 @@ public class MainActivity extends BaseActivity {
                     mTvNonMember.setVisibility(View.INVISIBLE);
 
                     if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
-
+                        mTvNameSub.setText("님");
                     }else{ // 원생이 아닌경우
-
+                        mTvNameSub.setText("학부모님");
                     }
 
                 }else{ // 비회원
@@ -570,6 +571,7 @@ public class MainActivity extends BaseActivity {
                             if(response.body() != null) {
                                 List<SchoolData> list = response.body().data;
                                 DataManager.getInstance().setSchoolList(list);
+                                DataManager.getInstance().initSchoolListMap(list);
                             }
                         } else {
                             LogMgr.e(TAG, "requestSchoolList() errBody : " + response.errorBody().string());
@@ -813,6 +815,7 @@ public class MainActivity extends BaseActivity {
 
                             TeacherClsResponse getData = response.body();
                             if (getData != null && getData.data != null && !getData.data.isEmpty()){
+                                DataManager.getInstance().initClsListMap(getData.data);
                                 String str = getData.data.get(0).sfName;
                                 teacherCnt = getData.data.size();
 

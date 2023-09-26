@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.data.TeacherClsData;
@@ -82,7 +83,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultation_request);
         mContext = this;
-        initData();
         initAppbar();
         initView();
     }
@@ -109,14 +109,18 @@ public class ConsultationRequestActivity extends BaseActivity {
             _writerName = PreferenceUtil.getStName(mContext);
         }
 
+        mListTeacher.addAll(DataManager.getInstance().getClsListMap().values());
+
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
         minYear = calendar.get(Calendar.YEAR);
-        requestTeacherCls();
     }
 
     @Override
     void initView() {
+
+        initData();
+
         findViewById(R.id.layout_calendar).setOnClickListener(this);
         findViewById(R.id.root_consult).setOnClickListener(this);
 
@@ -125,6 +129,8 @@ public class ConsultationRequestActivity extends BaseActivity {
         mSpinnerTeacher = findViewById(R.id.spinner_teacher);
 
         mSpinnerTeacher.setIsFocusable(true);
+
+        setSpinnerTeacher();
     }
 
     @Override
@@ -182,6 +188,8 @@ public class ConsultationRequestActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinnerTeacher(){
         try {
+
+            if (mListTeacher.size() == 0) finish();
 
             List<String> sfNames = new ArrayList<>();
 
@@ -290,36 +298,6 @@ public class ConsultationRequestActivity extends BaseActivity {
                     }
                 });
             }
-        }
-    }
-
-    private void requestTeacherCls(){
-        if(RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
-                @Override
-                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
-                    try {
-                        if (response.isSuccessful() && response.body() != null){
-                            mListTeacher.addAll(response.body().data);
-                            setSpinnerTeacher();
-                        }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                            LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
-                        }
-
-                    }catch (Exception e){ LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
-
-                }
-
-                @Override
-                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
-                    try { LogMgr.e(TAG, "requestTeacherCls() onFailure >> " + t.getMessage()); }
-                    catch (Exception e) { LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
-
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                }
-            });
         }
     }
 

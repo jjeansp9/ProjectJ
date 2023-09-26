@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="layout_margin_28">28dp</dimen>
+    <dimen name="layout_margin_24">24dp</dimen>
     <dimen name="layout_margin">20dp</dimen>
     <dimen name="layout_margin_16">16dp</dimen>
     <dimen name="layout_margin_12">12dp</dimen>
@@ -66,4 +67,7 @@
     <dimen name="calendar_arrow_size">40dp</dimen>
 
     <dimen name="dot_sex_size">10dp</dimen>
+
+    <dimen name="bottom_sheet_corner_radius">20dp</dimen>
+    <dimen name="bottom_sheet_top_padding">16dp</dimen>
 </resources>

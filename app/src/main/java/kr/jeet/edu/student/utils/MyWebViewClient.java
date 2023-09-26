@@ -28,6 +28,20 @@ public class MyWebViewClient extends WebViewClient {
     private AppCompatActivity activity;
     private AlertDialog mProgressDialog = null;
 
+    // 자동로그아웃 화면이 떴을 때
+//    onLoadResource() : https://www.shinhandamoa.com/common/login#payer,
+//    onPageFinished() : https://www.shinhandamoa.com/common/login#payer,
+//    onLoadResource() : https://www.shinhandamoa.com/loggedOut#payer,
+//    onPageStarted() : https://www.shinhandamoa.com/loggedOut#payer,
+//    onLoadResource() : https://www.shinhandamoa.com/assets/bootstrap/bootstrap.css,
+//    onPageFinished() : https://www.shinhandamoa.com/loggedOut#payer
+
+    // 정상 이동하였을 때
+//    onLoadResource() : https://www.shinhandamoa.com/common/login#payer,
+//    onPageStarted() : https://www.shinhandamoa.com/common/login#payer,
+//    onLoadResource() : https://www.shinhandamoa,
+//    onPageFinished() : https://www.shinhandamoa.com/common/login#payer
+
     public MyWebViewClient(AppCompatActivity mActivity, WebView webView) {
         this.activity = mActivity;
         this.wv = webView;
@@ -81,6 +95,10 @@ public class MyWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         LogMgr.e(TAG, "onPageStarted() : " + url);
+        if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
+            // JavaScript를 사용하여 원하는 URL로 리디렉션
+            view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
+        }
         showProgressDialog();
         wv.setVisibility(View.GONE);
     }
@@ -89,6 +107,10 @@ public class MyWebViewClient extends WebViewClient {
     public void onLoadResource(WebView view, String url) {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
+        if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
+            // JavaScript를 사용하여 원하는 URL로 리디렉션
+            view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
+        }
     }
 
     @Override
@@ -103,7 +125,6 @@ public class MyWebViewClient extends WebViewClient {
     @Override
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
-
         Toast.makeText(activity, R.string.server_error, Toast.LENGTH_SHORT).show();
 
         // 오류가 났을 때 대체 페이지 로드

@@ -86,13 +86,14 @@ public class WebViewActivity extends BaseActivity {
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         wv.setWebViewClient(new MyWebViewClient(mActivity, wv));
+
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 
-        wv.clearCache(true);
-        wv.clearHistory();
-
-        File cacheDir = getCacheDir();
-        clearAppCache(mContext, cacheDir);
+//        wv.clearCache(true);
+//        wv.clearHistory();
+//
+//        File cacheDir = getCacheDir();
+//        clearAppCache(mContext, cacheDir);
 
         if (url != null) wv.loadUrl(url);
     }

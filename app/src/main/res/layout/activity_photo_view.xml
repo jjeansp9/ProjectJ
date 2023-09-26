@@ -21,7 +21,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_vector_close"/>
+            android:src="@drawable/ic_vector_close_white" />
 
         <TextView
             android:id="@+id/tv_photoview_page"
@@ -35,10 +35,10 @@
             android:id="@+id/img_photoview_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:src="@drawable/ic_vector_download_img"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </RelativeLayout>
 
