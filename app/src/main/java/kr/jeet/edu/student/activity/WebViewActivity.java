@@ -76,6 +76,8 @@ public class WebViewActivity extends BaseActivity {
         wv = findViewById(R.id.web_view);
 
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        wv.getSettings().setSupportZoom(true);
+        wv.getSettings().setBuiltInZoomControls(true);
 
         WebSettings webSettings = wv.getSettings();
         webSettings.setJavaScriptEnabled(true);

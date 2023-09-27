@@ -264,7 +264,7 @@ public class FindCredentialsActivity extends BaseActivity {
         if(RetrofitClient.getInstance() != null) {
             showProgressDialog();
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.findPW(id).enqueue(new Callback<FindPWResponse>() {
+            mRetrofitApi.findPW(phoneNo.replace("-", ""), id).enqueue(new Callback<FindPWResponse>() {
                 @Override
                 public void onResponse(Call<FindPWResponse> call, Response<FindPWResponse> response) {
                     hideProgressDialog();

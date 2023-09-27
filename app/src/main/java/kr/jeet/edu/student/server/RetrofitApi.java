@@ -99,7 +99,7 @@ public interface RetrofitApi {
 
     //  PW 찾기
     @GET("member/pw")
-    Call<FindPWResponse> findPW(@Query("memberId") String memberId);
+    Call<FindPWResponse> findPW(@Query("phoneNumber") String phoneNumber, @Query("memberId") String memberId);
 
     //UPDATE PUSH TOKEN
     @POST("push/token")

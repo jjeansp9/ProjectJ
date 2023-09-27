@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
@@ -92,10 +97,16 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     }
 
     private void setView(){
-        String str = TextUtils.isEmpty(String.valueOf(mInfo.year)) ? "" : mInfo.year+"년 ";
-        str += TextUtils.isEmpty(String.valueOf(mInfo.month)) ? "" : mInfo.month+"월 ";
-        str += TextUtils.isEmpty(String.valueOf(mInfo.day)) ? "" : mInfo.day+"일";
-        tvDate.setText(str);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(mInfo.year, mInfo.month - 1, mInfo.day);
+
+        // 원하는 날짜 형식으로 포맷합니다.
+        SimpleDateFormat sdf = new SimpleDateFormat("M월 d일 E요일", Locale.getDefault());
+        Date date = calendar.getTime();
+
+        tvDate.setText(sdf.format(date));
+
+        String str = "";
 
         str = TextUtils.isEmpty(mInfo.acaName) ? "" : mInfo.acaName;
         tvCampus.setText(str);
