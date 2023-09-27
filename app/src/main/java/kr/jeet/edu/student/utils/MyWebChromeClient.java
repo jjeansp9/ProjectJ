@@ -34,9 +34,6 @@ public class MyWebChromeClient extends WebChromeClient {
         webSettings.setUseWideViewPort(true);
         webSettings.setSupportMultipleWindows(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-//        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-//        newWebView.clearCache(true);
-//        newWebView.clearHistory();
 
         newWebView.setWebViewClient(new MyWebViewClient(activity, newWebView));
         newWebView.setWebChromeClient(new MyWebChromeClient(activity) {

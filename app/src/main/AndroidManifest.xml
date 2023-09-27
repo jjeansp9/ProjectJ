@@ -120,18 +120,6 @@
         tools:replace="android:allowBackup"
         >
         <activity
-            android:name=".activity.BusRouteActivity"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.MenuBusActivity"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            />
-        <activity
             android:name=".activity.TeacherInfoActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
@@ -143,6 +131,24 @@
             android:exported="false"
             android:screenOrientation="portrait"
             />
+        <activity
+            android:name=".activity.MenuBusActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.BusRouteActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activity.MenuNoticeActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"

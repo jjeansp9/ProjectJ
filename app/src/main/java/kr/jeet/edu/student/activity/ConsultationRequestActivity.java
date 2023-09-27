@@ -95,9 +95,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
 
-        // 부모일 떄 : memberName - 김민결  //  writerName - 김민정
-        // 학생일 때 : memberName - 김민결  //  writerName - 김민결
-
         if (_userGubun == Constants.USER_TYPE_PARENTS) {
             _phoneNumber = PreferenceUtil.getParentPhoneNum(mContext);
             _memberName = PreferenceUtil.getStName(mContext);
