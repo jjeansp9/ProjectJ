@@ -857,13 +857,17 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        showMessageDialog(getString(R.string.dialog_title_alarm), getString(R.string.dialog_content_close), ok -> {
-            hideMessageDialog();
+        if (writeMode.equals(Constants.WRITE_EDIT)){
             finish();
-            Log.e(TAG, "Event");
-        }, cancel -> {
-            hideMessageDialog();
-            return;
-        }, false);
+        }else{
+            showMessageDialog(getString(R.string.dialog_title_alarm), getString(R.string.dialog_content_close), ok -> {
+                hideMessageDialog();
+                finish();
+                Log.e(TAG, "Event");
+            }, cancel -> {
+                hideMessageDialog();
+                return;
+            }, false);
+        }
     }
 }
