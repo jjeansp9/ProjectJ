@@ -371,6 +371,11 @@ public class MainActivity extends BaseActivity {
 
                     mLayoutBottom.setVisibility(View.GONE); // 화면 하단 레이아웃 gone
 
+                    if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
+                        mTvNameSub.setText("님");
+                    }else{ // 원생이 아닌경우
+                        mTvNameSub.setText("학부모님");
+                    }
                     LogMgr.e(TAG, "No Member");
                 }
             }
@@ -676,7 +681,6 @@ public class MainActivity extends BaseActivity {
                                 if (_userType.equals(Constants.MEMBER)){
 
                                     if (_userGubun == Constants.USER_TYPE_PARENTS){
-                                        LogMgr.e("EVENT1");
                                         if (stCode == 0) {
                                             PreferenceUtil.setParentName(mContext, getData.name);
                                             PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
@@ -689,7 +693,6 @@ public class MainActivity extends BaseActivity {
                                             }else mTvStudentName.setText(getData.name); // 원생 오리지널 이름
                                         }
                                     }else{
-                                        LogMgr.e("EVENT2");
                                         PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                         PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                         PreferenceUtil.setStName(mContext, getData.name);
@@ -700,12 +703,10 @@ public class MainActivity extends BaseActivity {
                                 }else{
                                     if (_userGubun == Constants.USER_TYPE_PARENTS){
                                         if (stCode == 0) {
-                                            LogMgr.e("EVENT3");
                                             PreferenceUtil.setParentName(mContext, getData.name);
                                             PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
 
                                         }else{
-                                            LogMgr.e("EVENT4");
                                             PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                             PreferenceUtil.setStName(mContext, getData.name);
                                         }
@@ -715,7 +716,6 @@ public class MainActivity extends BaseActivity {
                                         }else mTvStudentName.setText(Utils.getStr(getData.name)); // 원생 오리지널 이름
 
                                     }else{
-                                        LogMgr.e("EVENT5");
                                         PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                         PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                         PreferenceUtil.setStName(mContext, getData.name);

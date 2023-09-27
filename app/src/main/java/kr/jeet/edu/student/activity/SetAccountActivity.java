@@ -305,7 +305,7 @@ public class SetAccountActivity extends BaseActivity {
                                 mTvUserGubun.setVisibility(View.VISIBLE);
 
                                 if (getData.phoneNumber != null) {
-                                    mTvPhoneNum.setText(getData.phoneNumber);
+                                    mTvPhoneNum.setText(Utils.formatNum(getData.phoneNumber.replace("-", "")));
                                     phoneNum = getData.phoneNumber;
 
                                 } else mTvPhoneNum.setText(getText(R.string.empty_phonenumber));

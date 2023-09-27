@@ -125,7 +125,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
-
+                        LogMgr.e(TAG,"Event here2");
                     } else{
                         LogMgr.e(TAG,"Event here3");
                     }
@@ -139,9 +139,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         _pushData = intent.getParcelableExtra(extraKey);
                         _currentSeq = _pushData.connSeq;
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+                        LogMgr.e("Event here4");
 
                     } else{
-                        LogMgr.e("Event here2");
+                        LogMgr.e("Event here5");
                     }
                 }
             }
