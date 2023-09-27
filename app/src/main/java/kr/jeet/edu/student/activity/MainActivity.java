@@ -669,7 +669,6 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
 
-                                PreferenceUtil.setParentName(mContext, "");
                                 PreferenceUtil.setStuGender(mContext, getData.gender);
                                 //PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                 PreferenceUtil.setStuBirth(mContext, getData.birth);
@@ -694,6 +693,7 @@ public class MainActivity extends BaseActivity {
                                         PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                         PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                         PreferenceUtil.setStName(mContext, getData.name);
+                                        PreferenceUtil.setParentName(mContext, "");
 
                                         mTvStudentName.setText(getData.name); // 원생 오리지널 이름
                                     }
@@ -719,6 +719,7 @@ public class MainActivity extends BaseActivity {
                                         PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                         PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                         PreferenceUtil.setStName(mContext, getData.name);
+                                        PreferenceUtil.setParentName(mContext, "");
 
                                         if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
                                             if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
