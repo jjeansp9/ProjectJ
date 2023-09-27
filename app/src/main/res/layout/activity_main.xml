@@ -173,11 +173,11 @@
                     app:layout_constraintBottom_toTopOf="@id/tv_attendance_date"
                     app:layout_constraintStart_toStartOf="@id/guideline_profile_v75"
                     android:layout_marginEnd="@dimen/layout_margin_16"
-                    android:layout_marginTop="@dimen/layout_margin_8"
+                    android:layout_marginTop="@dimen/layout_margin_10"
                     android:background="@drawable/bg_nonmember"
                     android:text="비회원"
                     android:textStyle="bold"
-                    android:textColor="@color/line"
+                    android:textColor="@color/white"
                     android:gravity="center"
                     android:visibility="invisible"/>
 
