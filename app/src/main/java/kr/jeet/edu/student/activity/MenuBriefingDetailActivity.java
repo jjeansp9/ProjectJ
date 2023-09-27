@@ -148,7 +148,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.briefing_title);
+        customAppbar.setTitle(R.string.title_detail);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

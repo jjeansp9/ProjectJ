@@ -136,10 +136,12 @@
     <string name="main_menu_test_reserve_title">테스트 예약조회</string>
     <string name="main_menu_student_info">원생정보</string>
     <string name="main_menu_announcement">공지사항</string>
+    <string name="main_menu_announcement_new">최근 공지사항</string>
     <string name="main_menu_campus_schedule">캠퍼스일정</string>
-    <string name="main_menu_notice">알림장</string>
+    <string name="main_menu_notice">알림</string>
     <string name="main_menu_test_reserve">테스트예약</string>
     <string name="main_menu_vehicle_info">차량정보</string>
+    <string name="title_bus_route_info">운행정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
 
     <string name="settings_title">설정</string>
@@ -632,6 +634,19 @@
 부칙
 이 약관은 2018년 11월 30일 시행합니다."
     </string>
+    <string name="hint_bus_name">호차</string>
+    <string name="hint_bus_phone">연락처</string>
+    <string name="hint_bus_onoff">운행정보</string>
+    <string name="title_bus_timetable">차량시간표</string>
+    <string name="bus_route_binding_error">잘못된 노선 정보입니다.</string>
+    <string name="bus_route_not_found">노선 정보를 찾을 수 없습니다.</string>
+    <string name="empty_list_bus_route">버스 노선 정보가 없습니다.</string>
+    <string name="hint_select_campus">캠퍼스를 선택하세요.</string>
+    <string name="hint_select_bus">차량 선택</string>
+    <string name="item_total">전체</string>
+    <string name="title_detail">상세보기</string>
+    <string name="msg_backbutton_to_exit">뒤로 버튼을 한번 더 누르면 종료됩니다.</string>
 
+    <string name="msg_empty_schedule">일정이 없습니다.\n • 표시가 있는 날짜를 선택하여\n 일정을 확인해 주세요.</string>
 </resources>
 

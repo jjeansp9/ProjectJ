@@ -60,7 +60,7 @@ public class AttendanceDecorator implements DayViewDecorator {
 //            DayViewSpan span = new DayViewSpan("출석", context.getColor(R.color.blue),  context.getColor(R.color.white));
 //            view.addSpan(span);
             if (view != null) {
-                view.addSpan(new DotSpan(7f, color));
+                view.addSpan(new DotSpan(9f, color));
             }
         }
     }

@@ -70,7 +70,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(getString(R.string.main_menu_campus_schedule));
+        customAppbar.setTitle(getString(R.string.title_detail));
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

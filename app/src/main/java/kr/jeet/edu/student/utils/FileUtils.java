@@ -355,7 +355,6 @@ public class FileUtils {
                 //.thumbnail(0.2f)
                 .centerCrop()
                 //.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .error(R.drawable.ic_vector_image_error)
                 .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                 .into(view);
     }

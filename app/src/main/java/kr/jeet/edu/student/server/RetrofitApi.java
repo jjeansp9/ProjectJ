@@ -15,6 +15,7 @@ import kr.jeet.edu.student.model.request.UpdateProfileRequest;
 import kr.jeet.edu.student.model.request.UpdatePushStatusRequest;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
+import kr.jeet.edu.student.model.response.BCListResponse;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
@@ -22,6 +23,8 @@ import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingReserveResponse;
 import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
 import kr.jeet.edu.student.model.response.BriefingResponse;
+import kr.jeet.edu.student.model.response.BusInfoResponse;
+import kr.jeet.edu.student.model.response.BusRouteResponse;
 import kr.jeet.edu.student.model.response.FindIDResponse;
 import kr.jeet.edu.student.model.response.FindPWResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
@@ -220,4 +223,17 @@ public interface RetrofitApi {
     // 캠퍼스일정 상세 조회
     @GET("schedule/{scheduleSeq}")
     Call<ScheduleDetailResponse> getScheduleDetail(@Path("scheduleSeq") int scheduleSeq);
+
+    //버스 캠퍼스 조회
+    @GET("bus/campuses")
+    Call<BCListResponse> getBusCampusList();
+    // 버스 정보 조회
+    @GET("bus")
+    Call<BusInfoResponse> getBusInfo(@Query("phoneNumber") String phoneNumber);
+    // 버스 목록 조회
+    @GET("buses")
+    Call<BusInfoResponse> getBusesInfo(@Query("busAcaName") String busAcaName);
+    // 버스 노선 조회
+    @GET("bus/route")
+    Call<BusRouteResponse> getBusRoute(@Query("busAcaName") String busAcaName, @Query("busCode") int busCode);
 }

@@ -63,7 +63,6 @@ public class BoardDetailImageListAdapter extends RecyclerView.Adapter<BoardDetai
                             .load(url)
                             //.thumbnail(0.2f)
                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                            .error(R.drawable.ic_vector_image_error)
                             .transition(DrawableTransitionOptions.with(new DrawableAlwaysCrossFadeFactory()))
                             .into(holder.imgBoardDetail);
                 }

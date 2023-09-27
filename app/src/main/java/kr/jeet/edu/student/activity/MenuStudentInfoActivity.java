@@ -630,36 +630,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         }catch (Exception e){}
     }
 
-    // 원생 학급 정보 조회
-//    private void requestCls(){
-//        if(RetrofitClient.getInstance() != null) {
-//            mRetrofitApi = RetrofitClient.getApiInterface();
-//            mRetrofitApi.requestTeacherCls(_stCode, Utils.currentDate("yyyyMM")).enqueue(new Callback<TeacherClsResponse>() {
-//                @Override
-//                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
-//                    try {
-//                        if (response.isSuccessful() && response.body() != null){
-//                            mListCls.addAll(response.body().data);
-//                            setSpinnerTeacher();
-//                        }else{
-//                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-//                            LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
-//                        }
-//
-//                    }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
-//                    try { LogMgr.e(TAG, "requestCls() onFailure >> " + t.getMessage()); }
-//                    catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
-//
-//                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-//                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
-//                }
-//            });
-//        }
-//    }
 
     // 출결조회 (월별)
     private void requestGetAttendanceList(){

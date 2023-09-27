@@ -102,6 +102,7 @@ public class MainActivity extends BaseActivity {
     private ConstraintLayout layoutAttend, layoutNotify;
 
     private RetrofitApi mRetrofitApi;
+    boolean doubleBackToExitPressedOnce = false;
 
     private final int CMD_GET_ACALIST = 1;  // ACA정보 가져오기
     private final int CMD_GET_MEMBER_INFO = 2;       // 자녀정보 가져오기
@@ -175,7 +176,6 @@ public class MainActivity extends BaseActivity {
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
                     break;
                 case CMD_GET_NOTIFY_INFO:
-                    Log.i(TAG, "acaCode: " + acaCode);
                     requestBoardList(acaCode);
                     break;
                 case CMD_GET_BOARD_ATTRIBUTE:
@@ -224,8 +224,21 @@ public class MainActivity extends BaseActivity {
             finish();
             return;
         }
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
 
-        super.onBackPressed();
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, R.string.msg_backbutton_to_exit, Toast.LENGTH_SHORT).show();
+
+        mHandler.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 
     @Override
@@ -299,7 +312,6 @@ public class MainActivity extends BaseActivity {
     private void startMenuActivity(MainMenuItemData clickItem){
         if(clickItem.getTargetClass() != null) {
             Intent targetIntent = new Intent(mContext, clickItem.getTargetClass());
-            //startActivity(targetIntent);
             resultLauncher.launch(targetIntent);
         }else{
             LogMgr.d("targetIntent is null at " + getString(clickItem.getTitleRes()));
@@ -508,7 +520,7 @@ public class MainActivity extends BaseActivity {
             //테스트예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //차량정보
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_vehicle_info, null));
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_vehicle_info, MenuBusActivity.class));
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
 
@@ -639,12 +651,6 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null)  getData= response.body().data;
 
                             if (getData != null) {
-                                if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
-
-                                    if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
-
-                                }else mTvStudentName.setText(getData.name); // 원생 오리지널 이름
-
                                 mTvAttendanceDate.setText(Utils.currentDate("yy.MM.dd"));
 
                                 if (getData.acaName != null) { // 캠퍼스명
@@ -663,23 +669,63 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
 
+                                PreferenceUtil.setParentName(mContext, "");
                                 PreferenceUtil.setStuGender(mContext, getData.gender);
                                 //PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                 PreferenceUtil.setStuBirth(mContext, getData.birth);
 
-                                if (_userGubun == Constants.USER_TYPE_PARENTS){
-                                    if (stCode == 0) {
-                                        PreferenceUtil.setParentName(mContext, getData.name);
-                                        PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+                                if (_userType.equals(Constants.MEMBER)){
+
+                                    if (_userGubun == Constants.USER_TYPE_PARENTS){
+                                        LogMgr.e("EVENT1");
+                                        if (stCode == 0) {
+                                            PreferenceUtil.setParentName(mContext, getData.name);
+                                            PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+                                        }else{
+                                            PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                            PreferenceUtil.setStName(mContext, getData.name);
+
+                                            if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
+                                                if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
+                                            }else mTvStudentName.setText(getData.name); // 원생 오리지널 이름
+                                        }
                                     }else{
+                                        LogMgr.e("EVENT2");
+                                        PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                         PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                         PreferenceUtil.setStName(mContext, getData.name);
+
+                                        mTvStudentName.setText(getData.name); // 원생 오리지널 이름
                                     }
                                 }else{
-                                    PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
-                                    PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
-                                    PreferenceUtil.setStName(mContext, getData.name);
+                                    if (_userGubun == Constants.USER_TYPE_PARENTS){
+                                        if (stCode == 0) {
+                                            LogMgr.e("EVENT3");
+                                            PreferenceUtil.setParentName(mContext, getData.name);
+                                            PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+
+                                        }else{
+                                            LogMgr.e("EVENT4");
+                                            PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                            PreferenceUtil.setStName(mContext, getData.name);
+                                        }
+
+                                        if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
+                                            if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
+                                        }else mTvStudentName.setText(Utils.getStr(getData.name)); // 원생 오리지널 이름
+
+                                    }else{
+                                        LogMgr.e("EVENT5");
+                                        PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
+                                        PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                        PreferenceUtil.setStName(mContext, getData.name);
+
+                                        if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
+                                            if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
+                                        }else mTvStudentName.setText(Utils.getStr(getData.name)); // 원생 오리지널 이름
+                                    }
                                 }
+
 
                                 if (getData.scName.equals("")) mTvSchoolAndGradeName.setText(getData.stGrade);
                                 else if (getData.stGrade.equals("")) mTvSchoolAndGradeName.setText(getData.scName);

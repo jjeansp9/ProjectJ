@@ -18,7 +18,7 @@ public class ScheduleData implements Parcelable {
     public int month;        // 월
     public int day;          // 일
     public int writerSeq;    // 작성자 seq
-    public List<ReceiverData> receiverList;
+    public ArrayList<ReceiverData> receiverList;
     public boolean campusAll;
 
     // Parcelable 구현 부분
@@ -35,7 +35,10 @@ public class ScheduleData implements Parcelable {
         day = in.readInt();
         writerSeq = in.readInt();
         receiverList = new ArrayList<>();
-        in.readList(receiverList, ReceiverData.class.getClassLoader());
+        in.readTypedList(receiverList, ReceiverData.CREATOR);
+
+
+
     }
 
     public static final Creator<ScheduleData> CREATOR = new Creator<ScheduleData>() {
@@ -68,6 +71,6 @@ public class ScheduleData implements Parcelable {
         dest.writeInt(month);
         dest.writeInt(day);
         dest.writeInt(writerSeq);
-        dest.writeList(receiverList);
+        dest.writeTypedList(receiverList);
     }
 }

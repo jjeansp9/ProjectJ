@@ -91,7 +91,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 LogMgr.w(TAG,"param is recived");
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                title = getString(R.string.title_detail);
                 dataType = TYPE_ANNOUNCEMENT;
 
             } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
@@ -101,7 +101,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                title = getString(R.string.title_detail);
                 _pushData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
@@ -125,7 +125,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
-                        LogMgr.e(TAG,"Event here3-1");
+
                     } else{
                         LogMgr.e(TAG,"Event here3");
                     }
@@ -136,11 +136,9 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         result = intent.getParcelableExtra(extraKey);
 
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
-
                         _pushData = intent.getParcelableExtra(extraKey);
                         _currentSeq = _pushData.connSeq;
                         new FCMManager(mContext).requestPushConfirmToServer(_pushData);
-                        LogMgr.e("Event here2-1");
 
                     } else{
                         LogMgr.e("Event here2");

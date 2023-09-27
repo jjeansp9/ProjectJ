@@ -28,10 +28,10 @@
     <color name="line_set">#EDEDED</color>
     <color name="gray">#cccccc</color>
     <color name="blackgray">#666666</color>
-    <color name="bg_grey">#eee</color>
-    <color name="bg_gray_transparent">#66666666</color>
-    <color name="bg_lightgray">#f0f0f0</color>
     <color name="darkgray">#999999</color>
+    <color name="bg_grey">#eee</color>
+    <color name="bg_lightgray">#f0f0f0</color>
+    <color name="bg_gray_transparent">#66666666</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="bg_white">#f8f8f8</color>
     <color name="bg_profile">#cccccc</color>
@@ -82,4 +82,7 @@
     <color name="color_tardy">#ff7878</color>
     <color name="color_makeup_class">#248a43</color>
     <color name="color_online_lecture">#ffc000</color>
+
+    <color name="color_fab">#5C6BC0</color>
+    <color name="fab_color">#ffcc00</color>
 </resources>

@@ -18,12 +18,13 @@ public class IntentParams {
     public final static String PARAM_STU_ACANAME = "acaName";  // 캠퍼스 이름
     public final static String PARAM_STU_DEPTNAME = "deptName";  // 부서 이름
     public final static String PARAM_STU_CLSTNAME = "clstName";  // 학년 이름
-
+    public final static String PARAM_BCNAME = "bcName";  // 캠퍼스 이름
     public final static String PARAM_BOARD_SEQ = "boardSeq";  // 게시글 seq
     public final static String PARAM_WRITER_SEQ = "writerSeq";  // 작성자 seq
 
     public final static String PARAM_CHILD_STUDENT_INFO = "childStudentInfo";  // 자녀원생 정보
     public final static String PARAM_ANNOUNCEMENT_INFO = "announcementInfo";  // 선택한 공지사항 정보
+    public final static String PARAM_BOARD_ITEM = "board_item";  // 수정한 아이템
 
     public final static String PARAM_WRITE_MODE = "writeMode";  // 작성모드
 
