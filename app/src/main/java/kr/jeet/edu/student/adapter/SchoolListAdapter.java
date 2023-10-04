@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.SchoolData;
+import kr.jeet.edu.student.utils.Utils;
 
 public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.ViewHolder> implements Filterable {
 
@@ -50,7 +51,7 @@ public class SchoolListAdapter extends RecyclerView.Adapter<SchoolListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if(position == NO_POSITION) return;
         SchoolData schoolData = _filteredList.get(position);
-        holder.tvSchoolName.setText(schoolData.scName);
+        holder.tvSchoolName.setText(Utils.getStr(schoolData.scName));
     }
 
     @Override

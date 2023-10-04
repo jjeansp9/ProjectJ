@@ -361,32 +361,45 @@
                 android:textColor="@color/font_color_default"
                 android:gravity="end"/>
 
-            <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/spinner_reserve_sc_name"
+<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
+<!--                android:id="@+id/spinner_reserve_sc_name"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toTopOf="@id/tv_reserve_sc_name"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/tv_reserve_sc_name"-->
+<!--                app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"-->
+<!--                android:paddingHorizontal="@dimen/editbox_padding"-->
+<!--                android:paddingVertical="@dimen/editbox_padding_vertical"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:maxLines="1"-->
+<!--                android:ellipsize="end"-->
+<!--                android:hint="@string/test_reserve_write_select_school"-->
+<!--                android:gravity="center"-->
+<!--                app:spinner_arrow_gravity="end"-->
+<!--                app:spinner_arrow_tint="@color/blackgray"-->
+<!--                app:spinner_divider_color="@color/line"-->
+<!--                app:spinner_divider_show="true"-->
+<!--                app:spinner_divider_size="0.4dp"-->
+<!--                app:spinner_popup_focusable="true"-->
+<!--                app:spinner_popup_animation="dropdown"-->
+<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
+<!--                app:spinner_popup_elevation="2dp"-->
+<!--                android:background="@drawable/bg_edittext"/>-->
+
+            <kr.jeet.edu.student.view.ClearableTextView
+                android:id="@+id/tv_content_school"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/tv_reserve_sc_name"
                 app:layout_constraintBottom_toBottomOf="@id/tv_reserve_sc_name"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
-                android:paddingHorizontal="@dimen/editbox_padding"
-                android:paddingVertical="@dimen/editbox_padding_vertical"
-                android:textColor="@color/black"
                 android:textSize="@dimen/font_size"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:hint="@string/test_reserve_write_select_school"
                 android:gravity="center"
-                app:spinner_arrow_gravity="end"
-                app:spinner_arrow_tint="@color/blackgray"
-                app:spinner_divider_color="@color/line"
-                app:spinner_divider_show="true"
-                app:spinner_divider_size="0.4dp"
-                app:spinner_popup_focusable="true"
-                app:spinner_popup_animation="dropdown"
-                app:spinner_popup_background="@drawable/selector_spinner_item"
-                app:spinner_popup_elevation="2dp"
-                android:background="@drawable/bg_edittext"/>
+                android:textColor="@color/black"
+                android:focusable="true" />
 
             <TextView
                 android:id="@+id/tv_reserve_stu_contact"

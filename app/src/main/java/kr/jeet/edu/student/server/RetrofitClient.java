@@ -1,5 +1,8 @@
 package kr.jeet.edu.student.server;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import kr.jeet.edu.student.utils.LogMgr;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -20,19 +23,21 @@ public class RetrofitClient {
                 .addInterceptor(interceptor)
                 .build();
 
+        Gson gson = new GsonBuilder().setLenient().create();
+
         Retrofit retrofit = null;
         if(LogMgr.DEBUG) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(RetrofitApi.SERVER_BASE_URL + RetrofitApi.PREFIX)   // 꼭 / 로 끝나야함
                     //.baseUrl(RetrofitApi.SERVER_BASE_URL)   // 꼭 / 로 끝나야함
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client) // 로그 기능 추가
                     .build();
         } else {
             retrofit = new Retrofit.Builder()
                     .baseUrl(RetrofitApi.SERVER_BASE_URL + RetrofitApi.PREFIX)   // 꼭 / 로 끝나야함
                     //.baseUrl(RetrofitApi.SERVER_BASE_URL)   // 꼭 / 로 끝나야함
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
 

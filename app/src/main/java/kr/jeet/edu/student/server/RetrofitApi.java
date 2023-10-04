@@ -209,8 +209,8 @@ public interface RetrofitApi {
     Call<BriefingReserveResponse> requestBrfReserve(@Body BriefingReserveRequest request);
 
     // 설명회 예약자 목록 조회
-    @GET("pt/reservation/{ptSeq}")
-    Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq);
+    @GET("pt/reservation/{ptSeq}/member/{memberSeq}")
+    Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq, @Path("memberSeq") int memberSeq);
 
     // 알림장 상세 조회
     @GET("systemNotice/{seq}")

@@ -221,7 +221,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
         mTvContent.setText(Utils.getStr(mInfo.content));
 
-        str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "" : "("+mInfo.reservationCnt+")";
+        str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "(0)" : "("+mInfo.reservationCnt+")";
         if (mInfo.reservationCnt < 1) {
             mTvCnt.setVisibility(View.GONE);
         }

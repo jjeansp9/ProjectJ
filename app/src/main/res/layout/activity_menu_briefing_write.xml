@@ -114,79 +114,117 @@
                 android:layout_marginTop="10dp"
                 android:visibility="gone"/>
 
+<!--            <TextView-->
+<!--                android:id="@+id/tv_brf_write_personnel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/et_brf_write_phone_num"-->
+<!--                android:text="@string/briefing_write_personnel"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:textStyle="bold"-->
+<!--                android:layout_marginTop="20dp"/>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/img_cnt_sub"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintEnd_toStartOf="@id/et_brf_write_personnel"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:layout_marginEnd="40dp"-->
+<!--                android:padding="8dp"-->
+<!--                android:src="@drawable/selector_month_back"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"/>-->
+
+<!--            <EditText-->
+<!--                android:id="@+id/et_brf_write_personnel"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_personnel"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                android:background="@drawable/bg_edittext"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:maxLines="1"-->
+<!--                android:ems="5"-->
+<!--                android:hint="본인포함"-->
+<!--                android:gravity="center"-->
+<!--                android:inputType="number"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:padding="@dimen/editbox_padding"-->
+<!--                android:layout_marginTop="10dp" />-->
+
+<!--            <TextView-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"-->
+<!--                android:text="명"-->
+<!--                android:textSize="@dimen/font_size"-->
+<!--                android:textColor="@color/font_color_default"-->
+<!--                android:layout_marginStart="8dp"/>-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/img_cnt_add"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"-->
+<!--                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:layout_marginStart="40dp"-->
+<!--                android:padding="8dp"-->
+<!--                android:src="@drawable/selector_month_next"-->
+<!--                android:stateListAnimator="@xml/animate_button_push"/>-->
+
             <TextView
-                android:id="@+id/tv_brf_write_personnel"
+                android:id="@+id/tv_brf_write_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_brf_write_phone_num"
-                android:text="@string/briefing_write_personnel"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_email"
+                android:text="@string/grade"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
                 android:textStyle="bold"
                 android:layout_marginTop="20dp"/>
 
-            <ImageButton
-                android:id="@+id/img_cnt_sub"
-                android:layout_width="wrap_content"
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinner_reserve_grade"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
-                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
-                app:layout_constraintEnd_toStartOf="@id/et_brf_write_personnel"
-                android:background="@android:color/transparent"
-                android:layout_marginEnd="40dp"
-                android:padding="8dp"
-                android:src="@drawable/selector_month_back"
-                android:stateListAnimator="@xml/animate_button_push"/>
-
-            <EditText
-                android:id="@+id/et_brf_write_personnel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_personnel"
+                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_grade"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@drawable/bg_edittext"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="@dimen/editbox_padding"
+                android:paddingVertical="12dp"
+                android:textColor="@color/black"
                 android:textSize="@dimen/font_size"
-                android:maxLines="1"
-                android:ems="5"
-                android:hint="본인포함"
+                android:hint="초/중/고 학년 선택"
                 android:gravity="center"
-                android:inputType="number"
-                android:textColor="@color/font_color_default"
-                android:padding="@dimen/editbox_padding"
-                android:layout_marginTop="10dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
-                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
-                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"
-                android:text="명"
-                android:textSize="@dimen/font_size"
-                android:textColor="@color/font_color_default"
-                android:layout_marginStart="8dp"/>
-
-            <ImageButton
-                android:id="@+id/img_cnt_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="@id/et_brf_write_personnel"
-                app:layout_constraintBottom_toBottomOf="@id/et_brf_write_personnel"
-                app:layout_constraintStart_toEndOf="@id/et_brf_write_personnel"
-                android:background="@android:color/transparent"
-                android:layout_marginStart="40dp"
-                android:padding="8dp"
-                android:src="@drawable/selector_month_next"
-                android:stateListAnimator="@xml/animate_button_push"/>
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_tint="@color/blackgray"
+                app:spinner_divider_color="@color/line"
+                app:spinner_divider_show="true"
+                app:spinner_divider_size="0.4dp"
+                app:spinner_popup_focusable="true"
+                app:spinner_popup_animation="dropdown"
+                app:spinner_popup_background="@drawable/selector_spinner_item"
+                app:spinner_popup_elevation="2dp"
+                android:background="@drawable/bg_edittext"
+                app:spinner_item_array="@array/grade"/>
 
             <TextView
                 android:id="@+id/tv_brf_write_school"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_brf_write_personnel"
+                app:layout_constraintTop_toBottomOf="@id/spinner_reserve_grade"
                 android:text="@string/school"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"

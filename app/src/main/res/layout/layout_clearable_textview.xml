@@ -15,9 +15,10 @@
         android:layout_weight="1"
         android:padding="@dimen/layout_margin_12"
         android:textSize="@dimen/font_size"
+        android:hint="@string/test_reserve_write_select_school"
         android:maxLines="1"
         android:ellipsize="end"
-        android:gravity="start"
+        android:gravity="center"
         android:textColor="@color/black"
         android:drawableRight="@drawable/ic_vector_school"
         />

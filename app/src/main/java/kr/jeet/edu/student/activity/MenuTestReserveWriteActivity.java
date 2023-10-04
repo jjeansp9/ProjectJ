@@ -33,19 +33,24 @@ import android.widget.Toast;
 
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.text.Collator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.adapter.SchoolListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
+import kr.jeet.edu.student.dialog.SchoolListBottomSheetDialog;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
@@ -57,6 +62,7 @@ import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
+import kr.jeet.edu.student.view.ClearableTextView;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.dialog.SearchAddressDialog;
 import retrofit2.Call;
@@ -72,7 +78,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private EditText[] mEditList;
     private RadioGroup mRgGender;
     private RadioButton mGenderRbMale, mGenderRbFemale;
-    private PowerSpinnerView mSpinnerSchool, mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime;
+    private PowerSpinnerView mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime;
+
+    ClearableTextView tvSchool;
+    SchoolListBottomSheetDialog _schoolListBottomSheetDialog;
+    SchoolListAdapter _schoolListAdapter;
+    private boolean isFilterTriggerChanged = false;
+    private SchoolData _selectedSchoolData = null;
+
 
     private String _stuGender = "";
     private String _ltcCode = "";
@@ -96,10 +109,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private int testDateMaxYear = 2100;
 
     private int gender = 1;
-
-    private String elementary = "초등";
-    private String middleSchool = "중학교";
-    private String highSchool = "고등";
 
     private LevelTestRequest request;
     private SearchAddressDialog mDialog = null;
@@ -147,6 +156,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _stPhone = PreferenceUtil.getStuPhoneNum(mContext);
         _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
         _stParentName = PreferenceUtil.getParentName(mContext);
+        _selectedSchoolData = new SchoolData("", 0);
 
         try {
 
@@ -196,11 +206,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mGenderRbMale = (RadioButton) findViewById(R.id.rb_test_reserve_male);
         mGenderRbFemale = (RadioButton) findViewById(R.id.rb_test_reserve_female);
 
-        mSpinnerSchool = findViewById(R.id.spinner_reserve_sc_name);
+        //mSpinnerSchool = findViewById(R.id.spinner_reserve_sc_name);
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
         mSpinnerFunnel = findViewById(R.id.spinner_reserve_funnel);
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
         mSpinnerTestTime = findViewById(R.id.spinner_reserve_test_class);
+        tvSchool = findViewById(R.id.tv_content_school);
 
         LogMgr.e(TAG, "Gender: " + _stuGender);
 
@@ -283,7 +294,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         for(SchoolData info : DataManager.getInstance().getSchoolList()) {
             if(mInfo.scCode == info.scCode) {
-                mSpinnerSchool.setText(Utils.getStr(info.scName));
+                tvSchool.setText(Utils.getStr(info.scName));
                 _scCode = info.scCode;
                 break;
             }
@@ -433,7 +444,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinner(){
         mSpinnerCampus.setIsFocusable(true);
-        mSpinnerSchool.setIsFocusable(true);
+        //mSpinnerSchool.setIsFocusable(true);
         mSpinnerTestTime.setIsFocusable(true);
         mSpinnerGrade.setIsFocusable(true);
         mSpinnerFunnel.setIsFocusable(true);
@@ -453,8 +464,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _stGrade = newItem.toString();
             _scCode = 0;
+            //_schoolList = null;
             if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
-            mSpinnerSchool.setText("");
+            tvSchool.setText("");
         });
 
         mSpinnerFunnel.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -466,20 +478,21 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
         mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
-        mSpinnerSchool.setOnTouchListener((v, event) -> {
-            switch (event.getAction()){
-                case MotionEvent.ACTION_UP:
-                    if (mSpinnerGrade.getText().toString().equals("")) {
-                        mSpinnerGrade.performClick();
-                        Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
-                        mSpinnerSchool.dismiss();
-                    }
-                    Utils.clearFocus(mEditList);
-                    Utils.hideKeyboard(mContext, mEditList);
-                    break;
-            }
-            return false;
-        });
+
+//        mSpinnerSchool.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()){
+//                case MotionEvent.ACTION_UP:
+//                    if (mSpinnerGrade.getText().toString().equals("")) {
+//                        mSpinnerGrade.performClick();
+//                        Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
+//                        mSpinnerSchool.dismiss();
+//                    }
+//                    Utils.clearFocus(mEditList);
+//                    Utils.hideKeyboard(mContext, mEditList);
+//                    break;
+//            }
+//            return false;
+//        });
 
         mSpinnerTestTime.setOnTouchListener((v, event) -> {
             switch (event.getAction()){
@@ -523,62 +536,80 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     }
 
     private void setSchoolSpinner(){
+        toggleFilterLayout();
+        tvSchool.setCloseClickListener(new ClearableTextView.onTextViewClickListener() {
+            @Override
+            public void onContentClick() {
 
-        List<SchoolData> schoolList = DataManager.getInstance().getSchoolList();
-        List<String> scNames = new ArrayList<>();
-        List<Integer> scCodes = new ArrayList<>();
+                if (mSpinnerGrade.getText().toString().equals("")) {
+                    mSpinnerGrade.performClick();
+                    Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
+                }else{
+                    if (_schoolListBottomSheetDialog != null) {
+                        _schoolListBottomSheetDialog = null;
+                    }
+                    _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
+                    _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
+                }
+                Utils.clearFocus(mEditList);
+                Utils.hideKeyboard(mContext, mEditList);
+            }
+
+            @Override
+            public void onDeleteClick() {
+                LogMgr.e(TAG, "onDeleteClick");
+                isFilterTriggerChanged = true;
+                _selectedSchoolData = new SchoolData("", 0);
+                tvSchool.setText("");
+            }
+        });
+    }
+
+    private void toggleFilterLayout() {
+        List<SchoolData> _schoolList = new ArrayList<>();
+        List<SchoolData> schoolAllList = new ArrayList<>(DataManager.getInstance().getSchoolListMap().values());
 
         if (_stGrade.contains(getString(R.string.informed_question_elementary))){
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(middleSchool) && !data.scName.contains(highSchool)){
-                    scNames.add(data.scName);
-                    scCodes.add(data.scCode);
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.middleSchool) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
                 }
             }
-        }else if (_stGrade.contains(getString(R.string.informed_question_middle))){
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(elementary) && !data.scName.contains(highSchool)){
-                    scNames.add(data.scName);
-                    scCodes.add(data.scCode);
+        } else if (_stGrade.contains(getString(R.string.informed_question_middle))){
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
                 }
             }
-        }else{
-            for (SchoolData data : schoolList) {
-                if (!data.scName.contains(elementary) && !data.scName.contains(middleSchool)){
-                    scNames.add(data.scName);
-                    scCodes.add(data.scCode);
+        } else{
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.middleSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
                 }
             }
         }
+        LogMgr.e(TAG, "test: " + _schoolList.get(0).scName);
 
-        if (!writeMode.equals(Constants.WRITE_EDIT)) mSpinnerSchool.setText("");
-        mSpinnerSchool.setItems(scNames);
-        mSpinnerSchool.setSpinnerPopupHeight(800);
+        Collections.sort(_schoolList, new Comparator<SchoolData>() {
+            @Override
+            public int compare(SchoolData schoolData, SchoolData t1) {
+                return Collator.getInstance().compare(schoolData.scName, t1.scName);
+            }
+        });
+        _schoolListAdapter = new SchoolListAdapter(mContext, _schoolList, new SchoolListAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(SchoolData item) {
+                _selectedSchoolData = item;
+                tvSchool.setText(item.scName);
+                isFilterTriggerChanged = true;
+                if(_schoolListBottomSheetDialog != null) {
+                    _schoolListBottomSheetDialog.dismiss();
+                }
+            }
 
-        mSpinnerSchool.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            _scCode = scCodes.get(newIndex);
+            @Override
+            public void onFilteringCompleted() {
 
-            if (_stGrade.contains(getString(R.string.informed_question_elementary))){
-                for (SchoolData data : schoolList) {
-                    if (!data.scName.contains(middleSchool) && !data.scName.contains(highSchool)){
-                        scNames.add(data.scName);
-                        scCodes.add(data.scCode);
-                    }
-                }
-            }else if (_stGrade.contains(getString(R.string.informed_question_middle))){
-                for (SchoolData data : schoolList) {
-                    if (!data.scName.contains(elementary) && !data.scName.contains(highSchool)){
-                        scNames.add(data.scName);
-                        scCodes.add(data.scCode);
-                    }
-                }
-            }else{
-                for (SchoolData data : schoolList) {
-                    if (!data.scName.contains(elementary) && !data.scName.contains(middleSchool)){
-                        scNames.add(data.scName);
-                        scCodes.add(data.scCode);
-                    }
-                }
             }
         });
     }
@@ -597,7 +628,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.sex = gender; // 성별 (1 남자, 2 여자) [필수]
         request.address = mTvAddress.getText().toString(); // 주소 (도로명주소) [선택]
         request.addressSub = mEtAddressDetail.getText().toString(); // 상세주소 [선택]
-        request.scCode = _scCode; // 학교코드 [필수]
+        request.scCode = _selectedSchoolData.scCode; // 학교코드 [필수]
         request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), ""); // 학년 [필수]
         request.phoneNumber = mEtStuPhone.getText().toString(); // 학생 전화번호 [선택]
         request.parentPhoneNumber = mEtparentPhone.getText().toString(); // 학부모 연락처 [필수]
@@ -665,10 +696,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             mSpinnerGrade.setSpinnerPopupHeight(600);
             if (mSpinnerGrade != null) mSpinnerGrade.show();
 
-        } else if (mSpinnerSchool.getText().toString().equals("")) {
+        } else if (TextUtils.isEmpty(_selectedSchoolData.scName)) {
             Toast.makeText(mContext, R.string.school_empty, Toast.LENGTH_SHORT).show();
-            mSpinnerSchool.setSpinnerPopupHeight(600);
-            if (mSpinnerSchool != null) mSpinnerSchool.show();
+            if(_schoolListBottomSheetDialog == null) {
+                _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
+            }
+            _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
 
         } else if (request.phoneNumber.equals("")) {
             Toast.makeText(mContext, R.string.phone_empty, Toast.LENGTH_SHORT).show();

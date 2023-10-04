@@ -28,6 +28,7 @@ import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +51,7 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
     private int ptSeq = 0; // 글 seq
     private int ptCnt = 0; // 참가인원
     private int rvCnt = 0; // 현재예약 수
+    private int _memberSeq = 0;
 
 
     @Override
@@ -73,6 +75,7 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
             ptCnt = intent.getIntExtra(IntentParams.PARAM_BRIEFING_PARTICIPANTS_CNT, ptCnt);
             rvCnt = intent.getIntExtra(IntentParams.PARAM_BRIEFING_RESERVATION_CNT, rvCnt);
         }
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
         requestBrfReservedListData();
     }
@@ -123,7 +126,7 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
     private void requestBrfReservedListData(){
         if (RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getBrfReservedList(ptSeq).enqueue(new Callback<BriefingReservedListResponse>() {
+            mRetrofitApi.getBrfReservedList(ptSeq, _memberSeq).enqueue(new Callback<BriefingReservedListResponse>() {
                 @Override
                 public void onResponse(Call<BriefingReservedListResponse> call, Response<BriefingReservedListResponse> response) {
                     try {

@@ -111,6 +111,10 @@ public class Constants {
     public static final String WRITE_ADD = "ADD";
     public static final String WRITE_EDIT = "Edit";
 
+    public static final String elementary = "초등";
+    public static final String middleSchool = "중학교";
+    public static final String highSchool = "고등";
+
     public enum AttendanceStatus{
         UNSET(9, "미지정", R.color.gray),
         ATTENDANCE(0, "출석", R.color.color_attendance),

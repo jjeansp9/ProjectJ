@@ -785,7 +785,6 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
 
-
                     mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
                 }
                 @Override
@@ -816,15 +815,6 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
-//                                    for (int i = 0; i < 3; i++) {
-//                                        AnnouncementData item = new AnnouncementData();
-//                                        item.seq = getData.get(i).seq;
-//                                        item.rdcnt = getData.get(i).rdcnt;
-//                                        item.title = getData.get(i).title;
-//                                        item.insertDate = getData.get(i).insertDate;
-//                                        item.fileList = getData.get(i).fileList;
-//                                        announceList.add(item);
-//                                    }
                                     announceList.addAll(getData.stream().limit(3).collect(Collectors.toList()));
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");

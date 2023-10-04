@@ -58,15 +58,18 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     private TextView mTvPrivacy;
     private Button btnComplete;
     private ImageView mBtnSub, mBtnAdd;
-    private EditText mEtName, mEtPhoneNum, mEtEmail, mEtPersonnel, mEtSchool;
+    private EditText mEtName, mEtPhoneNum, mEtEmail, mEtSchool;
     private EditText[] mEtList;
     ClearableTextView tvSchool;
     SchoolListBottomSheetDialog _schoolListBottomSheetDialog;
     SchoolListAdapter _schoolListAdapter;
+    private PowerSpinnerView mSpinnerGrade;
 
     private RetrofitApi mRetrofitApi;
 
     private String _scName ="";
+    private String _stGrade = "";
+    private int _scCode = 0;
 
     private BriefingReserveRequest request;
 
@@ -86,6 +89,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     private final int MAX_CNT = 9999;
 
     private String url = "";
+    private final int PUT_CNT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,8 +124,11 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         findViewById(R.id.layout_brf_privacy).setOnClickListener(this);
         findViewById(R.id.layout_brf_view_privacy).setOnClickListener(this);
         findViewById(R.id.btn_brf_write_complete).setOnClickListener(this);
-        findViewById(R.id.img_cnt_sub).setOnClickListener(this);
-        findViewById(R.id.img_cnt_add).setOnClickListener(this);
+        //findViewById(R.id.img_cnt_sub).setOnClickListener(this);
+        //findViewById(R.id.img_cnt_add).setOnClickListener(this);
+
+        tvSchool = findViewById(R.id.tv_content_school);
+        btnComplete = findViewById(R.id.btn_brf_write_complete);
 
         mTvPrivacy = findViewById(R.id.tv_brf_privacy);
         cbPrivacy = findViewById(R.id.cb_brf_check_privacy);
@@ -129,54 +136,48 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         mEtName = findViewById(R.id.et_brf_write_name);
         mEtPhoneNum = findViewById(R.id.et_brf_write_phone_num);
         //mEtEmail = findViewById(R.id.et_brf_write_email);
-        mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
+        //mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         //mEtSchool = findViewById(R.id.et_brf_write_school);
-        tvSchool = findViewById(R.id.tv_content_school);
-        tvSchool.setCloseClickListener(new ClearableTextView.onTextViewClickListener() {
-            @Override
-            public void onContentClick() {
-                if(_schoolListBottomSheetDialog == null) {
-                    _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
-                }
-                _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
-            }
+        mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
+        mSpinnerGrade.setIsFocusable(true);
 
-            @Override
-            public void onDeleteClick() {
-                LogMgr.e(TAG, "onDeleteClick");
-                isFilterTriggerChanged = true;
-                _selectedSchoolData = null;
-                tvSchool.setText("");
-            }
+        mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
+
+        mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            _stGrade = newItem.toString();
+            _scCode = 0;
+            //_schoolList = null;
+            if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
+            tvSchool.setText("");
         });
 
-        btnComplete = findViewById(R.id.btn_brf_write_complete);
+        setSchoolSpinner();
 
-        mEtPersonnel.setText("1");
-        perCnt = Integer.parseInt(mEtPersonnel.getText().toString());
+        //mEtPersonnel.setText("1");
+        //perCnt = Integer.parseInt(mEtPersonnel.getText().toString());
 
         // 0 입력 막기
-        mEtPersonnel.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 1) if ("0".equals(s.toString())) mEtPersonnel.setText("");
-                if (s.length() >= 2 && s.charAt(0) == '0') mEtPersonnel.getText().replace(0, 1, "");
-                if (s.length() > 4){
-                    mEtPersonnel.setText(s.subSequence(0, 4));
-                    mEtPersonnel.setSelection(4);
-                }
-                if (s.length() > 0) perCnt = Integer.parseInt(s.toString());
-            }
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-
-        mEtPersonnel.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) mEtPersonnel.setText("");
-            else mEtPersonnel.setText(String.valueOf(perCnt));
-        });
+//        mEtPersonnel.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if (s.length() == 1) if ("0".equals(s.toString())) mEtPersonnel.setText("");
+//                if (s.length() >= 2 && s.charAt(0) == '0') mEtPersonnel.getText().replace(0, 1, "");
+//                if (s.length() > 4){
+//                    mEtPersonnel.setText(s.subSequence(0, 4));
+//                    mEtPersonnel.setSelection(4);
+//                }
+//                if (s.length() > 0) perCnt = Integer.parseInt(s.toString());
+//            }
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//        });
+//
+//        mEtPersonnel.setOnFocusChangeListener((view, hasFocus) -> {
+//            if (hasFocus) mEtPersonnel.setText("");
+//            else mEtPersonnel.setText(String.valueOf(perCnt));
+//        });
 
 //        mEtEmail.addTextChangedListener(new TextWatcher() {
 //            @Override
@@ -194,14 +195,75 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 //            public void afterTextChanged(Editable s) {}
 //        });
 
-        mEtList = new EditText[]{mEtName, mEtPhoneNum, mEtPersonnel};
+        mEtList = new EditText[]{mEtName, mEtPhoneNum};
+    }
 
+    @SuppressLint("ClickableViewAccessibility")
+    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_UP:
+                Utils.clearFocus(mEtList);
+                Utils.hideKeyboard(mContext, mEtList);
+                break;
+        }
+        return false;
+    };
+
+    private void setSchoolSpinner(){
         toggleFilterLayout();
+        tvSchool.setCloseClickListener(new ClearableTextView.onTextViewClickListener() {
+            @Override
+            public void onContentClick() {
+
+                if (mSpinnerGrade.getText().toString().equals("")) {
+                    mSpinnerGrade.performClick();
+                    Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
+                }else{
+                    if (_schoolListBottomSheetDialog != null) {
+                        _schoolListBottomSheetDialog = null;
+                    }
+                    _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
+                    _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
+                }
+                Utils.clearFocus(mEtList);
+                Utils.hideKeyboard(mContext, mEtList);
+            }
+
+            @Override
+            public void onDeleteClick() {
+                LogMgr.e(TAG, "onDeleteClick");
+                isFilterTriggerChanged = true;
+                _selectedSchoolData = new SchoolData("", 0);
+                tvSchool.setText("");
+            }
+        });
     }
 
     private void toggleFilterLayout() {
-        _schoolList = new ArrayList<>();
-        _schoolList.addAll(DataManager.getInstance().getSchoolListMap().values());
+        List<SchoolData> _schoolList = new ArrayList<>();
+        List<SchoolData> schoolAllList = new ArrayList<>(DataManager.getInstance().getSchoolListMap().values());
+
+        if (_stGrade.contains(getString(R.string.informed_question_elementary))){
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.middleSchool) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        } else if (_stGrade.contains(getString(R.string.informed_question_middle))){
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        } else{
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.middleSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        }
+        LogMgr.e(TAG, "test: " + _schoolList.get(0).scName);
+
         Collections.sort(_schoolList, new Comparator<SchoolData>() {
             @Override
             public int compare(SchoolData schoolData, SchoolData t1) {
@@ -250,28 +312,28 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                 if (checkWrite()) requestBrfReserve();
                 break;
 
-            case R.id.img_cnt_sub:
-                addOrSubCnt(SUBTRACT, TYPE_SUB);
-                break;
-
-            case R.id.img_cnt_add:
-                addOrSubCnt(ADD, TYPE_ADD);
-                break;
+//            case R.id.img_cnt_sub:
+//                addOrSubCnt(SUBTRACT, TYPE_SUB);
+//                break;
+//
+//            case R.id.img_cnt_add:
+//                addOrSubCnt(ADD, TYPE_ADD);
+//                break;
         }
     }
 
-    private void addOrSubCnt(int num, boolean type){
-
-        if (perCnt > MIN_CNT && type == TYPE_SUB){
-            perCnt += num;
-            mEtPersonnel.setText(String.valueOf(perCnt));
-
-        }else if (perCnt < MAX_CNT && type == TYPE_ADD){
-            perCnt += num;
-            mEtPersonnel.setText(String.valueOf(perCnt));
-        }
-        mEtPersonnel.clearFocus();
-    }
+//    private void addOrSubCnt(int num, boolean type){
+//
+//        if (perCnt > MIN_CNT && type == TYPE_SUB){
+//            perCnt += num;
+//            mEtPersonnel.setText(String.valueOf(perCnt));
+//
+//        }else if (perCnt < MAX_CNT && type == TYPE_ADD){
+//            perCnt += num;
+//            mEtPersonnel.setText(String.valueOf(perCnt));
+//        }
+//        mEtPersonnel.clearFocus();
+//    }
 
     private void requestBrfReserve(){
         requestData();
@@ -332,15 +394,17 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         request.name = mEtName.getText().toString();
         request.phoneNumber = mEtPhoneNum.getText().toString().trim();
         //request.email = mEtEmail.getText().toString().trim();
-        request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString().trim());
+        //request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString().trim());
+        request.participantsCnt = PUT_CNT; // 참석자는 무조건 1로 보내기
         request.schoolNm = _selectedSchoolData.scName;
     }
 
     private boolean checkWrite(){
 
         if (mEtName.getText().toString().equals("") ||
-                mEtPhoneNum.getText().toString().equals("") ||
-                mEtPersonnel.getText().toString().equals("")) {
+                mEtPhoneNum.getText().toString().equals("")
+                //mEtPersonnel.getText().toString().equals("")
+        ) {
             Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
             return false;
         }else if(!cbPrivacy.isChecked()){
@@ -351,10 +415,11 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 //            Toast.makeText(mContext, R.string.write_check_email, Toast.LENGTH_SHORT).show();
 //            return false;
 //        }
-        else if (Integer.parseInt(mEtPersonnel.getText().toString()) < 1){
-            Toast.makeText(mContext, R.string.briefing_write_please_per_cnt, Toast.LENGTH_SHORT).show();
-            return false;
-        }else{
+//        else if (Integer.parseInt(mEtPersonnel.getText().toString()) < 1){
+//            Toast.makeText(mContext, R.string.briefing_write_please_per_cnt, Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+        else{
             return true;
         }
     }
