@@ -84,7 +84,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember,
             mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty, mTvNameSub;
     private ImageView imgStudentAttendance;
+    private ImageView ivAttendanceNew;
     private LinearLayoutCompat mLayoutBottom;
     private ConstraintLayout layoutAttend, layoutNotify;
 
@@ -138,9 +139,9 @@ public class MainActivity extends BaseActivity {
                             try {
                                 List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
                                 if(pushMessages.isEmpty()) {
-                                    setNewCounselContent(false);
+                                    setNewAttendanceContent(false);
                                 }else{
-                                    setNewCounselContent(true);
+                                    setNewAttendanceContent(true);
                                 }
                             }catch(Exception e){
 
@@ -152,13 +153,15 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    void setNewCounselContent(boolean isNew) {
+    void setNewAttendanceContent(boolean isNew) {
         runOnUiThread(()->{
-            if(layoutNotify != null) {
+            if(ivAttendanceNew != null) {
                 if (isNew) {
-                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
+                    ivAttendanceNew.setVisibility(View.VISIBLE);
+//                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
                 } else {
-                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
+                    ivAttendanceNew.setVisibility(View.INVISIBLE);
+//                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
                 }
             }
         });
@@ -256,7 +259,7 @@ public class MainActivity extends BaseActivity {
     void initView() {
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
-
+        ivAttendanceNew = findViewById(R.id.img_attendance_new);
         layoutAttend = findViewById(R.id.btn_attendance_state);
 
         mTvStudentName = findViewById(R.id.tv_student_name);
@@ -459,9 +462,9 @@ public class MainActivity extends BaseActivity {
             try {
                 List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
                 if(pushMessages.isEmpty()) {
-                    setNewCounselContent(false);
+                    setNewAttendanceContent(false);
                 }else{
-                    setNewCounselContent(true);
+                    setNewAttendanceContent(true);
                 }
             }catch(Exception e){
 
@@ -709,11 +712,11 @@ public class MainActivity extends BaseActivity {
                                         }else{
                                             PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
                                             PreferenceUtil.setStName(mContext, getData.name);
-                                        }
 
-                                        if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
-                                            if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
-                                        }else mTvStudentName.setText(Utils.getStr(getData.name)); // 원생 오리지널 이름
+                                            if (getData.name.equals("") || getData.name.equals("null") || getData.name == null){ // 이름이 없다면 자녀선택화면의 이름 사용
+                                                if (_stName != null) mTvStudentName.setText(_stName); // 자녀선택화면의 이름
+                                            }else mTvStudentName.setText(Utils.getStr(getData.name)); // 원생 오리지널 이름
+                                        }
 
                                     }else{
                                         PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
@@ -813,16 +816,16 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null) {
                                 getData = response.body().data;
                                 if (getData != null && !getData.isEmpty()) {
-                                    for (int i = 0; i < 3; i++) {
-                                        AnnouncementData item = new AnnouncementData();
-                                        item.seq = getData.get(i).seq;
-                                        item.rdcnt = getData.get(i).rdcnt;
-                                        item.title = getData.get(i).title;
-                                        item.insertDate = getData.get(i).insertDate;
-                                        item.fileList = getData.get(i).fileList;
-                                        announceList.add(item);
-                                    }
-
+//                                    for (int i = 0; i < 3; i++) {
+//                                        AnnouncementData item = new AnnouncementData();
+//                                        item.seq = getData.get(i).seq;
+//                                        item.rdcnt = getData.get(i).rdcnt;
+//                                        item.title = getData.get(i).title;
+//                                        item.insertDate = getData.get(i).insertDate;
+//                                        item.fileList = getData.get(i).fileList;
+//                                        announceList.add(item);
+//                                    }
+                                    announceList.addAll(getData.stream().limit(3).collect(Collectors.toList()));
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");
                                 }
@@ -833,7 +836,6 @@ public class MainActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
                     mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
-                    LogMgr.e(TAG, "ListData is null4: " +announceList.get(0).insertDate);
                     announceAdapter.notifyDataSetChanged();
 
                     mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);

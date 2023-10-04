@@ -499,7 +499,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
                                         mTuitionList.add(data);
 
-                                        LogMgr.e(TAG, "data: " + data.acaName + getData.size());
+                                        LogMgr.e(TAG, "data: " + data.acaName);
 
                                     } catch (NumberFormatException e) {
                                         LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);

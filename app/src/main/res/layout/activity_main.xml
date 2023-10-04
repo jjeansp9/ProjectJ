@@ -173,11 +173,11 @@
                     app:layout_constraintBottom_toTopOf="@id/tv_attendance_date"
                     app:layout_constraintStart_toStartOf="@id/guideline_profile_v75"
                     android:layout_marginEnd="@dimen/layout_margin_16"
-                    android:layout_marginTop="@dimen/layout_margin_10"
+                    android:layout_marginTop="@dimen/layout_margin_8"
                     android:background="@drawable/bg_nonmember"
                     android:text="비회원"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
+                    android:textColor="@color/line"
                     android:gravity="center"
                     android:visibility="invisible"/>
 
@@ -313,7 +313,16 @@
                         android:background="@drawable/selector_main_box"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:padding="@dimen/layout_margin_12">
-
+                        <ImageView
+                            android:id="@+id/img_attendance_new"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_vector_alert_new"
+                            android:scaleType="fitCenter"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:visibility="visible"
+                            />
                         <ImageView
                             android:id="@+id/img_attendance_state"
                             android:layout_width="wrap_content"

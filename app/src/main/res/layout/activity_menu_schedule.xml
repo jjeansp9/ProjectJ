@@ -13,13 +13,13 @@
         app:layout_collapseMode="pin"
         app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"/>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-        android:fillViewport="true"
-        android:scrollbars="none">
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:id="@+id/nested_scroll_view"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"-->
+<!--        android:fillViewport="true"-->
+<!--        android:scrollbars="none">-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:orientation="vertical"
                 tools:listitem="@layout/layout_schedule_list_item"
-                android:overScrollMode="never"/>
+                android:scrollbars="none"/>
 
             <TextView
                 android:id="@+id/tv_schedule_empty_list"
@@ -136,5 +136,5 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+<!--    </androidx.core.widget.NestedScrollView>-->
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
