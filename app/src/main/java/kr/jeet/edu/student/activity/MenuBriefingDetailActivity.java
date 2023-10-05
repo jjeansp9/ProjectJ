@@ -280,30 +280,24 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             if (date != null) calBrf.setTime(date);
             Calendar calCurrent = Calendar.getInstance();
 
-
             if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) { // 종료
-                mTvReserve.setText(getString(R.string.briefing_write_close));
-                mImgReserve.setVisibility(View.GONE);
-                layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
-                layoutStartReserve.setStateListAnimator(null);
+                setTvInBtn(mTvReserve, getString(R.string.briefing_write_close), mTvCnt, View.GONE, mImgReserve, View.GONE);
 
             }else{
                 if (canceled) { // 취소
                     mTvReserve.setText(getString(R.string.briefing_reserve_cancel));
                     mTvCnt.setVisibility(View.GONE);
+                    mImgReserve.setVisibility(View.VISIBLE);
                     layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
                     StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
                     layoutStartReserve.setStateListAnimator(stateListAnimator);
 
                 } else if (mInfo.reservationCnt >= mInfo.participantsCnt) { // 마감
-                    mTvReserve.setText(getString(R.string.briefing_write_finish));
-                    mTvCnt.setVisibility(View.GONE);
-                    mImgReserve.setVisibility(View.GONE);
-                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
-                    layoutStartReserve.setStateListAnimator(null);
+                    setTvInBtn(mTvReserve, getString(R.string.briefing_write_finish), mTvCnt, View.GONE, mImgReserve, View.GONE);
 
                 } else {
                     mTvReserve.setText(getString(R.string.briefing_reserve));
+                    mImgReserve.setVisibility(View.VISIBLE);
                     layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_checked);
                     StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
                     layoutStartReserve.setStateListAnimator(stateListAnimator);
@@ -315,8 +309,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
     }
 
-    private void setTvInBtn(boolean notReserved){
-        mTvReserve.setText(getString(R.string.briefing_write_finish));
+    private void setTvInBtn(TextView tv, String str, TextView tvCnt, int visibilityCnt, ImageView img, int visibilityImg){
+        tv.setText(str);
+        tvCnt.setVisibility(visibilityCnt);
+        img.setVisibility(visibilityImg);
         layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
         layoutStartReserve.setStateListAnimator(null);
     }

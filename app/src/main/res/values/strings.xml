@@ -476,6 +476,7 @@
     <string name="briefing_title">설명회</string>
     <string name="briefing_write_title">설명회 예약</string>
     <string name="briefing_reserve">예약하기</string>
+    <string name="briefing_reserve_loading">불러오는중...</string>
     <string name="briefing_reserve_cancel">예약취소</string>
     <string name="briefing_reserved_list">예약자 명단</string>
     <string name="briefing_write_name_stu"><font color="@color/red">* </font>원생 이름</string>
@@ -491,7 +492,7 @@
     <string name="briefing_write_cancel">설명회 예약을 취소하였습니다.</string>
     <string name="briefing_write_finish">설명회 예약이 마감되었습니다.</string>
     <string name="briefing_write_close">설명회가 종료되었습니다.</string>
-    <string name="briefing_write_confirm">예약을 취소하시겠습니까?</string>
+    <string name="briefing_write_confirm">예약을 취소하려면 [확인]을 눌러주세요.</string>
     <string name="briefing_privacy">개인정보 취급방침 동의</string>
     <string name="briefing_privacy_content">
         개인정보 취급방침 간소\n

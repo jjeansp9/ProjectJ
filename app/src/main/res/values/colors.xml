@@ -27,6 +27,7 @@
     <color name="line_2">#DDDDDD</color>
     <color name="line_set">#EDEDED</color>
     <color name="gray">#cccccc</color>
+    <color name="blackgray_sub">#444444</color>
     <color name="blackgray">#666666</color>
     <color name="darkgray">#999999</color>
     <color name="bg_grey">#eee</color>

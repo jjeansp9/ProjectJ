@@ -119,6 +119,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     void initView() {
         findViewById(R.id.root_brf_write).setOnClickListener(this);
@@ -140,8 +141,10 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         //mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         //mEtSchool = findViewById(R.id.et_brf_write_school);
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
-        mSpinnerGrade.setIsFocusable(true);
 
+        mEtList = new EditText[]{mEtName, mEtPhoneNum};
+
+        mSpinnerGrade.setIsFocusable(true);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -199,8 +202,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 //            @Override
 //            public void afterTextChanged(Editable s) {}
 //        });
-
-        mEtList = new EditText[]{mEtName, mEtPhoneNum};
     }
 
     @SuppressLint("ClickableViewAccessibility")
