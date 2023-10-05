@@ -23,4 +23,7 @@ public class BriefingReserveRequest {
 
     @SerializedName("schoolNm")
     public String schoolNm; // (선택)학교명
+
+    @SerializedName("grade")
+    public String grade; // (선택)학년
 }

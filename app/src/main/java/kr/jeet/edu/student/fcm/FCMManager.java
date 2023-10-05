@@ -38,6 +38,7 @@ public class FCMManager {
     public static final String MSG_TYPE_NOTICE = "NOTICE";  //공지사항
     public static final String MSG_TYPE_ATTEND = "ATTEND";  //출결
     public static final String MSG_TYPE_PT = "PT";  //설명회
+    public static final String MSG_TYPE_PT_REZ_CNL = "PT_REZ_CNL";  //설명회 예약 취소
     public static final String MSG_TYPE_SYSTEM = "SYSTEM";  //시스템
     public static final String MSG_TYPE_TEST_APPT = "LEVEL_TEST";    //테스트예약
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청

@@ -45,6 +45,7 @@ import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -207,6 +208,10 @@ public interface RetrofitApi {
     // 설명회 예약 등록
     @POST("pt/reservation")
     Call<BriefingReserveResponse> requestBrfReserve(@Body BriefingReserveRequest request);
+
+    // 설명회 예약 취소
+    @DELETE("pt/reservation")
+    Call<BaseResponse> requestBrfCancel(@Query("reservationSeq") int reservationSeq, @Query("memberSeq") int memberSeq, @Query("userGubun") int userGubun);
 
     // 설명회 예약자 목록 조회
     @GET("pt/reservation/{ptSeq}/member/{memberSeq}")

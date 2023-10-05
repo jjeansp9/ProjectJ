@@ -316,10 +316,10 @@
             android:background="@drawable/bg_pref_sel_checked"
             android:stateListAnimator="@xml/animate_button_push"
             android:paddingVertical="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp">
+            android:layout_marginTop="12dp">
 
             <TextView
+                android:id="@+id/tv_brf_reserve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -327,8 +327,24 @@
                 android:layout_marginStart="12dp"
                 android:text="@string/briefing_reserve"
                 android:textColor="@color/white"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_brf_cnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/tv_brf_reserve"
+                android:layout_centerVertical="true"
+                android:layout_gravity="end"
+                android:layout_marginStart="6dp"
+                android:gravity="end"
+                android:textColor="@color/white"
+                android:textStyle="bold"
                 android:textSize="@dimen/font_size" />
+
             <ImageView
+                android:id="@+id/img_brf_reserve"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
@@ -350,7 +366,8 @@
             android:background="@drawable/btn_brf_reserver_list"
             android:stateListAnimator="@xml/animate_button_push"
             android:paddingVertical="10dp"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -374,7 +391,6 @@
                     android:textSize="@dimen/font_size" />
 
                 <TextView
-                    android:id="@+id/tv_brf_cnt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"

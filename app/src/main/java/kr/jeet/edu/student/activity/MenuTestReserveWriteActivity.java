@@ -462,7 +462,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         });
 
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            _stGrade = newItem.toString();
+
+            if (newIndex > 0) _stGrade = newItem.toString();
+            else {
+                mSpinnerGrade.setText("");
+                _stGrade = "";
+            }
             _scCode = 0;
             //_schoolList = null;
             if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
@@ -588,7 +593,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 }
             }
         }
-        LogMgr.e(TAG, "test: " + _schoolList.get(0).scName);
 
         Collections.sort(_schoolList, new Comparator<SchoolData>() {
             @Override

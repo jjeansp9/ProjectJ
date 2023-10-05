@@ -4,15 +4,21 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.AnimatorInflater;
+import android.animation.StateListAnimator;
 import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -31,19 +37,24 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
+import kr.jeet.edu.student.model.data.BriefingReservedListData;
 import kr.jeet.edu.student.model.data.FileData;
+import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingDetailResponse;
+import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
 import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -61,8 +72,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     private final static String TAG = "BriefingDetailActivity";
 
-    private ImageView mImgRdCnt;
-    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt, mTvRdCnt;
+    private ImageView mImgRdCnt, mImgReserve;
+    private TextView mTvTitle, mTvDate, mTvTime, mTvLoc, mTvPersonnel, mTvContent, mTvCnt, mTvRdCnt, mTvReserve;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
     private RelativeLayout layoutStartReserve;
 
@@ -79,8 +90,12 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     private final String RESERVE_LIST = "reserve_list";
 
     private int _currentSeq = -1; //PushMessage 용
+    private int _memberSeq = -1;
+    private int _userGubun = -1;
+    private int _reservationSeq = -1;
 
     boolean added = false;
+    boolean canceled = false;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -90,6 +105,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 added = intent.getBooleanExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, false);
 
                 if(added) {
+                    canceled = true;
                     requestBrfDetail(mInfo.seq);
                     Utils.createNotification(mContext, "예약완료", getString(R.string.briefing_write_success));
                 }
@@ -102,7 +118,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_briefing_detail);
         mContext = this;
-        initIntentData();
         initView();
         initAppbar();
         Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_PT);
@@ -141,8 +156,12 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
                 new FCMManager(mContext).requestPushConfirmToServer(message);
             }
-
         }
+
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
+
+        requestBrfReservedListData();
     }
 
     @Override
@@ -156,6 +175,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
     @Override
     void initView() {
+        initIntentData();
         findViewById(R.id.layout_start_reserve).setOnClickListener(this);
         findViewById(R.id.layout_reserver_list).setOnClickListener(this);
 
@@ -169,7 +189,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         mTvContent = findViewById(R.id.tv_brf_detail_content);
         mTvCnt = findViewById(R.id.tv_brf_cnt);
         mTvRdCnt = findViewById(R.id.tv_rd_cnt);
+        mTvReserve = findViewById(R.id.tv_brf_reserve);
+
         mImgRdCnt = findViewById(R.id.img_rd_cnt);
+        mImgReserve = findViewById(R.id.img_brf_reserve);
 
         mRecyclerViewImages = findViewById(R.id.recycler_brf_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_brf_file);
@@ -221,11 +244,11 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
         mTvContent.setText(Utils.getStr(mInfo.content));
 
-        str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "(0)" : "("+mInfo.reservationCnt+")";
+        str = TextUtils.isEmpty(String.valueOf(mInfo.reservationCnt)) ? "" : "("+mInfo.reservationCnt+")";
         if (mInfo.reservationCnt < 1) {
             mTvCnt.setVisibility(View.GONE);
-        }
-        else {
+
+        } else {
             mTvCnt.setVisibility(View.VISIBLE);
             mTvCnt.setText(str);
         }
@@ -246,6 +269,56 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
         if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
         if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
+
+        try {
+            String dateStr = mInfo.date+mInfo.ptTime;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.KOREA);
+
+            Date date = sdf.parse(dateStr);
+            Calendar calBrf = Calendar.getInstance();
+
+            if (date != null) calBrf.setTime(date);
+            Calendar calCurrent = Calendar.getInstance();
+
+
+            if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) { // 종료
+                mTvReserve.setText(getString(R.string.briefing_write_close));
+                mImgReserve.setVisibility(View.GONE);
+                layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+                layoutStartReserve.setStateListAnimator(null);
+
+            }else{
+                if (canceled) { // 취소
+                    mTvReserve.setText(getString(R.string.briefing_reserve_cancel));
+                    mTvCnt.setVisibility(View.GONE);
+                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+                    StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
+                    layoutStartReserve.setStateListAnimator(stateListAnimator);
+
+                } else if (mInfo.reservationCnt >= mInfo.participantsCnt) { // 마감
+                    mTvReserve.setText(getString(R.string.briefing_write_finish));
+                    mTvCnt.setVisibility(View.GONE);
+                    mImgReserve.setVisibility(View.GONE);
+                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+                    layoutStartReserve.setStateListAnimator(null);
+
+                } else {
+                    mTvReserve.setText(getString(R.string.briefing_reserve));
+                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_checked);
+                    StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
+                    layoutStartReserve.setStateListAnimator(stateListAnimator);
+                }
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setTvInBtn(boolean notReserved){
+        mTvReserve.setText(getString(R.string.briefing_write_finish));
+        layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+        layoutStartReserve.setStateListAnimator(null);
     }
 
     private void setImageRecycler(){
@@ -305,14 +378,27 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     if (date != null) calBrf.setTime(date);
                     Calendar calCurrent = Calendar.getInstance();
 
-                    if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) {
-                        Toast.makeText(mContext, R.string.briefing_write_close, Toast.LENGTH_SHORT).show();
+                    if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) { // 종료
 
-                    }else if (mInfo.reservationCnt >= mInfo.participantsCnt) {
-                        Toast.makeText(mContext, R.string.briefing_write_finish, Toast.LENGTH_SHORT).show();
+                    }else{
+                        if (canceled){ // 취소
+                            showMessageDialog(
+                                    getString(R.string.dialog_title_alarm),
+                                    getString(R.string.briefing_write_confirm),
+                                    ok -> {
+                                        hideMessageDialog();
+                                        canceled = false;
+                                        requestBrfCancel();
+                                    },
+                                    cancel -> hideMessageDialog(),
+                                    false
+                            );
 
-                    } else {
-                        startActivity(MenuBriefingWriteActivity.class, RESERVE);
+                        } else if (mInfo.reservationCnt >= mInfo.participantsCnt) { // 마감
+
+                        } else {
+                            startActivity(MenuBriefingWriteActivity.class, RESERVE);
+                        }
                     }
 
                 } catch (ParseException e) {
@@ -325,8 +411,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 break;
         }
     }
-
-
 
     private void requestBrfDetail(int ptSeq){
         if (RetrofitClient.getInstance() != null){
@@ -343,6 +427,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 BriefingData data = response.body().data;
                                 if (data != null){
                                     mInfo = data;
+                                    if (added) requestBrfReservedListData();
                                     setView();
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
@@ -359,6 +444,89 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<BriefingDetailResponse> call, Throwable t) {
+                    try {
+                        LogMgr.e(TAG, "requestBrfDetail() onFailure >> " + t.getMessage());
+                    }catch (Exception e){
+                    }
+                    hideProgressDialog();
+                    finish();
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void requestBrfReservedListData(){
+
+        if (RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.getBrfReservedList(mInfo.seq, _memberSeq).enqueue(new Callback<BriefingReservedListResponse>() {
+                @Override
+                public void onResponse(Call<BriefingReservedListResponse> call, Response<BriefingReservedListResponse> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            List<BriefingReservedListData> getData;
+
+                            if (response.body() != null) {
+                                getData = response.body().data;
+                                if (getData != null && !getData.isEmpty()) {
+                                    LogMgr.i(TAG, "reserveData: " + getData.size());
+                                    canceled = true;
+                                    _reservationSeq = getData.get(0).seq;
+
+                                } else {
+                                    LogMgr.e(TAG, "ListData is null");
+                                    canceled = false;
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestBrfReservedListData() Exception: ", e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<BriefingReservedListResponse> call, Throwable t) {
+                    try {
+                        LogMgr.e(TAG, "requestBrfReservedListData() onFailure >> " + t.getMessage());
+                    } catch (Exception e) {
+                    }
+                    hideProgressDialog();
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    // 예약 취소
+    private void requestBrfCancel(){
+        if (RetrofitClient.getInstance() != null){
+            showProgressDialog();
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.requestBrfCancel(_reservationSeq, _memberSeq, _userGubun).enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    try {
+                        if (response.isSuccessful()){
+
+                            Toast.makeText(mContext, R.string.briefing_write_cancel, Toast.LENGTH_SHORT).show();
+                            Utils.createNotification(mContext, "취소완료", getString(R.string.briefing_write_cancel));
+                            initData();
+
+                        }else{
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        }
+                    }catch (Exception e){
+                        LogMgr.e(TAG + "requestBrfDetail() Exception : ", e.getMessage());
+                    }
+
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
                     try {
                         LogMgr.e(TAG, "requestBrfDetail() onFailure >> " + t.getMessage());
                     }catch (Exception e){

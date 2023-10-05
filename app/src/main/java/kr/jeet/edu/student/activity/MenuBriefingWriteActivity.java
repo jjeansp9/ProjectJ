@@ -107,6 +107,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             ptSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, ptSeq);
         }
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _selectedSchoolData = new SchoolData("", 0);
     }
 
     @Override
@@ -144,7 +145,11 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            _stGrade = newItem.toString();
+            if (newIndex > 0) _stGrade = newItem.toString();
+            else {
+                mSpinnerGrade.setText("");
+                _stGrade = "";
+            }
             _scCode = 0;
             //_schoolList = null;
             if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
@@ -262,7 +267,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                 }
             }
         }
-        LogMgr.e(TAG, "test: " + _schoolList.get(0).scName);
 
         Collections.sort(_schoolList, new Comparator<SchoolData>() {
             @Override
@@ -396,18 +400,41 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         //request.email = mEtEmail.getText().toString().trim();
         //request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString().trim());
         request.participantsCnt = PUT_CNT; // 참석자는 무조건 1로 보내기
-        request.schoolNm = _selectedSchoolData.scName;
+        if (!TextUtils.isEmpty(_selectedSchoolData.scName)) request.schoolNm = _selectedSchoolData.scName;
+        if (!TextUtils.isEmpty(_stGrade)) request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), "");;
+
+        LogMgr.i(TAG, "== putData ==" +
+                "\nptSeq: " + request.ptSeq +
+                "\nmemberSeq: " + request.memberSeq +
+                "\nname: " + request.name +
+                "\nphoneNumber: " + request.phoneNumber +
+                "\nparticipantsCnt: " + request.participantsCnt +
+                "\nschoolNm: " + request.schoolNm +
+                "\ngrade: " + request.grade
+                );
     }
 
     private boolean checkWrite(){
 
-        if (mEtName.getText().toString().equals("") ||
-                mEtPhoneNum.getText().toString().equals("")
-                //mEtPersonnel.getText().toString().equals("")
-        ) {
-            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+        if (mEtName.getText().toString().equals("")) {
+            Toast.makeText(mContext, R.string.briefing_write_empty_stu_name, Toast.LENGTH_SHORT).show();
+            mEtName.requestFocus();
+            Utils.showKeyboard(mContext, mEtName);
             return false;
-        }else if(!cbPrivacy.isChecked()){
+
+        } else if (mEtPhoneNum.getText().toString().equals("")) {
+            Toast.makeText(mContext, R.string.briefing_write_empty_phone_num, Toast.LENGTH_SHORT).show();
+            mEtPhoneNum.requestFocus();
+            Utils.showKeyboard(mContext, mEtPhoneNum);
+            return false;
+
+        } else if (!Utils.checkPhoneNumber(mEtPhoneNum.getText().toString())){
+            Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
+            mEtPhoneNum.requestFocus();
+            Utils.showKeyboard(mContext, mEtPhoneNum);
+            return false;
+
+        } else if (!cbPrivacy.isChecked()) {
             Toast.makeText(mContext, R.string.write_privacy_empty, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -419,7 +446,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 //            Toast.makeText(mContext, R.string.briefing_write_please_per_cnt, Toast.LENGTH_SHORT).show();
 //            return false;
 //        }
-        else{
+        else {
             return true;
         }
     }
