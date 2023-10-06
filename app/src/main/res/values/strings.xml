@@ -162,6 +162,9 @@
     <string name="settings_update_profile">프로필 정보를 변경하였습니다.</string>
     <string name="settings_update_pw">비밀번호를 변경하였습니다.</string>
     <string name="settings_update_pw_lenth">비밀번호는 8자 이상으로 입력해주세요.</string>
+    <string name="description_leave">%s 앱의 회원계정을\n탈퇴하시겠습니까?</string>
+    <string name="description_typing_agree">• 동의하시면 아래와 같이 입력해 주세요.</string>
+    <string name="msg_agree">동의합니다</string>
 
     <string name="push_noti_received_announcement">공지사항 알림 도착</string>
     <string name="push_noti_received_attendance">출결 알림 도착</string>

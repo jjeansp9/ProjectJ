@@ -90,40 +90,8 @@ public class WebViewActivity extends BaseActivity {
         wv.setWebViewClient(new MyWebViewClient(mActivity, wv));
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 
-//        wv.clearCache(true);
-//        wv.clearHistory();
-//
-//        File cacheDir = getCacheDir();
-//        clearAppCache(mContext, cacheDir);
-
         if (url != null) wv.loadUrl(url);
     }
-
-    public void clearAppCache(Context mContext, java.io.File _oDir)
-    {
-        java.io.File _oFile = _oDir;
-
-        if(_oFile==null)
-            _oFile = mContext.getCacheDir();
-        if(_oFile==null)
-            return;
-
-        java.io.File[] _oChildrenFile = _oFile.listFiles();
-        try
-        {
-            for(int i=0;i<_oChildrenFile.length;i++)
-            {
-                if(_oChildrenFile[i].isDirectory())
-                    clearAppCache(mContext, _oChildrenFile[i]);
-                else
-                    _oChildrenFile[i].delete();
-            }
-        }
-        catch(Exception e)
-        {
-        }
-    }
-
 
     @Override
     void initAppbar() {}

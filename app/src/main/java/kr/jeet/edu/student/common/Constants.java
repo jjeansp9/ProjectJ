@@ -122,7 +122,7 @@ public class Constants {
         EARLY_LEAVE(2, "조퇴", R.color.color_early_leave),
         TARDY(3, "지각", R.color.color_tardy),
         MAKEUP_CLASS(4,"보충", R.color.color_makeup_class),
-        ONLINE_LECTURE(5, "인강", R.color.color_online_lecture);
+        ONLINE_LECTURE(5, "줌수업", R.color.color_online_lecture);
 
         private int attendanceCode;
         private String attendanceNameKor;

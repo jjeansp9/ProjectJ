@@ -77,13 +77,16 @@
 
     <color name="bg_brf_detail_box">#F8F8F8</color>
 
-    <color name="color_attendance">#999999</color>
+    <color name="color_attendance">#1d1dff</color>
     <color name="color_absence">#ff0000</color>
-    <color name="color_early_leave">#1d1dff</color>
+    <color name="color_early_leave">#999999</color>
     <color name="color_tardy">#ff7878</color>
     <color name="color_makeup_class">#248a43</color>
     <color name="color_online_lecture">#ffc000</color>
 
     <color name="color_fab">#5C6BC0</color>
     <color name="fab_color">#ffcc00</color>
+
+    <drawable name="color_enable">#e51b23</drawable>
+    <drawable name="color_disable">#cccccc</drawable>
 </resources>

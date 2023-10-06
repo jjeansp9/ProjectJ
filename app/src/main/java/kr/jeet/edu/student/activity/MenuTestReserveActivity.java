@@ -62,6 +62,7 @@ public class MenuTestReserveActivity extends BaseActivity {
 
     private final ArrayList<TestReserveData> mList = new ArrayList<>();
     private int _memberSeq = 0;
+    private final int LTC_CODE = 0; // 원생, 학부모인 경우는 0으로 고정
 
     // 등록했을 때 result =ActivityResult{resultCode=RESULT_CANCELED, data=null}
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -129,6 +130,20 @@ public class MenuTestReserveActivity extends BaseActivity {
         mAdapter = new TestReserveAdapter(mContext, mList, this::startActivity);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(!mRecyclerView.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                        && (mList != null && !mList.isEmpty()))
+                {
+                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    requestTestReserveList(lastNoticeSeq);
+                }
+            }
+        });
     }
 
     private void startActivity(TestReserveData item, int position){
@@ -141,19 +156,21 @@ public class MenuTestReserveActivity extends BaseActivity {
         }else LogMgr.e("item is null ");
     }
 
-    private void requestTestReserveList() {
+    private void requestTestReserveList(int... lastSeq) {
         showProgressDialog();
 
+        int lastNoticeSeq = 0;
+        if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
+
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getTestReserveListResponse(_memberSeq, 0, 0).enqueue(new Callback<TestReserveListResponse>() {
+            int finalLastNoticeSeq = lastNoticeSeq;
+            RetrofitClient.getApiInterface().getTestReserveListResponse(_memberSeq, LTC_CODE, lastNoticeSeq).enqueue(new Callback<TestReserveListResponse>() {
                 @Override
                 public void onResponse(Call<TestReserveListResponse> call, Response<TestReserveListResponse> response) {
-                    mList.clear();
-
                     try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
-
+                                if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                 List<TestReserveData> list = response.body().data;
                                 if (list != null && !list.isEmpty()) {
                                     mList.addAll(list);

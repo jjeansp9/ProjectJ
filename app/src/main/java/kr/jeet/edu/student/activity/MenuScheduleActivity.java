@@ -163,7 +163,10 @@ public class MenuScheduleActivity extends BaseActivity {
 
         for (ACAData data : spinList) acaNames.add(data.acaName);
 
-        if (_userType.equals(Constants.MEMBER)) mSpinnerCampus.setText(_acaName);
+        if (_userType.equals(Constants.MEMBER)) {
+            if (TextUtils.isEmpty(_acaName)) mSpinnerCampus.setText(acaNames.get(0));
+            else mSpinnerCampus.setText(_acaName);
+        }
         else mSpinnerCampus.setText(acaNames.get(0));
 
         mSpinnerCampus.setItems(acaNames);

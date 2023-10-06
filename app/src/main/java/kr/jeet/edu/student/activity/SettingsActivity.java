@@ -311,7 +311,8 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
-        super.onBackPressed();
+        Intent intent = getIntent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

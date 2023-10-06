@@ -5,6 +5,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT_REZ_CNL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
@@ -87,6 +88,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
+
+//    1. 알림 진입 시 앱종료됨 (1) Local DB가 비워져있을 때 앱이 종료되는지 확인,
+//                          (2) DB table 컬럼추가로 인해 DB가 수정된 경우 db version에 따른 컬럼추가 및 기본값부여하는부분에 처리가 되어있는지 확인 - 추후 수정
+//    2. 테스트예약 시 인적사항 입력 -> 사전질문 수정 -> 다시 인적수정하려 뒤로이동 후 다시 사전질문 이동하면 전에 작성된 사전질문 수정사항이 적용안됨 - 추후 수정
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -206,8 +211,10 @@ public class MainActivity extends BaseActivity {
                 announceRecycler.setAdapter(announceAdapter);
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
                 if(added) requestBoardList(acaCode);
+
+            }else {
+                mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
             }
-            //mHandler.sendEmptyMessage(CMD_GET_ACALIST);
         }
     });
 
@@ -431,6 +438,11 @@ public class MainActivity extends BaseActivity {
                 case MSG_TYPE_PT: // 설명회예약
                 {
                     startDetailActivity(intent, MenuBriefingDetailActivity.class);
+                }
+                break;
+                case MSG_TYPE_PT_REZ_CNL: // 설명회예약 취소
+                {
+
                 }
                 break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
@@ -677,8 +689,8 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
 
+                                PreferenceUtil.setStuPhoneNum(mContext, "");
                                 PreferenceUtil.setStuGender(mContext, getData.gender);
-                                //PreferenceUtil.setParentPhoneNum(mContext, getData.parentPhoneNumber);
                                 PreferenceUtil.setStuBirth(mContext, getData.birth);
 
                                 if (_userType.equals(Constants.MEMBER)){
@@ -708,6 +720,7 @@ public class MainActivity extends BaseActivity {
                                         if (stCode == 0) {
                                             PreferenceUtil.setParentName(mContext, getData.name);
                                             PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+                                            mTvStudentName.setText(Utils.getStr(getData.name));
 
                                         }else{
                                             PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);

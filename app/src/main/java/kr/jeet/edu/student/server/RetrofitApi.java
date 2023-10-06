@@ -39,6 +39,7 @@ import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
+import kr.jeet.edu.student.model.response.TestInflowResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TestReserveNoticeResponse;
 import kr.jeet.edu.student.model.response.TestTimeResponse;
@@ -69,7 +70,6 @@ public interface RetrofitApi {
     public final static int RESPONSE_CODE_DUPLICATE_ERROR= 409;
     public final static int RESPONSE_CODE_INERNAL_SERVER_ERROR= 500;
 
-
     // 회원가입
     @POST("member/signUp")
     Call<BaseResponse> signUp(@Body SignupRequest signUpRequest);
@@ -81,7 +81,9 @@ public interface RetrofitApi {
     // 로그아웃
     @POST("member/logout")
     Call<BaseResponse> logout(@Query("memberSeq") int memberSeq);
-
+    // 회원탈퇴
+    @POST("member/withdrawal")
+    Call<BaseResponse> leave(@Query("memberSeq") int memberSeq);
     // SMS 전송
     @POST("sms")
     Call<BaseResponse> sendSms(@Body SmsRequest request);
@@ -188,6 +190,9 @@ public interface RetrofitApi {
     // 레벨 테스트 이력 조회
     @GET("levelTests")
     Call<TestReserveListResponse> getTestReserveListResponse(@Query("memberSeq") int memberSeq, @Query("ltcCode") int ltcCode, @Query("lastSeq") int lastSeq);
+
+    @GET("levelTest/inflow")
+    Call<TestInflowResponse> requestInflow();
 
     // 레벨 테스트 테스트시간 조회
     @GET("levelTest/testTimes")

@@ -23,21 +23,19 @@ public class RetrofitClient {
                 .addInterceptor(interceptor)
                 .build();
 
-        Gson gson = new GsonBuilder().setLenient().create();
-
         Retrofit retrofit = null;
         if(LogMgr.DEBUG) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(RetrofitApi.SERVER_BASE_URL + RetrofitApi.PREFIX)   // 꼭 / 로 끝나야함
                     //.baseUrl(RetrofitApi.SERVER_BASE_URL)   // 꼭 / 로 끝나야함
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .client(client) // 로그 기능 추가
                     .build();
         } else {
             retrofit = new Retrofit.Builder()
                     .baseUrl(RetrofitApi.SERVER_BASE_URL + RetrofitApi.PREFIX)   // 꼭 / 로 끝나야함
                     //.baseUrl(RetrofitApi.SERVER_BASE_URL)   // 꼭 / 로 끝나야함
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
 

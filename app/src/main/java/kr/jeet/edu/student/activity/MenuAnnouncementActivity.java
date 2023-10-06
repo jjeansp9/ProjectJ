@@ -161,7 +161,10 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         for (ACAData data : spinList) acaNames.add(data.acaName);
 
-        if (_userType.equals(Constants.MEMBER)) mPowerSpinner.setText(_acaName);
+        if (_userType.equals(Constants.MEMBER)) {
+            if (TextUtils.isEmpty(_acaName)) mPowerSpinner.setText(acaNames.get(0));
+            else mPowerSpinner.setText(_acaName);
+        }
         else mPowerSpinner.setText(acaNames.get(0));
 
         mPowerSpinner.setItems(acaNames);

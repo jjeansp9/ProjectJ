@@ -324,31 +324,40 @@
                     android:adjustViewBounds="true"
                     app:mcv_showOtherDates="other_months"
                     android:layout_marginBottom="16dp"/>
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipgroup_legend"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/legend_attendance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_lightgray_panel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cv_attendance">
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipgroup_legend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+
+                        android:foregroundGravity="center"
+                        app:chipSpacingHorizontal="0dp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerview_attendance"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cv_attendance"
-                    android:background="@drawable/bg_lightgray_panel"
-                    app:chipSpacingHorizontal="0dp"
-                    />
-
-                <TextView
-                    android:id="@+id/tv_attendance_empty"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/spinner_cls"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:text="@string/menu_stu_info_attendance_empty"
-                    android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"
-                    android:textStyle="bold"
-                    android:padding="30dp"
-                    android:visibility="gone"/>
+                    app:layout_constraintTop_toBottomOf="@id/legend_attendance"
+                    android:layout_marginTop="@dimen/layout_margin_8"
+                    android:paddingHorizontal="@dimen/layout_margin_8"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    android:nestedScrollingEnabled="false" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

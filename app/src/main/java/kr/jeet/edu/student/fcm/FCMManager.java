@@ -51,9 +51,10 @@ public class FCMManager {
     public static final int NOTIFICATION_ID_ATTEND = 1000003;
     public static final int NOTIFICATION_ID_ACA_SCHEDULE = 1000004;
     public static final int NOTIFICATION_ID_PT = 1000005;
-    public static final int NOTIFICATION_ID_SYSTEM = 1000006;
-    public static final int NOTIFICATION_ID_TEST_APPT = 1000007;
-    public static final int NOTIFICATION_ID_COUNSEL = 1000008;
+    public static final int NOTIFICATION_ID_PT_REZ_CNL = 1000006;
+    public static final int NOTIFICATION_ID_SYSTEM = 1000007;
+    public static final int NOTIFICATION_ID_TEST_APPT = 1000008;
+    public static final int NOTIFICATION_ID_COUNSEL = 1000009;
 
     Context _context;
     PushMessage _pushMessage;
@@ -90,6 +91,11 @@ public class FCMManager {
             if (PreferenceUtil.getNotificationSeminar(_context) == false) {
                 isReject = true;
                 _notifyID = NOTIFICATION_ID_PT;
+            }
+        } else if (message.pushType.equals(MSG_TYPE_PT_REZ_CNL)) {
+            if (PreferenceUtil.getNotificationSeminar(_context) == false) {
+                isReject = true;
+                _notifyID = NOTIFICATION_ID_PT_REZ_CNL;
             }
         } else if (message.pushType.equals(MSG_TYPE_ATTEND)) {
             if (PreferenceUtil.getNotificationAttendance(_context) == false) {
@@ -225,6 +231,9 @@ public class FCMManager {
                 tickerText = _context.getString(R.string.push_noti_received_leveltest);
                 break;
             case MSG_TYPE_PT:
+                tickerText = _context.getString(R.string.push_noti_received_pt);
+                break;
+            case MSG_TYPE_PT_REZ_CNL:
                 tickerText = _context.getString(R.string.push_noti_received_pt);
                 break;
             case MSG_TYPE_COUNSEL:

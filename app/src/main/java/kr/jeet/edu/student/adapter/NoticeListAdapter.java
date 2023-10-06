@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -54,30 +55,34 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PushMessage item = mList.get(position);
+        if (position != NO_POSITION){
 
-        String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
-        if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
-            holder.tvType.setText("시스템알림");
-            holder.btnNext.setVisibility(View.VISIBLE);
-            //holder.tvAttState.setVisibility(View.GONE);
-        }
-        else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
-            holder.tvType.setText("출결현황");
-            holder.btnNext.setVisibility(View.GONE);
-            //holder.tvAttState.setVisibility(View.VISIBLE);
-        }
-        else {
-            holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
-            holder.tvAttState.setVisibility(View.GONE);
-            holder.btnNext.setVisibility(View.GONE);
-        }
+            PushMessage item = mList.get(position);
 
-        holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
-        holder.tvTitle.setText(TextUtils.isEmpty(item.body) ? "" : item.body);
+            String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
+            if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                holder.tvType.setText("시스템알림");
+                holder.btnNext.setVisibility(View.VISIBLE);
+                //holder.tvAttState.setVisibility(View.GONE);
+                holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+            }
+            else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
+                holder.tvType.setText("출결현황");
+                holder.btnNext.setVisibility(View.GONE);
+                //holder.tvAttState.setVisibility(View.VISIBLE);
+            }
+            else {
+                holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
+                holder.tvAttState.setVisibility(View.GONE);
+                holder.btnNext.setVisibility(View.GONE);
+            }
 
-        Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
-        holder.imgSenderAndReceiver.setVisibility(View.GONE);
+            holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
+            holder.tvTitle.setText(TextUtils.isEmpty(item.body) ? "" : item.body);
+
+            Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
+            holder.imgSenderAndReceiver.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -88,6 +93,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
+        private ConstraintLayout root;
         private TextView tvType, tvAttState, tvDate, tvReceiver, tvTitle;
         private ImageView imgSenderAndReceiver;
         private ImageButton btnNext;
@@ -95,6 +101,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            root = itemView.findViewById(R.id.notice_root);
             btnNext = itemView.findViewById(R.id.btn_notice_next);
             tvType = itemView.findViewById(R.id.tv_notice_type);
             //tvAttState = itemView.findViewById(R.id.tv_notice_attendance_state);
@@ -102,11 +109,6 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             tvReceiver = itemView.findViewById(R.id.tv_notice_receiver);
             tvTitle = itemView.findViewById(R.id.tv_system_notice_title);
             imgSenderAndReceiver = itemView.findViewById(R.id.img_notice_send_and_receiver);
-
-            itemView.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
-                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position));
-            });
         }
     }
 }

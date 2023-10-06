@@ -23,6 +23,7 @@ import org.w3c.dom.Text;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.dialog.Confirm2LeaveDialog;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.response.BaseResponse;
@@ -43,7 +44,7 @@ public class SetAccountActivity extends BaseActivity {
 
     private RetrofitApi mRetrofitApi;
 
-    private ConstraintLayout layoutPw;
+    private ConstraintLayout layoutPw, layoutPhone;
     private TextView mTvUserGubun, mTvName, mTvUpdatePhoneNum, mTvPhoneNum, mTvUpdatePw, mTvUpdateSns, mTvUpdateProfile;
     private ImageView mImgSns;
     private View line_1, line_2, line_3;
@@ -60,7 +61,7 @@ public class SetAccountActivity extends BaseActivity {
     private int stCodeParent = 0;
 
     private final String MEMBER = "Y";
-
+    Confirm2LeaveDialog _leaveDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +119,7 @@ public class SetAccountActivity extends BaseActivity {
         mTvUpdateSns = (TextView) findViewById(R.id.tv_update_sns_login);
 
         layoutPw = findViewById(R.id.layout_update_pw);
+        layoutPhone = findViewById(R.id.layout_update_phone_num);
 
         mImgSns = (ImageView) findViewById(R.id.img_update_sns_login);
 
@@ -158,20 +160,22 @@ public class SetAccountActivity extends BaseActivity {
         if (loginType == Constants.LOGIN_TYPE_NORMAL){ // 일반 로그인인 경우
             if (isOriginalMember.equals(MEMBER)){ // 회원
                 mTvUpdateProfile.setVisibility(View.GONE);
-                mTvUpdatePhoneNum.setVisibility(View.GONE);
-                mTvPhoneNum.setVisibility(View.GONE);
+                mTvUpdatePhoneNum.setVisibility(View.VISIBLE);
+                mTvPhoneNum.setVisibility(View.VISIBLE);
                 mTvUpdateSns.setVisibility(View.GONE);
                 line_1.setVisibility(View.GONE);
-                line_2.setVisibility(View.GONE);
+                line_2.setVisibility(View.VISIBLE);
 
-                Drawable backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_body);
-                layoutPw.setBackground(backgroundDrawable);
+                layoutPhone.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_top));
+                layoutPw.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_bottom));
 
             }else{ // 비회원
                 mTvUpdateSns.setVisibility(View.GONE);
 
-                Drawable backgroundDrawable = ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_bottom);
-                layoutPw.setBackground(backgroundDrawable);
+                TypedValue outValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                layoutPhone.setBackgroundResource(outValue.resourceId);
+                layoutPw.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_bottom));
             }
             line_3.setVisibility(View.GONE);
             layoutPw.setForeground(null);
@@ -179,15 +183,22 @@ public class SetAccountActivity extends BaseActivity {
         }else{ // sns 로그인인 경우
             if (isOriginalMember.equals(MEMBER)){ // 회원
                 mTvUpdateProfile.setVisibility(View.GONE);
-                mTvUpdatePhoneNum.setVisibility(View.GONE);
-                mTvPhoneNum.setVisibility(View.GONE);
+                mTvUpdatePhoneNum.setVisibility(View.VISIBLE);
+                mTvPhoneNum.setVisibility(View.VISIBLE);
                 mTvUpdatePw.setVisibility(View.GONE);
                 line_1.setVisibility(View.GONE);
-                line_2.setVisibility(View.GONE);
+                line_2.setVisibility(View.VISIBLE);
                 line_3.setVisibility(View.GONE);
+
+                layoutPhone.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_set_click_event_top));
+
             }else{
                 mTvUpdatePw.setVisibility(View.GONE);
                 line_2.setVisibility(View.GONE);
+
+                TypedValue outValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                layoutPhone.setBackgroundResource(outValue.resourceId);
             }
         }
     }
@@ -223,6 +234,7 @@ public class SetAccountActivity extends BaseActivity {
                 break;
 
             case R.id.layout_account_un_link:
+                showConfirm2LeaveDialog();
                 break;
 
             case R.id.layout_account_logout:
@@ -243,7 +255,29 @@ public class SetAccountActivity extends BaseActivity {
                 break;
         }
     }
-
+    private void showConfirm2LeaveDialog() {
+        if(_leaveDialog != null && _leaveDialog.isShowing()) {
+            _leaveDialog.dismiss();
+        }
+        _leaveDialog = new Confirm2LeaveDialog(mContext);
+        _leaveDialog.setOnOkButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideConfirm2LeaveDialog();
+                requestLeave(_memberSeq);
+            }
+        });
+        _leaveDialog.setOnCancelButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideConfirm2LeaveDialog();
+            }
+        });
+        _leaveDialog.show();
+    }
+    private void hideConfirm2LeaveDialog() {
+        if(_leaveDialog != null) _leaveDialog.dismiss();
+    }
     private void showDialog(){
         if(popupDialog != null && popupDialog.isShowing()) popupDialog.dismiss();
 
@@ -372,5 +406,32 @@ public class SetAccountActivity extends BaseActivity {
             });
         }
     }
+    // 회원탈퇴
+    private void requestLeave(int userSeq){
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.leave(userSeq).enqueue(new Callback<BaseResponse>() {
+                @Override
+                public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                    try {
+                        if (response.isSuccessful()){
+                            requestLogOut(_memberSeq);
+                        }else{
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());
+                        }
 
+                    }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+                }
+
+                @Override
+                public void onFailure(Call<BaseResponse> call, Throwable t) {
+                    try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 }

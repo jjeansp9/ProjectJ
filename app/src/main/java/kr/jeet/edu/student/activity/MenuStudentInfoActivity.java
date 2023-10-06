@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.adapter.MonthlyAttendanceListAdapter;
 import kr.jeet.edu.student.adapter.TuitionListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
@@ -87,7 +88,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     }
 
     private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum,
-            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty, mTvAttendanceEmpty;
+            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty;//, mTvAttendanceEmpty;
     private ImageView mImgStuProfile;
     private AppCompatButton mBtnConsultation;
     private RecyclerView mRecyclerTuition;
@@ -96,6 +97,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
+
+    private RecyclerView recyclerViewMonthlyAttend;
+    private MonthlyAttendanceListAdapter _attendanceListAdapter;
 
     private Calendar calendar;
     String strYear = "";
@@ -252,7 +256,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvStuPhoneNum = findViewById(R.id.tv_stu_info_stu_phone_num);
         mTvParentPhoneNum = findViewById(R.id.tv_stu_info_parent_phone_num);
         mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
-        mTvAttendanceEmpty = findViewById(R.id.tv_attendance_empty);
+//        mTvAttendanceEmpty = findViewById(R.id.tv_attendance_empty);
         //mTvBookPayEmpty = findViewById(R.id.tv_book_pay_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
@@ -269,6 +273,10 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
         mRecyclerTuition.setAdapter(mTuitionAdapter);
 
+        recyclerViewMonthlyAttend = findViewById(R.id.recyclerview_attendance);
+        _attendanceListAdapter = new MonthlyAttendanceListAdapter(mContext, _attendanceList);
+        recyclerViewMonthlyAttend.setAdapter(_attendanceListAdapter);
+
         setCalendar();
         initChipGroup();
         setSpinnerTeacher();
@@ -277,13 +285,13 @@ public class MenuStudentInfoActivity extends BaseActivity {
             _calendarView.setVisibility(View.GONE);
             mSpinnerCls.setVisibility(View.GONE);
             chipGroupLegend.setVisibility(View.GONE);
-            mTvAttendanceEmpty.setVisibility(View.VISIBLE);
+//            mTvAttendanceEmpty.setVisibility(View.VISIBLE);
             mBtnConsultation.setBackgroundResource(R.drawable.bt_menu_stu_info_consultation_request_disabled);
         }else{
             _calendarView.setVisibility(View.VISIBLE);
             mSpinnerCls.setVisibility(View.VISIBLE);
             chipGroupLegend.setVisibility(View.VISIBLE);
-            mTvAttendanceEmpty.setVisibility(View.GONE);
+//            mTvAttendanceEmpty.setVisibility(View.GONE);
             mBtnConsultation.setBackgroundResource(R.drawable.selector_bt_stu_info_consultation_request);
         }
     }
@@ -379,14 +387,14 @@ public class MenuStudentInfoActivity extends BaseActivity {
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.bg_white)));
             chip.setChipStrokeWidth(0);
             chip.setCloseIconVisible(false);
-            chip.setCheckable(true);
-            chip.setChecked(true);
+            chip.setCheckable(false);
             chip.setCheckedIconVisible(true);
             chip.setClickable(false);
             chip.setFocusable(false);
-            chip.setCheckedIcon(getDrawable(R.drawable.ic_vector_circle));
-            chip.setCheckedIconTint(ColorStateList.valueOf(ContextCompat.getColor(mContext, attendance.getColorRes())));
-            chip.setEnsureMinTouchTargetSize(false);
+            chip.setTextStartPadding(4f);
+            chip.setTextEndPadding(4f);
+            chip.setChipIcon(getDrawable(R.drawable.ic_vector_circle));
+            chip.setChipIconTint(ColorStateList.valueOf(ContextCompat.getColor(mContext, attendance.getColorRes())));
             chip.setChipIconSize(getResources().getDimensionPixelSize(R.dimen.dot_sex_size));
             chipGroupLegend.addView(chip);
         }
@@ -659,6 +667,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestGetAttendanceList() Exception : ", e.getMessage());
                     }finally{
 //                        hideProgressDialog();
+                        _attendanceListAdapter.notifyDataSetChanged();
                         updateCalView();
                     }
                 }
@@ -674,6 +683,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     }catch (Exception e){
                     }finally{
 //                        hideProgressDialog();
+                        _attendanceListAdapter.notifyDataSetChanged();
                         updateCalView();
                     }
                 }

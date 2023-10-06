@@ -46,7 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.30"/>
+                app:layout_constraintGuide_percent="0.25"/>
 
             <TextView
                 android:id="@+id/tv_bc_name_sub"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/tv_title_bus_name"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_call"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:textSize="@dimen/font_size_large"
@@ -101,7 +101,7 @@
                 android:id="@+id/tv_bus_info_sub"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@+id/tv_title_bus_name"
+                app:layout_constraintTop_toBottomOf="@+id/tv_bus_name"
                 app:layout_constraintEnd_toStartOf="@id/guideline_left"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginTop="8dp"
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/tv_bus_info_sub"
                 app:layout_constraintStart_toStartOf="@id/guideline_left"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btn_call"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:textSize="@dimen/font_size_large"

@@ -311,6 +311,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
         _ltcCode = Utils.getStr(mInfo.bigo);
         _ltcName = Utils.getStr(mInfo.bigoText);
+        _selectedSchoolData.scName = Utils.getStr(tvSchool.toString());
+        _selectedSchoolData.scCode = _scCode;
 
         String[] dateTimeParts = mInfo.reservationDate.split(" ");
 
