@@ -74,6 +74,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String selMonth = "";
 
     private int _memberSeq = 0;
+    private int _stuSeq = 0;
+    private int _userGubun = 0;
 
     private boolean fromBottomMenu = false;
 
@@ -105,6 +107,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         setContentView(R.layout.activity_menu_notice);
 
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _stuSeq = PreferenceUtil.getStuSeq(mContext);
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
 
         noticeType = getResources().getStringArray(R.array.notice_type);
         //allType = noticeType[0];
@@ -146,6 +150,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private void getListData(String selType, boolean isUpdate){
 
+
+
         new Thread(() -> {
             //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
 
@@ -163,7 +169,19 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
 
                 String mappedType = type.get(selType);
-                if (msg.memberSeq == _memberSeq) if (mappedType!=null) if (msg.pushType.equals(mappedType)) newMessage.add(msg);
+                if (mappedType!=null) {
+                    if (msg.pushType.equals(mappedType)){
+                        if (_userGubun == Constants.USER_TYPE_PARENTS){
+                            if (msg.memberSeq == _stuSeq){
+                                newMessage.add(msg);
+                            }
+                        }else{
+                            if (msg.memberSeq == _memberSeq) {
+                                newMessage.add(msg);
+                            }
+                        }
+                    }
+                }
 
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +
