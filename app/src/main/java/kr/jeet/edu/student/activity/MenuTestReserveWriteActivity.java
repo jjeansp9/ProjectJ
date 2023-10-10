@@ -51,11 +51,13 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.dialog.SchoolListBottomSheetDialog;
+import kr.jeet.edu.student.model.data.InflowData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
+import kr.jeet.edu.student.model.response.TestInflowResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -131,6 +133,18 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
                 setResult(RESULT_OK, intent);
                 finish();
+
+            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_SAVED)) {
+                if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                    LogMgr.e(TAG, "Event get mInfo");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                    }else{
+                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                    }
+                }
+
+                if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
             }
         }
     });
@@ -164,18 +178,24 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_WRITE)){
                 request = intent.getParcelableExtra(IntentParams.PARAM_TEST_RESERVE_WRITE);
             }
-            if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE) && intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+            if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE)){
+                writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
+            }
+            if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
                 }else{
                     mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
                 }
-                writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
+            }else{
+                mInfo = new TestReserveData();
             }
 
         }catch (Exception e) {
             LogMgr.e(TAG, e.getMessage());
         }
+
+
     }
 
     @Override
@@ -471,9 +491,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 _stGrade = "";
             }
             _scCode = 0;
-            //_schoolList = null;
             if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
             tvSchool.setText("");
+            _selectedSchoolData = new SchoolData("", 0);
         });
 
         mSpinnerFunnel.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -540,6 +560,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         });
 
         if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())) requestTestTime();
+        requestInflow();
     }
 
     private void setSchoolSpinner(){
@@ -704,9 +725,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (TextUtils.isEmpty(_selectedSchoolData.scName)) {
             Toast.makeText(mContext, R.string.school_empty, Toast.LENGTH_SHORT).show();
-            if(_schoolListBottomSheetDialog == null) {
-                _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
+            toggleFilterLayout();
+            if (_schoolListBottomSheetDialog != null) {
+                _schoolListBottomSheetDialog = null;
             }
+            _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
             _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
 
         } else if (request.phoneNumber.equals("")) {
@@ -757,8 +780,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             Intent intent = new Intent(mContext, InformedQuestionActivity.class);
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
             intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
-            if (writeMode.equals(Constants.WRITE_EDIT)) {
+            if (mInfo != null) {
+                LogMgr.e(TAG, "Event put mInfo");
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+            }else{
+                LogMgr.e(TAG, "Event put mInfo null");
             }
             resultLauncher.launch(intent);
         }
@@ -778,6 +804,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
                                 ArrayList<TestTimeData> getData = response.body().data;
+
+                                for (TestTimeData data: getData) LogMgr.i(TAG, "TestTimeList: " + data.time);
 
                                 int redColor;
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -829,6 +857,54 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<TestTimeResponse> call, Throwable t) {
                     mSpinnerTestTime.setItems(testTimeList);
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void requestInflow() {
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().requestInflow().enqueue(new Callback<TestInflowResponse>() {
+                @Override
+                public void onResponse(Call<TestInflowResponse> call, Response<TestInflowResponse> response) {
+//                    if (testTimeList!=null && testTimeList.size() > 0) testTimeList.clear();
+//                    if (gradeIndex!=null && gradeIndex.size() > 0) gradeIndex.clear();
+
+//                    try {
+//                        if (response.isSuccessful()) {
+//                            if (response.body() != null) {
+//                                List<InflowData> getData = response.body().data;
+//
+//                                mSpinnerFunnel.setItems(getData);
+//                            }
+//                        } else {
+//                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    } catch (Exception e) {
+//                        LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
+//                    }
+
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            List<InflowData> getData = response.body().data;
+                            List<String> inflowNames = new ArrayList<>();
+
+                            for (InflowData inflowData : getData) {
+                                inflowNames.add(inflowData.inflowName);
+                            }
+
+                            mSpinnerFunnel.setItems(inflowNames);
+                        }
+                    } else {
+                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<TestInflowResponse> call, Throwable t) {
+                    //mSpinnerFunnel.setItems(testTimeList);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

@@ -1,5 +1,8 @@
 package kr.jeet.edu.student.activity;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -108,11 +112,53 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private final String NOT_SEL = "선택";
 
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        LogMgr.w("result =" + result);
+        if(result.getResultCode() != RESULT_CANCELED) {
+            Intent intent = result.getData();
+            if (intent!= null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_SAVED)) {
+                LogMgr.e(TAG, "resultLauncher Event SAVE");
+                boolean saved = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, false);
+                if (saved) {
+                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                        }else{
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                        }
+                    }
+                }
+
+            }
+        }
+    });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informed_question);
         mContext = this;
+
+        if (savedInstanceState != null){
+            LogMgr.e("onSaveEvent2");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mInfo = savedInstanceState.getParcelable(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+            }else{
+                mInfo = savedInstanceState.getParcelable(IntentParams.PARAM_LIST_ITEM);
+            }
+        }
+
+        Intent intent = getIntent();
+        if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+            }else{
+                mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+            }
+        }else{
+            mInfo = new TestReserveData();
+        }
+
         initView();
         initAppbar();
     }
@@ -144,13 +190,21 @@ public class InformedQuestionActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE)){
                 writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
 
-                if (writeMode.equals(Constants.WRITE_EDIT)){
-                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
-                        }else{
-                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
-                        }
+//                if (writeMode.equals(Constants.WRITE_EDIT)){
+//                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+//                        }else{
+//                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+//                        }
+//                    }
+//                }
+                if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                    LogMgr.e(TAG, "Event get mInfo");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                    }else{
+                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
                     }
                 }
             }
@@ -213,7 +267,17 @@ public class InformedQuestionActivity extends BaseActivity {
         mSpinnerProcess_3 = findViewById(R.id.spinner_learning_process_3);
 
         setRecycler();
-        if (writeMode.equals(Constants.WRITE_EDIT)) setView();
+        if (writeMode.equals(Constants.WRITE_EDIT)) {
+            setView();
+            LogMgr.e(TAG, "EVENT EDIT");
+        }
+        else{
+            if (mInfo != null) {
+                setView();
+                LogMgr.e(TAG, "EVENT WRITE1");
+            }
+            LogMgr.e(TAG, "EVENT WRITE");
+        }
         setSpinner();
 
         mEditList = new EditText[]{mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
@@ -245,6 +309,8 @@ public class InformedQuestionActivity extends BaseActivity {
             mRecyclerSchool.setVisibility(View.GONE);
             tvQuestionNo6.setVisibility(View.GONE);
             rgPrefArea.setVisibility(View.GONE);
+
+
         }
     }
 
@@ -259,19 +325,23 @@ public class InformedQuestionActivity extends BaseActivity {
 
         for (RadioButton rb : rbList) rb.setOnCheckedChangeListener(listener);
 
-        switch (mInfo.wish) {
-            case "0":
-                rbSelDay1.setChecked(true);
-                break;
-            case "1":
-                rbSelDay2.setChecked(true);
-                break;
-            case "2":
-                rbSelDay3.setChecked(true);
-                break;
-            case "3":
-                rbSelDay4.setChecked(true);
-                break;
+        if (mInfo.wish != null){
+            switch (mInfo.wish) {
+                case "0":
+                    rbSelDay1.setChecked(true);
+                    break;
+                case "1":
+                    rbSelDay2.setChecked(true);
+                    break;
+                case "2":
+                    rbSelDay3.setChecked(true);
+                    break;
+                case "3":
+                    rbSelDay4.setChecked(true);
+                    break;
+                default:
+                    break;
+            }
         }
 
         mEtStTime1.setText(Utils.getStr(mInfo.time1));
@@ -284,24 +354,25 @@ public class InformedQuestionActivity extends BaseActivity {
         mEtStDate3.setText(Utils.getStr(mInfo.date3));
         mEtStDate4.setText(Utils.getStr(mInfo.date4));
 
-        mSpinnerProcess_1.setText(isNotSel(Utils.getStr(mInfo.processText1)));
-        mSpinnerProcess_2.setText(isNotSel(Utils.getStr(mInfo.processText2)));
-        mSpinnerProcess_3.setText(isNotSel(Utils.getStr(mInfo.processText3)));
+        mSpinnerProcess_1.setText(TextUtils.isEmpty(mInfo.processText1) ? getString(R.string.select) : isNotSel(Utils.getStr(mInfo.processText1)));
+        mSpinnerProcess_2.setText(TextUtils.isEmpty(mInfo.processText2) ? getString(R.string.select) : isNotSel(Utils.getStr(mInfo.processText2)));
+        mSpinnerProcess_3.setText(TextUtils.isEmpty(mInfo.processText3) ? getString(R.string.select) : isNotSel(Utils.getStr(mInfo.processText3)));
 
-        selProcess1 = Integer.parseInt(mInfo.process1);
-        selProcess2 = Integer.parseInt(mInfo.process2);
-        selProcess3 = Integer.parseInt(mInfo.process3);
+        selProcess1 = TextUtils.isEmpty(mInfo.process1) ? -1 : Integer.parseInt(mInfo.process1);
+        selProcess2 = TextUtils.isEmpty(mInfo.process2) ? -1 : Integer.parseInt(mInfo.process2);
+        selProcess3 = TextUtils.isEmpty(mInfo.process3) ? -1 : Integer.parseInt(mInfo.process3);
+
+        LogMgr.e(TAG, "selProcess1: " + selProcess1);
 
         mEtLearningProc1.setText(Utils.getStr(mInfo.processEtc1));
         mEtLearningProc2.setText(Utils.getStr(mInfo.processEtc2));
         mEtLearningProc3.setText(Utils.getStr(mInfo.processEtc3));
 
-
         int count = 0;
         for (String item : mListArea) areaCheckList.add("");
         String[] parts = Utils.getStr(mInfo.study).split("\\^");
-        for (int i = 0; i < mListArea.size(); i++) {
-            if (count < parts.length && mListArea.get(i).equals(parts[count])){
+        for (int i = 0; i < areaCheckList.size() && count < parts.length; i++) {
+            if (mListArea.size() > i && mListArea.get(i).equals(parts[count])) {
                 areaCheckList.set(i, parts[count]);
                 count++;
             }
@@ -312,19 +383,22 @@ public class InformedQuestionActivity extends BaseActivity {
 
         for (String item : mListSchool) SchoolCheckList.add("");
         parts = Utils.getStr(mInfo.highSchool).split("\\^");
-        for (int i = 0; i < SchoolCheckList.size(); i++) {
-            if (count < parts.length && mListSchool.get(i).equals(parts[count])) {
+        for (int i = 0; i < SchoolCheckList.size() && count < parts.length; i++) {
+            if (mListSchool.size() > i && mListSchool.get(i).equals(parts[count])) {
                 SchoolCheckList.set(i, parts[count]);
                 count++;
             }
         }
         mAdapterSchool.notifyDataSetChanged();
 
-        if (mInfo.gifted.equals("Y")) rbGiftedPref.setChecked(true);
-        else rbGiftedNonPref.setChecked(true);
+        if (mInfo.gifted != null){
+            if (mInfo.gifted.equals("Y")) rbGiftedPref.setChecked(true);
+            else rbGiftedNonPref.setChecked(true);
+        }
 
         mEtAnyQuestion.setText(Utils.getStr(mInfo.etc));
     }
+
     private String isNotSel(String s){
         if (s.equals("미선택")) s = s.replace("미", "");
         return s;
@@ -332,11 +406,6 @@ public class InformedQuestionActivity extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinner(){
-        if (!writeMode.equals(Constants.WRITE_EDIT)){
-            mSpinnerProcess_1.setText(getString(R.string.select));
-            mSpinnerProcess_2.setText(getString(R.string.select));
-            mSpinnerProcess_3.setText(getString(R.string.select));
-        }
 
         mSpinnerProcess_1.setOnTouchListener(spinnerTouchListener);
         mSpinnerProcess_2.setOnTouchListener(spinnerTouchListener);
@@ -403,7 +472,8 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                if (checked()) requestTestReserve();
+                //if (checked()) requestTestReserve();
+                requestData();
                 break;
         }
     }
@@ -482,22 +552,6 @@ public class InformedQuestionActivity extends BaseActivity {
             if (rgSelDay.getVisibility() == View.VISIBLE) request.wish = selDay; // 희망요일
             else request.wish = "";
 
-//            if (!mSpinnerProcess_1.getText().toString().equals(getString(R.string.select))
-//                    || !mEtLearningProc1.getText().toString().equals("")){
-//                request.process1 = selProcess1;
-//                request.processEtc1 = mEtLearningProc1.getText().toString();
-//
-//            }
-//            if (!mEtLearningProc2.getText().toString().equals("")){
-//                request.process2 = selProcess2;
-//                request.processEtc2 = mEtLearningProc2.getText().toString();
-//
-//            }
-//            if (!mEtLearningProc3.getText().toString().equals("")){
-//                request.process3 = selProcess3;
-//                request.processEtc3 = mEtLearningProc3.getText().toString();
-//            }
-
             request.process1 = selProcess1;
             request.processEtc1 = mEtLearningProc1.getText().toString();
             if (request.process1 == -1) request.processText1 = "미선택";
@@ -541,10 +595,11 @@ public class InformedQuestionActivity extends BaseActivity {
             }
             strHighSchool = schoolBuilder.toString();
 
-            LogMgr.e("FormatTest", strStudy + ", " + strHighSchool);
+            if (mRecyclerArea.getVisibility() == View.VISIBLE) request.study = Utils.getStr(strStudy);
+            else request.study = "";
 
-            request.study = strStudy;
-            request.highSchool = strHighSchool;
+            if (mRecyclerSchool.getVisibility() == View.VISIBLE) request.highSchool = Utils.getStr(strHighSchool);
+            else request.highSchool = "";
 
             if (rgPrefArea.getVisibility() == View.VISIBLE){
                 if (rbGiftedPref.isChecked()) request.gifted = PREF;
@@ -671,6 +726,171 @@ public class InformedQuestionActivity extends BaseActivity {
             Toast.makeText(mContext, R.string.write_before_study_empty, Toast.LENGTH_SHORT).show();
             return false;
         }
+    }
+
+    private void saveData(){
+        try {
+            mInfo.memberSeq = _memberSeq;
+
+            if (rbSelDay1.isChecked()) selDay = "0";
+            else if (rbSelDay2.isChecked()) selDay = "1";
+            else if (rbSelDay3.isChecked()) selDay = "2";
+            else if (rbSelDay4.isChecked()) selDay = "3";
+
+            mInfo.time1 = mEtStTime1.getText().toString();
+            mInfo.time2 = mEtStTime2.getText().toString();
+            mInfo.time3 = mEtStTime3.getText().toString();
+            mInfo.time4 = mEtStTime4.getText().toString();
+
+            mInfo.date1 = mEtStDate1.getText().toString();
+            mInfo.date2 = mEtStDate2.getText().toString();
+            mInfo.date3 = mEtStDate3.getText().toString();
+            mInfo.date4 = mEtStDate4.getText().toString();
+
+            if (rgSelDay.getVisibility() == View.VISIBLE) mInfo.wish = selDay; // 희망요일
+            else mInfo.wish = "";
+
+            mInfo.process1 = selProcess1+"";
+            mInfo.processEtc1 = mEtLearningProc1.getText().toString();
+            LogMgr.e(TAG, "process1 value" + mInfo.process1);
+            if (mInfo.process1.equals("-1")) mInfo.processText1 = getString(R.string.select);
+            else mInfo.processText1 = mSpinnerProcess_1.getText().toString();
+            LogMgr.e(TAG, "processText1 value" + mInfo.processText1);
+
+            mInfo.process2 = selProcess2+"";
+            mInfo.processEtc2 = mEtLearningProc2.getText().toString();
+            if (mInfo.process2.equals("-1")) mInfo.processText2 = getString(R.string.select);
+            else mInfo.processText2 = mSpinnerProcess_2.getText().toString();
+
+            mInfo.process3 = selProcess3+"";
+            mInfo.processEtc3 = mEtLearningProc3.getText().toString();
+            if (mInfo.process3.equals("-1")) mInfo.processText3 = getString(R.string.select);
+            else mInfo.processText3 = mSpinnerProcess_3.getText().toString();
+
+            String strStudy = "";
+            StringBuilder studyBuilder = new StringBuilder();
+
+            for (String value : areaCheckList) {
+                if (value != null && !value.isEmpty()) {
+                    if (studyBuilder.length() > 0) {
+                        studyBuilder.append("^");
+                    }
+                    studyBuilder.append(value);
+                }
+            }
+            strStudy = studyBuilder.toString();
+
+            String strHighSchool = "";
+            StringBuilder schoolBuilder = new StringBuilder();
+
+            LogMgr.i(TAG, "areaList: " + areaCheckList.toString() + "\nscList: " + SchoolCheckList.toString());
+
+            for (String value : SchoolCheckList) {
+                if (value != null && !value.isEmpty()) {
+                    if (schoolBuilder.length() > 0) {
+                        schoolBuilder.append("^");
+                    }
+                    schoolBuilder.append(value);
+                }
+            }
+            strHighSchool = schoolBuilder.toString();
+
+            LogMgr.e("FormatTest", strStudy + ", " + strHighSchool);
+
+            if (mRecyclerArea.getVisibility() == View.VISIBLE) mInfo.study = strStudy;
+            else mInfo.study = "";
+
+            if (mRecyclerSchool.getVisibility() == View.VISIBLE) mInfo.highSchool = strHighSchool;
+            else mInfo.highSchool = "";
+
+            if (rgPrefArea.getVisibility() == View.VISIBLE) {
+                if (rbGiftedPref.isChecked()) mInfo.gifted = PREF;
+                else if (rbGiftedNonPref.isChecked()) mInfo.gifted = NON_PREF;
+            } else mInfo.gifted = "";
+
+            mInfo.etc = mEtAnyQuestion.getText().toString();
+            mInfo.registerDate = currentDate();
+
+            if (writeMode.equals(Constants.WRITE_EDIT)) {
+                request.check1 = mInfo.check1;
+                request.check2 = mInfo.check2;
+                request.check3 = mInfo.check3;
+                request.check4 = mInfo.check4;
+            }
+
+            if (mInfo != null) {
+                LogMgr.i(TAG + "putData mInfo", "\nmemberSeq : " + mInfo.memberSeq
+                        + "\nseq : " + mInfo.seq
+                        + "\n학생이름 : " + mInfo.name
+                        + "\n생년월일 : " + mInfo.birth
+                        + "\n성별 : " + mInfo.sex
+                        + "\n주소 : " + mInfo.address
+                        + "\n상세주소 : " + mInfo.addressSub
+                        + "\n학교코드 : " + mInfo.scCode
+                        + "\n학년 : " + mInfo.grade
+                        + "\n학생 전화번호 : " + mInfo.phoneNumber
+                        + "\n학부모 연락처 : " + mInfo.parentPhoneNumber
+                        + "\n학부모 성함 : " + mInfo.parentName
+                        + "\n유입경로 : " + mInfo.reason
+                        + "\n테스트예약일 : " + mInfo.reservationDate
+                        + "\n레벨캠퍼스 비고 : " + mInfo.bigo
+                        + "\n현금영수증 : " + mInfo.cashReceiptNumber
+                        + "\n등록일 : " + mInfo.registerDate
+                        + "\n희망요일 : " + mInfo.wish
+                        + "\n주간수업량(시간) 학원 : " + mInfo.time1
+                        + "\n주간수업량(시간) 과외 : " + mInfo.time2
+                        + "\n주간수업량(시간) 가정학습(자기주도) : " + mInfo.time3
+                        + "\n주간수업량(시간) 구몬/눈높이/재능 : " + mInfo.time4
+                        + "\n수강기간 학원 : " + mInfo.date1
+                        + "\n수강기간 과외 : " + mInfo.date2
+                        + "\n수강기간 가정학습(자기주도) : " + mInfo.date3
+                        + "\n수강기간 구몬/눈높이/재능 : " + mInfo.date4
+                        + "\n진도 심화학습여부(1) 과정 : " + mInfo.process1
+                        + "\n진도 심화학습여부(1) 사용교재 : " + mInfo.processEtc1
+                        + "\n진도 심화학습여부(1) 과정 텍스트 : " + mInfo.processText1
+                        + "\n진도 심화학습여부(2) 과정 : " + mInfo.process2
+                        + "\n진도 심화학습여부(2) 사용교재 : " + mInfo.processEtc2
+                        + "\n진도 심화학습여부(2) 과정 텍스트 : " + mInfo.processText2
+                        + "\n진도 심화학습여부(3) 과정 : " + mInfo.process3
+                        + "\n진도 심화학습여부(3) 사용교재 : " + mInfo.processEtc3
+                        + "\n진도 심화학습여부(3) 과정 텍스트 : " + mInfo.processText3
+                        + "\n희망분야 : " + mInfo.study
+                        + "\n희망학교 : " + mInfo.highSchool
+                        + "\n영재센터 입학희망 : " + mInfo.gifted
+                        + "\n궁금사항 : " + mInfo.etc
+                        + "\ncheck1 : " + mInfo.check1
+                        + "\ncheck2 : " + mInfo.check2
+                        + "\ncheck3 : " + mInfo.check3
+                        + "\ncheck4 : " + mInfo.check4
+                );
+            }
+
+        }catch (Exception e){}
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveData();
+        outState.putParcelable(IntentParams.PARAM_LIST_ITEM, mInfo);
+        LogMgr.e(TAG,"onSaveEvent");
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        saveData();
+        Intent intent = getIntent();
+
+        if (intent != null){
+            intent.putExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, true);
+            intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+            LogMgr.e(TAG, "Event mInfo Test: " + mInfo.process1); // TODO : 작성화면에서 뒤로갈 때 mInfo 가 null인 상황 코드 수정하기
+        }
+
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void checkEtStudy(View view){

@@ -580,7 +580,6 @@
                 app:spinner_divider_color="@color/line"
                 app:spinner_divider_show="true"
                 app:spinner_divider_size="0.4dp"
-                app:spinner_item_array="@array/funnel"
                 app:spinner_popup_animation="normal"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"

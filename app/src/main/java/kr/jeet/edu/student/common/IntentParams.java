@@ -41,6 +41,7 @@ public class IntentParams {
 
     public final static String PARAM_TEST_RESERVE_ADDED = "testReserveAdded"; // 테스트 예약 등록 resultLauncher
     public final static String PARAM_TEST_RESERVE_EDITED = "testReserveEdited"; // 테스트 예약 수정 resultLauncher
+    public final static String PARAM_TEST_RESERVE_SAVED = "testReserveSaved"; // 테스트 예약 입력한 데이터 저장
 
     public final static String PARAM_BRIEFING_INFO = "briefingInfo";  // 선택한 설명회 정보
     public final static String PARAM_BRIEFING_PARTICIPANTS_CNT = "briefingParticipantsCnt";  // 참가인원
