@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -14,8 +15,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.OAuthProvider;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
@@ -26,6 +36,7 @@ import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.sns.AppleLoginManager;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
 import kr.jeet.edu.student.sns.KaKaoLoginManager;
 import kr.jeet.edu.student.sns.NaverLoginManager;
@@ -49,6 +60,7 @@ public class LoginActivity extends BaseActivity {
     private NaverLoginManager mNaverLogin = null;
     private KaKaoLoginManager mKaKaoLogin = null;
     private GoogleLoginManager mGoogleLogin = null;
+    private AppleLoginManager mAppleLogin = null;
     private int selectedSNSLoginType = -1;
 
     private AppCompatActivity mActivity = null;
@@ -77,11 +89,77 @@ public class LoginActivity extends BaseActivity {
         mContext = this;
 
         mGoogleLogin = new GoogleLoginManager(mActivity);
+        initAuthApple();
         initAppbar();
         initView();
         //String HashKey = Utility.INSTANCE.getKeyHash(mContext);
         //LogMgr.e(TAG, HashKey);
     }
+
+    private OAuthProvider.Builder provider;
+    private FirebaseAuth mAuth;
+
+    private void initAuthApple(){
+        if(provider == null) {
+            provider = OAuthProvider.newBuilder("apple.com");
+            List<String> scopes = new ArrayList<>();
+            scopes.add("email");
+            scopes.add("name");
+            provider.setScopes(scopes);
+            provider.addCustomParameter("locale", Constants.LOCALE_LANGUAGE_KR); // 한국어로 설정
+        }
+    }
+
+    private void checkAuthApple(){
+        mAuth = FirebaseAuth.getInstance();
+        Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> ");
+
+        Task<AuthResult> pending = mAuth.getPendingAuthResult();
+        if (pending != null) {
+            pending.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    // Get the user profile with authResult.getUser() and
+                    // authResult.getAdditionalUserInfo(), and the ID
+                    // token from Apple with authResult.getCredential().
+                    Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> " +authResult.getUser().toString()+", "+authResult.getAdditionalUserInfo().toString()+", "+authResult.getCredential().toString());
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        } else {
+            testApple();
+        }
+
+    }
+
+    private void testApple(){
+        mAuth.startActivityForSignInWithProvider(this, provider.build())
+                .addOnSuccessListener(
+                        new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
+                                // Sign-in successful!
+
+                                FirebaseUser user = authResult.getUser();
+                                LogMgr.e(TAG, "user Info: " + user.getEmail());
+                                Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> " +authResult.getUser().toString()+", "+authResult.getAdditionalUserInfo().toString()+", "+authResult.getCredential().toString());
+
+                                // ...
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                            }
+                        });
+    }
+
     @Override
     void initAppbar(){}
 
@@ -93,6 +171,7 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.btn_naver).setOnClickListener(this);
         findViewById(R.id.btn_kakao).setOnClickListener(this);
         findViewById(R.id.btn_google).setOnClickListener(this);
+        findViewById(R.id.btn_apple).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
         findViewById(R.id.checkbox_text).setOnClickListener(this);
 
@@ -152,6 +231,17 @@ public class LoginActivity extends BaseActivity {
                 mGoogleLogin.LoginProcess();
                 break;
 
+            case R.id.btn_apple:
+                if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
+
+//                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
+//                mAppleLogin = new AppleLoginManager(mContext);
+//                mAppleLogin.setHandler(mHandler);
+//                mAppleLogin.LoginProcess();
+                checkAuthApple();
+
+                break;
+
             case R.id.tv_join :
                 intent = new Intent(this, AgreeTermsActivity.class);
                 intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
@@ -176,6 +266,7 @@ public class LoginActivity extends BaseActivity {
                 break;
         }
     }
+
 
     private boolean checkLogin() {
         if(mEditId.getText().toString().trim().isEmpty()) {

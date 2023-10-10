@@ -136,6 +136,9 @@ public class SetAccountActivity extends BaseActivity {
             case Constants.LOGIN_TYPE_SNS_GOOGLE:
                 mImgSns.setImageResource(R.drawable.btn_sns_google);
                 break;
+            case Constants.LOGIN_TYPE_SNS_APPLE:
+                mImgSns.setImageResource(R.drawable.btn_sns_google); // TODO : apple icon으로 변경해야함
+                break;
         }
 
         LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

@@ -14,6 +14,7 @@ import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.sns.AppleLoginManager;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -54,6 +55,7 @@ public class IntroActivity extends BaseActivity {
     private NaverLoginManager mNaverLogin = null;
     private KaKaoLoginManager mKaKaoLogin = null;
     private GoogleLoginManager mGoogleLogin = null;
+    private AppleLoginManager mAppleLogin = null;
 
     private AppCompatActivity mActivity = null;
     private PushMessage _pushMessage = null;
@@ -106,6 +108,14 @@ public class IntroActivity extends BaseActivity {
                             if (SnsUserId != null && !SnsUserId.equals("")){
                                 mGoogleLogin.setHandler(mHandler);
                                 mGoogleLogin.LoginProcess();
+                            }
+                            else { emptyUserInfo(); }
+                        }
+                        else if(loginType == Constants.LOGIN_TYPE_SNS_APPLE) {
+                            if (SnsUserId != null && !SnsUserId.equals("")){
+                                mAppleLogin = new AppleLoginManager(mContext);
+                                mAppleLogin.setHandler(mHandler);
+                                mAppleLogin.LoginProcess();
                             }
                             else { emptyUserInfo(); }
                         }

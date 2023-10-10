@@ -4,6 +4,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.server.RetrofitApi;
+import kr.jeet.edu.student.sns.AppleLoginManager;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
 import kr.jeet.edu.student.sns.KaKaoLoginManager;
 import kr.jeet.edu.student.sns.NaverLoginManager;
@@ -31,6 +32,7 @@ public class AgreeTermsActivity extends BaseActivity {
     private NaverLoginManager mNaverLogin = null;
     private KaKaoLoginManager mKakaoLogin = null;
     private GoogleLoginManager mGoogleLogin = null;
+    private AppleLoginManager mAppleLogin = null;
 
     private AppCompatActivity mActivity = null;
 
@@ -55,6 +57,7 @@ public class AgreeTermsActivity extends BaseActivity {
         if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) mNaverLogin = new NaverLoginManager(mContext);
         else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) mKakaoLogin = new KaKaoLoginManager(mContext);
         else if(mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE) mGoogleLogin = new GoogleLoginManager(mActivity);
+        else if(mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) mAppleLogin = new AppleLoginManager(mActivity);
         initAppbar();
         initView();
     }
@@ -117,6 +120,13 @@ public class AgreeTermsActivity extends BaseActivity {
                     if (mGoogleLogin != null){
                         mGoogleLogin.setJoinProcess();
                         mGoogleLogin.LoginProcess();
+                    }
+                    break;
+                }
+                else if (mLoginType == Constants.LOGIN_TYPE_SNS_APPLE){
+                    if (mAppleLogin != null){
+                        mAppleLogin.setJoinProcess();
+                        mAppleLogin.LoginProcess();
                     }
                     break;
                 }

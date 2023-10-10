@@ -234,6 +234,8 @@ public class Utils {
                 return Constants.LOGIN_TYPE_SNS_KAKAO_STRING;
             case "G":
                 return Constants.LOGIN_TYPE_SNS_GOOGLE_STRING;
+            case "A":
+                return Constants.LOGIN_TYPE_SNS_APPLE_STRING;
             default:
                 return "";
         }

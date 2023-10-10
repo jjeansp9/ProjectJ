@@ -25,10 +25,14 @@ public class Constants {
     public final static int LOGIN_TYPE_SNS_NAVER = 1;
     public final static int LOGIN_TYPE_SNS_KAKAO = 2;
     public final static int LOGIN_TYPE_SNS_GOOGLE = 3;
+    public final static int LOGIN_TYPE_SNS_APPLE = 4;
 
     public final static String LOGIN_TYPE_SNS_NAVER_STRING = "Naver";
     public final static String LOGIN_TYPE_SNS_KAKAO_STRING = "Kakao";
     public final static String LOGIN_TYPE_SNS_GOOGLE_STRING = "Google";
+    public final static String LOGIN_TYPE_SNS_APPLE_STRING = "Apple";
+
+    public final static String LOCALE_LANGUAGE_KR = "ko";
 
     // 회원가입 or 로그인 400 BAD_REQUEST MSG
     public final static String ALREADY_LOGIN_IN = "ALREADY_LOGIN_IN"; // 이미 로그인된 사용자

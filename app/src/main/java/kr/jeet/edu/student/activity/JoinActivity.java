@@ -73,7 +73,7 @@ public class JoinActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_LOGIN_TYPE)){
                 mLoginType = intent.getIntExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
 
-                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER || mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO || mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE) {
+                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER || mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO || mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE || mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) {
                     mUserName = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_NAME);
                     mUserGender = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_GENDER);
                     //mUserSnsId = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_SNSID);
@@ -394,6 +394,7 @@ public class JoinActivity extends BaseActivity {
         if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) request.snsType = "N";
         else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) request.snsType = "K";
         else if(mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE) request.snsType = "G";
+        else if(mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) request.snsType = "A";
         else {
             request.snsType = "";
         }
