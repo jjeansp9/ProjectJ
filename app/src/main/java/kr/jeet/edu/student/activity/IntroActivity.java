@@ -113,7 +113,7 @@ public class IntroActivity extends BaseActivity {
                         }
                         else if(loginType == Constants.LOGIN_TYPE_SNS_APPLE) {
                             if (SnsUserId != null && !SnsUserId.equals("")){
-                                mAppleLogin = new AppleLoginManager(mContext);
+                                mAppleLogin = new AppleLoginManager(mActivity);
                                 mAppleLogin.setHandler(mHandler);
                                 mAppleLogin.LoginProcess();
                             }

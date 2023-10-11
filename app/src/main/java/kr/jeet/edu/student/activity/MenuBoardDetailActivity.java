@@ -65,6 +65,9 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private int _currentSeq = -1;
     private String title = "";
 
+    private String _stName = "";
+    private int _stCode = 0;
+
     Parcelable result = null;
     private int dataType = -1;
 
@@ -83,6 +86,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
     }
 
     private void initIntentData(){
+
+        _stName = PreferenceUtil.getStName(mContext);
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
+
         Intent intent = getIntent();
         if(intent != null){
 
@@ -105,7 +112,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 _pushData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
-                new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+                if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                 LogMgr.e(TAG,"Event here1");
 
             }
@@ -124,7 +131,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
-                        new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+
+                        if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                         LogMgr.e(TAG,"Event here2");
                     } else{
                         LogMgr.e(TAG,"Event here3");
@@ -138,8 +146,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
                         _pushData = intent.getParcelableExtra(extraKey);
                         _currentSeq = _pushData.connSeq;
-                        new FCMManager(mContext).requestPushConfirmToServer(_pushData);
+
+                        // TODO : 선택한 자녀에 따라 푸시 확인을 분기처리 해야할 필요가 있음, 시스템알림 목록에서도 자녀마다 시스템알림 목록 분리해야함
+                        if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                         LogMgr.e("Event here4");
+                        // 404 http://211.252.86.237:7777/mobile/api/push/confirm (67ms)
 
                     } else{
                         LogMgr.e("Event here5");
@@ -149,10 +160,12 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
             if (result instanceof AnnouncementData) {
                 _currentData = (AnnouncementData) result;
+                LogMgr.e("Event here6");
 
             } else if (result instanceof PushMessage) {
                 _pushData = (PushMessage) result;
                 _currentSeq = ((PushMessage) result).connSeq;
+                LogMgr.e("Event here7");
             }else{
 
             }

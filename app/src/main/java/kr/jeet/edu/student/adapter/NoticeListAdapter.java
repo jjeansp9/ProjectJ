@@ -2,8 +2,10 @@ package kr.jeet.edu.student.adapter;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -64,12 +67,18 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 holder.tvType.setText("시스템알림");
                 holder.btnNext.setVisibility(View.VISIBLE);
                 //holder.tvAttState.setVisibility(View.GONE);
+                TypedValue typedValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+                holder.root.setBackgroundResource(typedValue.resourceId);
+
                 holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
                 holder.tvType.setText("출결현황");
                 holder.btnNext.setVisibility(View.GONE);
                 //holder.tvAttState.setVisibility(View.VISIBLE);
+                holder.root.setOnClickListener(null);
+                holder.root.setBackgroundResource(R.color.transparent);
             }
             else {
                 holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);

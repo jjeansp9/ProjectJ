@@ -165,7 +165,7 @@ public class FCMManager {
         }
 
     }
-    public void requestPushConfirmToServer(PushMessage pushMsg){
+    public void requestPushConfirmToServer(PushMessage pushMsg, int stCode){
 
         PushConfirmRequest request = new PushConfirmRequest();
 
@@ -175,7 +175,8 @@ public class FCMManager {
         request.pushId = list;
         request.pushType = pushMsg.pushType;
         request.seq = pushMsg.connSeq;
-        request.stCode = PreferenceUtil.getUserSTCode(_context);
+        //request.stCode = PreferenceUtil.getUserSTCode(_context);
+        request.stCode = stCode;
         request.userGubun = PreferenceUtil.getUserGubun(_context);
 
         LogMgr.i(TAG, "pushConfirm" +

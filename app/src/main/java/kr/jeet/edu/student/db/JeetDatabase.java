@@ -2,13 +2,14 @@ package kr.jeet.edu.student.db;
 
 import android.content.Context;
 
+import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import kr.jeet.edu.student.utils.Converters;
 
-@Database(entities = {PushMessage.class}, version = 1, exportSchema = false)
+@Database(entities = {PushMessage.class}, version = 3, exportSchema = true, autoMigrations = {@AutoMigration(from = 2, to = 3)})
 @TypeConverters({Converters.class})
 public abstract class JeetDatabase extends RoomDatabase {
     private static JeetDatabase JeetDBInstance = null;

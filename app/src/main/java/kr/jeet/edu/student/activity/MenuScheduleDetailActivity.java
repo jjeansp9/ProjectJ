@@ -21,6 +21,7 @@ import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
@@ -37,6 +38,8 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     private int _currentSeq = -1;
     private String title = "";
 
+    private int _stCode = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,9 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     }
 
     private void initData(){
+
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
+
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(IntentParams.PARAM_SCHEDULE_INFO)){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -68,7 +74,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
             if (_currentSeq != -1) requestScheduleDetail(_currentSeq);
 
-            new FCMManager(mContext).requestPushConfirmToServer(message);
+            if (message.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
         }
     }
 

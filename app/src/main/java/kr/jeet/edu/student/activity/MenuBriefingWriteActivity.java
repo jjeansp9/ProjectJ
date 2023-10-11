@@ -79,6 +79,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
     private int ptSeq = 0;
     private int _memberSeq = 0;
+    private int _userGubun = 0;
     private int perCnt = 0;
 
     private final int ADD = 1;
@@ -96,7 +97,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_briefing_write);
         mContext = this;
-        initData();
         initView();
         initAppbar();
     }
@@ -107,6 +107,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             ptSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, ptSeq);
         }
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
         _selectedSchoolData = new SchoolData("", 0);
     }
 
@@ -122,6 +123,9 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     void initView() {
+
+        initData();
+
         findViewById(R.id.root_brf_write).setOnClickListener(this);
         findViewById(R.id.layout_brf_privacy).setOnClickListener(this);
         findViewById(R.id.layout_brf_view_privacy).setOnClickListener(this);
@@ -144,6 +148,15 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum};
 
+        if (_userGubun == Constants.USER_TYPE_PARENTS) {
+            mEtName.setText(PreferenceUtil.getParentName(mContext));
+            mEtPhoneNum.setText(PreferenceUtil.getParentPhoneNum(mContext).replace("-", ""));
+        }
+        else {
+            mEtName.setText(PreferenceUtil.getStName(mContext));
+            mEtPhoneNum.setText(PreferenceUtil.getStuPhoneNum(mContext).replace("-", ""));
+        }
+
         mSpinnerGrade.setIsFocusable(true);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
 
@@ -154,9 +167,9 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                 _stGrade = "";
             }
             _scCode = 0;
-            //_schoolList = null;
             if (!TextUtils.isEmpty(_stGrade)) setSchoolSpinner();
             tvSchool.setText("");
+            _selectedSchoolData = new SchoolData("", 0);
         });
 
         setSchoolSpinner();
@@ -438,6 +451,23 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         } else if (!cbPrivacy.isChecked()) {
             Toast.makeText(mContext, R.string.write_privacy_empty, Toast.LENGTH_SHORT).show();
             return false;
+
+        } else if (mSpinnerGrade.getText().toString().equals("")) {
+            Toast.makeText(mContext, R.string.grade_empty, Toast.LENGTH_SHORT).show();
+            //mSpinnerGrade.setSpinnerPopupHeight(600);
+            if (mSpinnerGrade != null) mSpinnerGrade.show();
+            return false;
+
+        } else if (TextUtils.isEmpty(_selectedSchoolData.scName)) {
+            Toast.makeText(mContext, R.string.school_empty, Toast.LENGTH_SHORT).show();
+            toggleFilterLayout();
+            if (_schoolListBottomSheetDialog != null) {
+                _schoolListBottomSheetDialog = null;
+            }
+            _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
+            _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
+            return false;
+
         }
 //        else if(!Utils.checkEmailForm(mEtEmail.getText().toString())){
 //            Toast.makeText(mContext, R.string.write_check_email, Toast.LENGTH_SHORT).show();

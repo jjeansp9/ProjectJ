@@ -14,6 +14,7 @@ import kr.jeet.edu.student.view.CustomAppbarLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -34,6 +35,8 @@ public class AgreeTermsActivity extends BaseActivity {
     private GoogleLoginManager mGoogleLogin = null;
     private AppleLoginManager mAppleLogin = null;
 
+    private String snsName = "";
+
     private AppCompatActivity mActivity = null;
 
     private String url = "";
@@ -49,9 +52,12 @@ public class AgreeTermsActivity extends BaseActivity {
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_LOGIN_TYPE)){
                 mLoginType = intent.getIntExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
+
             }else{
                 LogMgr.e("no intent extra");
             }
+
+            if (intent.hasExtra("test")) snsName = intent.getStringExtra("test");
         }
 
         if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) mNaverLogin = new NaverLoginManager(mContext);
@@ -125,13 +131,19 @@ public class AgreeTermsActivity extends BaseActivity {
                 }
                 else if (mLoginType == Constants.LOGIN_TYPE_SNS_APPLE){
                     if (mAppleLogin != null){
-                        mAppleLogin.setJoinProcess();
-                        mAppleLogin.LoginProcess();
+
+                        if (!TextUtils.isEmpty(snsName)) {
+                            startActivity();
+                        } else {
+                            mAppleLogin.setJoinProcess();
+                            mAppleLogin.LoginProcess();
+                        }
                     }
                     break;
+                }else{
+                    startActivity();
+                    break;
                 }
-                startActivity();
-                break;
 
             case R.id.layout_all_check:
                 if(!mAllCheckBox.isChecked()) {
@@ -182,6 +194,7 @@ public class AgreeTermsActivity extends BaseActivity {
     private void startActivity(){
         Intent intent = new Intent(this, JoinActivity.class);
         intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, mLoginType);
+        if (!TextUtils.isEmpty(snsName)) intent.putExtra("test", snsName);
         startActivity(intent);
         finish();
     }

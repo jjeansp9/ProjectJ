@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private int _memberSeq = 0;
     private int _stuSeq = 0;
+    private int _stCode = 0;
+    private String _stuName = "";
     private int _userGubun = 0;
 
     private boolean fromBottomMenu = false;
@@ -108,6 +111,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
+        _stuName = PreferenceUtil.getStName(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
 
         noticeType = getResources().getStringArray(R.array.notice_type);
@@ -138,8 +143,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_ATTEND);
                 if(!pushMessages.isEmpty()) {
                     for(PushMessage message : pushMessages) {
-                        message.isRead = true;
-                        JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                        if (message.stCode == _stCode){
+                            message.isRead = true;
+                            JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                        }
                     }
                 }
             }catch (Exception e){
@@ -149,8 +156,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void getListData(String selType, boolean isUpdate){
-
-
 
         new Thread(() -> {
             //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
@@ -171,15 +176,31 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 String mappedType = type.get(selType);
                 if (mappedType!=null) {
                     if (msg.pushType.equals(mappedType)){
-                        if (_userGubun == Constants.USER_TYPE_PARENTS){
-                            if (msg.memberSeq == _stuSeq){
-                                newMessage.add(msg);
-                            }
-                        }else{
-                            if (msg.memberSeq == _memberSeq) {
-                                newMessage.add(msg);
-                            }
+                        if (_stCode == msg.stCode){
+                            newMessage.add(msg);
                         }
+//                        if (_userGubun == Constants.USER_TYPE_PARENTS){
+////                            if (msg.memberSeq == _stuSeq){
+////                                newMessage.add(msg);
+////                            }
+//                            if (selType.equals(attendanceType)){
+//                                if (!TextUtils.isEmpty(msg.body)){
+//                                    if (msg.body.contains(_stuName)){
+//                                        newMessage.add(msg);
+//                                    }
+//                                }
+//                            }else{
+//                                // TODO : 시스템알림도 자녀마다 목록을 분리해서 보여줘야함
+//                                if (msg.memberSeq == _memberSeq){
+//                                    newMessage.add(msg);
+//                                }
+//                            }
+//
+//                        }else{
+//                            if (msg.memberSeq == _memberSeq) {
+//                                newMessage.add(msg);
+//                            }
+//                        }
                     }
                 }
 

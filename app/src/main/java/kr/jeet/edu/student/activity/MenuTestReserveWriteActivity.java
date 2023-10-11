@@ -842,12 +842,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                     e.printStackTrace();
                                 }
 
+                                mSpinnerTestTime.setItems(testTimeList);
+
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
-
-                        mSpinnerTestTime.setItems(testTimeList);
 
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());

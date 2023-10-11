@@ -19,6 +19,7 @@ import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
@@ -149,7 +150,9 @@ public class MainActivity extends BaseActivity {
                                 if(pushMessages.isEmpty()) {
                                     setNewAttendanceContent(false);
                                 }else{
-                                    setNewAttendanceContent(true);
+                                    for (PushMessage data : pushMessages) {
+                                        if (data.stCode == _stCode) setNewAttendanceContent(true);
+                                    }
                                 }
                             }catch(Exception e){
 
@@ -411,9 +414,9 @@ public class MainActivity extends BaseActivity {
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
-                                List<String> list = new ArrayList<>();
-                                list.add(_pushMessage.pushId);
-                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
+//                                List<String> list = new ArrayList<>();
+//                                list.add(_pushMessage.pushId);
+//                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage, _stCode);
                             }
                             pushPopupDialog.dismiss();
                         });
@@ -450,8 +453,10 @@ public class MainActivity extends BaseActivity {
                 break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
-                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
-                    startDetailActivity(intent, MenuBoardDetailActivity.class);
+                    if (_pushMessage.stCode == _stCode){
+                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
+                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+                    }
                 }
                 break;
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
@@ -479,7 +484,9 @@ public class MainActivity extends BaseActivity {
                 if(pushMessages.isEmpty()) {
                     setNewAttendanceContent(false);
                 }else{
-                    setNewAttendanceContent(true);
+                    for (PushMessage data : pushMessages) {
+                        if (data.stCode == _stCode) setNewAttendanceContent(true);
+                    }
                 }
             }catch(Exception e){
 
@@ -580,6 +587,7 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestACAList() Exception : ", e.getMessage()); }
 
+                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                     mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
                 }
 
@@ -588,6 +596,7 @@ public class MainActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestACAList() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestACAList() Exception : ", e.getMessage()); }
 
+                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                     mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
                 }
             });
@@ -675,26 +684,32 @@ public class MainActivity extends BaseActivity {
 
                             if (getData != null) {
                                 mTvAttendanceDate.setText(Utils.currentDate("yy.MM.dd"));
-
-                                if (getData.acaName != null) { // 캠퍼스명
-                                    PreferenceUtil.setAcaName(mContext, getData.acaName);
-                                    mTvStudentCampus.setText(getData.acaName);
-                                }
-                                if (getData.acaCode != null) {
-                                    acaCode = getData.acaCode;
-                                    PreferenceUtil.setAcaCode(mContext, getData.acaCode);
-                                }
-
-                                List<ACAData> item = DataManager.getInstance().getACAList();
-                                for (ACAData data : item){
-                                    if (acaCode.equals(data.acaCode)) {
-                                        PreferenceUtil.setAcaTel(mContext, data.acaTel);
-                                    }
-                                }
-
                                 PreferenceUtil.setStuPhoneNum(mContext, "");
-                                PreferenceUtil.setStuGender(mContext, getData.gender);
-                                PreferenceUtil.setStuBirth(mContext, getData.birth);
+
+                                if (stCode != 0){
+                                    PreferenceUtil.setStuGender(mContext, getData.gender);
+                                    PreferenceUtil.setStuBirth(mContext, getData.birth);
+
+                                    if (getData.acaName != null) { // 캠퍼스명
+                                        PreferenceUtil.setAcaName(mContext, getData.acaName);
+                                        mTvStudentCampus.setText(getData.acaName);
+                                    }
+                                    if (getData.acaCode != null) {
+                                        acaCode = getData.acaCode;
+                                        PreferenceUtil.setAcaCode(mContext, getData.acaCode);
+                                    }
+
+                                    List<ACAData> item = DataManager.getInstance().getACAList();
+                                    for (ACAData data : item){
+                                        if (acaCode.equals(data.acaCode)) {
+                                            PreferenceUtil.setAcaTel(mContext, data.acaTel);
+                                        }
+                                    }
+
+                                    if (getData.scName.equals("")) mTvSchoolAndGradeName.setText(getData.stGrade);
+                                    else if (getData.stGrade.equals("")) mTvSchoolAndGradeName.setText(getData.scName);
+                                    else mTvSchoolAndGradeName.setText(getData.scName + " " + getData.stGrade); // 학교, 학년
+                                }
 
                                 if (_userType.equals(Constants.MEMBER)){
 
@@ -746,11 +761,6 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
 
-
-                                if (getData.scName.equals("")) mTvSchoolAndGradeName.setText(getData.stGrade);
-                                else if (getData.stGrade.equals("")) mTvSchoolAndGradeName.setText(getData.scName);
-                                else mTvSchoolAndGradeName.setText(getData.scName + " " + getData.stGrade); // 학교, 학년
-
                                 mTvAttendance.setText(R.string.main_null_attendance); // 출결 현황 text
 
                             }
@@ -761,7 +771,7 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
+                    //mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                 }
 
                 @Override
@@ -769,7 +779,7 @@ public class MainActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
+                    //mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                 }
             });
         }

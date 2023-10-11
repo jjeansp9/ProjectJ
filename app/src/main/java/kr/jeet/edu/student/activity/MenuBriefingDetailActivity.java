@@ -92,6 +92,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     private int _currentSeq = -1; //PushMessage 용
     private int _memberSeq = -1;
     private int _userGubun = -1;
+    private int _stCode = 0;
     private int _reservationSeq = -1;
 
     boolean added = false;
@@ -136,6 +137,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     }
 
     private void initIntentData(){
+
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
+
         Intent intent = getIntent();
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_BRIEFING_INFO)){
@@ -154,7 +158,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 }
                 _currentSeq = message.connSeq;
 
-                new FCMManager(mContext).requestPushConfirmToServer(message);
+                if (message.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
             }
         }
 

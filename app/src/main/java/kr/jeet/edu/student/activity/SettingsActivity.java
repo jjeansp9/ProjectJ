@@ -197,6 +197,7 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void requestMemberInfo(int stuSeq, int stCode){
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -249,6 +250,8 @@ public class SettingsActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+
+                    hideProgressDialog();
                 }
 
                 @Override
@@ -257,6 +260,7 @@ public class SettingsActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             });
         }

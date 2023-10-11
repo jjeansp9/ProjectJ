@@ -32,6 +32,7 @@ import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
@@ -111,7 +112,7 @@ public class SelectStudentActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-            LogMgr.e("EVENT", _pushMessage.pushType);
+            LogMgr.e(TAG, "EVENT initData()"+ _pushMessage.pushType);
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND:
@@ -121,19 +122,26 @@ public class SelectStudentActivity extends BaseActivity {
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
 
-                                PushConfirmRequest request = new PushConfirmRequest();
+//                                PushConfirmRequest request = new PushConfirmRequest();
+//
+//                                List<String> list = new ArrayList<>();
+//                                list.add(_pushMessage.pushId);
 
-                                List<String> list = new ArrayList<>();
-                                list.add(_pushMessage.pushId);
-
-                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
+                                //pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
                             }
                             pushPopupDialog.dismiss();
                         });
                         pushPopupDialog.show();
                     }
-
                 }
+                break;
+
+                case MSG_TYPE_SYSTEM:
+                {
+                    //new FCMManager(mContext).requestPushConfirmToServer(_pushMessage);
+                }
+                    break;
+
                 default:
                     break;
             }
@@ -221,7 +229,9 @@ public class SelectStudentActivity extends BaseActivity {
         PreferenceUtil.setStuGender(mContext, mList.get(position).gender);
 
         Intent intent = new Intent(mContext, MainActivity.class);
+        LogMgr.e(TAG, "EVENT goMain()");
         if(_pushMessage != null) {
+            LogMgr.e(TAG, "EVENT goMain()2: "+ _pushMessage);
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

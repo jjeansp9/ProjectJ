@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -22,10 +23,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.auth.UserInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
@@ -64,6 +67,8 @@ public class LoginActivity extends BaseActivity {
     private int selectedSNSLoginType = -1;
 
     private AppCompatActivity mActivity = null;
+    private String snsName = "";
+    private String snsType = "";
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -73,6 +78,13 @@ public class LoginActivity extends BaseActivity {
                     LogMgr.e(TAG, "SNS_LOGIN_COMPLETE");
 
                     String snsId = (String) msg.obj;
+
+                    Bundle data = msg.getData();
+                    if (data != null){
+                        snsName = data.getString("name");
+                        snsType = data.getString("loginType");
+                    }
+
                     if(snsId != null && !snsId.isEmpty()) {
                         requestLoginFromSns(snsId);
                     }
@@ -89,75 +101,10 @@ public class LoginActivity extends BaseActivity {
         mContext = this;
 
         mGoogleLogin = new GoogleLoginManager(mActivity);
-        initAuthApple();
         initAppbar();
         initView();
         //String HashKey = Utility.INSTANCE.getKeyHash(mContext);
         //LogMgr.e(TAG, HashKey);
-    }
-
-    private OAuthProvider.Builder provider;
-    private FirebaseAuth mAuth;
-
-    private void initAuthApple(){
-        if(provider == null) {
-            provider = OAuthProvider.newBuilder("apple.com");
-            List<String> scopes = new ArrayList<>();
-            scopes.add("email");
-            scopes.add("name");
-            provider.setScopes(scopes);
-            provider.addCustomParameter("locale", Constants.LOCALE_LANGUAGE_KR); // 한국어로 설정
-        }
-    }
-
-    private void checkAuthApple(){
-        mAuth = FirebaseAuth.getInstance();
-        Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> ");
-
-        Task<AuthResult> pending = mAuth.getPendingAuthResult();
-        if (pending != null) {
-            pending.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                @Override
-                public void onSuccess(AuthResult authResult) {
-                    // Get the user profile with authResult.getUser() and
-                    // authResult.getAdditionalUserInfo(), and the ID
-                    // token from Apple with authResult.getCredential().
-                    Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> " +authResult.getUser().toString()+", "+authResult.getAdditionalUserInfo().toString()+", "+authResult.getCredential().toString());
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
-        } else {
-            testApple();
-        }
-
-    }
-
-    private void testApple(){
-        mAuth.startActivityForSignInWithProvider(this, provider.build())
-                .addOnSuccessListener(
-                        new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-                                // Sign-in successful!
-
-                                FirebaseUser user = authResult.getUser();
-                                LogMgr.e(TAG, "user Info: " + user.getEmail());
-                                Log.e("checkAuthApple", ">>>>>>>>>>>>>>>>> " +authResult.getUser().toString()+", "+authResult.getAdditionalUserInfo().toString()+", "+authResult.getCredential().toString());
-
-                                // ...
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
     }
 
     @Override
@@ -234,12 +181,11 @@ public class LoginActivity extends BaseActivity {
             case R.id.btn_apple:
                 if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
-//                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
-//                mAppleLogin = new AppleLoginManager(mContext);
-//                mAppleLogin.setHandler(mHandler);
-//                mAppleLogin.LoginProcess();
-                checkAuthApple();
-
+                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
+                mAppleLogin = new AppleLoginManager(mActivity);
+                mAppleLogin.setHandler(mHandler);
+                mAppleLogin.LoginProcess();
+                //checkAuthApple();
                 break;
 
             case R.id.tv_join :
@@ -535,6 +481,7 @@ public class LoginActivity extends BaseActivity {
                                     Intent intent = null;
                                     intent = new Intent(mContext, AgreeTermsActivity.class);
                                     intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, selectedSNSLoginType);
+                                    intent.putExtra("test", snsName);
                                     startActivity(intent);
                                 }
 

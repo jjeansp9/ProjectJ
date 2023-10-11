@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 
@@ -30,6 +31,10 @@ import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.sns.AppleLoginManager;
+import kr.jeet.edu.student.sns.GoogleLoginManager;
+import kr.jeet.edu.student.sns.KaKaoLoginManager;
+import kr.jeet.edu.student.sns.NaverLoginManager;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -62,11 +67,20 @@ public class SetAccountActivity extends BaseActivity {
 
     private final String MEMBER = "Y";
     Confirm2LeaveDialog _leaveDialog;
+
+    private NaverLoginManager mNaverLogin = null;
+    private KaKaoLoginManager mKaKaoLogin = null;
+    private GoogleLoginManager mGoogleLogin = null;
+    private AppleLoginManager mAppleLogin = null;
+    private AppCompatActivity mActivity = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_account);
+        mActivity = this;
         mContext = this;
+        mGoogleLogin = new GoogleLoginManager(mActivity);
         initData();
         initAppbar();
         initView();
@@ -137,7 +151,7 @@ public class SetAccountActivity extends BaseActivity {
                 mImgSns.setImageResource(R.drawable.btn_sns_google);
                 break;
             case Constants.LOGIN_TYPE_SNS_APPLE:
-                mImgSns.setImageResource(R.drawable.btn_sns_google); // TODO : apple icon으로 변경해야함
+                mImgSns.setImageResource(R.drawable.btn_sns_apple);
                 break;
         }
 
@@ -258,6 +272,7 @@ public class SetAccountActivity extends BaseActivity {
                 break;
         }
     }
+
     private void showConfirm2LeaveDialog() {
         if(_leaveDialog != null && _leaveDialog.isShowing()) {
             _leaveDialog.dismiss();
@@ -267,7 +282,30 @@ public class SetAccountActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 hideConfirm2LeaveDialog();
-                requestLeave(_memberSeq);
+                switch(PreferenceUtil.getLoginType(mContext)){
+                    case Constants.LOGIN_TYPE_NORMAL:
+                        requestLeave(_memberSeq);
+                        break;
+                    case Constants.LOGIN_TYPE_SNS_NAVER:
+                        mNaverLogin = new NaverLoginManager(mContext);
+                        mNaverLogin.DeleteAccountProcess();
+                        requestLeave(_memberSeq);
+                        break;
+                    case Constants.LOGIN_TYPE_SNS_KAKAO:
+                        mKaKaoLogin = new KaKaoLoginManager(mContext);
+                        mKaKaoLogin.DeleteAccountProcess();
+                        requestLeave(_memberSeq);
+                        break;
+                    case Constants.LOGIN_TYPE_SNS_GOOGLE:
+                        mGoogleLogin.DeleteAccountProcess();
+                        requestLeave(_memberSeq);
+                        break;
+                    case Constants.LOGIN_TYPE_SNS_APPLE:
+                        mAppleLogin = new AppleLoginManager(mActivity);
+                        mAppleLogin.DeleteAccountProcess();
+                        requestLeave(_memberSeq);
+                        break;
+                }
             }
         });
         _leaveDialog.setOnCancelButtonClickListener(new View.OnClickListener() {
