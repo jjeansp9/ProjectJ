@@ -160,9 +160,10 @@
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size_large"
                     android:textColor="@color/font_color_default"
-                    android:inputType="text"
+                    android:inputType="textVisiblePassword"
                     android:padding="@dimen/editbox_padding"
                     android:maxLines="1"
+                    android:digits="@string/id_pattern"
                     />
 
                 <!-- 비밀번호 -->

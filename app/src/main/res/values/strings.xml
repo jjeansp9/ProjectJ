@@ -31,6 +31,9 @@
     <string name="find_id_pw">계정 찾기</string>
     <string name="cancel">취소</string>
     <string name="ok">확인</string>
+    <string name="new_member">신규원생</string>
+
+    <string name="id_pattern">0123456789qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
 
     <string name="title_main_school">학교</string>
     <string name="title_memo">메모</string>
@@ -420,7 +423,7 @@
     <string name="test_reserve_grade_sel_please">학년을 먼저 선택해주세요.</string>
     <string name="test_reserve_campus_sel_please">테스트예약일을 먼저 선택해주세요.</string>
     <string name="test_reserve_sunday_impossible_sel">일요일은 테스트예약을 진행하지 않습니다.</string>
-    <string name="test_reserve_test_time_empty">해당 테스트예약일에 테스트시간 정보가 없습니다.</string>
+    <string name="test_reserve_test_time_empty">선택된 예약일에 등록된 테스트시간이 없습니다.</string>
 
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
     <string name="test_reserve_detail_wish_day_week">등원희망요일</string>
@@ -666,5 +669,7 @@
     <string name="msg_backbutton_to_exit">뒤로 버튼을 한번 더 누르면 종료됩니다.</string>
 
     <string name="msg_empty_schedule">일정이 없습니다.\n • 표시가 있는 날짜를 선택하여\n 일정을 확인해 주세요.</string>
+
+    <string name="success_leave">계정을 탈퇴하였습니다.</string>
 </resources>
 

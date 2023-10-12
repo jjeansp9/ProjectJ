@@ -73,16 +73,13 @@ public class JoinActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_LOGIN_TYPE)){
                 mLoginType = intent.getIntExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
 
-                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER || mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO || mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE) {
+                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER || mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO || mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE || mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) {
                     if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_NAME)) mUserName = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_NAME);
                     else mUserName = "";
                     if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_GENDER)) mUserGender = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_GENDER);
                     else mUserGender = "";
                     //mUserSnsId = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_SNSID);
 
-                }else if (mLoginType == Constants.LOGIN_TYPE_SNS_APPLE){
-                    if (intent.hasExtra("test")) mUserName = intent.getStringExtra("test");
-                    else mUserName = "";
                 }
             }else{
                 LogMgr.e("no intent extra");
@@ -167,7 +164,6 @@ public class JoinActivity extends BaseActivity {
                     mGenderRadioMale.setEnabled(true);
                     mGenderRadioFemale.setEnabled(true);
                 }
-
             }
         }
 

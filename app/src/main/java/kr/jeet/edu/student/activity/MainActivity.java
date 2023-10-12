@@ -138,6 +138,7 @@ public class MainActivity extends BaseActivity {
 
     private final String MR = "님";
     private final String MR_PARENT = "학부모님";
+    private final String STR_NON_MEMBER = " (비회원)";
 
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
@@ -338,6 +339,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initData(){
+
+        PreferenceUtil.setStuPhoneNum(mContext, "");
+        PreferenceUtil.setParentPhoneNum(mContext, "");
+
         Intent intent = getIntent();
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
@@ -366,35 +371,36 @@ public class MainActivity extends BaseActivity {
             initMenusMember();
 
             if (_userType != null) {
+
+                String str = "";
+
                 if (_userType.equals(Constants.MEMBER)) { // 회원
 
-                    imgStudentAttendance.setVisibility(View.INVISIBLE);
+                    imgStudentAttendance.setVisibility(View.GONE);
                     //mTvAttendance.setVisibility(View.VISIBLE);
-                    mTvAttendanceDate.setVisibility(View.INVISIBLE);
-                    mTvNonMember.setVisibility(View.INVISIBLE);
+                    mTvAttendanceDate.setVisibility(View.GONE);
+                    mTvNonMember.setVisibility(View.GONE);
 
-                    if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
-                        mTvNameSub.setText(MR);
-                    }else{ // 원생이 아닌경우
-                        mTvNameSub.setText(MR_PARENT);
-                    }
+                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR; // 원생
+                    else str = MR_PARENT; // 부모
+
+                    mTvNameSub.setText(str);
 
                 }else{ // 비회원
                     mTvSchoolAndGradeName.setVisibility(View.GONE);
                     mTvStudentCampus.setVisibility(View.GONE);
                     mTvNonMemberNoti.setVisibility(View.VISIBLE);
-                    imgStudentAttendance.setVisibility(View.INVISIBLE); // 출석 배지
+                    imgStudentAttendance.setVisibility(View.GONE); // 출석 배지
                     mTvAttendance.setVisibility(View.GONE); // 출석 text
                     mTvAttendanceDate.setVisibility(View.GONE); // 출석날짜
-                    mTvNonMember.setVisibility(View.VISIBLE); // 비회원 배지
+                    mTvNonMember.setVisibility(View.GONE); // 비회원 배지
 
                     mLayoutBottom.setVisibility(View.GONE); // 화면 하단 레이아웃 gone
 
-                    if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
-                        mTvNameSub.setText(MR);
-                    }else{ // 원생이 아닌경우
-                        mTvNameSub.setText(MR_PARENT);
-                    }
+                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR+STR_NON_MEMBER; // 원생
+                    else str = MR_PARENT+STR_NON_MEMBER; // 부모
+
+                    mTvNameSub.setText(str);
                     LogMgr.e(TAG, "No Member");
                 }
             }
@@ -687,7 +693,6 @@ public class MainActivity extends BaseActivity {
 
                             if (getData != null) {
                                 mTvAttendanceDate.setText(Utils.currentDate("yy.MM.dd"));
-                                PreferenceUtil.setStuPhoneNum(mContext, "");
 
                                 if (stCode != 0){
                                     PreferenceUtil.setStuGender(mContext, getData.gender);

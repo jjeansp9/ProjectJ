@@ -19,6 +19,6 @@ public class GradeComparator implements Comparator<String> {
                 return i;
             }
         }
-        return GRADE_ORDER.length; // 다른 학년이라면 가장 뒤로 정렬
+        return GRADE_ORDER.length; // 다른 학년이라면 가장 뒤로 정렬 (서버에서 가져온 학년이 GRADE_ORDER 데이터와 다른경우 정렬하지 않음)
     }
 }

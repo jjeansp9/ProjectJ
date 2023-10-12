@@ -86,6 +86,8 @@
                         android:maxLength="30"
                         android:maxLines="1"
                         android:padding="@dimen/editbox_padding"
+                        android:inputType="textVisiblePassword"
+                        android:digits="@string/id_pattern"
                         android:textColor="@color/font_color_default"
                         android:textColorHint="@color/font_color_999"
                         android:textSize="@dimen/font_size" />

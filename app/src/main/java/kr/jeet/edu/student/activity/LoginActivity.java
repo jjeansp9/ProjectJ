@@ -185,7 +185,6 @@ public class LoginActivity extends BaseActivity {
                 mAppleLogin = new AppleLoginManager(mActivity);
                 mAppleLogin.setHandler(mHandler);
                 mAppleLogin.LoginProcess();
-                //checkAuthApple();
                 break;
 
             case R.id.tv_join :
@@ -425,6 +424,8 @@ public class LoginActivity extends BaseActivity {
                                             },
                                             null, false);
 
+                                    mAppleLogin.DeleteAccountProcess();
+
                                 }else{
                                     if (!String.valueOf(res.data.stCode).equals("null")){
 
@@ -481,7 +482,7 @@ public class LoginActivity extends BaseActivity {
                                     Intent intent = null;
                                     intent = new Intent(mContext, AgreeTermsActivity.class);
                                     intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, selectedSNSLoginType);
-                                    intent.putExtra("test", snsName);
+                                    intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
                                     startActivity(intent);
                                 }
 
@@ -491,6 +492,7 @@ public class LoginActivity extends BaseActivity {
 
                         } catch (IOException e) {
                         }
+                        mAppleLogin.DeleteAccountProcess();
                     }
                     hideProgressDialog();
                 }

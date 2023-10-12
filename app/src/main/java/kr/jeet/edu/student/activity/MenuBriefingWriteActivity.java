@@ -148,13 +148,31 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum};
 
+        String str = "";
+
         if (_userGubun == Constants.USER_TYPE_PARENTS) {
-            mEtName.setText(PreferenceUtil.getParentName(mContext));
-            mEtPhoneNum.setText(PreferenceUtil.getParentPhoneNum(mContext).replace("-", ""));
+            str = PreferenceUtil.getParentName(mContext);
+            if (!TextUtils.isEmpty(str)){
+                mEtName.setEnabled(false);
+                mEtName.setText(str);
+            }
+            str = PreferenceUtil.getParentPhoneNum(mContext).replace("-", "");
+            if (!TextUtils.isEmpty(str)){
+                mEtPhoneNum.setEnabled(false);
+                mEtPhoneNum.setText(str);
+            }
         }
         else {
-            mEtName.setText(PreferenceUtil.getStName(mContext));
-            mEtPhoneNum.setText(PreferenceUtil.getStuPhoneNum(mContext).replace("-", ""));
+            str = PreferenceUtil.getStName(mContext);
+            if (!TextUtils.isEmpty(str)){
+                mEtName.setEnabled(false);
+                mEtName.setText(str);
+            }
+            str = PreferenceUtil.getStuPhoneNum(mContext).replace("-", "");
+            if (!TextUtils.isEmpty(str)){
+                mEtPhoneNum.setEnabled(false);
+                mEtPhoneNum.setText(str);
+            }
         }
 
         mSpinnerGrade.setIsFocusable(true);

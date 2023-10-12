@@ -472,8 +472,7 @@ public class InformedQuestionActivity extends BaseActivity {
             case R.id.btn_informed_question_complete:
                 Utils.clearFocus(mEditList);
                 Utils.hideKeyboard(mContext, mEditList);
-                //if (checked()) requestTestReserve();
-                requestData();
+                if (checked()) requestTestReserve();
                 break;
         }
     }
@@ -886,7 +885,6 @@ public class InformedQuestionActivity extends BaseActivity {
         if (intent != null){
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, true);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
-            LogMgr.e(TAG, "Event mInfo Test: " + mInfo.process1); // TODO : 작성화면에서 뒤로갈 때 mInfo 가 null인 상황 코드 수정하기
         }
 
         setResult(RESULT_OK, intent);

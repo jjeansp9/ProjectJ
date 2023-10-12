@@ -60,6 +60,7 @@ public class SetAccountActivity extends BaseActivity {
     private String _stName = "";
     private int _stCode = 0;
     private int _userGubun = 0;
+    private int _loginType = 0;
     private String userGubun = "";
     private String phoneNum = "";
     private String memberName = "";
@@ -100,6 +101,7 @@ public class SetAccountActivity extends BaseActivity {
         _stName = PreferenceUtil.getStName(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
+        _loginType = PreferenceUtil.getLoginType(mContext);
 
         switch (_userGubun){
             case Constants.USER_TYPE_STUDENT:
@@ -282,7 +284,7 @@ public class SetAccountActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 hideConfirm2LeaveDialog();
-                switch(PreferenceUtil.getLoginType(mContext)){
+                switch(_loginType){
                     case Constants.LOGIN_TYPE_NORMAL:
                         requestLeave(_memberSeq);
                         break;
@@ -458,6 +460,7 @@ public class SetAccountActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()){
                             requestLogOut(_memberSeq);
+                            Toast.makeText(mContext, R.string.success_leave, Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());

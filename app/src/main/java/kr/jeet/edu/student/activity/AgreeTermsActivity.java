@@ -35,11 +35,10 @@ public class AgreeTermsActivity extends BaseActivity {
     private GoogleLoginManager mGoogleLogin = null;
     private AppleLoginManager mAppleLogin = null;
 
-    private String snsName = "";
-
     private AppCompatActivity mActivity = null;
-
     private String url = "";
+
+    private String snsName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class AgreeTermsActivity extends BaseActivity {
                 LogMgr.e("no intent extra");
             }
 
-            if (intent.hasExtra("test")) snsName = intent.getStringExtra("test");
+            if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_NAME)) snsName = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_NAME);
         }
 
         if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) mNaverLogin = new NaverLoginManager(mContext);
@@ -194,7 +193,7 @@ public class AgreeTermsActivity extends BaseActivity {
     private void startActivity(){
         Intent intent = new Intent(this, JoinActivity.class);
         intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, mLoginType);
-        if (!TextUtils.isEmpty(snsName)) intent.putExtra("test", snsName);
+        if (!TextUtils.isEmpty(snsName)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
         startActivity(intent);
         finish();
     }

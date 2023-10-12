@@ -680,22 +680,16 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/img_reserve_test_date_cal"
-                    android:paddingHorizontal="@dimen/editbox_padding"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:drawableEnd="@drawable/bt_calendar_nor"
+                    android:drawablePadding="8dp"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="12dp"
                     android:paddingVertical="@dimen/editbox_padding_vertical"
                     android:textSize="@dimen/font_size"
+                    android:hint="@string/select"
                     android:gravity="center"
                     android:textColor="@color/black"/>
-
-                <ImageView
-                    android:id="@+id/img_reserve_test_date_cal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:src="@drawable/bt_calendar_nor"
-                    android:layout_marginEnd="@dimen/layout_margin_12"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

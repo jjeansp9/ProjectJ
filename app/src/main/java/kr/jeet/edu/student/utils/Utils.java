@@ -389,6 +389,9 @@ public class Utils {
         else return false;
     }
 
+    /**
+    * 문자열이 null 또는 길이가 0인 경우, 빈 문자열로 대체하여 예외를 방지
+    * */
     public static String getStr(String s){ return TextUtils.isEmpty(s) ? "" : s; }
 
     /**

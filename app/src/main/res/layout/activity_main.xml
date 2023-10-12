@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_color01"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginHorizontal="@dimen/layout_margin">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:paddingVertical="@dimen/layout_margin_16">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_profile_v25"
@@ -58,8 +59,6 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/guideline_profile_v25"
-                    android:layout_marginTop="@dimen/layout_margin_16"
-                    android:layout_marginBottom="@dimen/layout_margin_16"
                     android:layout_marginStart="@dimen/layout_margin_16"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,9 +67,8 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/img_student"
                     app:layout_constraintTop_toTopOf="@id/img_student"
-                    app:layout_constraintEnd_toStartOf="@id/img_student_attendance"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginTop="4dp">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="16dp">
 
                     <TextView
                         android:id="@+id/tv_student_name"
@@ -97,9 +95,6 @@
                         app:layout_constraintBottom_toBottomOf="@id/tv_student_name"
                         android:gravity="bottom"
                         android:text="@string/main_student_sub"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMinTextSize="@dimen/font_size_xxsmall"
-                        android:autoSizeStepGranularity="1dp"
                         android:maxLines="1"
                         android:ellipsize="end"
                         android:textSize="@dimen/font_size_large"
@@ -109,18 +104,16 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
                 <TextView
                     android:id="@+id/tv_student_campus"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toEndOf="@id/img_student"
                     app:layout_constraintBottom_toTopOf="@id/tv_student_school_and_grade"
-                    app:layout_constraintEnd_toStartOf="@id/img_student_attendance"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:hint="@string/main_student_campus"
                     android:layout_marginStart="@dimen/layout_margin_4"
-                    android:layout_marginEnd="@dimen/layout_margin_4"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginTop="@dimen/layout_margin_4"
                     android:textSize="@dimen/font_size_small"
                     android:maxLines="1"
@@ -135,10 +128,9 @@
                     android:hint="@string/main_student_school_and_grade"
                     app:layout_constraintStart_toEndOf="@id/img_student"
                     app:layout_constraintBottom_toBottomOf="@id/img_student"
-                    app:layout_constraintEnd_toStartOf="@id/img_student_attendance"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginStart="@dimen/layout_margin_4"
-                    android:layout_marginEnd="@dimen/layout_margin_4"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="16dp"
                     android:textSize="@dimen/font_size_small"
                     android:maxLines="1"
                     android:ellipsize="end"
@@ -170,16 +162,15 @@
                     android:layout_height="60dp"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@id/tv_attendance_date"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/guideline_profile_v75"
                     android:layout_marginEnd="@dimen/layout_margin_16"
-                    android:layout_marginTop="@dimen/layout_margin_8"
                     android:background="@drawable/bg_nonmember"
                     android:text="비회원"
                     android:textStyle="bold"
                     android:textColor="@color/line"
                     android:gravity="center"
-                    android:visibility="invisible"/>
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/img_student_attendance"
@@ -192,7 +183,7 @@
                     app:layout_constraintStart_toStartOf="@id/guideline_profile_v75"
                     android:layout_marginEnd="@dimen/layout_margin_16"
                     android:layout_marginTop="@dimen/layout_margin_16"
-                    android:visibility="invisible"/>
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tv_attendance"
@@ -226,7 +217,7 @@
                     android:text="@string/main_attendance_date"
                     android:textSize="@dimen/font_size"
                     android:textColor="@color/font_color_default"
-                    android:visibility="invisible"/>
+                    android:visibility="gone"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

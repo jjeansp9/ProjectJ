@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.OAuthProvider;
+import com.google.firebase.auth.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,18 +132,52 @@ public class AppleLoginManager extends SNSLoginManager {
                         //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                         if (user != null){
-                            String name = user.getDisplayName();
-                            String email = Utils.getStr(user.getEmail());
-                            String uId = Utils.getStr(user.getUid());
-                            String providerId = Utils.getStr(user.getProviderId());
+//                            String name = user.getDisplayName();
+//                            String email = Utils.getStr(user.getEmail());
+//                            String uId = Utils.getStr(user.getUid());
+//                            String providerId = Utils.getStr(user.getProviderId());
 
-                            LogMgr.i(
-                                    TAG, "apple Info: " +
-                                            "\n name: " + name +
-                                            "\n email: " + email +
-                                            "\n uId: " + uId +
-                                            "\n providerId: " + providerId
-                            );
+                            String name = "";
+                            String email = "";
+                            String uId = "";
+
+                            for (UserInfo profile : user.getProviderData()) {
+                                String getProviderId = profile.getProviderId();
+                                String getName = profile.getDisplayName();
+                                String getUId = profile.getUid();
+
+                                if ("apple.com".equals(Utils.getStr(getProviderId))) {
+                                    name = Utils.getStr(getName);
+                                    uId = Utils.getStr(getUId);
+                                    LogMgr.i(
+                                            TAG, "apple Info: " +
+                                                    "\n name: " + name +
+                                                    "\n email: " + email +
+                                                    "\n providerId: " + getProviderId +
+                                                    "\n uid: " + uId
+                                    );
+                                }
+                            }
+
+//                            for (UserInfo profile : user.getProviderData()) {
+//                                // Id of the provider (ex: google.com)
+//                                String providerId = profile.getProviderId();
+//
+//                                // UID specific to the provider
+//                                String uid = profile.getUid();
+//
+//                                // Name, email address
+//                                String name = profile.getDisplayName();
+//                                String email = profile.getEmail();
+//
+//                                LogMgr.i(
+//                                        TAG, "apple Info: " +
+//                                                "\n name: " + name +
+//                                                "\n email: " + email +
+//                                                "\n providerId: " + providerId +
+//                                                "\n uid: " + uid
+//                                );
+//                            }
 
                             PreferenceUtil.setSNSUserId(mActivity, uId);
                             PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_APPLE);
@@ -168,26 +203,6 @@ public class AppleLoginManager extends SNSLoginManager {
                                     mHandler.sendMessage(msg);
                                 }
                             }
-
-//                                    for (UserInfo profile : user.getProviderData()) {
-//                                        // Id of the provider (ex: google.com)
-//                                        String providerId = profile.getProviderId();
-//
-//                                        // UID specific to the provider
-//                                        String uid = profile.getUid();
-//
-//                                        // Name, email address
-//                                        String name = profile.getDisplayName();
-//                                        String email = profile.getEmail();
-//
-//                                        LogMgr.i(
-//                                                TAG, "apple Info: " +
-//                                                        "\n name: " + name +
-//                                                        "\n email: " + email +
-//                                                        "\n providerId: " + providerId +
-//                                                        "\n uid: " + uid
-//                                        );
-//                                    }
                         }
                         hideProgressDialog();
 

@@ -508,21 +508,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
 
-//        mSpinnerSchool.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()){
-//                case MotionEvent.ACTION_UP:
-//                    if (mSpinnerGrade.getText().toString().equals("")) {
-//                        mSpinnerGrade.performClick();
-//                        Toast.makeText(mContext, R.string.test_reserve_grade_sel_please, Toast.LENGTH_SHORT).show();
-//                        mSpinnerSchool.dismiss();
-//                    }
-//                    Utils.clearFocus(mEditList);
-//                    Utils.hideKeyboard(mContext, mEditList);
-//                    break;
-//            }
-//            return false;
-//        });
-
         mSpinnerTestTime.setOnTouchListener((v, event) -> {
             switch (event.getAction()){
                 case MotionEvent.ACTION_UP:
@@ -855,6 +840,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                         getTestTime(testTimeList, getData, grade, weekend);
                                     }
 
+                                    if (testTimeList.isEmpty()) Toast.makeText(mContext, R.string.test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                                    else mSpinnerTestTime.setItems(testTimeList);
+
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
@@ -866,13 +854,10 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
                     }
-
-                    mSpinnerTestTime.setItems(testTimeList);
                 }
 
                 @Override
                 public void onFailure(Call<TestTimeResponse> call, Throwable t) {
-                    mSpinnerTestTime.setItems(testTimeList);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -884,24 +869,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             RetrofitClient.getApiInterface().requestInflow().enqueue(new Callback<TestInflowResponse>() {
                 @Override
                 public void onResponse(Call<TestInflowResponse> call, Response<TestInflowResponse> response) {
-//                    if (testTimeList!=null && testTimeList.size() > 0) testTimeList.clear();
-//                    if (gradeIndex!=null && gradeIndex.size() > 0) gradeIndex.clear();
-
-//                    try {
-//                        if (response.isSuccessful()) {
-//                            if (response.body() != null) {
-//                                List<InflowData> getData = response.body().data;
-//
-//                                mSpinnerFunnel.setItems(getData);
-//                            }
-//                        } else {
-//                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-//                        }
-//
-//                    } catch (Exception e) {
-//                        LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
-//                    }
-
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
                             List<InflowData> getData = response.body().data;
@@ -990,17 +957,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_next, menu);
-        int positionOfMenuItem = 0;
+        if (writeMode.equals(Constants.WRITE_EDIT)) menu.findItem(R.id.action_btn_sub).setVisible(false);
+        else menu.findItem(R.id.action_btn_sub).setVisible(true);
+
         try {
-            MenuItem item = menu.getItem(positionOfMenuItem);
-            SpannableString span = new SpannableString(item.getTitle());
-            span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.red)), 0, span.length(), 0);
-            span.setSpan(new StyleSpan(Typeface.BOLD), 0, span.length(), 0);
+            setMenuItemTextStyling(menu.findItem(R.id.action_next), R.color.red, true, 16);
+            setMenuItemTextStyling(menu.findItem(R.id.action_btn_sub), R.color.font_color_default, true, 16);
 
-            int sizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, mContext.getResources().getDisplayMetrics());
-            span.setSpan(new AbsoluteSizeSpan(sizeInPx), 0, span.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-
-            item.setTitle(span);
         }catch(Exception ex){}
         return (super.onCreateOptionsMenu(menu));
     }
@@ -1011,6 +974,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             case R.id.action_next:
                 clearFocusAndHideKeyboard();
                 startQuestionActivity();
+                return true;
+            case R.id.action_btn_sub:
+                mEtName.setText("");
+                mEtStuPhone.setText("");
+                mEtName.setEnabled(true);
+                mEtStuPhone.setEnabled(true);
+                item.setVisible(false);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1030,5 +1000,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 return;
             }, false);
         }
+    }
+
+    private void setMenuItemTextStyling(MenuItem menuItem, int textColorResId, boolean isBold, int textSizeInDp) {
+        SpannableString spannableTitle = new SpannableString(menuItem.getTitle());
+        spannableTitle.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, textColorResId)), 0, spannableTitle.length(), 0);
+        if (isBold) spannableTitle.setSpan(new StyleSpan(Typeface.BOLD), 0, spannableTitle.length(), 0);
+        int sizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, textSizeInDp, mContext.getResources().getDisplayMetrics());
+        spannableTitle.setSpan(new AbsoluteSizeSpan(sizeInPx), 0, spannableTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        menuItem.setTitle(spannableTitle);
     }
 }
