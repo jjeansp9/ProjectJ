@@ -434,10 +434,23 @@
                 android:paddingVertical="@dimen/editbox_padding_vertical"/>
 
             <TextView
+                android:id="@+id/tv_reserve_stu_contact_notice"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/et_reserve_stu_contact"
+                app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
+                app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
+                android:layout_marginTop="2dp"
+                android:text="@string/test_reserve_write_stu_contact_notice"
+                android:textSize="@dimen/font_size_xsmall"
+                android:textColor="@color/red_sub"
+                android:visibility="gone"/>
+
+            <TextView
                 android:id="@+id/tv_reserve_parent_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_reserve_stu_contact"
+                app:layout_constraintTop_toBottomOf="@id/tv_reserve_stu_contact_notice"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_first"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_second"
                 android:paddingVertical="@dimen/tv_test_reserve_write"

@@ -75,7 +75,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
     private static final String TAG = "MenuTestReserveWriteActivity";
 
-    private TextView mTvReserveDate, mTvBirthDate, mTvAddress;
+    private TextView mTvReserveDate, mTvBirthDate, mTvAddress, mTvStuPhoneIsEmpty;
     private EditText mEtName, mEtAddressDetail, mEtStuPhone, mEtParentName, mEtparentPhone, mEtCashReceipt;
     private EditText[] mEditList;
     private RadioGroup mRgGender;
@@ -213,6 +213,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mTvReserveDate = findViewById(R.id.tv_reserve_test_date_cal);
         mTvBirthDate = findViewById(R.id.tv_reserve_birth_date_cal);
         mTvAddress = findViewById(R.id.tv_reserve_address_result);
+        mTvStuPhoneIsEmpty = findViewById(R.id.tv_reserve_stu_contact_notice);
 
         mEtName = (EditText) findViewById(R.id.et_reserve_name);
         mEtAddressDetail = (EditText) findViewById(R.id.et_reserve_address_detail);
@@ -250,10 +251,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 mEtName.setText(Utils.getStr(_stName));
                 mEtName.setEnabled(false);
             }
-            Log.i(TAG, "stPhone: " + _stPhone);
             if (!TextUtils.isEmpty(_stPhone)) {
                 mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
                 mEtStuPhone.setEnabled(false);
+            }else{
+                mTvStuPhoneIsEmpty.setVisibility(View.VISIBLE);
             }
             if (!TextUtils.isEmpty(_stParentPhone)){
                 mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));

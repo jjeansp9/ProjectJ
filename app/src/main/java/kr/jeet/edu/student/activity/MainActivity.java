@@ -136,6 +136,9 @@ public class MainActivity extends BaseActivity {
 
     private boolean isMain = true;
 
+    private final String MR = "님";
+    private final String MR_PARENT = "학부모님";
+
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -365,15 +368,15 @@ public class MainActivity extends BaseActivity {
             if (_userType != null) {
                 if (_userType.equals(Constants.MEMBER)) { // 회원
 
-                    imgStudentAttendance.setVisibility(View.VISIBLE);
+                    imgStudentAttendance.setVisibility(View.INVISIBLE);
                     //mTvAttendance.setVisibility(View.VISIBLE);
-                    mTvAttendanceDate.setVisibility(View.VISIBLE);
+                    mTvAttendanceDate.setVisibility(View.INVISIBLE);
                     mTvNonMember.setVisibility(View.INVISIBLE);
 
                     if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
-                        mTvNameSub.setText("님");
+                        mTvNameSub.setText(MR);
                     }else{ // 원생이 아닌경우
-                        mTvNameSub.setText("학부모님");
+                        mTvNameSub.setText(MR_PARENT);
                     }
 
                 }else{ // 비회원
@@ -388,9 +391,9 @@ public class MainActivity extends BaseActivity {
                     mLayoutBottom.setVisibility(View.GONE); // 화면 하단 레이아웃 gone
 
                     if (_userGubun == Constants.USER_TYPE_STUDENT){ // 원생
-                        mTvNameSub.setText("님");
+                        mTvNameSub.setText(MR);
                     }else{ // 원생이 아닌경우
-                        mTvNameSub.setText("학부모님");
+                        mTvNameSub.setText(MR_PARENT);
                     }
                     LogMgr.e(TAG, "No Member");
                 }

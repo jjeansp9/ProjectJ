@@ -423,6 +423,7 @@ public class SetAccountActivity extends BaseActivity {
                             PreferenceUtil.setStuGender(mContext, "");
                             PreferenceUtil.setStuBirth(mContext, "");
                             PreferenceUtil.setStName(mContext, "");
+                            PreferenceUtil.setUserSTCode(mContext, -1);
                             PreferenceUtil.setParentName(mContext, "");
                             PreferenceUtil.setAutoLogin(mContext, false);
                             Intent intent = new Intent(mContext, LoginActivity.class);
