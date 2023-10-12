@@ -139,7 +139,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:background="@drawable/selector_bt_ubderbox"
         android:stateListAnimator="@xml/animate_button_pull"
-        android:text="@string/menu_item_reserve"
+        android:text="@string/menu_test_reserve_btn"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_large"
         />

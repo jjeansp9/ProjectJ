@@ -14,6 +14,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -28,21 +29,29 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TestReserveAdapter;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
+import kr.jeet.edu.student.utils.comparator.GradeComparator;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -124,6 +133,7 @@ public class MenuTestReserveActivity extends BaseActivity {
         mSwipeRefresh.setOnRefreshListener( this::requestTestReserveList );
 
         requestTestReserveList();
+        requestTestTime();
     }
 
     private void setRecycler(){
@@ -197,6 +207,48 @@ public class MenuTestReserveActivity extends BaseActivity {
 
                     mSwipeRefresh.setRefreshing(false);
                     hideProgressDialog();
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void requestTestTime() {
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
+                @Override
+                public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
+
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                ArrayList<TestTimeData> getData = response.body().data;
+
+                                if (getData == null || getData.isEmpty()){
+                                    btnReserve.setOnClickListener(null);
+                                    btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+                                    Toast.makeText(mContext, R.string.menu_test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        } else {
+                            btnReserve.setOnClickListener(null);
+                            btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+                            Toast.makeText(mContext, R.string.menu_test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
+                        btnReserve.setOnClickListener(null);
+                        btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<TestTimeResponse> call, Throwable t) {
+                    btnReserve.setOnClickListener(null);
+                    btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

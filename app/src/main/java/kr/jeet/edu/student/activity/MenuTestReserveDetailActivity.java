@@ -8,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
@@ -23,11 +25,17 @@ import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.LTCListResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
+import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuTestReserveDetailActivity extends BaseActivity {
 
@@ -210,7 +218,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             if(!TextUtils.isEmpty(mInfo.date3)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date3;
             str += subStr.isEmpty() ? "-" : subStr;
 
-            str += "\n구몬/눈높이/재능 : ";
+            str += "\n학습지 : ";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time4)) subStr += mInfo.time4;
             if(!TextUtils.isEmpty(mInfo.date4)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date4;
@@ -274,7 +282,47 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         else {
             ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
         }
+    }
 
+    private void requestTestTime() {
+        showProgressDialog();
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
+                @Override
+                public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
+
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                ArrayList<TestTimeData> getData = response.body().data;
+
+                                if (getData == null || getData.isEmpty()){
+                                    Toast.makeText(mContext, R.string.menu_test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Intent editIntent = new Intent(mContext, MenuTestReserveWriteActivity.class);
+                                    editIntent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+                                    editIntent.putExtra(IntentParams.PARAM_WRITE_MODE, Constants.WRITE_EDIT);
+                                    resultLauncher.launch(editIntent);
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.menu_test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
+                        Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    }
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<TestTimeResponse> call, Throwable t) {
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
+                }
+            });
+        }
     }
 
     @Override
@@ -300,10 +348,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_edit:
-                Intent editIntent = new Intent(mContext, MenuTestReserveWriteActivity.class);
-                editIntent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
-                editIntent.putExtra(IntentParams.PARAM_WRITE_MODE, Constants.WRITE_EDIT);
-                resultLauncher.launch(editIntent);
+                requestTestTime();
                 return true;
             default:
                 break;

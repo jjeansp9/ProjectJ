@@ -58,12 +58,12 @@ import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.TestInflowResponse;
-import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
+import kr.jeet.edu.student.utils.comparator.GradeComparator;
 import kr.jeet.edu.student.view.ClearableTextView;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import kr.jeet.edu.student.dialog.SearchAddressDialog;
@@ -430,7 +430,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     tv.setText(formattedDate);
                     requestTestTime();
                     mSpinnerTestTime.setText("");
-                    mSpinnerTestTime.show();
+                    //mSpinnerTestTime.show();
                 }else{
                     Toast.makeText(mContext, R.string.test_reserve_sunday_impossible_sel, Toast.LENGTH_SHORT).show();
                     showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
@@ -530,6 +530,10 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                         showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
                         Toast.makeText(mContext, R.string.test_reserve_campus_sel_please, Toast.LENGTH_SHORT).show();
                         mSpinnerTestTime.dismiss();
+                    }else{
+                        if (testTimeList.isEmpty()){
+                            Toast.makeText(mContext, R.string.test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
+                        }
                     }
                     Utils.clearFocus(mEditList);
                     Utils.hideKeyboard(mContext, mEditList);
@@ -543,17 +547,25 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerTestTime.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (!TextUtils.isEmpty(mTvReserveDate.getText().toString())){
 
-                if (newIndex == gradeIndex.get(0)){
-                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
-                    else mSpinnerTestTime.setText("");
+                String originalTime = "";
 
-                }else if (newIndex == gradeIndex.get(1)){
-                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
-                    else mSpinnerTestTime.setText("");
+                if (gradeIndex.contains(newIndex)) originalTime = testTimeList.get(newIndex + 1).toString();
+                else originalTime = testTimeList.get(newIndex).toString();
 
-                }else if (newIndex == gradeIndex.get(2)){
-                    if (newIndex >= 0 && newIndex < testTimeList.size() - 1) mSpinnerTestTime.setText(testTimeList.get(newIndex + 1).toString());
-                    else mSpinnerTestTime.setText("");
+                SimpleDateFormat originalFormat = new SimpleDateFormat("a hh:mm", Locale.getDefault());
+                SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
+                try {
+                    Date date = originalFormat.parse(originalTime);
+                    if (date != null) {
+                        String formattedTime = targetFormat.format(date);
+                        mSpinnerTestTime.setText(formattedTime);
+                    } else {
+                        mSpinnerTestTime.setText("");
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    mSpinnerTestTime.setText("");
                 }
 
             }else{
@@ -775,8 +787,10 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         }else if (mSpinnerTestTime.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.reservation_time_empty, Toast.LENGTH_SHORT).show();
-            mSpinnerTestTime.setSpinnerPopupHeight(500);
-            if (mSpinnerTestTime != null) mSpinnerTestTime.show();
+            if (!testTimeList.isEmpty()){
+                mSpinnerTestTime.setSpinnerPopupHeight(500);
+                if (mSpinnerTestTime != null) mSpinnerTestTime.show();
+            }
 
         }else{
             Intent intent = new Intent(mContext, InformedQuestionActivity.class);
@@ -826,11 +840,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                     if (date != null) calendar.setTime(date);
 
                                     int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                                    int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
 
                                     ArrayList<String> grades = new ArrayList<>();
-                                    for (TestTimeData item : getData) if (!grades.contains(item.grade)) grades.add(item.grade);
+                                    for (TestTimeData item : getData) if (weekend == item.weekend) if (!grades.contains(item.grade)) grades.add(item.grade);
 
-                                    int weekend = (dayOfWeek == Calendar.SATURDAY) ? 1 : 0;
+                                    grades.sort(new GradeComparator());
 
                                     for (String grade : grades) {
                                         SpannableString gradeSpan = createColoredSpan(grade, redColor);
@@ -843,9 +858,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                 } catch (ParseException e) {
                                     e.printStackTrace();
                                 }
-
-                                mSpinnerTestTime.setItems(testTimeList);
-
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -854,6 +866,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
                     }
+
+                    mSpinnerTestTime.setItems(testTimeList);
                 }
 
                 @Override
@@ -920,14 +934,44 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     }
 
     private void getTestTime(ArrayList<SpannableString> testTimeList, ArrayList<TestTimeData> getData, String grade, int weekend) {
+
+        SimpleDateFormat timeFormat = new SimpleDateFormat(Constants.TIME_FORMATTER_HH_MM, Locale.KOREA);
+
         for (TestTimeData item : getData) {
             if (grade.equals(item.grade) && item.weekend == weekend) {
                 SpannableString timeSpan = new SpannableString(item.time);
-
-//                if (item.weekend == 0) timeSpan = new SpannableString("평일 "+ item.time);
-//                else timeSpan = new SpannableString("토요일 "+ item.time);
-
                 testTimeList.add(timeSpan);
+            }
+        }
+
+        testTimeList.sort((span1, span2) -> {
+            try {
+                Date time1 = timeFormat.parse(span1.toString());
+                Date time2 = timeFormat.parse(span2.toString());
+                return time1 != null ? time1.compareTo(time2) : 0;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return 0;
+            }
+        });
+
+        formatAndAddAmPm(testTimeList);
+    }
+
+    private void formatAndAddAmPm(ArrayList<SpannableString> testTimeList) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat(Constants.TIME_FORMATTER_HH_MM, Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(Constants.TIME_FORMATTER_A_HH_MM, Locale.KOREA);
+
+        for (int i = 0; i < testTimeList.size(); i++) {
+            SpannableString span = testTimeList.get(i);
+            try {
+                Date date = inputFormat.parse(span.toString());
+                if (date != null) {
+                    String formattedTime = outputFormat.format(date);
+                    testTimeList.set(i, new SpannableString(formattedTime));
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         }
     }

@@ -233,6 +233,9 @@
     <string name="consultation_request_attention">※ 상담은 내선전화 070번호로 진행됩니다.\n\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
 
     <string name="menu_test_reserve_state">상태</string>
+    <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>
+    <string name="menu_test_reserve_test_time_empty">테스트예약 시간정보가 없습니다.지트학원에 문의바랍니다.</string>
+    <string name="menu_test_reserve_test_server_fail">테스트예약 정보를 불러오는데 실패했습니다.</string>
     <string name="menu_test_reserve_campus_test_date">캠퍼스&amp;테스트일시</string>
     <string name="menu_test_reserve_campus_test">캠퍼스</string>
     <string name="menu_test_reserve_campus_date">테스트일시</string>
@@ -416,12 +419,14 @@
     <string name="test_reserve_write_select_school">학교 선택</string>
     <string name="test_reserve_grade_sel_please">학년을 먼저 선택해주세요.</string>
     <string name="test_reserve_campus_sel_please">테스트예약일을 먼저 선택해주세요.</string>
-    <string name="test_reserve_sunday_impossible_sel">일요일은 선택할 수 없습니다.</string>
+    <string name="test_reserve_sunday_impossible_sel">일요일은 테스트예약을 진행하지 않습니다.</string>
+    <string name="test_reserve_test_time_empty">해당 테스트예약일에 테스트시간 정보가 없습니다.</string>
 
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
     <string name="test_reserve_detail_wish_day_week">등원희망요일</string>
     <string name="test_reserve_detail_study">이전학습방법</string>
-    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>
+<!--    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>-->
+    <string name="hint_test_reserve_detail_study"> 주간수업량 (시간) / 수강기간 (개월) </string>
     <string name="test_reserve_detail_process">진도/심화학습</string>
     <string name="test_reserve_detail_option">희망분야</string>
     <string name="test_reserve_detail_high_school">희망고등학교</string>
@@ -454,7 +459,9 @@
     <string name="informed_question_class_path_1">학원</string>
     <string name="informed_question_class_path_2">과외</string>
     <string name="informed_question_class_path_3">가정학습\n(자기주도)</string>
-    <string name="informed_question_class_path_4">구몬\n눈높이\n재능</string>
+    <string name="informed_question_class_path_4">학습지</string>
+    <string name="informed_question_class_path_hint_hours">주간수업량 (시간)</string>
+    <string name="informed_question_class_path_hint_month">수강기간 (개월)</string>
     <string name="informed_question_success">레벨테스트를 예약하였습니다.</string>
     <string name="informed_question_update_success">레벨테스트를 수정하였습니다.</string>
     <string name="title_search_school">학교 검색</string>
