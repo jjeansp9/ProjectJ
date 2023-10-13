@@ -103,8 +103,10 @@
     <string name="empty_phonenumber">휴대폰번호 정보가 없습니다.</string>
     <string name="msg_re_auth">휴대폰번호를 다시 인증해 주세요.</string>
     <string name="check_id_empty">아이디를 입력해 주세요.</string>
+    <string name="check_id_min_length">아이디는 최소 4글자 이상 입력해주세요.</string>
     <string name="check_id_duplicate">아이디 중복체크 확인이 필요합니다.</string>
     <string name="password_does_not_match">비밀번호가 일치하지 않습니다.</string>
+    <string name="password_pattern_not_match">비밀번호 형식을 확인해주세요.</string>
     <string name="password_empty">비밀번호를 입력해주세요.</string>
     <string name="singup_success">회원가입 되었습니다.</string>
     <string name="server_data_empty">알 수 없는 에러가 발생하였습니다.</string>

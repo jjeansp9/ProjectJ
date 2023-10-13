@@ -476,6 +476,17 @@ public class Utils {
      * 스피너 item 개수가 기존과 다를경우 view height update
      * */
     public static void updateSpinnerList(PowerSpinnerView powerSpinner) { powerSpinner.setSpinnerPopupHeight(ConstraintLayout.LayoutParams.WRAP_CONTENT); }
+
+    /**
+    * EditText 공백제거
+    * */
+    public static void removeSpace(EditText editText) {
+        String textWithoutSpaces = editText.getText().toString().replace(" ", "");
+        if (!editText.getText().toString().equals(textWithoutSpaces)) {
+            editText.setText(textWithoutSpaces);
+            editText.setSelection(textWithoutSpaces.length());
+        }
+    }
 }
 
 

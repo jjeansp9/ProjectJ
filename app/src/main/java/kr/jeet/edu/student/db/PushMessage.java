@@ -51,7 +51,6 @@ public class PushMessage implements Parcelable {
     @ColumnInfo(name="isRead", defaultValue = "false")
     public boolean isRead = false;
 
-//2023-10-11 13:52:14.332 24903-27676/kr.jeet.edu.student E/firebase: key = userGubun : value = 3
 
     public PushMessage(long id, String title, String body, String acaCode, int stCode, int userGubun, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
         this.id = id;

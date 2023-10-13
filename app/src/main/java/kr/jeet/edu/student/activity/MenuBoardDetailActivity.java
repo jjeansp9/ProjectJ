@@ -147,10 +147,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         _pushData = intent.getParcelableExtra(extraKey);
                         _currentSeq = _pushData.connSeq;
 
-                        // TODO : 선택한 자녀에 따라 푸시 확인을 분기처리 해야할 필요가 있음, 시스템알림 목록에서도 자녀마다 시스템알림 목록 분리해야함
                         if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                         LogMgr.e("Event here4");
-                        // 404 http://211.252.86.237:7777/mobile/api/push/confirm (67ms)
 
                     } else{
                         LogMgr.e("Event here5");

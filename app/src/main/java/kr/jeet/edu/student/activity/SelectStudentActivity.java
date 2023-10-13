@@ -112,7 +112,6 @@ public class SelectStudentActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-            LogMgr.e(TAG, "EVENT initData()"+ _pushMessage.pushType);
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND:
@@ -231,7 +230,6 @@ public class SelectStudentActivity extends BaseActivity {
         Intent intent = new Intent(mContext, MainActivity.class);
         LogMgr.e(TAG, "EVENT goMain()");
         if(_pushMessage != null) {
-            LogMgr.e(TAG, "EVENT goMain()2: "+ _pushMessage);
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

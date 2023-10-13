@@ -62,6 +62,8 @@ public class JoinActivity extends BaseActivity {
 
     private RetrofitApi mRetrofitApi;
 
+    private final int MIN_ID_LENGTH = 4;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,19 +169,20 @@ public class JoinActivity extends BaseActivity {
             }
         }
 
-        mEditPassword1.addTextChangedListener(new TextWatcher() {
+        setTextWatcher(mEditPassword1);
+        setTextWatcher(mEditPassword2);
+    }
+
+    private void setTextWatcher(EditText et){
+        et.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
+                Utils.removeSpace(et);
                 if(checkPassword(editable.toString())) {
                     mCheckPwTxt.setVisibility(View.INVISIBLE);
                 }
@@ -223,12 +226,20 @@ public class JoinActivity extends BaseActivity {
 
         // 일반 회원가입인 경우 패스워드 체크
         if(mLoginType == Constants.LOGIN_TYPE_NORMAL) {
+            if (mEditId.getText().toString().length() < MIN_ID_LENGTH){
+                Toast.makeText(mContext, R.string.check_id_min_length, Toast.LENGTH_SHORT).show();
+                return false;
+            }
             if (TextUtils.isEmpty(mEditPassword1.getText().toString()) || TextUtils.isEmpty(mEditPassword2.getText().toString())){
                 Toast.makeText(mContext, R.string.password_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
             if(!mEditPassword1.getText().toString().equals(mEditPassword2.getText().toString())) {
                 Toast.makeText(mContext, R.string.password_does_not_match, Toast.LENGTH_SHORT).show();
+                return false;
+            }
+            if (mCheckPwTxt.getVisibility() == View.VISIBLE){
+                Toast.makeText(mContext, R.string.password_pattern_not_match, Toast.LENGTH_SHORT).show();
                 return false;
             }
         }

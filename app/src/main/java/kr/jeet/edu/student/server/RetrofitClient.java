@@ -1,8 +1,5 @@
 package kr.jeet.edu.student.server;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import kr.jeet.edu.student.utils.LogMgr;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
