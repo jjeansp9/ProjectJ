@@ -80,7 +80,7 @@
     <color name="color_attendance">#1d1dff</color>
     <color name="color_absence">#ff0000</color>
     <color name="color_early_leave">#999999</color>
-    <color name="color_tardy">#ff7878</color>
+    <color name="color_tardy">#CC99FF</color>
     <color name="color_makeup_class">#248a43</color>
     <color name="color_online_lecture">#ffc000</color>
 

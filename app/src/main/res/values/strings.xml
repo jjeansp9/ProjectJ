@@ -33,7 +33,7 @@
     <string name="ok">확인</string>
     <string name="new_member">신규원생</string>
 
-    <string name="id_pattern">0123456789qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM</string>
+    <string name="id_pattern">0123456789qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-</string>
 
     <string name="title_main_school">학교</string>
     <string name="title_memo">메모</string>

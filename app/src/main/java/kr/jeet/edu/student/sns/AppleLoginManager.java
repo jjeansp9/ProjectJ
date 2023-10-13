@@ -68,53 +68,8 @@ public class AppleLoginManager extends SNSLoginManager {
 
             Task<AuthResult> pending = mAuth.getPendingAuthResult();
             if (pending != null) {
-                pending.addOnSuccessListener( authResult -> {
-                    FirebaseUser user = authResult.getUser();
-                    //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-                    if (user != null){
-                        String name = user.getDisplayName();
-                        String email = Utils.getStr(user.getEmail());
-                        String additionalUserInfo = Utils.getStr(Objects.requireNonNull(authResult.getAdditionalUserInfo()).getUsername());
-                        String credential = Utils.getStr(Objects.requireNonNull(authResult.getCredential()).toString());
-                        String uId = Utils.getStr(user.getUid());
-                        String tenantId = Utils.getStr(user.getTenantId());
-                        String providerId = Utils.getStr(user.getProviderId());
-
-                        LogMgr.i(
-                                TAG, "apple Info check: " +
-                                        "\n name: " + name +
-                                        "\n email: " + email +
-                                        "\n additionalUserInfo: " + additionalUserInfo +
-                                        "\n credential: " + credential +
-                                        "\n uId: " + uId +
-                                        "\n tenantId: " + tenantId +
-                                        "\n providerId: " + providerId
-                        );
-
-                        PreferenceUtil.setSNSUserId(mActivity, uId);
-                        PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_APPLE);
-
-                        if (mIsJoinStatus){
-                            Intent intent = new Intent(mActivity, JoinActivity.class);
-                            intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_APPLE);
-                            intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
-                            intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, uId);
-                            mActivity.startActivity(intent);
-                            mActivity.finish();
-                        }else{
-                            LogMgr.e("login complete -> ");
-                            if(mHandler != null) {
-                                Message msg = Message.obtain();
-                                msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
-                                msg.obj = uId;
-                                mHandler.sendMessage(msg);
-                            }
-                        }
-                    }
-                    hideProgressDialog();
-
-                }).addOnFailureListener( error -> {
+                pending.addOnSuccessListener(this::actionAfterSuccess)
+                        .addOnFailureListener( error -> {
                     LogMgr.e(TAG, error.getMessage());
                     hideProgressDialog();
                 });
@@ -127,37 +82,52 @@ public class AppleLoginManager extends SNSLoginManager {
     private void startAppleActivity(){
         if (mAuth != null && provider != null){
             mAuth.startActivityForSignInWithProvider(mActivity, provider.build())
-                    .addOnSuccessListener( authResult -> {
-                        FirebaseUser user = authResult.getUser();
-                        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    .addOnSuccessListener(this::actionAfterSuccess)
+                    .addOnFailureListener( error -> {
+                        LogMgr.e(TAG, error.getMessage());
+                        hideProgressDialog();
+                    });
+        }
+    }
 
-                        if (user != null){
-//                            String name = user.getDisplayName();
-//                            String email = Utils.getStr(user.getEmail());
-//                            String uId = Utils.getStr(user.getUid());
-//                            String providerId = Utils.getStr(user.getProviderId());
+    @Override
+    public void LogoutProcess() {
 
-                            String name = "";
-                            String email = "";
-                            String uId = "";
+    }
 
-                            for (UserInfo profile : user.getProviderData()) {
-                                String getProviderId = profile.getProviderId();
-                                String getName = profile.getDisplayName();
-                                String getUId = profile.getUid();
+    @Override
+    public void DeleteAccountProcess() {
+        if (mAuth != null){
+            mAuth.signOut();
+        }
+    }
 
-                                if ("apple.com".equals(Utils.getStr(getProviderId))) {
-                                    name = Utils.getStr(getName);
-                                    uId = Utils.getStr(getUId);
-                                    LogMgr.i(
-                                            TAG, "apple Info: " +
-                                                    "\n name: " + name +
-                                                    "\n email: " + email +
-                                                    "\n providerId: " + getProviderId +
-                                                    "\n uid: " + uId
-                                    );
-                                }
-                            }
+    private void actionAfterSuccess(AuthResult authResult){
+        FirebaseUser user = authResult.getUser();
+        //FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null){
+            String name = "";
+            String email = "";
+            String uId = "";
+
+            for (UserInfo profile : user.getProviderData()) {
+                String getProviderId = profile.getProviderId();
+                String getName = profile.getDisplayName();
+                String getUId = profile.getUid();
+
+                if ("apple.com".equals(Utils.getStr(getProviderId))) {
+                    name = Utils.getStr(getName);
+                    uId = Utils.getStr(getUId);
+                    LogMgr.i(
+                            TAG, "apple Info: " +
+                                    "\n name: " + name +
+                                    "\n email: " + email +
+                                    "\n providerId: " + getProviderId +
+                                    "\n uid: " + uId
+                    );
+                }
+            }
 
 //                            for (UserInfo profile : user.getProviderData()) {
 //                                // Id of the provider (ex: google.com)
@@ -179,50 +149,34 @@ public class AppleLoginManager extends SNSLoginManager {
 //                                );
 //                            }
 
-                            PreferenceUtil.setSNSUserId(mActivity, uId);
-                            PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_APPLE);
+            PreferenceUtil.setSNSUserId(mActivity, uId);
+            PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_APPLE);
 
-                            if (mIsJoinStatus){
-                                Intent intent = new Intent(mActivity, JoinActivity.class);
-                                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_APPLE);
-                                intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
-                                intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, uId);
-                                mActivity.startActivity(intent);
-                                mActivity.finish();
-                            }else{
-                                LogMgr.e("login complete -> ");
-                                if(mHandler != null) {
-                                    Bundle data = new Bundle();
-                                    data.putString("name", name);
-                                    data.putInt("loginType", Constants.LOGIN_TYPE_SNS_APPLE);
+            if (mIsJoinStatus){
+                Intent intent = new Intent(mActivity, JoinActivity.class);
+                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_APPLE);
+                intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
+                intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, uId);
+                mActivity.startActivity(intent);
+                mActivity.finish();
+            }else{
+                LogMgr.e("login complete -> ");
+                if(mHandler != null) {
+                    Bundle data = new Bundle();
+                    data.putString("name", name);
+                    data.putInt("loginType", Constants.LOGIN_TYPE_SNS_APPLE);
 
-                                    Message msg = Message.obtain();
-                                    msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
-                                    msg.obj = uId;
-                                    msg.setData(data);
-                                    mHandler.sendMessage(msg);
-                                }
-                            }
-                        }
-                        hideProgressDialog();
-
-                    }).addOnFailureListener( error -> {
-                        LogMgr.e(TAG, error.getMessage());
-                        hideProgressDialog();
-                    });
+                    Message msg = Message.obtain();
+                    msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
+                    msg.obj = uId;
+                    msg.setData(data);
+                    mHandler.sendMessage(msg);
+                }
+            }
+        }else{
+            LogMgr.e(TAG, "apple Login user info is null");
         }
-    }
-
-    @Override
-    public void LogoutProcess() {
-
-    }
-
-    @Override
-    public void DeleteAccountProcess() {
-        if (mAuth != null){
-            mAuth.signOut();
-        }
+        hideProgressDialog();
     }
 
     private void showProgressDialog() {

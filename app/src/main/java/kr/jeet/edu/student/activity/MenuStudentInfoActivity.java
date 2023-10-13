@@ -282,7 +282,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         setSpinnerTeacher();
 
         if (mListCls.size() == 0) {
-            _calendarView.setVisibility(View.GONE);
+            _calendarView.setVisibility(View.VISIBLE);
             mSpinnerCls.setVisibility(View.GONE);
             chipGroupLegend.setVisibility(View.GONE);
 //            mTvAttendanceEmpty.setVisibility(View.VISIBLE);
@@ -661,7 +661,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                                 _attendanceList.addAll(getData);
                             }
                         }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
                         LogMgr.e(TAG + "requestGetAttendanceList() Exception : ", e.getMessage());
@@ -678,7 +678,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         if(_attendanceList != null && _attendanceList.size() > 0) {
                             _attendanceList.clear();
                         }
-                        Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                         LogMgr.e(TAG, "requestGetAttendanceList() onFailure >> " + t.getMessage());
                     }catch (Exception e){
                     }finally{

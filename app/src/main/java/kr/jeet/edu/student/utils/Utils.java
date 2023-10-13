@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 
@@ -50,6 +51,7 @@ import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.skydoves.powerspinner.PowerSpinnerView;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
@@ -470,6 +472,10 @@ public class Utils {
         int _notifyID = random.nextInt(maxInt);
         notificationManager.notify(_notifyID, notificationBuilder.build());
     }
+    /**
+     * 스피너 item 개수가 기존과 다를경우 view height update
+     * */
+    public static void updateSpinnerList(PowerSpinnerView powerSpinner) { powerSpinner.setSpinnerPopupHeight(ConstraintLayout.LayoutParams.WRAP_CONTENT); }
 }
 
 
