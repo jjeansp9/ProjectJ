@@ -411,7 +411,7 @@
     <string name="test_reserve_write_grade"><font color="@color/red">* </font>학년</string>
     <string name="test_reserve_write_grade_sub">학년</string>
     <string name="test_reserve_write_stu_contact"><font color="@color/red">* </font>학생 연락처</string>
-    <string name="test_reserve_write_stu_contact_notice">학생 연락처 없을시 부모님 연락처를 입력바랍니다.</string>
+    <string name="test_reserve_write_stu_contact_notice">학생 연락처가 없을 경우 [ 학부모 연락처 ]를 입력바랍니다.</string>
     <string name="test_reserve_write_parent_contact"><font color="@color/red">* </font>학부모 연락처</string>
     <string name="test_reserve_write_cash_receipts">현금영수증</string>
     <string name="test_reserve_write_cash_receipts_notice">미입력 시(010-000-1234)로 등록됩니다</string>
@@ -467,10 +467,9 @@
     <string name="informed_question_class_path_4">학습지</string>
     <string name="informed_question_class_path_hint_hours">주간수업량 (시간)</string>
     <string name="informed_question_class_path_hint_month">수강기간 (개월)</string>
-    <string name="informed_question_success">레벨테스트를 예약하였습니다.</string>
-    <string name="informed_question_update_success">레벨테스트를 수정하였습니다.</string>
+    <string name="informed_question_success">테스트예약이 등록되었습니다. 신규테스트 취소 시 데스크로 연락주시기 바랍니다.</string>
+    <string name="informed_question_update_success">테스트예약이 수정되었습니다. 신규테스트 취소 시 데스크로 연락주시기 바랍니다.</string>
     <string name="title_search_school">학교 검색</string>
-
 
     <string name="elementary_school"><font color="@color/red">초등</font></string>
     <string name="weekday_afternoon_5">평일 오후 05:00</string>

@@ -58,6 +58,8 @@ public class GoogleLoginManager extends SNSLoginManager {
                     }
 
                 }else{
+                    mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+                    ((Activity)mActivity).finish();
                     LogMgr.e("로그인 실패 : " + result.getResultCode());
                 }
             }

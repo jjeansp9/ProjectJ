@@ -224,7 +224,7 @@ public class SettingsActivity extends BaseActivity {
                                 if (getData.phoneNumber != null) {
                                     String phoneNumber = "";
 
-                                    if (getData.phoneNumber.length() == 11) phoneNumber = Utils.formatNum(getData.phoneNumber);
+                                    if (getData.phoneNumber.length() == 11) phoneNumber = Utils.formatPhoneNumber(getData.phoneNumber);
                                     else phoneNumber = getData.phoneNumber;
 
                                     mTvPhoneNum.setText(phoneNumber);

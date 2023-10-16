@@ -125,7 +125,7 @@ public class BusRouteActivity extends BaseActivity {
         setRecycler();
         if(_currentData != null) {
             _tvBusName.setText(_currentData.busName);
-            _tvPhoneNumber.setText(Utils.formatNum(_currentData.busPhoneNumber.replace("-", "")));
+            _tvPhoneNumber.setText(Utils.formatPhoneNumber(_currentData.busPhoneNumber.replace("-", "")));
             if(Utils.checkPhoneNumber(_currentData.busPhoneNumber.replace("-", ""))) {
                 _btnDriverCall.setOnClickListener(this);
             }else{

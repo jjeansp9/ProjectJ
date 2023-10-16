@@ -45,7 +45,7 @@ public class BriefingReservedListAdapter extends RecyclerView.Adapter<BriefingRe
         try{
             if (!mList.isEmpty()){
                 String participantsCnt = String.valueOf(item.participantsCnt);
-                String phoneNum = Utils.formatNum(item.phoneNumber);
+                String phoneNum = Utils.formatPhoneNumber(item.phoneNumber);
 
                 holder.tvName.setText(item.name);
                 holder.tvCnt.setText(participantsCnt);

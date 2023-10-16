@@ -7,6 +7,7 @@ import android.os.Message;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.common.KakaoSdk;
@@ -99,6 +100,8 @@ public class KaKaoLoginManager extends SNSLoginManager {
 
             }else {
                 //로그인 실패
+                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+                ((Activity)mContext).finish();
                 LogMgr.e(TAG, "invoke: login fail" );
                 //Login 화면으로..
                 //mContext.startActivity(new Intent(mContext, LoginActivity.class));

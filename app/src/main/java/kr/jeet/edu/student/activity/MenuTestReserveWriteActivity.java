@@ -5,8 +5,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -23,9 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -119,6 +115,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String writeMode = "";
     private ArrayList<Integer> gradeIndex = new ArrayList<>();
 
+    private int _childCnt = -1;
+
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
@@ -142,6 +140,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     }else{
                         mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
                     }
+                }else{
+                    mInfo = new TestReserveData();
                 }
 
                 if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
@@ -171,6 +171,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
         _stParentName = PreferenceUtil.getParentName(mContext);
         _selectedSchoolData = new SchoolData("", 0);
+        _childCnt = PreferenceUtil.getNumberOfChild(mContext);
 
         try {
 
@@ -239,8 +240,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
         } else{
-            if (_stuGender.equals("M")) mGenderRbMale.setChecked(true);
-            else mGenderRbFemale.setChecked(true);
+            if (_stuGender.equals("F")){
+                mGenderRbMale.setChecked(false);
+                mGenderRbFemale.setChecked(true);
+            }else{
+                mGenderRbMale.setChecked(true);
+                mGenderRbFemale.setChecked(false);
+            }
 
 //            mEtName.setText(Utils.getStr(_stName));
 //            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
@@ -269,24 +275,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             mTvBirthDate.setText(Utils.getStr(_birth));
 
         }
+
         setSpinner();
-    }
-
-    private void setTvText(){
-        if (!TextUtils.isEmpty(_stName)) {
-            mEtName.setText(Utils.getStr(_stName));
-            mEtName.setEnabled(false);
-        }
-        if (!TextUtils.isEmpty(_stPhone)) {
-            mEtStuPhone.setText(Utils.getStr(_stPhone).replace("-", ""));
-            mEtStuPhone.setEnabled(false);
-        }
-        if (!TextUtils.isEmpty(_stParentPhone)){
-            mEtparentPhone.setText(Utils.getStr(_stParentPhone).replace("-", ""));
-            mEtParentName.setEnabled(false);
-        }
-
-        mTvBirthDate.setText(Utils.getStr(_birth));
     }
 
     private void setView(){
@@ -301,9 +291,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (mInfo.sex.equals("M")) {
             mGenderRbMale.setChecked(true);
             mGenderRbFemale.setChecked(false);
+            gender = 1;
         }else{
             mGenderRbMale.setChecked(false);
             mGenderRbFemale.setChecked(true);
+            gender = 2;
         }
 
         mTvAddress.setText(Utils.getStr(mInfo.address));
@@ -350,6 +342,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
         mTvReserveDate.setText(Utils.getStr(date)); // yyyy-MM-dd
         mSpinnerTestTime.setText(Utils.getStr(time)); // HH:mm
+
+        mSpinnerCampus.setOnClickListener(null);
+        mSpinnerCampus.setEnabled(false);
     }
 
     @Override
@@ -648,6 +643,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
+
         request.userGubun = _userGubun;
         request.name = mEtName.getText().toString(); // 학생이름 [필수]
         request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]
@@ -665,7 +661,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.bigo = _ltcCode; // 캠퍼스 비고 [필수]
         request.bigoText = _ltcName; // 캠퍼스 비고(캠퍼스 이름) [필수]
         //request.cashReceiptNumber = TextUtils.isEmpty(mEtCashReceipt.getText().toString()) ? "010-000-1234" : mEtCashReceipt.getText().toString(); // 현금영수증 (010-000-1234) [선택]
-        request.cashReceiptNumber = Utils.formatNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
+        request.cashReceiptNumber = Utils.formatCashReceiptNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
 
         LogMgr.i(TAG+ "putData","\n학생이름 : " + request.name
                 + "\n생년월일 : " + request.birth
@@ -794,6 +790,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     ArrayList<SpannableString> testTimeList = new ArrayList<>();
 
     private void requestTestTime() {
+
+        showProgressDialog();
+
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
                 @Override
@@ -841,7 +840,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                     }
 
                                     if (testTimeList.isEmpty()) Toast.makeText(mContext, R.string.test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
-                                    else mSpinnerTestTime.setItems(testTimeList);
+                                    mSpinnerTestTime.setItems(testTimeList);
 
                                 } catch (ParseException e) {
                                     e.printStackTrace();
@@ -854,11 +853,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
                     }
+
+                    hideProgressDialog();
                 }
 
                 @Override
                 public void onFailure(Call<TestTimeResponse> call, Throwable t) {
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             });
         }
@@ -958,7 +960,10 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_next, menu);
         if (writeMode.equals(Constants.WRITE_EDIT)) menu.findItem(R.id.action_btn_sub).setVisible(false);
-        else menu.findItem(R.id.action_btn_sub).setVisible(true);
+        else {
+            if (_childCnt > 0) menu.findItem(R.id.action_btn_sub).setVisible(true);
+            else menu.findItem(R.id.action_btn_sub).setVisible(false);
+        }
 
         try {
             setMenuItemTextStyling(menu.findItem(R.id.action_next), R.color.red, true, 16);
@@ -981,6 +986,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 mEtName.setEnabled(true);
                 mEtStuPhone.setEnabled(true);
                 item.setVisible(false);
+                mTvStuPhoneIsEmpty.setVisibility(View.VISIBLE);
                 return true;
         }
         return super.onOptionsItemSelected(item);

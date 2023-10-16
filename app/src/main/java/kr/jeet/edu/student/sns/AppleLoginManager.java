@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.JoinActivity;
+import kr.jeet.edu.student.activity.LoginActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -71,7 +72,10 @@ public class AppleLoginManager extends SNSLoginManager {
                 pending.addOnSuccessListener(this::actionAfterSuccess)
                         .addOnFailureListener( error -> {
                     LogMgr.e(TAG, error.getMessage());
+                    mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+                    ((Activity)mActivity).finish();
                     hideProgressDialog();
+
                 });
             } else {
                 startAppleActivity();
@@ -85,6 +89,8 @@ public class AppleLoginManager extends SNSLoginManager {
                     .addOnSuccessListener(this::actionAfterSuccess)
                     .addOnFailureListener( error -> {
                         LogMgr.e(TAG, error.getMessage());
+                        mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
+                        ((Activity)mActivity).finish();
                         hideProgressDialog();
                     });
         }

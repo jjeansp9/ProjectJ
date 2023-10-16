@@ -2,15 +2,12 @@ package kr.jeet.edu.student.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +15,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-
-import org.w3c.dom.Text;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
@@ -382,7 +377,7 @@ public class SetAccountActivity extends BaseActivity {
                                 mTvUserGubun.setVisibility(View.VISIBLE);
 
                                 if (getData.phoneNumber != null) {
-                                    mTvPhoneNum.setText(Utils.formatNum(getData.phoneNumber.replace("-", "")));
+                                    mTvPhoneNum.setText(Utils.formatPhoneNumber(getData.phoneNumber.replace("-", "")));
                                     phoneNum = getData.phoneNumber;
 
                                 } else mTvPhoneNum.setText(getText(R.string.empty_phonenumber));
@@ -407,6 +402,7 @@ public class SetAccountActivity extends BaseActivity {
         }
     }
     private void requestLogOut(int managerSeq){
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.logout(managerSeq).enqueue(new Callback<BaseResponse>() {
@@ -427,6 +423,7 @@ public class SetAccountActivity extends BaseActivity {
                             PreferenceUtil.setStName(mContext, "");
                             PreferenceUtil.setUserSTCode(mContext, -1);
                             PreferenceUtil.setParentName(mContext, "");
+                            PreferenceUtil.setNumberOfChild(mContext, 0);
                             PreferenceUtil.setAutoLogin(mContext, false);
                             Intent intent = new Intent(mContext, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -438,6 +435,8 @@ public class SetAccountActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
+
+                    hideProgressDialog();
                 }
 
                 @Override
@@ -446,6 +445,7 @@ public class SetAccountActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             });
         }

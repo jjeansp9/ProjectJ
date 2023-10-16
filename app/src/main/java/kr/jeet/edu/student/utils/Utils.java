@@ -267,9 +267,9 @@ public class Utils {
     }
 
     /**
-     * number format
+     * Number Cash Receipt
     * */
-    public static String formatNum(String num){
+    public static String formatCashReceiptNum(String num){
         String number = "";
         if (num.equals("")){
             number = "010-000-1234";
@@ -305,6 +305,31 @@ public class Utils {
         }
 
         return number;
+    }
+    /**
+     * 전화번호에 - 붙은 Format 으로 변환
+     * @param phoneNumber
+     * @return formatted phone number format (ex 010-1234-5678)
+     */
+    public static  String formatPhoneNumber(String phoneNumber) {
+        if(phoneNumber == null) return "";
+        String cleanedNumber = phoneNumber.replaceAll("[^0-9]", "");
+        try {
+            if (cleanedNumber.length() == 10) {
+                if (cleanedNumber.startsWith("02")) {   //서울은 02
+                    return cleanedNumber.substring(0, 2) + "-" + cleanedNumber.substring(2, 6) + "-" + cleanedNumber.substring(6);
+                } else {
+                    return cleanedNumber.substring(0, 3) + "-" + cleanedNumber.substring(3, 6) + "-" + cleanedNumber.substring(6);
+                }
+            } else if (cleanedNumber.length() == 11) {
+                return cleanedNumber.substring(0, 3) + "-" + cleanedNumber.substring(3, 7) + "-" + cleanedNumber.substring(7);
+            } else {
+                return cleanedNumber;
+            }
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return cleanedNumber;
     }
 
     /**

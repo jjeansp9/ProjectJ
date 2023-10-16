@@ -113,6 +113,8 @@ public class NaverLoginManager extends SNSLoginManager {
             String errorDescription = NaverIdLoginSDK.INSTANCE.getLastErrorDescription();
             LogMgr.e("errorCode -> " + errorCode);
             LogMgr.e("errorDescription -> " + errorDescription);
+            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+            ((Activity)mContext).finish();
             //Toast.makeText(mContext, "errorCode : " + errorCode, Toast.LENGTH_SHORT).show();
         }
 
@@ -161,12 +163,14 @@ public class NaverLoginManager extends SNSLoginManager {
 
         @Override
         public void onFailure(int i, @NonNull String s) {
-
+            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+            ((Activity)mContext).finish();
         }
 
         @Override
         public void onError(int i, @NonNull String s) {
-
+            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+            ((Activity)mContext).finish();
         }
     };
 

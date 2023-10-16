@@ -32,7 +32,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +54,6 @@ import kr.jeet.edu.student.model.data.TuitionData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
-import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -711,7 +709,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     public String formatPhoneNum(String phoneNum, String defaultNum){
         if (phoneNum != null && !phoneNum.isEmpty()){
-            if (phoneNum.length() == 11) return Utils.formatNum(phoneNum).equals("") ? defaultNum : Utils.formatNum(phoneNum);
+            if (phoneNum.length() == 11) return Utils.formatPhoneNumber(phoneNum).equals("") ? defaultNum : Utils.formatPhoneNumber(phoneNum);
             else return phoneNum;
         }
         else return "";

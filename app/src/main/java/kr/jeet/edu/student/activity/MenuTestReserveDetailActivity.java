@@ -15,19 +15,16 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
-import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -152,14 +149,14 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
 //        }
 //        ((TextView)findViewById(R.id.txt_grade)).setText(str);
 
-        ((TextView)findViewById(R.id.txt_st_phone_num)).setText(TextUtils.isEmpty(mInfo.phoneNumber) ? "" : Utils.formatNum(mInfo.phoneNumber));
+        ((TextView)findViewById(R.id.txt_st_phone_num)).setText(TextUtils.isEmpty(mInfo.phoneNumber) ? "" : Utils.formatCashReceiptNum(mInfo.phoneNumber));
 
         str = "";
         if(!TextUtils.isEmpty(mInfo.parentName)) {
             str = mInfo.parentName +" "+ getString(R.string.parents);
         }
         if(!TextUtils.isEmpty(mInfo.parentPhoneNumber)) {
-            str += TextUtils.isEmpty(str) ? "" : "\n" + Utils.formatNum(mInfo.parentPhoneNumber);
+            str += TextUtils.isEmpty(str) ? "" : "\n" + Utils.formatCashReceiptNum(mInfo.parentPhoneNumber);
         }
 
         ((TextView)findViewById(R.id.txt_parent)).setText(str);

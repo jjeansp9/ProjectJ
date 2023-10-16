@@ -103,6 +103,7 @@ public class InformedQuestionActivity extends BaseActivity {
     private int selProcess3 = -1;
 
     private int _memberSeq = 0;
+    private int _userGubun = -1;
 
     private static final String PREF= "Y";
     private static final String NON_PREF= "N";
@@ -180,6 +181,7 @@ public class InformedQuestionActivity extends BaseActivity {
             }
 
             _memberSeq = PreferenceUtil.getUserSeq(mContext);
+            _userGubun = PreferenceUtil.getUserGubun(mContext);
 
             Intent intent= getIntent();
 
@@ -206,6 +208,8 @@ public class InformedQuestionActivity extends BaseActivity {
                     }else{
                         mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
                     }
+                }else{
+                    mInfo = new TestReserveData();
                 }
             }
         }catch (Exception e) {
@@ -270,13 +274,11 @@ public class InformedQuestionActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
             LogMgr.e(TAG, "EVENT EDIT");
-        }
-        else{
+        } else{
             if (mInfo != null) {
                 setView();
                 LogMgr.e(TAG, "EVENT WRITE1");
             }
-            LogMgr.e(TAG, "EVENT WRITE");
         }
         setSpinner();
 
@@ -290,27 +292,27 @@ public class InformedQuestionActivity extends BaseActivity {
 
         for (RadioButton rb : rbList) rb.setOnCheckedChangeListener(listener);
 
-        if (request.grade.contains(getString(R.string.informed_question_elementary))) {
-            tvQuestionNo6.setVisibility(View.GONE);
-            rgPrefArea.setVisibility(View.GONE);
+        if (request.grade != null){
+            if (request.grade.contains(getString(R.string.informed_question_elementary))) {
+                tvQuestionNo6.setVisibility(View.GONE);
+                rgPrefArea.setVisibility(View.GONE);
 
-        } else if (request.grade.contains(getString(R.string.informed_question_middle))) {
-            tvQuestionNo4.setVisibility(View.GONE);
-            mRecyclerArea.setVisibility(View.GONE);
-            tvQuestionNo5.setVisibility(View.GONE);
-            mRecyclerSchool.setVisibility(View.GONE);
+            } else if (request.grade.contains(getString(R.string.informed_question_middle))) {
+                tvQuestionNo4.setVisibility(View.GONE);
+                mRecyclerArea.setVisibility(View.GONE);
+                tvQuestionNo5.setVisibility(View.GONE);
+                mRecyclerSchool.setVisibility(View.GONE);
 
-        } else if (request.grade.contains(getString(R.string.informed_question_high))) {
-            tvQuestionNo1.setVisibility(View.GONE);
-            rgSelDay.setVisibility(View.GONE);
-            tvQuestionNo4.setVisibility(View.GONE);
-            mRecyclerArea.setVisibility(View.GONE);
-            tvQuestionNo5.setVisibility(View.GONE);
-            mRecyclerSchool.setVisibility(View.GONE);
-            tvQuestionNo6.setVisibility(View.GONE);
-            rgPrefArea.setVisibility(View.GONE);
-
-
+            } else if (request.grade.contains(getString(R.string.informed_question_high))) {
+                tvQuestionNo1.setVisibility(View.GONE);
+                rgSelDay.setVisibility(View.GONE);
+                tvQuestionNo4.setVisibility(View.GONE);
+                mRecyclerArea.setVisibility(View.GONE);
+                tvQuestionNo5.setVisibility(View.GONE);
+                mRecyclerSchool.setVisibility(View.GONE);
+                tvQuestionNo6.setVisibility(View.GONE);
+                rgPrefArea.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -362,7 +364,7 @@ public class InformedQuestionActivity extends BaseActivity {
         selProcess2 = TextUtils.isEmpty(mInfo.process2) ? -1 : Integer.parseInt(mInfo.process2);
         selProcess3 = TextUtils.isEmpty(mInfo.process3) ? -1 : Integer.parseInt(mInfo.process3);
 
-        LogMgr.e(TAG, "selProcess1: " + selProcess1);
+        //LogMgr.e(TAG, "selProcess1: " + selProcess1);
 
         mEtLearningProc1.setText(Utils.getStr(mInfo.processEtc1));
         mEtLearningProc2.setText(Utils.getStr(mInfo.processEtc2));
@@ -483,8 +485,6 @@ public class InformedQuestionActivity extends BaseActivity {
 
         if(RetrofitClient.getInstance() != null) {
 
-            if (writeMode.equals(Constants.WRITE_EDIT)) request.seq = mInfo.seq;
-
             RetrofitClient.getApiInterface().requestLevelTest(request).enqueue(new Callback<BaseResponse>() {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
@@ -531,6 +531,9 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private void requestData(){
         try {
+
+            if (writeMode.equals(Constants.WRITE_EDIT)) request.seq = mInfo.seq+"";
+
             request.memberSeq = _memberSeq;
 
             if (rbSelDay1.isChecked()) selDay = "0";
@@ -615,6 +618,7 @@ public class InformedQuestionActivity extends BaseActivity {
                 request.check3 = mInfo.check3;
                 request.check4 = mInfo.check4;
             }
+
 
             if (request != null){
                 LogMgr.i(TAG+ "putData", "\nmemberSeq : " + request.memberSeq
