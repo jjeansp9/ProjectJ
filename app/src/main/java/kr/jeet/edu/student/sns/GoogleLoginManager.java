@@ -32,6 +32,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 
 public class GoogleLoginManager extends SNSLoginManager {
     private static final String TAG = GoogleLoginManager.class.getSimpleName();
@@ -117,8 +118,8 @@ public class GoogleLoginManager extends SNSLoginManager {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String userId = account.getId();
-            String name = account.getDisplayName();
+            String userId = Utils.getStr(account.getId());
+            String name = Utils.getStr(account.getDisplayName());
 
             LogMgr.e(TAG, "Google userId : " + userId);
             LogMgr.e(TAG, "Google name : " + name);

@@ -866,6 +866,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
     }
 
+    // 유입경로 api
     private void requestInflow() {
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().requestInflow().enqueue(new Callback<TestInflowResponse>() {
@@ -874,13 +875,17 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     if (response.isSuccessful()) {
                         if (response.body() != null) {
                             List<InflowData> getData = response.body().data;
-                            List<String> inflowNames = new ArrayList<>();
 
-                            for (InflowData inflowData : getData) {
-                                inflowNames.add(inflowData.inflowName);
+                            if (getData != null){
+                                List<String> inflowNames = new ArrayList<>();
+
+                                for (InflowData inflowData : getData) {
+                                    inflowNames.add(inflowData.inflowName);
+                                }
+                                Collections.sort(inflowNames, Collections.reverseOrder());
+
+                                mSpinnerFunnel.setItems(inflowNames);
                             }
-
-                            mSpinnerFunnel.setItems(inflowNames);
                         }
                     } else {
                         Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

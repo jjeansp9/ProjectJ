@@ -31,7 +31,8 @@ public class DataManager {
     private List<ACAData> ACAList = new ArrayList<>();
     private List<LTCData> LTCList = new ArrayList<>();
     private List<SchoolData> SchoolList = new ArrayList<>();
-
+    //지역별 캠퍼스 리스트
+    private ArrayMap<String, ACAData> LocalACAListMap = new ArrayMap<>();
     //학교 리스트
     private ArrayMap<Integer, SchoolData> SchoolListMap = new ArrayMap<>();
 
@@ -178,6 +179,40 @@ public class DataManager {
         int key = data.clsCode;
         if(!clsListMap.containsKey(key)) {
             clsListMap.put(key, data);
+            return true;
+        }
+        return false;
+    }
+
+    public ArrayMap<String, ACAData> getLocalACAListMap() {
+        return LocalACAListMap;
+    }
+    public void setLocalACAListMap(ArrayMap<String, ACAData> map) {
+        this.LocalACAListMap =  map;
+    }
+    public boolean initLocalACAListMap(List<ACAData> list)
+    {
+        if(list == null) return false;
+        if(!LocalACAListMap.isEmpty()) LocalACAListMap.clear();
+        for(ACAData item : list) {
+            String key = item.acaCode;
+            if (!LocalACAListMap.containsKey(key)) {
+                LocalACAListMap.put(key, item);
+            }
+        }
+        return true;
+    }
+    public ACAData getLocalACAData(String acaCode) {
+        if(LocalACAListMap.containsKey(acaCode)) {
+            return LocalACAListMap.get(acaCode);
+        }
+        return null;
+    }
+    public boolean setLocalACAData(ACAData data) {
+        if(data == null) return false;
+        String key = data.acaCode;
+        if(!LocalACAListMap.containsKey(key)) {
+            LocalACAListMap.put(key, data);
             return true;
         }
         return false;

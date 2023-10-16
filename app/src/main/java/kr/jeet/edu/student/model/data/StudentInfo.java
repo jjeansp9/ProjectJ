@@ -14,7 +14,8 @@ public class StudentInfo { // 원생 정보
 
     @SerializedName("acaCode")
     public String acaCode;
-
+    @SerializedName("appAcaCode")
+    public String appAcaCode; // Local캠퍼스 코드
     @SerializedName("deptCode")
     public int deptCode;
 
@@ -23,7 +24,8 @@ public class StudentInfo { // 원생 정보
 
     @SerializedName("acaName")
     public String acaName;
-
+    @SerializedName("appAcaName")
+    public String appAcaName; // Local캠퍼스 이름
     @SerializedName("deptName")
     public String deptName;
 

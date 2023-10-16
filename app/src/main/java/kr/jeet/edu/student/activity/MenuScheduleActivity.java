@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,17 +16,22 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.ScheduleListAdapter;
@@ -35,7 +41,9 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.ScheduleData;
 import kr.jeet.edu.student.model.data.HolidayData;
+import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
+import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -60,11 +68,12 @@ import retrofit2.Response;
 public class MenuScheduleActivity extends BaseActivity {
 
     private static final String TAG = "ScheduleActivity";
-
-    private static final int CMD_GET_SCHEDULES = 0;
+    private static final int CMD_GET_ACA_LIST = 0;
+    private static final int CMD_GET_GRADE_LIST = 1;
+    private static final int CMD_GET_SCHEDULES = 2;
 
     private TextView mTvListEmpty, mTvHolidayDate, mTvHoliday;
-    private PowerSpinnerView mSpinnerCampus;
+    private PowerSpinnerView _spinnerCampus, _spinnerGrade;
     private MaterialCalendarView mCalendarView;
     private RecyclerView mRecyclerSchedule;
     private ScheduleListAdapter mAdapter;
@@ -79,8 +88,13 @@ public class MenuScheduleActivity extends BaseActivity {
     private ArrayList<HolidayData> calHolidayList = new ArrayList<>();
 
     private String _acaCode = "";
+    private String _appAcaCode = "";
     private String _acaName = "";
     private String _userType = "";
+    List<ACAData> _ACAList = new ArrayList<>();
+    List<StudentGradeData> _GradeList = new ArrayList<>();
+    ACAData _selectedACA = null;
+    private StudentGradeData _selectedGrade = null;
 
     Date _selectedDate = new Date();
 
@@ -95,12 +109,29 @@ public class MenuScheduleActivity extends BaseActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
+                case CMD_GET_ACA_LIST:
+                    break;
+                case CMD_GET_GRADE_LIST:
+                    if (_GradeList != null && !_GradeList.isEmpty()) {
+//                        _spinnerGrade.setEnabled(true);
+                        Utils.updateSpinnerList(_spinnerGrade, _GradeList.stream().map(t -> t.gubunName).collect(Collectors.toList()));
+                        Optional optional = (_GradeList.stream().filter(t->TextUtils.isEmpty(t.gubunCode)).findFirst());
+                        if(optional.isPresent()) {
+                            int index = _GradeList.indexOf(optional.get());
+                            _spinnerGrade.selectItemByIndex(index);
+                        }else{
+                            _spinnerGrade.selectItemByIndex(0);
+                        }
+                    }
+//                    _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
+                    break;
+
                 case CMD_GET_SCHEDULES:
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(_selectedDate);
                     int year = cal.get(Calendar.YEAR);
                     int month = cal.get(Calendar.MONTH) + 1;
-                    requestScheduleList(_acaCode, year, month);
+                    requestScheduleList(year, month);
                     break;
             }
         }
@@ -120,14 +151,15 @@ public class MenuScheduleActivity extends BaseActivity {
         _userType = PreferenceUtil.getUserType(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
+        _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(_selectedDate);
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
 
-        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode, year, month);
-        else requestScheduleList("", year, month);
+//        if (_userType.equals(Constants.MEMBER)) requestScheduleList(_acaCode, year, month);
+//        else requestScheduleList("", year, month);
     }
 
     @Override
@@ -141,7 +173,9 @@ public class MenuScheduleActivity extends BaseActivity {
 
     @Override
     void initView() {
-        mSpinnerCampus = findViewById(R.id.spinner_schedule_campus);
+        _spinnerCampus = findViewById(R.id.spinner_schedule_campus);
+        _spinnerGrade = findViewById(R.id.spinner_schedule_grade);
+
         mCalendarView = findViewById(R.id.cv_schedule);
         mRecyclerSchedule = findViewById(R.id.recycler_schedule);
         mTvListEmpty = findViewById(R.id.tv_schedule_empty_list);
@@ -156,27 +190,101 @@ public class MenuScheduleActivity extends BaseActivity {
     }
 
     private void setSpinner(){
-        List<ACAData> spinList = DataManager.getInstance().getACAList();
+        _spinnerCampus.setIsFocusable(true);
+//        _ACAList.add(new ACAData("", "전체", ""));
+        _ACAList.addAll(DataManager.getInstance().getLocalACAListMap().values());
         List<String> acaNames = new ArrayList<>();
+        for (ACAData data : _ACAList) { acaNames.add(data.acaName); }
 
-        acaNames.add(getString(R.string.announcement_spinner_default_text));
+        _spinnerCampus.setItems(acaNames);
+        _spinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            if(oldItem != null && oldItem.equals(newItem)) return;
+            ACAData selectedData = null;
+            Optional optional =  _ACAList.stream().filter(t -> t.acaName == newItem).findFirst();
+            if(optional.isPresent()) {
+                _selectedACA = (ACAData) optional.get();
+//                _listAdapter.setACACode(_selectedACA.acaCode);
+                LogMgr.w(TAG,"selectedACA = " + _selectedACA.acaCode + " / " + _selectedACA.acaName);
+            }
+            if(_selectedACA != null) {
+                LogMgr.w("selectedACA = " + _selectedACA.acaCode + " / " + _selectedACA.acaName);
+                if (_selectedGrade != null) {
+                    _selectedGrade = null;
+                }
+                if (_spinnerGrade != null) _spinnerGrade.clearSelectedItem();
+                if(!TextUtils.isEmpty(_selectedACA.acaCode)) {
+                    requestGradeList(_selectedACA.acaCode);
+                }else{
+                    if(_GradeList != null) _GradeList.clear();
+                    _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
+                }
+                LogMgr.w(TAG, "_spinnerGrade == null" + (_spinnerGrade == null));
+                if(TextUtils.isEmpty(_selectedACA.acaCode)){   //전체
+                    if (_spinnerGrade != null) _spinnerGrade.setEnabled(false);
+                }else{
+                    if (_spinnerGrade != null) _spinnerGrade.setEnabled(true);
+                }
+            }
 
-        for (ACAData data : spinList) acaNames.add(data.acaName);
 
-        if (_userType.equals(Constants.MEMBER)) {
-            if (TextUtils.isEmpty(_acaName)) mSpinnerCampus.setText(acaNames.get(0));
-            else mSpinnerCampus.setText(_acaName);
-        }
-        else mSpinnerCampus.setText(acaNames.get(0));
-
-        mSpinnerCampus.setItems(acaNames);
-        mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
-            else _acaCode = "";
-
-            _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
         });
-        mSpinnerCampus.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerCampus.dismiss());
+        _spinnerCampus.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                _spinnerCampus.dismiss();
+            }
+        });
+        _spinnerCampus.setLifecycleOwner(this);
+        if(!TextUtils.isEmpty(_appAcaCode) && Constants.MEMBER.equals(_userType)){
+            ACAData selectedACA = null;
+            Optional option =  _ACAList.stream().filter(t -> t.acaCode.equals(_appAcaCode)).findFirst();
+            if(option.isPresent()) {
+                selectedACA = (ACAData) option.get();
+            }
+
+            try {
+                if (selectedACA != null) {
+                    int selectedIndex = _ACAList.indexOf(selectedACA);
+                    _spinnerCampus.selectItemByIndex(selectedIndex); //전체
+
+                } else {
+                    _spinnerCampus.selectItemByIndex(0);
+                }
+            }catch(Exception ex){
+                ex.printStackTrace();
+            }
+
+        }else{
+            _spinnerCampus.selectItemByIndex(0);
+        }
+
+        _spinnerGrade.setIsFocusable(true);
+        _spinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            if(oldItem != null && oldItem.equals(newItem)) return;
+            ACAData selectedData = null;
+            Optional optional =  _GradeList.stream().filter(t -> t.gubunName == newItem).findFirst();
+            if(optional.isPresent()) {
+                _selectedGrade = (StudentGradeData) optional.get();
+//                _listAdapter.setACACode(_selectedACA.acaCode);
+                LogMgr.w(TAG,"selectedACA = " + _selectedGrade.gubunCode + " / " + _selectedGrade.gubunName);
+            }
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTime(_selectedDate);
+            Message msg = _handler.obtainMessage(CMD_GET_SCHEDULES);//
+//            msg.arg1 = calendar.get(Calendar.YEAR);
+//            msg.arg2 = calendar.get(Calendar.MONTH);
+            _handler.sendMessage(msg);
+
+        });
+        _spinnerGrade.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                _spinnerGrade.dismiss();
+            }
+        });
+        _spinnerGrade.setLifecycleOwner(this);
+
+
     }
 
     private void setTvHolidayDate(){
@@ -304,10 +412,58 @@ public class MenuScheduleActivity extends BaseActivity {
             startActivity(targetIntent);
         }
     }
+    private void requestGradeList(String acaCode){
+        if(RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getStudentGradeList(acaCode).enqueue(new Callback<StudentGradeListResponse>() {
+                @Override
+                public void onResponse(Call<StudentGradeListResponse> call, Response<StudentGradeListResponse> response) {
+                    if(response.isSuccessful()) {
 
-    private void requestScheduleList(String acaCode, int year, int month) {
+                        if(response.body() != null) {
+                            List<StudentGradeData> list = response.body().data;
+                            if(_GradeList != null) _GradeList.clear();
+                            _GradeList.add(new StudentGradeData("", "구분 전체"));
+                            _GradeList.addAll(list);
+                            Collections.sort(_GradeList, new Comparator<StudentGradeData>() {
+                                @Override
+                                public int compare(StudentGradeData schoolData, StudentGradeData t1) {
+                                    return schoolData.gubunCode.compareTo(t1.gubunCode);
+                                }
+                            });
+                            _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
+                        }
+                    } else {
+
+                        try {
+                            LogMgr.e(TAG, "requestACAList() errBody : " + response.errorBody().string());
+                        } catch (IOException e) {
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<StudentGradeListResponse> call, Throwable t) {
+                    LogMgr.e(TAG, "requestACAList() onFailure >> " + t.getMessage());
+//                    _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
+                }
+            });
+        }
+    }
+
+    private void requestScheduleList(int year, int month) {
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getScheduleList(acaCode, year, month).enqueue(new Callback<ScheduleListResponse>() {
+            String acaCode = "";
+            String acaGubunCode = "";
+            if(_selectedACA != null) {
+                acaCode = _selectedACA.acaCode;
+            }
+            if(_selectedGrade != null) {
+                acaGubunCode =_selectedGrade.gubunCode;
+            }
+
+            RetrofitClient.getApiInterface().getScheduleList(acaCode,acaGubunCode, year, month).enqueue(new Callback<ScheduleListResponse>() {
                 @Override
                 public void onResponse(Call<ScheduleListResponse> call, Response<ScheduleListResponse> response) {
                     if (mList != null && mList.size() > 0) mList.clear();
@@ -336,7 +492,7 @@ public class MenuScheduleActivity extends BaseActivity {
 
                                     for (ScheduleData item : getData) calendarDaySet.add(CalendarDay.from(item.year, item.month-1, item.day));
 
-                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
+//                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }
                             }
 

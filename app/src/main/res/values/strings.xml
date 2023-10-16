@@ -76,7 +76,7 @@
     <string name="name">이름</string>
     <string name="name_stu">원생 이름</string>
     <string name="birth">생년월일</string>
-    <string name="tv_class">클래스</string>
+    <string name="tv_class">클래스 정보없음</string>
     <string name="gender">성별</string>
     <string name="male">남</string>
     <string name="female">여</string>
@@ -228,6 +228,9 @@
     <string name="won">원</string>
     <string name="year">년</string>
     <string name="month">월</string>
+    <string name="msg_changed_class">반 정보가 갱신되었습니다.</string>
+    <string name="msg_empty_class">반 정보가 없습니다.</string>
+
 
     <string name="consultation_request_day_desired">상담 희망일</string>
     <string name="consultation_request_sel_date">날짜를 선택해주세요</string>
@@ -471,6 +474,7 @@
     <string name="informed_question_update_success">테스트예약이 수정되었습니다. 신규테스트 취소 시 데스크로 연락주시기 바랍니다.</string>
     <string name="title_search_school">학교 검색</string>
 
+
     <string name="elementary_school"><font color="@color/red">초등</font></string>
     <string name="weekday_afternoon_5">평일 오후 05:00</string>
     <string name="weekday_afternoon_7">평일 오후 07:00</string>
@@ -660,10 +664,17 @@
     <string name="hint_bus_phone">연락처</string>
     <string name="hint_bus_onoff">운행정보</string>
     <string name="title_bus_timetable">차량시간표</string>
+    <string name="title_whole_bus_timetable">차량시간표 전체보기</string>
     <string name="bus_route_binding_error">잘못된 노선 정보입니다.</string>
     <string name="bus_route_not_found">노선 정보를 찾을 수 없습니다.</string>
     <string name="empty_list_bus_route">버스 노선 정보가 없습니다.</string>
+    <string name="title_main_campus">캠퍼스</string>
     <string name="hint_select_campus">캠퍼스를 선택하세요.</string>
+    <string name="hint_select_grade">등급을 선택하세요.</string>
+    <string name="hint_main_school_grade">캠퍼스구분</string>
+    <string name="hint_empty_school_grade">캠퍼스구분 정보 없음</string>
+    <string name="msg_empty_school_grade">캠퍼스구분을 선택해 주세요.</string>
+
     <string name="hint_select_bus">차량 선택</string>
     <string name="item_total">전체</string>
     <string name="title_detail">상세보기</string>

@@ -23,101 +23,65 @@
 
         <com.skydoves.powerspinner.PowerSpinnerView
             android:id="@+id/spinner_brf_campus"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginHorizontal="@dimen/layout_margin"
-            android:layout_marginTop="12dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:layout_marginStart="@dimen/layout_margin_16"
+            android:layout_marginEnd="@dimen/layout_margin_4"
+            android:layout_marginTop="@dimen/layout_margin_16"
             android:paddingHorizontal="@dimen/layout_margin_16"
             android:paddingVertical="@dimen/layout_margin_12"
+            android:hint="@string/title_main_campus"
             android:textColor="@color/black"
             android:textSize="@dimen/font_size"
             android:maxLines="1"
             android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/spinner_brf_grade"
             app:spinner_arrow_gravity="end"
-            app:spinner_arrow_tint="@color/blackgray"
+            app:spinner_arrow_tint="@color/darkgray"
+            app:spinner_selected_item_background="@color/color_spinner_selected_item"
             app:spinner_divider_color="@color/line"
             app:spinner_divider_show="true"
             app:spinner_divider_size="0.4dp"
+            app:spinner_item_height="@dimen/spinner_item_height"
             app:spinner_popup_animation="dropdown"
             app:spinner_popup_background="@drawable/selector_spinner_item"
             app:spinner_popup_elevation="2dp"
             android:focusable="true"
-            android:background="@drawable/bg_campus_spinner"/>
+            android:background="@drawable/selector_spinner_normal"/>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/img_brf_back"-->
-<!--            android:layout_width="@dimen/calendar_arrow_size"-->
-<!--            android:layout_height="@dimen/calendar_arrow_size"-->
-<!--            app:layout_constraintEnd_toStartOf="@id/layout_brf_year_month"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:layout_marginEnd="12dp"-->
-<!--            android:padding="4dp"-->
-<!--            android:src="@drawable/bt_month_back_nor"-->
-<!--            android:stateListAnimator="@xml/animate_button_push"/>-->
-
-<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--            android:id="@+id/layout_brf_year_month"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:stateListAnimator="@xml/animate_button_push"-->
-<!--            android:padding="8dp">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_brf_year"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintEnd_toStartOf="@id/tv_brf_month"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="@dimen/font_size_large"-->
-<!--                android:textColor="@color/font_color_default"-->
-<!--                android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/tv_brf_month"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toEndOf="@id/tv_brf_year"-->
-<!--                app:layout_constraintTop_toTopOf="parent"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                android:layout_marginStart="6dp"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="@dimen/font_size_large"-->
-<!--                android:textColor="@color/font_color_default"-->
-<!--                android:textAppearance="@style/CalendarHeaderTextAppearance"/>-->
-
-<!--            <ImageView-->
-<!--                android:layout_width="29dp"-->
-<!--                android:layout_height="24dp"-->
-<!--                android:layout_marginStart="@dimen/layout_margin_8"-->
-<!--                android:src="@drawable/bt_calendar_nor"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toEndOf="@id/tv_brf_month"-->
-<!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--        <ImageView-->
-<!--            android:id="@+id/img_brf_next"-->
-<!--            android:layout_width="@dimen/calendar_arrow_size"-->
-<!--            android:layout_height="@dimen/calendar_arrow_size"-->
-<!--            app:layout_constraintStart_toEndOf="@id/layout_brf_year_month"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/spinner_brf_campus"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:layout_marginStart="12dp"-->
-<!--            android:padding="4dp"-->
-<!--            android:src="@drawable/bt_month_next_nor"-->
-<!--            android:stateListAnimator="@xml/animate_button_push"/>-->
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/spinner_brf_grade"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            android:layout_marginStart="@dimen/layout_margin_4"
+            android:layout_marginEnd="@dimen/layout_margin_16"
+            android:layout_marginTop="@dimen/layout_margin_16"
+            android:paddingHorizontal="@dimen/layout_margin_16"
+            android:paddingVertical="@dimen/layout_margin_12"
+            android:hint="@string/hint_main_school_grade"
+            android:textColor="@color/black"
+            android:textSize="@dimen/font_size"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/spinner_brf_campus"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:spinner_arrow_gravity="end"
+            app:spinner_arrow_tint="@color/darkgray"
+            app:spinner_selected_item_background="@color/color_spinner_selected_item"
+            app:spinner_divider_color="@color/line"
+            app:spinner_divider_show="true"
+            app:spinner_divider_size="0.4dp"
+            app:spinner_item_height="@dimen/spinner_item_height"
+            app:spinner_popup_animation="dropdown"
+            app:spinner_popup_background="@drawable/selector_spinner_item"
+            app:spinner_popup_elevation="2dp"
+            android:focusable="true"
+            android:background="@drawable/selector_spinner_normal"/>
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/btn_brf_previous"

@@ -5,7 +5,11 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,11 +26,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
@@ -38,11 +47,14 @@ import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
+import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
+import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,17 +63,26 @@ import retrofit2.Response;
 public class MenuAnnouncementActivity extends BaseActivity {
 
     private String TAG = MenuAnnouncementActivity.class.getSimpleName();
+    private static final int CMD_GET_ACA_LIST = 0;
+    private static final int CMD_GET_GRADE_LIST = 1;
 
     private RecyclerView mRecyclerView;
     private TextView mTvListEmpty;
-    private PowerSpinnerView mPowerSpinner;
+    private PowerSpinnerView mSpinnerCampus, mSpinnerGrade;
     private SwipeRefreshLayout mSwipeRefresh;
+    List<ACAData> _ACAList = new ArrayList<>();
+    List<String> _ACANameList = new ArrayList<>();
+    List<StudentGradeData> _GradeList = new ArrayList<>();
 
     private AnnouncementListAdapter mAdapter;
     private ArrayList<AnnouncementData> mList = new ArrayList<>();
 
     private String _acaCode = "";
     private String _acaName = "";
+    private String _appAcaCode = "";
+    private ACAData _selectedLocalACA = null;
+    private StudentGradeData _selectedGrade = null;
+
     String _userType = "";
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -70,10 +91,37 @@ public class MenuAnnouncementActivity extends BaseActivity {
         if(result.getResultCode() != RESULT_CANCELED) {
             if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(added) requestBoardList(_acaCode);
+                if(_selectedLocalACA != null)
+                    LogMgr.e("acaCode = " + _selectedLocalACA.acaCode);
+                requestBoardList();
+
             }
         }
     });
+    private Handler _handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch (msg.what) {
+
+                case CMD_GET_ACA_LIST:
+                    break;
+                case CMD_GET_GRADE_LIST:
+                    if (_GradeList != null && !_GradeList.isEmpty()) {
+//                        _spinnerGrade.setEnabled(true);
+                        Utils.updateSpinnerList(mSpinnerGrade, _GradeList.stream().map(t -> t.gubunName).collect(Collectors.toList()));
+                        Optional optional = (_GradeList.stream().filter(t->TextUtils.isEmpty(t.gubunCode)).findFirst());
+                        if(optional.isPresent()) {
+                            int index = _GradeList.indexOf(optional.get());
+                            mSpinnerGrade.selectItemByIndex(index);
+                        }else{
+                            mSpinnerGrade.selectItemByIndex(0);
+                        }
+                    }
+                    break;
+
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +136,9 @@ public class MenuAnnouncementActivity extends BaseActivity {
         _userType = PreferenceUtil.getUserType(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
-
-        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
-        else requestBoardList("");
+        _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);
+//        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
+//        else requestBoardList("");
     }
 
     @Override
@@ -109,13 +157,50 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
         mSwipeRefresh = findViewById(R.id.refresh_layout);
         mRecyclerView = findViewById(R.id.recycler_announcement);
-        mPowerSpinner = findViewById(R.id.power_spinner);
+        mSpinnerCampus = findViewById(R.id.spinner_campus);
+        mSpinnerGrade = findViewById(R.id.spinner_grade);
         mTvListEmpty = findViewById(R.id.tv_announcement_list_empty);
 
         setListRecycler();
         setListSpinner();
 
-        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList(_acaCode) );
+        mSwipeRefresh.setOnRefreshListener( () -> requestBoardList() );
+//        LogMgr.e(TAG, "appACACode = " + _appAcaCode + " userType = " + _userType);
+        if(!TextUtils.isEmpty(_appAcaCode) && Constants.MEMBER.equals(_userType)){
+            ACAData selectedACA = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                Optional option =  _ACAList.stream().filter(t -> t.acaCode.equals(_appAcaCode)).findFirst();
+                if(option.isPresent()) {
+                    selectedACA = (ACAData) option.get();
+                }
+            } else {
+                for (ACAData data : _ACAList) {
+                    if (data.acaCode == _appAcaCode) {
+                        selectedACA = data;
+                        break;
+                    }
+                }
+            }
+            try {
+                if (selectedACA != null) {
+//                    LogMgr.e(TAG, "selectedACA != null");
+                    int selectedIndex = _ACAList.indexOf(selectedACA);
+                    if(selectedIndex >= 0) {
+                        mSpinnerCampus.selectItemByIndex(selectedIndex);
+                    }
+                } else {
+//                    LogMgr.e(TAG, "selectedACA == null");
+                    mSpinnerCampus.selectItemByIndex(0);
+                }
+            }catch(Exception ex){
+
+            }
+
+        }else{
+//            LogMgr.e(TAG, "else~");
+            mSpinnerCampus.selectItemByIndex(0);
+        }
+
     }
 
     private void setListRecycler(){
@@ -134,7 +219,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         && (mList != null && !mList.isEmpty()))
                 {
                     int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    requestBoardList(_acaCode, lastNoticeSeq);
+                    requestBoardList(lastNoticeSeq);
                 }
             }
         });
@@ -151,39 +236,86 @@ public class MenuAnnouncementActivity extends BaseActivity {
     }
 
     private void setListSpinner(){
-        mPowerSpinner.setIsFocusable(true);
+        _ACAList.clear();
+//        _ACAList.add(new ACAData("", "전체", ""));
+        _ACAList.addAll(DataManager.getInstance().getLocalACAListMap().values());
+        if(_ACAList != null) _ACANameList = _ACAList.stream().map(t -> t.acaName).collect(Collectors.toList());
+        mSpinnerCampus.setItems(_ACANameList);
+        mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            LogMgr.e(newItem + " selected");
+            if(oldItem != null && oldItem.equals(newItem)) return;
+            ACAData selectedData = null;
+            Optional optional = _ACAList.stream().filter(t -> t.acaName == newItem).findFirst();
+            if(optional.isPresent()) {
+                selectedData = (ACAData) optional.get();
+            }
+            _selectedLocalACA = selectedData;
+            if(_selectedLocalACA != null) {
+                LogMgr.w("selectedACA = " + _selectedLocalACA.acaCode + " / " + _selectedLocalACA.acaName);
+                if (_selectedGrade != null) {
+                    _selectedGrade = null;
+                }
+                if (mSpinnerGrade != null) mSpinnerGrade.clearSelectedItem();
+                if(!TextUtils.isEmpty(_selectedLocalACA.acaCode)) {
+                    requestGradeList(_selectedLocalACA.acaCode);
+                }else{
+                    if(_GradeList != null) _GradeList.clear();
+                    _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
+                }
+                if(TextUtils.isEmpty(_selectedLocalACA.acaCode)){   //전체
+                    if (mSpinnerGrade != null) mSpinnerGrade.setEnabled(false);
+                }else{
+                    if (mSpinnerGrade != null) mSpinnerGrade.setEnabled(true);
+                }
 
-        List<ACAData> spinList = DataManager.getInstance().getACAList();
-        List<String> acaNames = new ArrayList<>();
-        ACAData selectedACA = null;
+            }
 
-        acaNames.add(getString(R.string.announcement_spinner_default_text));
-
-        for (ACAData data : spinList) acaNames.add(data.acaName);
-
-        if (_userType.equals(Constants.MEMBER)) {
-            if (TextUtils.isEmpty(_acaName)) mPowerSpinner.setText(acaNames.get(0));
-            else mPowerSpinner.setText(_acaName);
-        }
-        else mPowerSpinner.setText(acaNames.get(0));
-
-        mPowerSpinner.setItems(acaNames);
-        mPowerSpinner.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            if (newIndex > 0) _acaCode = spinList.get(newIndex - 1).acaCode;
-            else _acaCode = "";
-
-            requestBoardList(_acaCode);
         });
-        mPowerSpinner.setLifecycleOwner(this);
+        mSpinnerCampus.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                mSpinnerCampus.dismiss();
+            }
+        });
+        mSpinnerCampus.setLifecycleOwner(this);
+
+        mSpinnerGrade = findViewById(R.id.spinner_grade);
+        mSpinnerGrade.setIsFocusable(true);
+        mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            LogMgr.e(newItem + " selected");
+            if(oldItem != null && oldItem.equals(newItem)) return;
+            StudentGradeData selectedData = null;
+            Optional optional = _GradeList.stream().filter(t -> t.gubunName == newItem).findFirst();
+            if(optional.isPresent()) {
+                selectedData = (StudentGradeData) optional.get();
+            }
+            _selectedGrade = selectedData;
+            if(_selectedGrade != null) {
+                LogMgr.w("selectedGubun = " + _selectedGrade.gubunCode + " / " + _selectedGrade.gubunName);
+            }
+            requestBoardList();
+        });
+        mSpinnerGrade.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                mSpinnerGrade.dismiss();
+            }
+        });
+        mSpinnerGrade.setLifecycleOwner(this);
+
     }
 
-    private void requestBoardList(String acaCodes, int... lastSeq) {
+    private void requestBoardList(int... lastSeq) {
         int lastNoticeSeq = 0;
         if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
+        String acaCode = "";
+        String gradeCode = "";
+        if(_selectedLocalACA != null) acaCode = _selectedLocalACA.acaCode;
+        if(_selectedGrade != null) gradeCode = String.valueOf(_selectedGrade.gubunCode);
 
         if (RetrofitClient.getInstance() != null) {
             int finalLastNoticeSeq = lastNoticeSeq;
-            RetrofitClient.getApiInterface().getAnnouncementList(lastNoticeSeq, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
+            RetrofitClient.getApiInterface().getAnnouncementList(lastNoticeSeq, acaCode, gradeCode).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {
@@ -198,7 +330,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                     mList.addAll(getData);
 
 
-                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCodes));
+//                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");
@@ -227,6 +359,45 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                     mSwipeRefresh.setRefreshing(false);
+                }
+            });
+        }
+    }
+    private void requestGradeList(String acaCode){
+        if(RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getStudentGradeList(acaCode).enqueue(new Callback<StudentGradeListResponse>() {
+                @Override
+                public void onResponse(Call<StudentGradeListResponse> call, Response<StudentGradeListResponse> response) {
+                    if(response.isSuccessful()) {
+
+                        if(response.body() != null) {
+                            List<StudentGradeData> list = response.body().data;
+                            if(_GradeList != null) _GradeList.clear();
+                            _GradeList.add(new StudentGradeData("", "구분 전체"));
+                            _GradeList.addAll(list);
+                            Collections.sort(_GradeList, new Comparator<StudentGradeData>() {
+                                @Override
+                                public int compare(StudentGradeData schoolData, StudentGradeData t1) {
+                                    return schoolData.gubunCode.compareTo(t1.gubunCode);
+                                }
+                            });
+                            _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
+                        }
+                    } else {
+
+                        try {
+                            LogMgr.e(TAG, "requestGrade errBody : " + response.errorBody().string());
+                        } catch (IOException e) {
+                        }
+
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<StudentGradeListResponse> call, Throwable t) {
+                    LogMgr.e(TAG, "requestGrade() onFailure >> " + t.getMessage());
+//                    _handler.sendEmptyMessage(CMD_GET_GRADE_LIST);
                 }
             });
         }

@@ -36,6 +36,7 @@ import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
+import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
@@ -55,8 +56,8 @@ import retrofit2.http.Query;
 
 public interface RetrofitApi {
 
-    //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     //public final static String SERVER_BASE_URL = "http://211.43.14.242:7777/"; // 이전 cloud local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
@@ -131,10 +132,15 @@ public interface RetrofitApi {
     @GET("aca")
     Call<GetACAListResponse> getACAList();
 
+    // 지역기준 캠퍼스 조회
+    @GET("appAca")
+    Call<GetACAListResponse> getLocalACAList();
     // 캠퍼스 목록 조회(테스트예약)
     @GET("levelTest/campuses")
     Call<LTCListResponse> getLTCList();
-
+    // 학생등급 조회 (지역기준 캠퍼스)
+    @GET("appAcaGubun/{appAcaCode}")
+    Call<StudentGradeListResponse> getStudentGradeList(@Path("appAcaCode") String appAcaCode);
     // 학교 목록 조회
     @GET("school")
     Call<SchoolListResponse> getSchoolList();
@@ -145,7 +151,7 @@ public interface RetrofitApi {
 
     // 공지사항 목록 조회
     @GET("notices")
-    Call<AnnouncementListResponse> getAnnouncementList(@Query("noticeSeq") int noticeSeq, @Query("acaCode") String acaCode);
+    Call<AnnouncementListResponse> getAnnouncementList(@Query("noticeSeq") int noticeSeq, @Query("acaCode") String acaCode, @Query("acaGubunCode") String acaGubunCode);
 
     // 공지사항 글 상세보기
     @GET("notice/{noticeSeq}")
@@ -205,7 +211,7 @@ public interface RetrofitApi {
 
     // 설명회 목록 조회
     @GET("pts")
-    Call<BriefingResponse> getBriefingList(@Query("acaCode") String acaCode, @Query("year") int year, @Query("month") int month);
+    Call<BriefingResponse> getBriefingList(@Query("acaCode") String acaCode, @Query("acaGubunCode") String acaGubunCode, @Query("year") int year, @Query("month") int month);
 
     // 설명회 글 상세보기
     @GET("pt/{ptSeq}")
@@ -229,8 +235,7 @@ public interface RetrofitApi {
 
     // 캠퍼스일정 목록 조회
     @GET("schedules")
-    Call<ScheduleListResponse> getScheduleList(@Query("acaCode") String acaCode, @Query("year") int year, @Query("month") int month);
-
+    Call<ScheduleListResponse> getScheduleList(@Query("acaCode") String acaCode, @Query("acaGubunCode") String acaGubunCode, @Query("year") int year, @Query("month") int month);
     // 캠퍼스일정 상세 조회
     @GET("schedule/{scheduleSeq}")
     Call<ScheduleDetailResponse> getScheduleDetail(@Path("scheduleSeq") int scheduleSeq);

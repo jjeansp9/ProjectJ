@@ -22,6 +22,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 
 public class NaverLoginManager extends SNSLoginManager {
     private static final String TAG = NaverLoginManager.class.getSimpleName();
@@ -128,9 +129,9 @@ public class NaverLoginManager extends SNSLoginManager {
         @Override
         public void onSuccess(Object o) {
             NidProfileResponse result = (NidProfileResponse) o ;
-            String userId = result.getProfile().getId();
-            String gender = result.getProfile().getGender();
-            String name = result.getProfile().getName();
+            String userId = Utils.getStr(result.getProfile().getId());
+            String gender = Utils.getStr(result.getProfile().getGender());
+            String name = Utils.getStr(result.getProfile().getName());
             LogMgr.e("userId -> " + userId);
             LogMgr.e("gender -> " + gender);
             LogMgr.e("name -> " + name);

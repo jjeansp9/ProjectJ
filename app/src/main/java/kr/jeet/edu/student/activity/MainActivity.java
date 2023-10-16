@@ -82,6 +82,7 @@ import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -89,13 +90,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
-
-//    1. 알림 진입 시 앱종료됨 (1) Local DB가 비워져있을 때 앱이 종료되는지 확인,
-//                          (2) DB table 컬럼추가로 인해 DB가 수정된 경우 db version에 따른 컬럼추가 및 기본값부여하는부분에 처리가 되어있는지 확인 - 추후 수정
-//    2. 테스트예약 시 인적사항 입력 -> 사전질문 수정 -> 다시 인적수정하려 뒤로이동 후 다시 사전질문 이동하면 전에 작성된 사전질문 수정사항이 적용안됨 - 추후 수정
-//    3. 자녀마다 seq 구분에서 출결현황 보여주기
-//    4. 공지사항/설명회/알림장 캠퍼스구분코드 관련 추가되었습니다. (등록/리스트/상세). 일정은 추후 수정될 예정입니다.
-//    5. 테스트시간 버그있음. 수정 필요
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -115,12 +109,13 @@ public class MainActivity extends BaseActivity {
     boolean doubleBackToExitPressedOnce = false;
 
     private final int CMD_GET_ACALIST = 1;  // ACA정보 가져오기
-    private final int CMD_GET_MEMBER_INFO = 2;       // 자녀정보 가져오기
-    private final int CMD_GET_NOTIFY_INFO = 3;       // 공지사항 정보 가져오기
-    private final int CMD_GET_BOARD_ATTRIBUTE = 4;       // 게시판 속성 조회하기
-    private final int CMD_GET_SCHOOL_LIST = 5;       // 학교 목록 조회하기
-    private final int CMD_GET_LTC_LIST = 6;       // LTC 목록 가져오기
-    private final int CMD_GET_TEACHER = 7;       // LTC 목록 가져오기
+    private final int CMD_GET_LOCAL_ACALIST = 2;  // 지역별 캠퍼스정보 가져오기
+    private final int CMD_GET_MEMBER_INFO = 3;       // 자녀정보 가져오기
+    private final int CMD_GET_NOTIFY_INFO = 4;       // 공지사항 정보 가져오기
+    private final int CMD_GET_BOARD_ATTRIBUTE = 5;       // 게시판 속성 조회하기
+    private final int CMD_GET_SCHOOL_LIST = 6;       // 학교 목록 조회하기
+    private final int CMD_GET_LTC_LIST = 7;       // LTC 목록 가져오기
+    private final int CMD_GET_TEACHER = 8;       // LTC 목록 가져오기
 
     private String _userType = "";
     private String _stName = "";
@@ -188,13 +183,15 @@ public class MainActivity extends BaseActivity {
             switch (msg.what) {
                 case CMD_GET_ACALIST:
                     requestACAList();
+                case CMD_GET_LOCAL_ACALIST :
+                    requestLocalACAList();
                     break;
                 case CMD_GET_MEMBER_INFO:
                     requestMemberInfo(_stuSeq, _stCode);
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
                     break;
                 case CMD_GET_NOTIFY_INFO:
-                    requestBoardList(acaCode);
+                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
                     break;
                 case CMD_GET_BOARD_ATTRIBUTE:
                     requestBoardAttribute();
@@ -220,7 +217,7 @@ public class MainActivity extends BaseActivity {
                 announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
                 announceRecycler.setAdapter(announceAdapter);
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(added) requestBoardList(acaCode);
+                if(added) requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
 
             }else {
                 mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
@@ -596,8 +593,7 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestACAList() Exception : ", e.getMessage()); }
 
-                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
-                    mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
+                    mHandler.sendEmptyMessage(CMD_GET_LOCAL_ACALIST);
                 }
 
                 @Override
@@ -605,6 +601,37 @@ public class MainActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestACAList() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestACAList() Exception : ", e.getMessage()); }
 
+
+                }
+            });
+        }
+    }
+    private void requestLocalACAList(){
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.getLocalACAList().enqueue(new Callback<GetACAListResponse>() {
+                @Override
+                public void onResponse(Call<GetACAListResponse> call, Response<GetACAListResponse> response) {
+                    if(response.isSuccessful()) {
+                        if(response.body() != null) {
+                            List<ACAData> list = response.body().data;
+                            DataManager.getInstance().initLocalACAListMap(list);
+                        }
+                    } else {
+
+                        try {
+                            LogMgr.e(TAG, "requestLocalACAList() errBody : " + response.errorBody().string());
+                        } catch (IOException e) {
+                        }
+
+                    }
+                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
+                    mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
+                }
+
+                @Override
+                public void onFailure(Call<GetACAListResponse> call, Throwable t) {
+                    LogMgr.e(TAG, "requestLocalACAList() onFailure >> " + t.getMessage());
                     mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
                     mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
                 }
@@ -706,7 +733,11 @@ public class MainActivity extends BaseActivity {
                                         acaCode = getData.acaCode;
                                         PreferenceUtil.setAcaCode(mContext, getData.acaCode);
                                     }
-
+    //                            if(!TextUtils.isEmpty(res.appAcaCode)) {
+                                        PreferenceUtil.setAppAcaCode(mContext, getData.appAcaCode);
+    //                            }
+    //                            if(!TextUtils.isEmpty(res.appAcaName)) {
+                                        PreferenceUtil.setAppAcaName(mContext, getData.appAcaName);
                                     List<ACAData> item = DataManager.getInstance().getACAList();
                                     for (ACAData data : item){
                                         if (acaCode.equals(data.acaCode)) {
@@ -835,9 +866,9 @@ public class MainActivity extends BaseActivity {
     }
 
     // 공지사항 목록 정보 조회
-    private void requestBoardList(String acaCodes) {
+    private void requestBoardList(String acaCode, String appgubunCode) {
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getAnnouncementList(0, acaCodes).enqueue(new Callback<AnnouncementListResponse>() {
+            RetrofitClient.getApiInterface().getAnnouncementList(0, acaCode, appgubunCode).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {

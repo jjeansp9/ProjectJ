@@ -17,6 +17,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,16 +27,19 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,6 +58,7 @@ import kr.jeet.edu.student.model.data.TuitionData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
+import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TuitionResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -112,7 +117,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private int _userGubun = 0;
     private int _stCode = 0;
     private int _clsCode = 0;
-    private String _clsName = "";
+//    private String _clsName = "";
 
     private final String MAN = "M";
     private final String WOMAN = "F";
@@ -131,6 +136,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private ArrayList<AttendanceData> _attendanceList = new ArrayList<>();
     private ArrayList<TeacherClsData> mListCls = new ArrayList<>();
     SimpleDateFormat _dateTransferFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD);
+    SimpleDateFormat _apiDateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYYMM);
     //calendar
     private Set<AttendanceSummaryData> calendarDaySet = new HashSet<>();
     private ArrayList<HolidayData> calHolidayList = new ArrayList<>();
@@ -148,8 +154,10 @@ public class MenuStudentInfoActivity extends BaseActivity {
     OtherSundayDecorator otherSundayDec = null;
     OtherSaturdayDecorator otherSaturdayDec = null;
     private Date _selectedDate = new Date();
+    private TeacherClsData _selectedClass = null;
 
     private final int CMD_GET_TUITION_INFO = 0;
+    private static final int CMD_GET_CLASS_INFO = 1;
     private static final int CMD_GET_STU_INFO = 1;
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
@@ -158,6 +166,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
+                case CMD_GET_CLASS_INFO:
+                    requestCls();
                 case CMD_GET_ATTENDANCE_INFO:
                     requestGetAttendanceList();
                     break;
@@ -260,6 +270,22 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
 
         mSpinnerCls = findViewById(R.id.spinner_cls);
+        mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+            @Override
+            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+                mSpinnerCls.dismiss();
+            }
+        });
+
+        mSpinnerCls.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            Optional optional = mListCls.stream().filter(t->String.valueOf(newItem).equals(t.clsName)).findFirst();
+            if(optional.isPresent()) {
+                _selectedClass = (TeacherClsData) optional.get();
+                _clsCode = _selectedClass.clsCode;
+                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+            }
+        });
+        mSpinnerCls.setLifecycleOwner(this);
         mSpinnerCls.setIsFocusable(true);
 
         strYear = currentYear + getString(R.string.year);
@@ -281,7 +307,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         if (mListCls.size() == 0) {
             _calendarView.setVisibility(View.VISIBLE);
-            mSpinnerCls.setVisibility(View.GONE);
+//            mSpinnerCls.setVisibility(View.GONE);
             chipGroupLegend.setVisibility(View.GONE);
 //            mTvAttendanceEmpty.setVisibility(View.VISIBLE);
             mBtnConsultation.setBackgroundResource(R.drawable.bt_menu_stu_info_consultation_request_disabled);
@@ -344,11 +370,15 @@ public class MenuStudentInfoActivity extends BaseActivity {
             Utils.yearMonthPicker(mContext, (month, year) -> {
                 LogMgr.e(TAG, year+"년 "+month+"월");
                 CalendarDay newDate = CalendarDay.from(year, month, 1);
+                CalendarDay selectedCalendarDay = CalendarDay.from(_selectedDate);
+                if(!newDate.isAfter(selectedCalendarDay) && !newDate.isBefore(selectedCalendarDay)){
+                    return;
+                }
                 runOnUiThread( () -> _calendarView.setCurrentDate(newDate) );
                 _selectedDate = newDate.getDate();
 
                 LogMgr.e(TAG, "selDate = " + _selectedDate);
-                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+                _handler.sendEmptyMessage(CMD_GET_CLASS_INFO);
             }, currentYear, currentMonth);
         });
         _calendarView.setSelectionMode(MaterialCalendarView.SELECTION_MODE_NONE);
@@ -357,6 +387,12 @@ public class MenuStudentInfoActivity extends BaseActivity {
             LogMgr.e(TAG, "calendarView onMonthChanged");
             Calendar calendar = date.getCalendar();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
+            calendar.set(Calendar.HOUR_OF_DAY, 12);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            Date selectedTime = calendar.getTime();
+            if(_selectedDate.compareTo(selectedTime) == 0) return;
             _selectedDate = calendar.getTime();
 
 //            setTvHolidayDate();
@@ -368,7 +404,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
             setDeco();
             view.invalidateDecorators();
             LogMgr.i(TAG, "DateTestMonth >> " + _selectedDate);
-            _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+            _handler.sendEmptyMessage(CMD_GET_CLASS_INFO);
         });
     }
     private void initChipGroup() {
@@ -475,7 +511,38 @@ public class MenuStudentInfoActivity extends BaseActivity {
             }
         }
     }
+    // 원생 학급 정보 조회
+    private void requestCls(){
+        if(RetrofitClient.getInstance() != null) {
+            String dateStr = _apiDateFormat.format(_selectedDate);
+            RetrofitClient.getApiInterface().requestTeacherCls(_stCode, dateStr).enqueue(new Callback<TeacherClsResponse>() {
+                @Override
+                public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null){
+                            if(mListCls != null) mListCls.clear();
+                            mListCls.addAll(response.body().data);
+                            setSpinnerTeacher();
+                        }else{
+                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
+                        }
 
+                    }catch (Exception e){ LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+
+                }
+
+                @Override
+                public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
+                    try { LogMgr.e(TAG, "requestCls() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
+
+                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+                }
+            });
+        }
+    }
     // 수강료, 교재비 조회
     private void requestTuitionList(String yearMonth){
 
@@ -613,26 +680,56 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinnerTeacher(){
+        LogMgr.e(TAG, "setSpinnerClass()");
         try {
-            List<String> sfNames = new ArrayList<>();
+            if(mListCls != null && mListCls.size() > 0) {
+                if(mSpinnerCls.getVisibility() != View.VISIBLE) {
+                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+                    mSpinnerCls.setVisibility(View.VISIBLE);
+                }
+            }else{
+                mSpinnerCls.setVisibility(View.GONE);
+                mSpinnerCls.clearSelectedItem();
+                if(_selectedClass != null) {
+                    Toast.makeText(mContext, R.string.msg_empty_class, Toast.LENGTH_SHORT).show();
+                    _selectedClass = null;
+                    _clsCode = 0;
+                }
+                if(_attendanceList != null) {
+                    _attendanceList.clear();
+                    _attendanceListAdapter.notifyDataSetChanged();
+                }
 
-            for (TeacherClsData data : mListCls) sfNames.add(data.clsName);
+//                if(!isContainClassInfo) {   //클래스정보가 없는 경우 출석을 표시할 수 없으므로 gone 처리함
+//                    layoutAttendanceArea.setVisibility(View.GONE);
+//                }
 
-            if (sfNames.size() > 0 && sfNames != null) mSpinnerCls.setText(sfNames.get(0));
-            mSpinnerCls.setItems(sfNames);
-            _clsName = mListCls.get(0).clsName;
-            _clsCode = mListCls.get(0).clsCode;
-            _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+                return;
+            }
+//            List<String> sfNames = new ArrayList<>();
 
-            mSpinnerCls.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-                _clsName = mListCls.get(newIndex).clsName;
-                _clsCode = mListCls.get(newIndex).clsCode;
-                LogMgr.e(TAG,
-                                "\nclsName:" + _clsName +
-                                "\nclsCode:" + _clsCode
-                );
-                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
-            });
+//            for (TeacherClsData data : _classList) sfNames.add(data.clsName);
+            Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
+
+
+            if(_selectedClass != null){
+                Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
+                if (optional.isPresent()) {
+                    _selectedClass = (TeacherClsData) optional.get();
+                    try {
+                        int index = mListCls.indexOf(_selectedClass);
+                        mSpinnerCls.selectItemByIndex(index);
+                    }catch(Exception ex) {
+                        Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+                        mSpinnerCls.selectItemByIndex(0);
+                    }
+                } else {
+                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+                    mSpinnerCls.selectItemByIndex(0);
+                }
+            }else{
+                mSpinnerCls.selectItemByIndex(0);
+            }
         }catch (Exception e){}
     }
 

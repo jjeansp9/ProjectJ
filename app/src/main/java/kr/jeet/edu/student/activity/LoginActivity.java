@@ -473,7 +473,7 @@ public class LoginActivity extends BaseActivity {
                                 }else if (response.body().msg.equals(Constants.USER_NOT_JEET_MEMBER)){
                                     showMessageDialog(title, msgNotJeetMember, clickOK -> hideMessageDialog(), null, false);
                                 }
-                                mAppleLogin.DeleteAccountProcess();
+                                if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
 
                             }else if(response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
                                 // {"msg":"NOT_FOUND_MEMBER"}
@@ -486,17 +486,17 @@ public class LoginActivity extends BaseActivity {
                                     intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
                                     startActivity(intent);
                                 }else{
-                                    mAppleLogin.DeleteAccountProcess();
+                                    if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
                                 }
 
                             } else {
                                 Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                                mAppleLogin.DeleteAccountProcess();
+                                if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
                             }
 
                         } catch (IOException e) {
                         }
-                        mAppleLogin.DeleteAccountProcess();
+                        if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
                     }
                     hideProgressDialog();
                 }

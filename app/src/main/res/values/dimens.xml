@@ -64,7 +64,8 @@
     <dimen name="informed_question_sub_title_margin_top">24dp</dimen>
 
     <dimen name="test_reserve_detail_item_margin">12dp</dimen>
-    <dimen name="test_reserve_detail_item_title_margin">4dp</dimen>
+    <dimen name="test_reserve_detail_item_title_margin">10dp</dimen>
+    <dimen name="test_reserve_detail_layout_study_sub">4dp</dimen>
 
     <dimen name="line_red_margin_horizontal">20dp</dimen>
     <dimen name="line_red_margin_height">2dp</dimen>
@@ -82,4 +83,6 @@
 
     <dimen name="bottom_sheet_corner_radius">20dp</dimen>
     <dimen name="bottom_sheet_top_padding">16dp</dimen>
+
+
 </resources>

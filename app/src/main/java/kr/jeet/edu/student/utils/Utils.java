@@ -501,7 +501,16 @@ public class Utils {
      * 스피너 item 개수가 기존과 다를경우 view height update
      * */
     public static void updateSpinnerList(PowerSpinnerView powerSpinner) { powerSpinner.setSpinnerPopupHeight(ConstraintLayout.LayoutParams.WRAP_CONTENT); }
-
+    public static void updateSpinnerList(PowerSpinnerView powerSpinner, List<String> newList) {
+        powerSpinner.setItems(newList);
+//        PopupWindow popupWindow = powerSpinner.getSpinnerWindow();
+//        if (popupWindow != null) {
+//            int itemCount = newList.size();
+//            int maxHeight = calculatePopupMaxHeight(context, itemCount);
+//            popupWindow.setHeight(maxHeight);
+//        }
+        powerSpinner.setSpinnerPopupHeight(ConstraintLayout.LayoutParams.WRAP_CONTENT);
+    }
     /**
     * EditText 공백제거
     * */

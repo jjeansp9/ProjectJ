@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kakao.sdk.auth.model.OAuthToken;
 import com.kakao.sdk.common.KakaoSdk;
 import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.Gender;
 import com.kakao.sdk.user.model.User;
 
 import kotlin.Unit;
@@ -24,6 +26,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 
 public class KaKaoLoginManager extends SNSLoginManager {
     private static final String TAG = KaKaoLoginManager.class.getSimpleName();
@@ -117,9 +120,13 @@ public class KaKaoLoginManager extends SNSLoginManager {
             @Override
             public Unit invoke(User user, Throwable throwable) {
                 if (user != null) {
-                    String userId = user.getId().toString();
-                    String name = user.getKakaoAccount().getProfile().getNickname();
-                    String gender = user.getKakaoAccount().getGender().toString();
+                    String userId = Utils.getStr(user.getId().toString());
+                    String name = Utils.getStr(user.getKakaoAccount().getProfile().getNickname());
+                    //String gender = Utils.getStr(user.getKakaoAccount().getGender().toString());
+                    String gender = "";
+                    Gender userGender = user.getKakaoAccount().getGender();
+                    if (userGender != null) gender = userGender.toString();
+
 
                     LogMgr.e(TAG, "userId = " + userId);
                     LogMgr.e(TAG, "gender = " + gender);

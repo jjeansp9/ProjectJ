@@ -1,5 +1,8 @@
 package kr.jeet.edu.student.utils;
 
+import static kr.jeet.edu.student.common.Constants.CAMPUS_ACA_CODE;
+import static kr.jeet.edu.student.common.Constants.CAMPUS_ACA_NAME;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -34,6 +37,8 @@ public class PreferenceUtil {
     public static final String PREF_ACA_CODE = "aca_code"; // 캠퍼스 코드
     public static final String PREF_ACA_NAME = "aca_name"; // 캠퍼스 이름
     public static final String PREF_ACA_TEL = "aca_tel"; // 캠퍼스 대표번호
+    public static final String PREF_APP_ACA_CODE = "app_aca_code"; // local캠퍼스 코드
+    public static final String PREF_APP_ACA_NAME = "app_aca_name"; // local캠퍼스 이름
 
     public static final String PREF_PUSH_TOKEN = "push_token";    //PUSH TOKEN
 
@@ -279,7 +284,7 @@ public class PreferenceUtil {
 
     public static String getAcaCode(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(PREF_ACA_CODE, Constants.CAMPUS_ACA_CODE);
+        return pref.getString(PREF_ACA_CODE, CAMPUS_ACA_CODE);
     }
 
     // aca name
@@ -290,7 +295,7 @@ public class PreferenceUtil {
 
     public static String getAcaName(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(PREF_ACA_NAME, Constants.CAMPUS_ACA_NAME);
+        return pref.getString(PREF_ACA_NAME, CAMPUS_ACA_NAME);
     }
 
     // aca name
@@ -301,9 +306,29 @@ public class PreferenceUtil {
 
     public static String getAcaTel(Context context) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(PREF_ACA_TEL, Constants.CAMPUS_ACA_NAME);
+        return pref.getString(PREF_ACA_TEL, CAMPUS_ACA_NAME);
+    }
+    // aca code
+    public static void setAppAcaCode(Context context, String acaCode) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putString(PREF_APP_ACA_CODE, acaCode).apply();
     }
 
+    public static String getAppAcaCode(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return pref.getString(PREF_APP_ACA_CODE, CAMPUS_ACA_CODE);
+    }
+
+    // aca name
+    public static void setAppAcaName(Context context, String acaName) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        pref.edit().putString(PREF_APP_ACA_NAME, acaName).apply();
+    }
+
+    public static String getAppAcaName(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
+        return pref.getString(PREF_APP_ACA_NAME, CAMPUS_ACA_NAME);
+    }
     // notification announcement
     public static void setNotificationAnnouncement(Context context, boolean flag) {
         SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);

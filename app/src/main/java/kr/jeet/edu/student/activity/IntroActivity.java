@@ -253,7 +253,7 @@ public class IntroActivity extends BaseActivity {
                 startSNSMain(PreferenceUtil.getStuSeq(this), PreferenceUtil.getUserSTCode(this));
             }
         }else { //일반 실행
-            long delayTime = 2000;
+            long delayTime = 1000;
             if (PreferenceUtil.getAutoLogin(mContext)) {
                 // 자동 로그인
                 mHandler.sendEmptyMessageDelayed(HANDLER_AUTO_LOGIN, delayTime);

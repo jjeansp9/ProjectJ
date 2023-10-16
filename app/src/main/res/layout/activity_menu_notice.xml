@@ -43,6 +43,7 @@
                 android:textSize="@dimen/font_size"
                 app:spinner_arrow_gravity="end"
                 app:spinner_arrow_tint="@color/blackgray"
+                app:spinner_selected_item_background="@color/color_spinner_selected_item"
                 app:spinner_divider_color="@color/line"
                 app:spinner_divider_show="true"
                 app:spinner_divider_size="0.4dp"

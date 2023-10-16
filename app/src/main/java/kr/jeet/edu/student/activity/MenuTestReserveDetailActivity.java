@@ -197,47 +197,61 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         ((TextView)findViewById(R.id.txt_wish_day_week)).setText(str);
 
         {   // 이전학습방법
-            str = "학원 : ";
+            //str = "학원 : ";
+            str = "";
             String subStr = "";
             if(!TextUtils.isEmpty(mInfo.time1)) subStr += mInfo.time1;
             if(!TextUtils.isEmpty(mInfo.date1)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date1;
-            str += subStr.isEmpty() ? "-" : subStr;
+            str += subStr.isEmpty() ? "" : subStr;
 
-            str += "\n과외 : ";
+            if (TextUtils.isEmpty(str)) ((ConstraintLayout)findViewById(R.id.layout_study_sub_1)).setVisibility(View.GONE);
+            else ((TextView)findViewById(R.id.txt_study_1)).setText(str);
+
+            //str += "\n과외 : ";
+            str = "";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time2)) subStr += mInfo.time2;
             if(!TextUtils.isEmpty(mInfo.date2)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date2;
-            str += subStr.isEmpty() ? "-" : subStr;
+            str += subStr.isEmpty() ? "" : subStr;
 
-            str += "\n가정학습(자기주도) : ";
+            if (TextUtils.isEmpty(str)) ((ConstraintLayout)findViewById(R.id.layout_study_sub_2)).setVisibility(View.GONE);
+            else ((TextView)findViewById(R.id.txt_study_2)).setText(str);
+
+            //str += "\n가정학습(자기주도) : ";
+            str = "";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time3)) subStr += mInfo.time3;
             if(!TextUtils.isEmpty(mInfo.date3)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date3;
-            str += subStr.isEmpty() ? "-" : subStr;
+            str += subStr.isEmpty() ? "" : subStr;
 
-            str += "\n학습지 : ";
+            if (TextUtils.isEmpty(str)) ((ConstraintLayout)findViewById(R.id.layout_study_sub_3)).setVisibility(View.GONE);
+            else ((TextView)findViewById(R.id.txt_study_3)).setText(str);
+
+            //str += "\n학습지 : ";
+            str = "";
             subStr = "";
             if(!TextUtils.isEmpty(mInfo.time4)) subStr += mInfo.time4;
             if(!TextUtils.isEmpty(mInfo.date4)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date4;
-            str += subStr.isEmpty() ? "-" : subStr;
+            str += subStr.isEmpty() ? "" : subStr;
 
-            ((TextView)findViewById(R.id.txt_study)).setText(str);
+            if (TextUtils.isEmpty(str)) ((ConstraintLayout)findViewById(R.id.layout_study_sub_4)).setVisibility(View.GONE);
+            else ((TextView)findViewById(R.id.txt_study_4)).setText(str);
         }
 
         {   // 진도/심화학습
             str = "";
             String subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText1)) subStr += "["+mInfo.processText1+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText1)) subStr += "[ "+mInfo.processText1+" ] ";
             if(!TextUtils.isEmpty(mInfo.processEtc1)) subStr += mInfo.processEtc1;
             str += subStr.isEmpty() ? "" : subStr;
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText2)) subStr += "["+mInfo.processText2+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText2)) subStr += "[ "+mInfo.processText2+" ] ";
             if(!TextUtils.isEmpty(mInfo.processEtc2)) subStr += mInfo.processEtc2;
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText3)) subStr += "["+mInfo.processText3+"] ";
+            if(!TextUtils.isEmpty(mInfo.processText3)) subStr += "[ "+mInfo.processText3+" ] ";
             if(!TextUtils.isEmpty(mInfo.processEtc3)) subStr += mInfo.processEtc3;
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 

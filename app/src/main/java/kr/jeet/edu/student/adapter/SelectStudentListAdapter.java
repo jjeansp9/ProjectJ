@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.SelectStudentActivity;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudentListAdapter.ViewHolder> {
 
@@ -50,8 +52,23 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
 
         try{
             String itemClass = "";
-            if (item.stGrade.equals(item.clstName)) itemClass = item.deptName + " / " + item.clstName;
-            else itemClass = item.deptName + " " + item.stGrade + " / " + item.clstName;
+
+            String deptName = "";
+            String clstName = "";
+            String stGrade = "";
+
+            if (item.stGrade.equals(item.clstName)) {
+                deptName = Utils.getStr(item.deptName);
+                clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+                itemClass = deptName + clstName;
+            }
+            else {
+                deptName = Utils.getStr(item.deptName);
+                stGrade = Utils.getStr(item.stGrade);
+                clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+
+                itemClass = deptName + stGrade + clstName;
+            }
 
             SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
             SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -64,9 +81,9 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 e.printStackTrace();
             }
 
-            holder.tvName.setText(item.stName);
-            holder.tvBirth.setText(item.birth);
-            holder.tvAcaName.setText(item.acaName);
+            holder.tvName.setText(Utils.getStr(item.stName));
+            holder.tvBirth.setText(Utils.getStr(item.birth));
+            holder.tvAcaName.setText(Utils.getStr(item.acaName));
             holder.tvClass.setText(itemClass);
 
             // gender
