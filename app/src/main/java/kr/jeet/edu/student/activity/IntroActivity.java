@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
@@ -32,6 +33,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Toast;
 
@@ -158,6 +160,7 @@ public class IntroActivity extends BaseActivity {
         // todo. 앱 버전 체크
         // todo. 권한 처리
         initIntentData();
+        initView();
         checkPermissions();
     }
     private void initIntentData() {
@@ -186,7 +189,10 @@ public class IntroActivity extends BaseActivity {
     }
     @Override
     void initView() {
-
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int screenHeight = displayMetrics.heightPixels;
+        int radius = screenHeight / 200;
+        DataManager.getInstance().DOT_SIZE = radius;
     }
 
     @Override

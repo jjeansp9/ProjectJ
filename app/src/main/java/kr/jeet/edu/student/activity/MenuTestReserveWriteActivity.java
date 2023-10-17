@@ -122,6 +122,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
             if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
+                //if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
                 setResult(RESULT_OK, intent);
                 finish();

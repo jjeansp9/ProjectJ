@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.model.data.AttendanceSummaryData;
 import kr.jeet.edu.student.utils.LogMgr;
 
@@ -60,7 +61,7 @@ public class AttendanceDecorator implements DayViewDecorator {
 //            DayViewSpan span = new DayViewSpan("출석", context.getColor(R.color.blue),  context.getColor(R.color.white));
 //            view.addSpan(span);
             if (view != null) {
-                view.addSpan(new DotSpan(9f, color));
+                view.addSpan(new DotSpan(DataManager.getInstance().DOT_SIZE, color));
             }
         }
     }

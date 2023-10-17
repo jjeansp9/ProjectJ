@@ -77,12 +77,12 @@
 
     <color name="bg_brf_detail_box">#F8F8F8</color>
 
-    <color name="color_attendance">#1d1dff</color>
-    <color name="color_absence">#ff0000</color>
-    <color name="color_early_leave">#999999</color>
-    <color name="color_tardy">#CC99FF</color>
-    <color name="color_makeup_class">#248a43</color>
-    <color name="color_online_lecture">#ffc000</color>
+    <color name="color_attendance">#991d1dff</color>
+    <color name="color_absence">#99ff0000</color>
+    <color name="color_early_leave">#99999999</color>
+    <color name="color_tardy">#99CC99FF</color>
+    <color name="color_makeup_class">#99248a43</color>
+    <color name="color_online_lecture">#99ffc000</color>
 
     <color name="color_fab">#5C6BC0</color>
     <color name="fab_color">#ffcc00</color>

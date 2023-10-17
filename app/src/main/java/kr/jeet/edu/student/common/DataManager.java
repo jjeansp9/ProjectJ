@@ -10,6 +10,7 @@ import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
+import kr.jeet.edu.student.utils.LogMgr;
 
 /**
  * 앱에서 사용하는 JEET 관련 정보들을 저장하는 클래스
@@ -27,6 +28,8 @@ public class DataManager {
     public final String BOARD_NOTICE = "notice";
     public final String BOARD_PT = "pt";
     public final String BOARD_MESSAGE_NOTICE = "messageNotice";
+    //Dot size
+    public float DOT_SIZE = 10f;
     // 캠퍼스, 레벨캠퍼스, 학교 리스트
     private List<ACAData> ACAList = new ArrayList<>();
     private List<LTCData> LTCList = new ArrayList<>();
@@ -160,7 +163,11 @@ public class DataManager {
     public boolean initClsListMap(List<TeacherClsData> list)
     {
         if(list == null) return false;
-        if(!clsListMap.isEmpty()) clsListMap.clear();
+        if(!clsListMap.isEmpty()) {
+
+            LogMgr.e(TAG, "EVENT ClsList Clear");
+            clsListMap.clear();
+        }
         for(TeacherClsData item : list) {
             int key = item.clsCode;
             if (!clsListMap.containsKey(key)) {

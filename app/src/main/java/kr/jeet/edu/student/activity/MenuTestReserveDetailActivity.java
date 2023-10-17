@@ -241,18 +241,24 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         {   // 진도/심화학습
             str = "";
             String subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText1)) subStr += "[ "+mInfo.processText1+" ] ";
-            if(!TextUtils.isEmpty(mInfo.processEtc1)) subStr += mInfo.processEtc1;
+            if(!TextUtils.isEmpty(mInfo.processEtc1)) {
+                if(!TextUtils.isEmpty(mInfo.processText1)) subStr += "[ "+mInfo.processText1+" ] ";
+                subStr += mInfo.processEtc1;
+            }
             str += subStr.isEmpty() ? "" : subStr;
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText2)) subStr += "[ "+mInfo.processText2+" ] ";
-            if(!TextUtils.isEmpty(mInfo.processEtc2)) subStr += mInfo.processEtc2;
+            if(!TextUtils.isEmpty(mInfo.processEtc2)) {
+                if(!TextUtils.isEmpty(mInfo.processText2)) subStr += "[ "+mInfo.processText2+" ] ";
+                subStr += mInfo.processEtc2;
+            }
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 
             subStr = "";
-            if(!TextUtils.isEmpty(mInfo.processText3)) subStr += "[ "+mInfo.processText3+" ] ";
-            if(!TextUtils.isEmpty(mInfo.processEtc3)) subStr += mInfo.processEtc3;
+            if(!TextUtils.isEmpty(mInfo.processEtc3)) {
+                if(!TextUtils.isEmpty(mInfo.processText3)) subStr += "[ "+mInfo.processText3+" ] ";
+                subStr += mInfo.processEtc3;
+            }
             str += subStr.isEmpty() ? "" : (str.isEmpty() ? subStr : "\n" + subStr);
 
             ((TextView)findViewById(R.id.txt_process)).setText(str);

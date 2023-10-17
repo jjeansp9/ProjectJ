@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.DataManager;
 
 public class EventDecorator implements DayViewDecorator {
 
@@ -32,7 +33,7 @@ public class EventDecorator implements DayViewDecorator {
     @Override
     public void decorate(DayViewFacade view) {
         if (view != null) {
-            view.addSpan(new DotSpan(9f, color));
+            view.addSpan(new DotSpan(DataManager.getInstance().DOT_SIZE, color));
         }
     }
 

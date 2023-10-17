@@ -190,6 +190,7 @@ public class AuthPhoneNumberView extends LinearLayout implements View.OnClickLis
                 mEditAuthNo.setEnabled(true);
                 checkPhone = mEditPhoneNo.getText().toString();
                 requestAuth();
+                mEditAuthNo.requestFocus();
                 break;
         }
     }

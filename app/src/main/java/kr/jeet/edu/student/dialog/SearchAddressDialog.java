@@ -26,7 +26,6 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.LogMgr;
 
 public class SearchAddressDialog extends DialogFragment {
-
     static public SearchAddressDialog newInstance() {
         return new SearchAddressDialog();
     }

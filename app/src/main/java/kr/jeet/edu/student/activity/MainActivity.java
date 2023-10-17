@@ -177,32 +177,56 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    //2023-10-17 09:05:57.069 9158-9158/kr.jeet.edu.student E/MainActivity: event1
+    //2023-10-17 09:05:57.148 9158-9158/kr.jeet.edu.student E/MainActivity: event2
+    //2023-10-17 09:05:57.411 9158-9158/kr.jeet.edu.student E/MainActivity: event4
+    //2023-10-17 09:05:57.424 9158-9158/kr.jeet.edu.student E/MainActivity: event3
+    //2023-10-17 09:05:57.434 9158-9158/kr.jeet.edu.student E/MainActivity: event2
+    //2023-10-17 09:05:57.473 9158-9158/kr.jeet.edu.student E/MainActivity: event4
+    //2023-10-17 09:05:57.474 9158-9158/kr.jeet.edu.student E/MainActivity: event3
+    //2023-10-17 09:05:57.616 9158-9158/kr.jeet.edu.student E/MainActivity: event5
+    //2023-10-17 09:05:57.688 9158-9158/kr.jeet.edu.student E/MainActivity: event5
+    //2023-10-17 09:05:57.689 9158-9158/kr.jeet.edu.student E/MainActivity: event6
+    //2023-10-17 09:05:57.733 9158-9158/kr.jeet.edu.student E/MainActivity: event6
+    //2023-10-17 09:05:57.781 9158-9158/kr.jeet.edu.student E/MainActivity: event7
+    //2023-10-17 09:05:57.834 9158-9158/kr.jeet.edu.student E/MainActivity: event8
+    //2023-10-17 09:05:57.852 9158-9158/kr.jeet.edu.student E/MainActivity: event7
+    //2023-10-17 09:05:57.900 9158-9158/kr.jeet.edu.student E/MainActivity: event8
+
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case CMD_GET_ACALIST:
+                    LogMgr.e(TAG, "event1");
                     requestACAList();
                 case CMD_GET_LOCAL_ACALIST :
+                    LogMgr.e(TAG, "event2");
                     requestLocalACAList();
                     break;
                 case CMD_GET_MEMBER_INFO:
+                    LogMgr.e(TAG, "event3");
                     requestMemberInfo(_stuSeq, _stCode);
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
                     break;
                 case CMD_GET_NOTIFY_INFO:
+                    LogMgr.e(TAG, "event4");
                     requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
                     break;
                 case CMD_GET_BOARD_ATTRIBUTE:
+                    LogMgr.e(TAG, "event5");
                     requestBoardAttribute();
                     break;
                 case CMD_GET_SCHOOL_LIST:
+                    LogMgr.e(TAG, "event6");
                     requestSchoolList();
                     break;
                 case CMD_GET_LTC_LIST:
+                    LogMgr.e(TAG, "event7");
                     requestLTCList();
                     break;
                 case CMD_GET_TEACHER:
+                    LogMgr.e(TAG, "event8");
                     requestTeacherCls();
                     break;
             }
@@ -601,7 +625,7 @@ public class MainActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestACAList() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestACAList() Exception : ", e.getMessage()); }
 
-
+                    mHandler.sendEmptyMessage(CMD_GET_LOCAL_ACALIST);
                 }
             });
         }
@@ -918,9 +942,10 @@ public class MainActivity extends BaseActivity {
                         if (response.isSuccessful()){
 
                             TeacherClsResponse getData = response.body();
-                            if (getData != null && getData.data != null && !getData.data.isEmpty()){
+                            if (getData != null && getData.data != null){
                                 DataManager.getInstance().initClsListMap(getData.data);
-                                String str = getData.data.get(0).sfName;
+                                String str = "";
+                                if (getData.data.size() > 0) str = getData.data.get(0).sfName;
                                 teacherCnt = getData.data.size();
 
                                 if (teacherCnt <= 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님");

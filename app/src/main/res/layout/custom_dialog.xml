@@ -130,7 +130,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/white">
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -140,7 +139,7 @@
                     android:stateListAnimator="@xml/animate_button_push"
                     android:text="@string/cancel"
                     android:textColor="@color/font_color_default"
-                    android:textSize="@dimen/font_size_large" />
+                    android:textSize="@dimen/font_size_large"/>
             </RelativeLayout>
 
             <RelativeLayout

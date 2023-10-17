@@ -73,6 +73,8 @@ public class MenuTestReserveActivity extends BaseActivity {
     private int _memberSeq = 0;
     private final int LTC_CODE = 0; // 원생, 학부모인 경우는 0으로 고정
 
+    //private boolean newChild = false;
+
     // 등록했을 때 result =ActivityResult{resultCode=RESULT_CANCELED, data=null}
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -82,6 +84,7 @@ public class MenuTestReserveActivity extends BaseActivity {
                 LogMgr.e(TAG, "resultLauncher Event ADD");
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
                 if (added) {
+                    //if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) newChild = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                     requestTestReserveList();
                     Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
                 }
