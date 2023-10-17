@@ -457,7 +457,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     }
 
     private void requestBrfReservedListData(int ptSeq){
-
+        showProgressDialog();
         if (RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getBrfReservedList(ptSeq, _memberSeq).enqueue(new Callback<BriefingReservedListResponse>() {
@@ -485,6 +485,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestBrfReservedListData() Exception: ", e.getMessage());
                     }
+                    hideProgressDialog();
                 }
 
                 @Override
