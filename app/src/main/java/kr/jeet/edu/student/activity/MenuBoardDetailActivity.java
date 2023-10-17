@@ -100,11 +100,13 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
                 title = getString(R.string.title_detail);
                 dataType = TYPE_ANNOUNCEMENT;
+                LogMgr.e(TAG,"Event heres3");
 
             } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 dataType = TYPE_PUSH;
+                LogMgr.e(TAG,"Event heres2");
 
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
@@ -113,7 +115,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = TYPE_SYSTEM;
                 if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-                LogMgr.e(TAG,"Event here1");
+                LogMgr.e(TAG,"Event heres1");
 
             }
 //            else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
@@ -148,7 +150,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         _currentSeq = _pushData.connSeq;
 
                         if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-                        LogMgr.e("Event here4");
+                        LogMgr.e("Event here4", _pushData.connSeq+"");
 
                     } else{
                         LogMgr.e("Event here5");
@@ -158,17 +160,14 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
             if (result instanceof AnnouncementData) {
                 _currentData = (AnnouncementData) result;
-                LogMgr.e("Event here6");
 
             } else if (result instanceof PushMessage) {
                 _pushData = (PushMessage) result;
                 _currentSeq = ((PushMessage) result).connSeq;
-                LogMgr.e("Event here7");
             }else{
 
             }
         }
-        LogMgr.w("currentData = " + _currentData);
     }
 
     @Override
@@ -222,24 +221,29 @@ public class MenuBoardDetailActivity extends BaseActivity {
 //            if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
             mImgRdCnt.setVisibility(View.VISIBLE);
             mTvRdCnt.setVisibility(View.VISIBLE);
+            LogMgr.e("Event5");
             requestNoticeDetail(_currentData.seq);
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
 
         }else if (dataType == TYPE_PUSH){
             if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
+                LogMgr.e("Event1", _pushData.connSeq+"");
                 requestNoticeDetail(_pushData.connSeq);
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
             }
             else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                LogMgr.e("Event2");
                 requestSystemDetail();
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
             }
 
         }else if (dataType == TYPE_SYSTEM){
+            LogMgr.e("Event3");
             requestSystemDetail();
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
 
         }else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){
+            LogMgr.e("Event4");
             requestNoticeDetail(_currentSeq);
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
         }

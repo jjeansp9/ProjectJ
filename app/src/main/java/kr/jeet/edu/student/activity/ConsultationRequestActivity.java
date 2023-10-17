@@ -1,5 +1,8 @@
 package kr.jeet.edu.student.activity;
 
+import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD;
+import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD_KOR;
+
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -125,7 +128,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         mTvCal = findViewById(R.id.tv_consultation_request_cal);
         mSpinnerTeacher = findViewById(R.id.spinner_teacher);
 
-        mSpinnerTeacher.setIsFocusable(true);
+        mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
         setSpinnerTeacher();
     }
@@ -155,7 +158,7 @@ public class ConsultationRequestActivity extends BaseActivity {
 
     void showDatePicker() {
         DatePickerFragment.OnDateSetListener listener = (year, month, day) -> {
-            String formattedDate = String.format(Locale.KOREA, "%d-%02d-%02d", year, month + 1, day);
+            String formattedDate = String.format(Locale.KOREA, getString(R.string.consultation_request_date), year, month + 1, day);
             mTvCal.setText(formattedDate);
         };
         DatePickerFragment datePickerDialog = new DatePickerFragment(listener, true, minYear, maxYear);
@@ -168,7 +171,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         }else{
 
             try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+                SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMATTER_YYYY_MM_DD_KOR, Locale.KOREA);
                 Date date = null;
                 date = sdf.parse(strDate);
 
@@ -184,58 +187,66 @@ public class ConsultationRequestActivity extends BaseActivity {
 
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinnerTeacher(){
+        mSpinnerTeacher.setIsFocusable(true);
         try {
 
-            if (mListTeacher.size() == 0) finish();
+            if (mListTeacher.size() <= 0) {
+                finish();
+            }else{
+                List<String> sfNames = new ArrayList<>();
+                for (TeacherClsData data : mListTeacher) sfNames.add(data.sfName + " / " + data.clsName);
 
-            List<String> sfNames = new ArrayList<>();
+                if (sfNames.size() > 0 && sfNames != null) mSpinnerTeacher.setText(sfNames.get(0));
+                mSpinnerTeacher.setItems(sfNames);
+                _clsName = mListTeacher.get(0).clsName;
+                _sfCode = mListTeacher.get(0).sfCode;
+                _sfName = mListTeacher.get(0).sfName;
+                _managerPhoneNumber = mListTeacher.get(0).phoneNumber;
 
-            for (TeacherClsData data : mListTeacher) sfNames.add(data.sfName + " / " + data.clsName);
+                mSpinnerTeacher.setOnTouchListener((v, event) -> {
+                    mEtConsultContent.clearFocus();
+                    Utils.hideKeyboard(mContext, mEtConsultContent);
+                    return false;
+                });
 
-            if (sfNames.size() > 0 && sfNames != null) mSpinnerTeacher.setText(sfNames.get(0));
-            mSpinnerTeacher.setItems(sfNames);
-            _clsName = mListTeacher.get(0).clsName;
-            _sfCode = mListTeacher.get(0).sfCode;
-            _sfName = mListTeacher.get(0).sfName;
-            _managerPhoneNumber = mListTeacher.get(0).phoneNumber;
+                mSpinnerTeacher.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+                    _sfCode = mListTeacher.get(newIndex).sfCode;
+                    _sfName = mListTeacher.get(newIndex).sfName;
+                    _clsName = mListTeacher.get(newIndex).clsName;
+                    _managerPhoneNumber = mListTeacher.get(newIndex).phoneNumber;
+                    LogMgr.e("TEST",
+                            "\nsfCode:" + _sfCode +
+                                    "\nsfName:" + _sfName +
+                                    "\nclsName:" + _clsName +
+                                    "\nphoneNum:" + _managerPhoneNumber
+                    );
+                });
+            }
 
-            mSpinnerTeacher.setOnTouchListener((v, event) -> {
-                mEtConsultContent.clearFocus();
-                Utils.hideKeyboard(mContext, mEtConsultContent);
-                return false;
-            });
-
-            mSpinnerTeacher.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-                _sfCode = mListTeacher.get(newIndex).sfCode;
-                _sfName = mListTeacher.get(newIndex).sfName;
-                _clsName = mListTeacher.get(newIndex).clsName;
-                _managerPhoneNumber = mListTeacher.get(newIndex).phoneNumber;
-                LogMgr.e("TEST",
-                        "\nsfCode:" + _sfCode +
-                        "\nsfName:" + _sfName +
-                        "\nclsName:" + _clsName +
-                        "\nphoneNum:" + _managerPhoneNumber
-                );
-            });
         }catch (Exception e){}
     }
 
     private void putConsultRequest(){
-        String content = mEtConsultContent.getText().toString();
 
-        LogMgr.e(TAG + "putConsultRequest >> ", "content : " + content + "\n acaCode : " + _acaCode);
+        String str = "";
 
         CounselRequest request = new CounselRequest();
         request.memberSeq = _memberSeq;
         request.memberName = _memberName;
         request.userGubun = _userGubun;
         request.writerName = _writerName;
-        request.counselDate = mTvCal.getText().toString();
+
+        str = Utils.reformFormatDate(mTvCal.getText().toString(), DATE_FORMATTER_YYYY_MM_DD_KOR, DATE_FORMATTER_YYYY_MM_DD);
+        request.counselDate = str;
+
         request.acaCode = _acaCode;
         request.acaName = _acaName;
         request.sfCode = _sfCode;
         request.sfName = _sfName;
-        request.memo = content;
+
+        str = mEtConsultContent.getText().toString();
+        request.memo = str;
+
         request.clsName = _clsName;
         request.phoneNumber = _phoneNumber.replace("-", "");
         request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
@@ -259,7 +270,7 @@ public class ConsultationRequestActivity extends BaseActivity {
 
         if (request.counselDate.equals("") ||
                 request.memo.equals("")){
-            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
         }else{
             showProgressDialog();
             if(RetrofitClient.getInstance() != null) {

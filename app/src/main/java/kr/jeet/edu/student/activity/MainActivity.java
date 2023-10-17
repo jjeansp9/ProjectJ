@@ -177,56 +177,33 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    //2023-10-17 09:05:57.069 9158-9158/kr.jeet.edu.student E/MainActivity: event1
-    //2023-10-17 09:05:57.148 9158-9158/kr.jeet.edu.student E/MainActivity: event2
-    //2023-10-17 09:05:57.411 9158-9158/kr.jeet.edu.student E/MainActivity: event4
-    //2023-10-17 09:05:57.424 9158-9158/kr.jeet.edu.student E/MainActivity: event3
-    //2023-10-17 09:05:57.434 9158-9158/kr.jeet.edu.student E/MainActivity: event2
-    //2023-10-17 09:05:57.473 9158-9158/kr.jeet.edu.student E/MainActivity: event4
-    //2023-10-17 09:05:57.474 9158-9158/kr.jeet.edu.student E/MainActivity: event3
-    //2023-10-17 09:05:57.616 9158-9158/kr.jeet.edu.student E/MainActivity: event5
-    //2023-10-17 09:05:57.688 9158-9158/kr.jeet.edu.student E/MainActivity: event5
-    //2023-10-17 09:05:57.689 9158-9158/kr.jeet.edu.student E/MainActivity: event6
-    //2023-10-17 09:05:57.733 9158-9158/kr.jeet.edu.student E/MainActivity: event6
-    //2023-10-17 09:05:57.781 9158-9158/kr.jeet.edu.student E/MainActivity: event7
-    //2023-10-17 09:05:57.834 9158-9158/kr.jeet.edu.student E/MainActivity: event8
-    //2023-10-17 09:05:57.852 9158-9158/kr.jeet.edu.student E/MainActivity: event7
-    //2023-10-17 09:05:57.900 9158-9158/kr.jeet.edu.student E/MainActivity: event8
-
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case CMD_GET_ACALIST:
-                    LogMgr.e(TAG, "event1");
                     requestACAList();
+                    break;
                 case CMD_GET_LOCAL_ACALIST :
-                    LogMgr.e(TAG, "event2");
                     requestLocalACAList();
                     break;
                 case CMD_GET_MEMBER_INFO:
-                    LogMgr.e(TAG, "event3");
                     requestMemberInfo(_stuSeq, _stCode);
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
                     break;
                 case CMD_GET_NOTIFY_INFO:
-                    LogMgr.e(TAG, "event4");
                     requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
                     break;
                 case CMD_GET_BOARD_ATTRIBUTE:
-                    LogMgr.e(TAG, "event5");
                     requestBoardAttribute();
                     break;
                 case CMD_GET_SCHOOL_LIST:
-                    LogMgr.e(TAG, "event6");
                     requestSchoolList();
                     break;
                 case CMD_GET_LTC_LIST:
-                    LogMgr.e(TAG, "event7");
                     requestLTCList();
                     break;
                 case CMD_GET_TEACHER:
-                    LogMgr.e(TAG, "event8");
                     requestTeacherCls();
                     break;
             }
@@ -434,7 +411,9 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
+                    LogMgr.e("MainActivity Event", _pushMessage.connSeq+"");
                     intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
@@ -473,6 +452,7 @@ public class MainActivity extends BaseActivity {
                 break;
                 case MSG_TYPE_PT: // 설명회예약
                 {
+                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuBriefingDetailActivity.class);
                 }
                 break;
@@ -485,12 +465,14 @@ public class MainActivity extends BaseActivity {
                 {
                     if (_pushMessage.stCode == _stCode){
                         intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
+                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                         startDetailActivity(intent, MenuBoardDetailActivity.class);
                     }
                 }
                 break;
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
+                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuScheduleDetailActivity.class);
                 }
                 break;

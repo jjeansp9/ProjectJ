@@ -3,6 +3,8 @@ package kr.jeet.edu.student.model.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class BriefingData implements Parcelable {
@@ -11,6 +13,8 @@ public class BriefingData implements Parcelable {
     public String content; // 내용
     public String acaCode; // 캠퍼스 코드
     public String acaName; // 캠퍼스 이름
+    public String acaGubunCode; // 캠퍼스 구분코드
+    public String acaGubunName; // 캠퍼스 구분이름
     public int writerSeq; // 작성자 seq
     public String date; // 날짜(yyyy-MM-dd)
     public String ptTime; // 시간
@@ -29,6 +33,8 @@ public class BriefingData implements Parcelable {
         content = in.readString();
         acaCode = in.readString();
         acaName = in.readString();
+        acaGubunCode = in.readString();
+        acaGubunName = in.readString();
         writerSeq = in.readInt();
         date = in.readString();
         ptTime = in.readString();
@@ -64,6 +70,8 @@ public class BriefingData implements Parcelable {
         dest.writeString(content);
         dest.writeString(acaCode);
         dest.writeString(acaName);
+        dest.writeString(acaGubunCode);
+        dest.writeString(acaGubunName);
         dest.writeInt(writerSeq);
         dest.writeString(date);
         dest.writeString(ptTime);

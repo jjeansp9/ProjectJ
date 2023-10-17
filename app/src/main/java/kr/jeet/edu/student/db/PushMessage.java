@@ -105,10 +105,16 @@ public class PushMessage implements Parcelable {
         String userGubunStr = map.containsKey("userGubun")? map.get("userGubun") : "";
         int connSeq = -1;
         String connSeqStr = map.containsKey("connSeq")? map.get("connSeq") : "";
+        
+        try {
+            stCode = Integer.parseInt(stCodeStr);
+        }catch (Exception e){}
+
+        try {
+            userGubun = Integer.parseInt(userGubunStr);
+        }catch (Exception e){}
 
         try{
-            stCode = Integer.parseInt(stCodeStr);
-            userGubun = Integer.parseInt(userGubunStr);
             connSeq = Integer.parseInt(connSeqStr);
         }catch(Exception ex){}
 

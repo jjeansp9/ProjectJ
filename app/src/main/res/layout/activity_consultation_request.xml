@@ -60,6 +60,7 @@
                     android:paddingHorizontal="@dimen/layout_margin_16"
                     android:paddingVertical="@dimen/layout_margin_12"
                     android:hint="@string/consultation_request_sel_date"
+                    android:gravity="center"
                     android:textSize="@dimen/font_size"
                     android:textColor="@color/black"/>
 
@@ -133,6 +134,7 @@
                 android:paddingVertical="@dimen/layout_margin_12"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size"
+                android:gravity="center"
                 app:spinner_arrow_gravity="end"
                 app:spinner_arrow_tint="@color/blackgray"
                 app:spinner_divider_color="@color/line"
@@ -168,6 +170,7 @@
                 android:background="@drawable/selector_edit_consultation"
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:minLines="6"
+                android:hint="@string/please_content"
                 android:maxLines="12"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size"

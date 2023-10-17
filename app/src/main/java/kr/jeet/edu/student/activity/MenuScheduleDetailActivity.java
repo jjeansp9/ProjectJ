@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.activity;
 
+import static kr.jeet.edu.student.common.Constants.TIME_FORMATTER_YYYY_M_D_E;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,7 +109,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         calendar.set(mInfo.year, mInfo.month - 1, mInfo.day);
 
         // 원하는 날짜 형식으로 포맷합니다.
-        SimpleDateFormat sdf = new SimpleDateFormat("M월 d일 E요일", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMATTER_YYYY_M_D_E, Locale.getDefault());
         Date date = calendar.getTime();
 
         tvDate.setText(sdf.format(date));
@@ -120,7 +122,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         str = TextUtils.isEmpty(mInfo.title) ? "" : mInfo.title;
         tvTitle.setText(str);
 
-        str = TextUtils.isEmpty(mInfo.target) ? "" : "["+mInfo.target +"]";
+        str = TextUtils.isEmpty(mInfo.acaGubunName) ? "" : "["+mInfo.acaGubunName +"]";
         viewVisibility(tvTarget, str);
 
         str = TextUtils.isEmpty(mInfo.content) ? "" : mInfo.content;

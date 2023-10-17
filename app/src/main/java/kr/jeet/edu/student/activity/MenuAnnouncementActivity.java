@@ -214,7 +214,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(!mRecyclerView.canScrollVertically(1)
+                if(((!mRecyclerView.canScrollVertically(1)) && mRecyclerView.canScrollVertically(-1))
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
                 {

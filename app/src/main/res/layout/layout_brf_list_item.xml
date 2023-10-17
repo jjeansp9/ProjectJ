@@ -50,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/tv_brf_date"
-        app:layout_constraintBottom_toTopOf="@+id/tv_brf_campus"
+        app:layout_constraintBottom_toTopOf="@+id/tv_brf_campus_and_aca_gubun"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintVertical_bias="1"
@@ -62,7 +62,7 @@
         android:textSize="@dimen/font_size_large"/>
 
     <TextView
-        android:id="@+id/tv_brf_campus"
+        android:id="@+id/tv_brf_campus_and_aca_gubun"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/tv_brf_location"

@@ -70,6 +70,8 @@ public class LoginActivity extends BaseActivity {
     private String snsName = "";
     private String snsType = "";
 
+    private boolean btnPush = false;
+
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -148,43 +150,52 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_naver:
-                if(mAutoLoginCb.isChecked()) {
-                    PreferenceUtil.setAutoLogin(mContext, true);
-                }
-                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_NAVER;
-                mNaverLogin = new NaverLoginManager(mContext);
-                mNaverLogin.setHandler(mHandler);
-                mNaverLogin.LoginProcess();
+                if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
+                if (!btnPush) {
+                    btnPush = true;
+                    selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_NAVER;
+                    mNaverLogin = new NaverLoginManager(mContext);
+                    mNaverLogin.setHandler(mHandler);
+                    mNaverLogin.LoginProcess();
+                }
                 break;
 
             case R.id.btn_kakao:
 
-                if(mAutoLoginCb.isChecked()) {
-                    PreferenceUtil.setAutoLogin(mContext, true);
-                }
-                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_KAKAO;
-                mKaKaoLogin = new KaKaoLoginManager(mContext);
-                mKaKaoLogin.setHandler(mHandler);
-                mKaKaoLogin.LoginProcess();
+                if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
+                if (!btnPush) {
+                    btnPush = true;
+                    selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_KAKAO;
+                    mKaKaoLogin = new KaKaoLoginManager(mContext);
+                    mKaKaoLogin.setHandler(mHandler);
+                    mKaKaoLogin.LoginProcess();
+                }
                 break;
 
             case R.id.btn_google:
                 if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
-                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_GOOGLE;
-                mGoogleLogin.setHandler(mHandler);
-                mGoogleLogin.LoginProcess();
+                if (!btnPush) {
+                    btnPush = true;
+                    selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_GOOGLE;
+                    mGoogleLogin.setHandler(mHandler);
+                    mGoogleLogin.LoginProcess();
+                }
                 break;
 
             case R.id.btn_apple:
                 if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
-                selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
-                mAppleLogin = new AppleLoginManager(mActivity);
-                mAppleLogin.setHandler(mHandler);
-                mAppleLogin.LoginProcess();
+                if (!btnPush){
+                    btnPush = true;
+                    selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
+                    mAppleLogin = new AppleLoginManager(mActivity);
+                    mAppleLogin.setHandler(mHandler);
+                    mAppleLogin.LoginProcess();
+                }
+
                 break;
 
             case R.id.tv_join :
@@ -199,7 +210,10 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_login :
-                if(checkLogin()) requestLogin();
+                if (!btnPush) {
+                    btnPush = true;
+                    if(checkLogin()) requestLogin();
+                }
                 Utils.hideKeyboard(mContext, mEditList);
                 // 자동로그인 체크 저장
                 if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
@@ -355,6 +369,7 @@ public class LoginActivity extends BaseActivity {
                     }
 
                     hideProgressDialog();
+                    btnPush = false;
                 }
 
                 @Override
@@ -365,6 +380,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    btnPush = false;
                 }
             });
         }
@@ -499,6 +515,7 @@ public class LoginActivity extends BaseActivity {
                         if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
                     }
                     hideProgressDialog();
+                    btnPush = false;
                 }
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
@@ -508,6 +525,7 @@ public class LoginActivity extends BaseActivity {
                     }
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    btnPush = false;
                 }
             });
         }

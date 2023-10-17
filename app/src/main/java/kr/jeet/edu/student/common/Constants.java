@@ -107,6 +107,7 @@ public class Constants {
     public static final String TIME_FORMATTER_A_HH_MM = "a hh:mm";
     public static final String TIME_FORMATTER_HH_MM = "HH:mm";
     public static final String TIME_FORMATTER_M_D_E = "M월 d일 E요일";
+    public static final String TIME_FORMATTER_YYYY_M_D_E = "yyyy년 M월 d일 E요일";
 
     public static final String ACTION_JEET_PUSH_MESSAGE_RECEIVED = "action_jeet_push_message_received";
 
@@ -122,9 +123,9 @@ public class Constants {
     public enum AttendanceStatus{
         UNSET(9, "미지정", R.color.gray),
         ATTENDANCE(0, "출석", R.color.color_attendance),
-        ABSENCE(1, "결석", R.color.color_absence),
+        TARDY(1, "지각", R.color.color_tardy),
         EARLY_LEAVE(2, "조퇴", R.color.color_early_leave),
-        TARDY(3, "지각", R.color.color_tardy),
+        ABSENCE(3, "결석", R.color.color_absence),
         MAKEUP_CLASS(4,"보충", R.color.color_makeup_class),
         ONLINE_LECTURE(5, "줌수업", R.color.color_online_lecture);
 

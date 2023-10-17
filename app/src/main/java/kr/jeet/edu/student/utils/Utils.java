@@ -399,6 +399,22 @@ public class Utils {
         }
     }
 
+    public static String reformFormatDate(String inputDate, String beforeForm, String afterForm){
+
+        String newDate = "";
+
+        SimpleDateFormat inputFormat = new SimpleDateFormat(beforeForm, Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(afterForm, Locale.KOREA);
+        try {
+            Date date = inputFormat.parse(inputDate);
+            if (date != null) newDate = outputFormat.format(date);
+            return newDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     /**
     * 이메일 형식을 체크해주는 기능
      *

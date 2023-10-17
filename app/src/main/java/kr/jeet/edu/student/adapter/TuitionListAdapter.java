@@ -5,6 +5,7 @@ import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 import android.content.Context;
 import android.os.Build;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,8 @@ import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 
 public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    private static final String TAG = "TuitionListAdapter";
 
     public interface ItemClickListener{ public void onItemClick(MenuStudentInfoActivity.PayListItem item); }
 
@@ -73,58 +76,46 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if (holder == null) return;
 
-        if (holder.getItemViewType() == LAYOUT_HEADER){
-            HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            TuitionHeaderData headerItem = (TuitionHeaderData) item;
+        try{
 
-            headerHolder.tvGubunBadge.setText(Utils.getStr(headerItem.gubun));
-            headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
-            headerHolder.tvHeaderAcaName.setText(Utils.getStr(headerItem.acaName));
+            String str = "";
 
-            headerHolder.tvPayTotal.setText(headerItem.payment);
+            if (holder.getItemViewType() == LAYOUT_HEADER){
+                HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+                TuitionHeaderData headerItem = (TuitionHeaderData) item;
 
-        }else {
-            ContentViewHolder contentHolder = (ContentViewHolder) holder;
-            TuitionData contentItem = (TuitionData) item;
+                headerHolder.tvGubunBadge.setText(Utils.getStr(headerItem.gubun));
+                headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
+                headerHolder.tvHeaderAcaName.setText(Utils.getStr(headerItem.acaName));
 
-            contentHolder.tvContentPay.setText(Utils.getStr(contentItem.payment+"원"));
-            contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
-            contentHolder.tvContentDate.setText(Utils.getStr(contentItem.payDate));
+                headerHolder.tvPayTotal.setText(headerItem.payment);
 
-//            // 마지막 아이템 체크
-//            if (position == mList.size() - 1) {
-//                // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
-//                contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
-//            } else {
-//                // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
-//                contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
-//            }
+            }else {
+                ContentViewHolder contentHolder = (ContentViewHolder) holder;
+                TuitionData contentItem = (TuitionData) item;
 
-            // 현재 아이템의 ViewType이 Content인 경우에만 다음 아이템의 ViewType을 확인
-//            if (holder.getItemViewType() == LAYOUT_CONTENT) {
-//                int nextItemType = getItemViewType(position + 1);
-//                if (nextItemType != LAYOUT_HEADER) {
-//                    // 다음 아이템의 ViewType이 Header가 아닌 경우, contentHolder.line을 invisible로 설정
-//                    contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
-//                } else {
-//                    // 다음 아이템의 ViewType이 Header인 경우, contentHolder.line을 visible로 설정
-//                    contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
-//                }
-//            }
+                str = TextUtils.isEmpty(contentItem.payment) ? "0원" : contentItem.payment+"원";
+                contentHolder.tvContentPay.setText(str);
+                contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
+                contentHolder.tvContentDate.setText(Utils.getStr(contentItem.payDate));
 
-            // 마지막 아이템 체크
-            if (position == mList.size() - 1) {
-                // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
-                contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
-            } else {
-                // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
-                int nextPosition = position + 1;
-                if (nextPosition < mList.size() && getItemViewType(nextPosition) == LAYOUT_HEADER) {
-                    contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
-                } else {
+                // 마지막 아이템 체크
+                if (position == mList.size() - 1) {
+                    // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
                     contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+                } else {
+                    // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
+                    int nextPosition = position + 1;
+                    if (nextPosition < mList.size() && getItemViewType(nextPosition) == LAYOUT_HEADER) {
+                        contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
+                    } else {
+                        contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+                    }
                 }
             }
+
+        }catch (Exception e){
+            LogMgr.e(TAG, e.getMessage());
         }
     }
 

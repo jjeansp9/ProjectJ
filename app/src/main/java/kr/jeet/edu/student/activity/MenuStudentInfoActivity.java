@@ -215,20 +215,22 @@ public class MenuStudentInfoActivity extends BaseActivity {
     }
 
     private void startWebView(PayListItem item) {
+        if (!((TuitionHeaderData)item).accountNO.isEmpty()){
+            ClipboardManager clipMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("Account No Clipboard", ((TuitionHeaderData)item).accountNO);
+            if (clipMgr != null) {
+                clipMgr.setPrimaryClip(clipData);
+                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
 
-        ClipboardManager clipMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("Account No Clipboard", ((TuitionHeaderData)item).accountNO);
-        if (clipMgr != null) {
-            clipMgr.setPrimaryClip(clipData);
-            Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, WebViewActivity.class);
+                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+                startActivity(intent);
+            }else {
+                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_error, Toast.LENGTH_SHORT).show();
+            }
+        }else{
+            Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
         }
-//        else {
-//            Toast.makeText(mContext, "error: 클립보드 서비스를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-//        }
-
-        Intent intent = new Intent(mContext, WebViewActivity.class);
-        intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
-        startActivity(intent);
 
     }
 

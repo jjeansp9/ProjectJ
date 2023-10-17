@@ -949,7 +949,7 @@
                         android:id="@+id/txt_etc"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:minLines="4"
+                        android:minLines="5"
                         android:padding="12dp"
                         android:textColor="@color/font_color_default"
                         android:gravity="start"

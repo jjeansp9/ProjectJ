@@ -4,11 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -18,8 +19,9 @@ import kr.jeet.edu.student.R;
 public class CustomAppbarLayout extends AppBarLayout {
     private Context _context;
     private MaterialToolbar _toolbar;
-    private ImageView _ivLogo;
-    private ImageButton _btnBack;
+    private ConstraintLayout _layoutBtnBack;
+    private ImageView _ivLogo, _btnBack;
+    private TextView _tvBack;
     public CustomAppbarLayout(@NonNull Context context) {
         super(context);
         _context = context;
@@ -42,7 +44,9 @@ public class CustomAppbarLayout extends AppBarLayout {
         View view = inflater.inflate(R.layout.layout_custom_appbar, this, true);
         _toolbar = view.findViewById(R.id.toolbar);
         _ivLogo = view.findViewById(R.id.iv_logo);
+        _layoutBtnBack = view.findViewById(R.id.layout_btn_back);
         _btnBack = view.findViewById(R.id.btn_back);
+        _tvBack = view.findViewById(R.id.tv_back_sub);
     }
     public MaterialToolbar getToolbar() {
         return _toolbar;
@@ -68,8 +72,8 @@ public class CustomAppbarLayout extends AppBarLayout {
 
 
     public void setMainBtnLeftClickListener(View.OnClickListener listener) {
-        _btnBack.setVisibility(View.VISIBLE);
-        _btnBack.setOnClickListener(listener);
+        _layoutBtnBack.setVisibility(View.VISIBLE);
+        _layoutBtnBack.setOnClickListener(listener);
     }
 
     public void setTitle(int titleRes) {

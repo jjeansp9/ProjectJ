@@ -71,10 +71,12 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             }else{
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
-                holder.tvCampus.setVisibility(View.VISIBLE);
+                holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
                 holder.tvLocation.setVisibility(View.VISIBLE);
 
-                holder.tvCampus.setText(Utils.getStr(item.acaName));
+                String str = Utils.getStr(item.acaName) + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
+
+                holder.tvCampusAndAcaGubun.setText(str);
                 holder.tvLocation.setText(Utils.getStr(item.memberResponseVO.name));
             }
 
@@ -157,7 +159,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
         private ConstraintLayout brfRoot;
         private Guideline guideline;
         private ImageView imgBrf, imgRdCnt;
-        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvAnnouncementDate, tvRdCnt;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampusAndAcaGubun, tvAnnouncementDate, tvRdCnt;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -167,7 +169,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
             tvTitle = itemView.findViewById(R.id.tv_brf_title);
             tvLocation = itemView.findViewById(R.id.tv_brf_location);
             tvState = itemView.findViewById(R.id.tv_brf_state);
-            tvCampus = itemView.findViewById(R.id.tv_brf_campus);
+            tvCampusAndAcaGubun = itemView.findViewById(R.id.tv_brf_campus_and_aca_gubun);
             imgBrf = itemView.findViewById(R.id.img_brf);
             guideline = itemView.findViewById(R.id.guideline);
             tvAnnouncementDate = itemView.findViewById(R.id.tv_announcement_date);

@@ -5,6 +5,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -21,7 +23,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -122,7 +126,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
             if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
-                //if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -644,7 +647,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
-
         request.userGubun = _userGubun;
         request.name = mEtName.getText().toString(); // 학생이름 [필수]
         request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]

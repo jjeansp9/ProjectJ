@@ -91,7 +91,9 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
                 drawable = R.drawable.bg_brf_state_normal;
             }
 
-            holder.tvCampus.setVisibility(View.VISIBLE);
+            String str = "";
+
+            holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
             holder.tvLocation.setVisibility(View.VISIBLE);
             holder.tvRdCnt.setVisibility(View.VISIBLE);
             holder.imgRdCnt.setVisibility(View.VISIBLE);
@@ -102,7 +104,10 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             holder.tvDate.setText(TextUtils.isEmpty(item.date) || TextUtils.isEmpty(item.ptTime) ? "" : Utils.formatDate(item.date, item.ptTime, false));
             holder.tvTitle.setText(Utils.getStr(item.title));
             holder.tvLocation.setText(Utils.getStr(item.place));
-            holder.tvCampus.setText(Utils.getStr(item.acaName));
+
+            str = Utils.getStr(item.acaName) + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
+            holder.tvCampusAndAcaGubun.setText(str);
+
             holder.tvRdCnt.setText(Utils.getStr(String.valueOf(item.rdcnt)));
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
@@ -175,7 +180,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
         private ConstraintLayout brfRoot;
         private Guideline guideline;
         private ImageView imgBrf, imgRdCnt;
-        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampus, tvRdCnt;
+        private TextView tvDate, tvTitle, tvLocation, tvState, tvCampusAndAcaGubun, tvRdCnt;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -185,7 +190,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             tvTitle = itemView.findViewById(R.id.tv_brf_title);
             tvLocation = itemView.findViewById(R.id.tv_brf_location);
             tvState = itemView.findViewById(R.id.tv_brf_state);
-            tvCampus = itemView.findViewById(R.id.tv_brf_campus);
+            tvCampusAndAcaGubun = itemView.findViewById(R.id.tv_brf_campus_and_aca_gubun);
             imgBrf = itemView.findViewById(R.id.img_brf);
             guideline = itemView.findViewById(R.id.guideline);
             tvRdCnt = itemView.findViewById(R.id.tv_brf_rd_cnt);

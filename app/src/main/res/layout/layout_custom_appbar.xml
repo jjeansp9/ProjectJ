@@ -16,14 +16,38 @@
         app:titleCentered="true"
         >
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:background="@drawable/selector_icon_student"
-            android:stateListAnimator="@xml/animate_button_push"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:stateListAnimator="@xml/animate_button_push">
+
+            <ImageView
+                android:id="@+id/btn_back"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/icon_student_nor" />
+
+            <TextView
+                android:id="@+id/tv_back_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@+id/btn_back"
+                app:layout_constraintTop_toTopOf="@id/btn_back"
+                app:layout_constraintBottom_toBottomOf="@id/btn_back"
+                android:layout_marginStart="2dp"
+                android:text="원생선택"
+                android:textColor="@color/font_color_default"
+                android:textStyle="bold"
+                android:textSize="@dimen/font_size_small"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <ImageView
             android:id="@+id/iv_logo"

@@ -169,7 +169,7 @@ public class IntroActivity extends BaseActivity {
             if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)){
                 LogMgr.e(TAG, "push msg ");
                 _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                LogMgr.e(TAG, "msg = " + _pushMessage.body);
+                LogMgr.e(TAG, "msg = " + _pushMessage.body + ", " + _pushMessage.connSeq);
             }else{
                 LogMgr.e(TAG, "push msg is null");
             }
@@ -538,6 +538,7 @@ public class IntroActivity extends BaseActivity {
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         intent.putParcelableArrayListExtra(IntentParams.PARAM_CHILD_STUDENT_INFO, getData);
                                         if(_pushMessage != null) {
+                                            LogMgr.e(TAG, "EVENT intro pushConnSeq: " + _pushMessage.connSeq+"");
                                             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                                         }
                                         startActivity(intent);

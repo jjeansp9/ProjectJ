@@ -90,6 +90,7 @@
     <string name="input_auth_number">인증번호 입력</string>
     <string name="auth_complete">인증이 완료되었습니다.</string>
     <string name="timeout">시간초과</string>
+    <string name="please_content">내용을 입력해주세요.</string>
     <string name="check_duplicate">중복체크</string>
     <string name="duplicate_id">중복된 아이디입니다.</string>
     <string name="duplicate_phone_no">이미 사용 중인 휴대폰 번호입니다.</string>
@@ -225,6 +226,8 @@
     <string name="menu_stu_info_impossible_sel_next">2099년 이후의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_attendance">출석부</string>
     <string name="menu_stu_info_get_clipboard">납부 계좌번호를 클립보드에 복사하였습니다.</string>
+    <string name="menu_stu_info_get_clipboard_error">error: 클립보드 서비스를 찾을 수 없습니다.</string>
+    <string name="menu_stu_info_get_clipboard_empty">계좌번호를 확인해주세요.</string>
     <string name="won">원</string>
     <string name="year">년</string>
     <string name="month">월</string>
@@ -235,10 +238,11 @@
     <string name="consultation_request_day_desired">상담 희망일</string>
     <string name="consultation_request_sel_date">날짜를 선택해주세요</string>
     <string name="consultation_request_campus">캠퍼스</string>
-    <string name="consultation_request_teacher">선생님</string>
+    <string name="consultation_request_date">%d년 %d월 %d일</string>
+    <string name="consultation_request_teacher">상담 강사</string>
     <string name="consultation_request_content">상담 내용</string>
     <string name="consultation_request_content_success">선생님에게 상담요청을 하였습니다</string>
-    <string name="consultation_request_attention">※ 상담은 내선전화 070번호로 진행됩니다.\n\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
+    <string name="consultation_request_attention">※ 상담은 내선전화 070번호로 진행됩니다.\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>

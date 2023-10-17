@@ -164,8 +164,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
-
-        requestBrfReservedListData();
     }
 
     @Override
@@ -228,8 +226,10 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 //                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
 //            });
             requestBrfDetail(mInfo.seq);
+            requestBrfReservedListData(mInfo.seq);
         }else if(_currentSeq != -1) {
             requestBrfDetail(_currentSeq);
+            requestBrfReservedListData(_currentSeq);
         }
     }
 
@@ -427,7 +427,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 BriefingData data = response.body().data;
                                 if (data != null){
                                     mInfo = data;
-                                    if (added) requestBrfReservedListData();
+                                    if (added) requestBrfReservedListData(ptSeq);
                                     setView();
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
@@ -456,11 +456,11 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
     }
 
-    private void requestBrfReservedListData(){
+    private void requestBrfReservedListData(int ptSeq){
 
         if (RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getBrfReservedList(mInfo.seq, _memberSeq).enqueue(new Callback<BriefingReservedListResponse>() {
+            mRetrofitApi.getBrfReservedList(ptSeq, _memberSeq).enqueue(new Callback<BriefingReservedListResponse>() {
                 @Override
                 public void onResponse(Call<BriefingReservedListResponse> call, Response<BriefingReservedListResponse> response) {
                     try {

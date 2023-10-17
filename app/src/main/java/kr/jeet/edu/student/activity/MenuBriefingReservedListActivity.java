@@ -109,7 +109,7 @@ public class MenuBriefingReservedListActivity extends BaseActivity {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if(!mRecyclerBrf.canScrollVertically(1)
+                if(((!mRecyclerBrf.canScrollVertically(1)) && mRecyclerBrf.canScrollVertically(-1))
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
                 {

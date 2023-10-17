@@ -503,7 +503,6 @@ public class InformedQuestionActivity extends BaseActivity {
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
                             }else{
                                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
-                                //if (request.seq == null) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                                 Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             }
                             setResult(RESULT_OK, intent);
