@@ -116,6 +116,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         }else{
                             mSpinnerGrade.selectItemByIndex(0);
                         }
+                    }else{
+                        requestBoardList();
                     }
                     break;
 
@@ -237,7 +239,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private void setListSpinner(){
         _ACAList.clear();
-//        _ACAList.add(new ACAData("", "전체", ""));
+        _ACAList.add(new ACAData("", "전체", ""));
         _ACAList.addAll(DataManager.getInstance().getLocalACAListMap().values());
         if(_ACAList != null) _ACANameList = _ACAList.stream().map(t -> t.acaName).collect(Collectors.toList());
         mSpinnerCampus.setItems(_ACANameList);

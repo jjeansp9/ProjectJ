@@ -411,7 +411,6 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-                    LogMgr.e("MainActivity Event", _pushMessage.connSeq+"");
                     intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
                     intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuBoardDetailActivity.class);

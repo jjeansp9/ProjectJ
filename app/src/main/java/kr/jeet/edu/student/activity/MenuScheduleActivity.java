@@ -122,8 +122,9 @@ public class MenuScheduleActivity extends BaseActivity {
                         }else{
                             _spinnerGrade.selectItemByIndex(0);
                         }
+                    }else {
+                        _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
                     }
-//                    _handler.sendEmptyMessage(CMD_GET_SCHEDULES);
                     break;
 
                 case CMD_GET_SCHEDULES:
@@ -191,7 +192,7 @@ public class MenuScheduleActivity extends BaseActivity {
 
     private void setSpinner(){
         _spinnerCampus.setIsFocusable(true);
-//        _ACAList.add(new ACAData("", "전체", ""));
+        _ACAList.add(new ACAData("", "전체", ""));
         _ACAList.addAll(DataManager.getInstance().getLocalACAListMap().values());
         List<String> acaNames = new ArrayList<>();
         for (ACAData data : _ACAList) { acaNames.add(data.acaName); }

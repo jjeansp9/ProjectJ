@@ -10,7 +10,6 @@ import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
-import kr.jeet.edu.student.utils.LogMgr;
 
 /**
  * 앱에서 사용하는 JEET 관련 정보들을 저장하는 클래스
@@ -163,11 +162,7 @@ public class DataManager {
     public boolean initClsListMap(List<TeacherClsData> list)
     {
         if(list == null) return false;
-        if(!clsListMap.isEmpty()) {
-
-            LogMgr.e(TAG, "EVENT ClsList Clear");
-            clsListMap.clear();
-        }
+        if(!clsListMap.isEmpty()) clsListMap.clear();
         for(TeacherClsData item : list) {
             int key = item.clsCode;
             if (!clsListMap.containsKey(key)) {

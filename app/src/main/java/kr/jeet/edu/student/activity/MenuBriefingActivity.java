@@ -122,8 +122,9 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                         }else{
                             _spinnerGrade.selectItemByIndex(0);
                         }
+                    }else {
+                        _handler.sendEmptyMessage(CMD_GET_BRIEFINGS);
                     }
-//                    _handler.sendEmptyMessage(CMD_GET_BRIEFINGS);
                     break;
                 case CMD_GET_BRIEFINGS:
                     //todo request logic
@@ -192,7 +193,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     }
 
     private void setSpinner(){
-//        _ACAList.add(new ACAData("", "전체", ""));
+        _ACAList.add(new ACAData("", "전체", ""));
         _ACAList.addAll(DataManager.getInstance().getLocalACAListMap().values());
         List<String> acaNames = new ArrayList<>();
         for (ACAData data : _ACAList) { acaNames.add(data.acaName); }
