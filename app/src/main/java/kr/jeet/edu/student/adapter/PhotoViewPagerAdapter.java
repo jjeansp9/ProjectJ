@@ -19,6 +19,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.server.RetrofitApi;
+import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.view.DrawableAlwaysCrossFadeFactory;
 import kr.jeet.edu.student.view.photoview.PhotoView;
@@ -53,7 +54,7 @@ public class PhotoViewPagerAdapter extends PagerAdapter {
 
         if (mImageList != null && mImageList.size() > 0) { // 이미지가 있는 경우
             String imageUrl = RetrofitApi.FILE_SUFFIX_URL + mImageList.get(position).path + "/" + mImageList.get(position).saveName;
-
+            imageUrl = FileUtils.replaceMultipleSlashes(imageUrl);
             Glide.with(container)
                     .load(imageUrl)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)

@@ -371,8 +371,7 @@ public class MenuScheduleActivity extends BaseActivity {
             Calendar calendar = date.getCalendar();
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             _selectedDate = calendar.getTime();
-
-            setTvHolidayDate();
+            LogMgr.e(TAG, "_selectedDate: " + _selectedDate);
 
             otherDec.setSelectedDay(date);
             otherSundayDec.setSelectedDay(date);
@@ -546,6 +545,8 @@ public class MenuScheduleActivity extends BaseActivity {
         if(mAdapter != null) mAdapter.getFilter().filter(String.valueOf(firstDay.getDay()));
         setDeco();
         mCalendarView.invalidateDecorators();
+
+        setTvHolidayDate();
     }
 }
 

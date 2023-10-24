@@ -689,6 +689,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
                     mSpinnerCls.setVisibility(View.VISIBLE);
                 }
+                LogMgr.e("STInfo Event1");
             }else{
                 mSpinnerCls.setVisibility(View.GONE);
                 mSpinnerCls.clearSelectedItem();
@@ -705,12 +706,39 @@ public class MenuStudentInfoActivity extends BaseActivity {
 //                if(!isContainClassInfo) {   //클래스정보가 없는 경우 출석을 표시할 수 없으므로 gone 처리함
 //                    layoutAttendanceArea.setVisibility(View.GONE);
 //                }
-
+                LogMgr.e("STInfo Event2");
                 return;
             }
 //            List<String> sfNames = new ArrayList<>();
 
 //            for (TeacherClsData data : _classList) sfNames.add(data.clsName);
+
+            LogMgr.e("STInfo Event3");
+
+//            new Thread(() -> {
+//                Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
+//
+//
+//                if(_selectedClass != null){
+//                    Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
+//                    if (optional.isPresent()) {
+//                        _selectedClass = (TeacherClsData) optional.get();
+//                        try {
+//                            int index = mListCls.indexOf(_selectedClass);
+//                            mSpinnerCls.selectItemByIndex(index);
+//                        }catch(Exception ex) {
+//                            Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+//                            mSpinnerCls.selectItemByIndex(0);
+//                        }
+//                    } else {
+//                        Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+//                        mSpinnerCls.selectItemByIndex(0);
+//                    }
+//                }else{
+//                    mSpinnerCls.selectItemByIndex(0);
+//                }
+//            });
+
             Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
 
 
@@ -732,6 +760,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
             }else{
                 mSpinnerCls.selectItemByIndex(0);
             }
+
         }catch (Exception e){}
     }
 

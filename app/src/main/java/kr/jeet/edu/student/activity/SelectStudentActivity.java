@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.activity;
 
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
@@ -61,6 +62,8 @@ public class SelectStudentActivity extends BaseActivity {
     private ArrayList<ChildStudentInfo> mList = new ArrayList<>();
     boolean doubleBackToExitPressedOnce = false;
 
+    private int _childCnt = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class SelectStudentActivity extends BaseActivity {
     private void initData(){
         try {
             _parentSeq = PreferenceUtil.getUserSeq(mContext);
+            _childCnt = PreferenceUtil.getNumberOfChild(mContext);
 
             Intent intent = getIntent();
             if (intent != null) {
@@ -133,11 +137,26 @@ public class SelectStudentActivity extends BaseActivity {
                         pushPopupDialog.show();
                     }
                 }
-                break;
+                    break;
 
+                case MSG_TYPE_NOTICE:
+                {
+                    if (_childCnt > 1) startPushActivity(MSG_TYPE_NOTICE);
+                }
+                    break;
                 case MSG_TYPE_SYSTEM:
                 {
-                    //new FCMManager(mContext).requestPushConfirmToServer(_pushMessage);
+                    if (_childCnt > 1) startPushActivity(MSG_TYPE_SYSTEM);
+                }
+                    break;
+                case MSG_TYPE_PT:
+                {
+                    if (_childCnt > 1) startPushActivity(MSG_TYPE_PT);
+                }
+                    break;
+                case MSG_TYPE_ACA_SCHEDULE:
+                {
+                    if (_childCnt > 1) startPushActivity(MSG_TYPE_ACA_SCHEDULE);
                 }
                     break;
 
@@ -145,9 +164,26 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
             }
         }
-
-
     }
+
+    private void startPushActivity(String pushType){
+        Intent intent = new Intent(mContext, MainActivity.class);
+        if (pushType.equals(MSG_TYPE_SYSTEM)){
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
+
+        } else if (pushType.equals(MSG_TYPE_NOTICE)){
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+        }
+
+        LogMgr.e(TAG, "EVENT pushActivity()");
+        if(_pushMessage != null) {
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+        }
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        _pushMessage = null;
+    }
+
 
     @Override
     public void onBackPressed() {

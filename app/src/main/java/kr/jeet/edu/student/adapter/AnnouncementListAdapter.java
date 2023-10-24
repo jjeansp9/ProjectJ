@@ -64,6 +64,9 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
         AnnouncementData item = mList.get(position);
         try{
             LogMgr.e("isMain: " + isMain);
+
+            String str = "";
+
             if (isMain) {
                 holder.brfRoot.setForeground(null);
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
@@ -74,10 +77,11 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
                 holder.tvLocation.setVisibility(View.VISIBLE);
 
-                String str = Utils.getStr(item.acaName) + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
-
+                str = TextUtils.isEmpty(item.acaName) ? "캠퍼스 정보없음" : item.acaName + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
                 holder.tvCampusAndAcaGubun.setText(str);
-                holder.tvLocation.setText(Utils.getStr(item.memberResponseVO.name));
+
+                str = TextUtils.isEmpty(item.memberResponseVO.name) ? "이름 정보없음" : item.memberResponseVO.name;
+                holder.tvLocation.setText(str);
             }
 
             holder.tvState.setVisibility(View.GONE);
