@@ -196,7 +196,6 @@ public class FCMManager {
                         if (response.isSuccessful()) {
 
                         } else {
-                            Toast.makeText(_context, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestPushReceivedToServer() Exception: ", e.getMessage());
@@ -210,7 +209,6 @@ public class FCMManager {
                         LogMgr.e(TAG, "requestPushReceivedToServer() onFailure >> " + t.getMessage());
                     } catch (Exception e) {
                     }
-                    Toast.makeText(_context, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
         }

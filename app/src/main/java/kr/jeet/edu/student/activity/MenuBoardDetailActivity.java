@@ -381,7 +381,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 if (data != null){
                                     _systemNoticeData = data;
                                     mTvTitle.setText(TextUtils.isEmpty(_systemNoticeData.title) ? "" : _systemNoticeData.title); // 제목
-                                    mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
+                                    mTvName.setVisibility(View.GONE);
+                                    //mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
                                     mTvDate.setText(TextUtils.isEmpty(_systemNoticeData.insertDate) ? "" : _systemNoticeData.insertDate); // 작성날짜
                                     mTvContent.setText(TextUtils.isEmpty(_systemNoticeData.content) ? "" : _systemNoticeData.content); // 내용
 

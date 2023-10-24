@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.Html;
 import android.view.View;
 import android.webkit.ValueCallback;
 import android.webkit.WebResourceError;
@@ -28,6 +29,30 @@ public class MyWebViewClient extends WebViewClient {
 
     private AppCompatActivity activity;
     private AlertDialog mProgressDialog = null;
+
+    private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
+    private final String SHIN_HAN_JS_CODE = "javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');";
+
+    private final String BUS_ROUTE_URL = "http://m.jeet.kr/intro/table/index.jsp?route_type=1&campus_fk=";
+    private final String BUS_ROUTE_JS_CODE = "javascript:var meta = document.createElement('meta'); meta.name = 'viewport'; meta.content = 'width=device-width, user-scalable = yes'; var header = document.getElementsByTagName('head')[0]; header.appendChild(meta)";
+    private final String BUS_ROUTE_JS_CODE_MENU_CLEAR = "javascript:(function() {" +
+            "   var element = document.querySelector('.mobile_quick');" +
+            "   if (element) {" +
+            "       element.style.display = 'none';" +
+            "   }" +
+            "   var leftDiv = document.querySelector('.left');" +
+            "   if (leftDiv) {" +
+            "       leftDiv.parentNode.removeChild(leftDiv);" +
+            "   }" +
+            "   var rightDiv = document.querySelector('.right');" +
+            "   if (rightDiv) {" +
+            "       rightDiv.parentNode.removeChild(rightDiv);" +
+            "   }" +
+            "   var topDiv = document.querySelector('.top');" +
+            "   if (topDiv) {" +
+            "       topDiv.parentNode.removeChild(topDiv);" +
+            "   }" +
+            "})()";
 
     public MyWebViewClient(AppCompatActivity mActivity, WebView webView) {
         this.activity = mActivity;
@@ -82,9 +107,9 @@ public class MyWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         LogMgr.e(TAG, "onPageStarted() : " + url);
-        if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
-            view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
-        }
+        if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
+        else view.loadUrl(BUS_ROUTE_JS_CODE);
+
         showProgressDialog();
         wv.setVisibility(View.GONE);
     }
@@ -93,18 +118,19 @@ public class MyWebViewClient extends WebViewClient {
     public void onLoadResource(WebView view, String url) {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
-        if (url.equals("https://www.shinhandamoa.com/loggedOut#payer")) {
-            view.loadUrl("javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');");
-        }
+        if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
+        else view.loadUrl(BUS_ROUTE_JS_CODE);
     }
 
     @Override
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
+
+        if (url.contains(BUS_ROUTE_URL)) view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
-
     }
 
     @Override

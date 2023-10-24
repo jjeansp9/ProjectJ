@@ -68,6 +68,7 @@ public class PrivacySeeContentActivity extends BaseActivity {
             wv.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
             wv.getSettings().setSupportZoom(true);
             wv.getSettings().setBuiltInZoomControls(true);
+            wv.getSettings().setDisplayZoomControls(false);
 
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);
