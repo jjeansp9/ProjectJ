@@ -62,10 +62,19 @@ public class TeacherInfoActivity extends BaseActivity {
         mRecyclerView = findViewById(R.id.recycler_teacher);
         mTvListEmpty = findViewById(R.id.tv_teacher_empty);
 
-        mAdapter = new TeacherListAdapter(mContext, mList);
+        mAdapter = new TeacherListAdapter(mContext, mList, this::startConsultActivity);
         mRecyclerView.setAdapter(mAdapter);
 
         requestTeacherCls();
+    }
+
+    private void startConsultActivity(TeacherClsData item){
+        if (item != null){
+            Intent intent = new Intent(mContext, ConsultationRequestActivity.class);
+            intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
+            startActivity(intent);
+
+        }else LogMgr.e("clickItem is null ");
     }
 
     private void requestTeacherCls(){
@@ -80,6 +89,7 @@ public class TeacherInfoActivity extends BaseActivity {
                         if (response.isSuccessful() && response.body() != null){
                             if (mList.size() > 0) mList.clear();
                             mList.addAll(response.body().data);
+                            mList.add(0, new TeacherClsData());
                             if (mAdapter != null) mAdapter.notifyDataSetChanged();
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

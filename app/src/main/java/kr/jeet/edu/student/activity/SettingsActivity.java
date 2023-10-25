@@ -137,10 +137,10 @@ public class SettingsActivity extends BaseActivity {
         try {
             PackageManager packageManager = getPackageManager();
             PackageInfo packageInfo = packageManager.getPackageInfo(getPackageName(), 0);
+
             String versionName = packageInfo.versionName;
 
             if (versionName != null) mTvAppVersion.setText("v"+versionName);
-            else mTvAppVersionBadge.setVisibility(View.GONE);
 
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();

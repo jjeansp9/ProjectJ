@@ -190,8 +190,9 @@
     <string name="main_tv_first_notify">공지안내</string>
     <string name="main_tv_second_notify">공지내용 없음</string>
 
-    <string name="main_tv_my_teacher">지도강사</string>
+    <string name="main_tv_my_teacher">지도강사/상담</string>
     <string name="main_tv_teacher">선생님</string>
+    <string name="main_tv_consult">※ 상담을 진행하실 강사를 선택해주세요.</string>
 
     <string name="menu_item_settings">설정</string>
     <string name="menu_item_complete">완료</string>
@@ -243,7 +244,7 @@
     <string name="consultation_request_teacher">상담 강사</string>
     <string name="consultation_request_content">상담 내용</string>
     <string name="consultation_request_content_success">선생님에게 상담요청을 하였습니다</string>
-    <string name="consultation_request_attention">※ 상담은 내선전화 070번호로 진행됩니다.\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
+    <string name="consultation_request_attention">상담은 내선전화 070번호로 진행됩니다.\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>

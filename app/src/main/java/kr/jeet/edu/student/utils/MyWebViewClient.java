@@ -2,9 +2,13 @@ package kr.jeet.edu.student.utils;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.text.Html;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -178,7 +182,7 @@ public class MyWebViewClient extends WebViewClient {
         String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
         LogMgr.e(TAG, "clipboard: " + getClipboard);
         int clipboard = 0;
-
+        Utils.setClipData(activity, "");
         try{ clipboard = Integer.parseInt(getClipboard); }
         catch (Exception e) {}
 

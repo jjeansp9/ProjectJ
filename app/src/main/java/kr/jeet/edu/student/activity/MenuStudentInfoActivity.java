@@ -2,9 +2,11 @@ package kr.jeet.edu.student.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -19,7 +21,10 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,6 +105,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
+    private ProgressBar progressBar;
 
     private RecyclerView recyclerViewMonthlyAttend;
     private MonthlyAttendanceListAdapter _attendanceListAdapter;
@@ -272,6 +278,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         //mTvBookPayEmpty = findViewById(R.id.tv_book_pay_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
+        progressBar = findViewById(R.id.progress_bar);
 
         mSpinnerCls = findViewById(R.id.spinner_cls);
         mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
@@ -549,7 +556,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     }
     // 수강료, 교재비 조회
     private void requestTuitionList(String yearMonth){
-
+        progressBar.setVisibility(View.VISIBLE);
         if (RetrofitClient.getInstance() != null){
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
@@ -591,12 +598,15 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     } else {
                         Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                     }
+                    //updateList();
                     if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
                     mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
+                    progressBar.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onFailure(Call<TuitionResponse> call, Throwable t) {
+                    //updateList();
                     if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
                     mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
                     try {
@@ -604,10 +614,25 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     } catch (Exception e) {
                     }
                     hideProgressDialog();
+                    progressBar.setVisibility(View.GONE);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
         }
+    }
+
+    private void updateList(){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+        alphaAnimation.setDuration(1000);
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) { mTuitionAdapter.notifyDataSetChanged(); }
+            @Override
+            public void onAnimationEnd(Animation animation) {}
+            @Override
+            public void onAnimationRepeat(Animation animation) {}
+        });
+        mRecyclerTuition.startAnimation(alphaAnimation);
     }
 
     // 원생 정보 조회

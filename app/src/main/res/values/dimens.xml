@@ -45,9 +45,9 @@
     <dimen name="usergubun_badge_padding_horizontal">10dp</dimen>
     <dimen name="usergubun_badge_padding_vertical">1dp</dimen>
 
-    <dimen name="app_version_badge_corner">12dp</dimen>
-    <dimen name="app_version_badge_padding_horizontal">4dp</dimen>
-    <dimen name="app_version_badge_padding_vertical">6dp</dimen>
+    <dimen name="app_version_badge_corner">5dp</dimen>
+    <dimen name="app_version_badge_padding_horizontal">8dp</dimen>
+    <dimen name="app_version_badge_padding_vertical">2dp</dimen>
 
     <dimen name="settings_btn_box">16dp</dimen>
 

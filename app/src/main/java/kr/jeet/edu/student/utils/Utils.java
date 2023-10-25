@@ -550,6 +550,7 @@ public class Utils {
         if (clipMgr != null) {
             clipMgr.setPrimaryClip(clipData);
             return str;
+
         } else {
             return "";
         }
@@ -568,10 +569,11 @@ public class Utils {
                 CharSequence text = item.getText();
 
                 if (text != null) {
-                    clipMgr.setPrimaryClip(ClipData.newPlainText(null, ""));
                     return text.toString();
+
+                } else {
+                    return "";
                 }
-                else return "";
 
             } else {
                 return "";

@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="@drawable/bg_teacher_info_list"
+    android:stateListAnimator="@xml/animate_button_push"
     android:gravity="center"
     android:layout_marginTop="@dimen/layout_margin_12"
     android:layout_marginHorizontal="@dimen/layout_margin_16"

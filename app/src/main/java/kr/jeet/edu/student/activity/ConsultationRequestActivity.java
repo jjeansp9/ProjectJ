@@ -4,7 +4,9 @@ import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD;
 import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD_KOR;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -34,9 +36,11 @@ import java.util.Locale;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
+import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.data.TeacherClsData;
+import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.CounselRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
@@ -80,6 +84,8 @@ public class ConsultationRequestActivity extends BaseActivity {
     private int maxYear = 2100;
 
     private ArrayList<TeacherClsData> mListTeacher = new ArrayList<>();
+    private TeacherClsData mInfo;
+    private String title = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +120,19 @@ public class ConsultationRequestActivity extends BaseActivity {
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
         minYear = calendar.get(Calendar.YEAR);
+
+        Intent intent = getIntent();
+        if (intent != null){
+            if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TeacherClsData.class);
+                }else{
+                    mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                }
+            }
+        }
+
+        if(mInfo == null) finish();
     }
 
     @Override
@@ -126,11 +145,11 @@ public class ConsultationRequestActivity extends BaseActivity {
 
         mEtConsultContent = findViewById(R.id.et_consultation_content);
         mTvCal = findViewById(R.id.tv_consultation_request_cal);
-        mSpinnerTeacher = findViewById(R.id.spinner_teacher);
+        //mSpinnerTeacher = findViewById(R.id.spinner_teacher);
 
         mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
-        setSpinnerTeacher();
+        //setSpinnerTeacher();
     }
 
     @Override
@@ -185,46 +204,46 @@ public class ConsultationRequestActivity extends BaseActivity {
         datePickerDialog.show(getSupportFragmentManager(), "date");
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private void setSpinnerTeacher(){
-        mSpinnerTeacher.setIsFocusable(true);
-        try {
-
-            if (mListTeacher.size() <= 0) {
-                finish();
-            }else{
-                List<String> sfNames = new ArrayList<>();
-                for (TeacherClsData data : mListTeacher) sfNames.add(data.sfName + " / " + data.clsName);
-
-                if (sfNames.size() > 0 && sfNames != null) mSpinnerTeacher.setText(sfNames.get(0));
-                mSpinnerTeacher.setItems(sfNames);
-                _clsName = mListTeacher.get(0).clsName;
-                _sfCode = mListTeacher.get(0).sfCode;
-                _sfName = mListTeacher.get(0).sfName;
-                _managerPhoneNumber = mListTeacher.get(0).phoneNumber;
-
-                mSpinnerTeacher.setOnTouchListener((v, event) -> {
-                    mEtConsultContent.clearFocus();
-                    Utils.hideKeyboard(mContext, mEtConsultContent);
-                    return false;
-                });
-
-                mSpinnerTeacher.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-                    _sfCode = mListTeacher.get(newIndex).sfCode;
-                    _sfName = mListTeacher.get(newIndex).sfName;
-                    _clsName = mListTeacher.get(newIndex).clsName;
-                    _managerPhoneNumber = mListTeacher.get(newIndex).phoneNumber;
-                    LogMgr.e("TEST",
-                            "\nsfCode:" + _sfCode +
-                                    "\nsfName:" + _sfName +
-                                    "\nclsName:" + _clsName +
-                                    "\nphoneNum:" + _managerPhoneNumber
-                    );
-                });
-            }
-
-        }catch (Exception e){}
-    }
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void setSpinnerTeacher(){
+//        mSpinnerTeacher.setIsFocusable(true);
+//        try {
+//
+//            if (mListTeacher.size() <= 0) {
+//                finish();
+//            }else{
+//                List<String> sfNames = new ArrayList<>();
+//                for (TeacherClsData data : mListTeacher) sfNames.add(data.sfName + " / " + data.clsName);
+//
+//                if (sfNames.size() > 0 && sfNames != null) mSpinnerTeacher.setText(sfNames.get(0));
+//                mSpinnerTeacher.setItems(sfNames);
+//                _clsName = mListTeacher.get(0).clsName;
+//                _sfCode = mListTeacher.get(0).sfCode;
+//                _sfName = mListTeacher.get(0).sfName;
+//                _managerPhoneNumber = mListTeacher.get(0).phoneNumber;
+//
+//                mSpinnerTeacher.setOnTouchListener((v, event) -> {
+//                    mEtConsultContent.clearFocus();
+//                    Utils.hideKeyboard(mContext, mEtConsultContent);
+//                    return false;
+//                });
+//
+//                mSpinnerTeacher.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+//                    _sfCode = mListTeacher.get(newIndex).sfCode;
+//                    _sfName = mListTeacher.get(newIndex).sfName;
+//                    _clsName = mListTeacher.get(newIndex).clsName;
+//                    _managerPhoneNumber = mListTeacher.get(newIndex).phoneNumber;
+//                    LogMgr.e("TEST",
+//                            "\nsfCode:" + _sfCode +
+//                                    "\nsfName:" + _sfName +
+//                                    "\nclsName:" + _clsName +
+//                                    "\nphoneNum:" + _managerPhoneNumber
+//                    );
+//                });
+//            }
+//
+//        }catch (Exception e){}
+//    }
 
     private void putConsultRequest(){
 
@@ -237,19 +256,23 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.writerName = _writerName;
 
         str = Utils.reformFormatDate(mTvCal.getText().toString(), DATE_FORMATTER_YYYY_MM_DD_KOR, DATE_FORMATTER_YYYY_MM_DD);
-        request.counselDate = str;
 
+        request.counselDate = str;
         request.acaCode = _acaCode;
         request.acaName = _acaName;
-        request.sfCode = _sfCode;
-        request.sfName = _sfName;
+//        request.sfCode = _sfCode;
+//        request.sfName = _sfName;
+//        request.clsName = _clsName;
+        //request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
+        request.sfCode = mInfo.sfCode;
+        request.sfName = mInfo.sfName;
+        request.clsName = mInfo.clsName;
+        request.managerPhoneNumber = mInfo.phoneNumber;
 
         str = mEtConsultContent.getText().toString();
-        request.memo = str;
 
-        request.clsName = _clsName;
+        request.memo = str;
         request.phoneNumber = _phoneNumber.replace("-", "");
-        request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
         request.smsSender = _acaTel.replace("-", "");
 
         LogMgr.d(TAG + "requestData",

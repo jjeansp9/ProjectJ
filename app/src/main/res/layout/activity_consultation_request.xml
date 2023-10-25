@@ -120,7 +120,8 @@
                 android:text="@string/consultation_request_teacher"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinner_teacher"
@@ -143,7 +144,8 @@
                 app:spinner_popup_animation="dropdown"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
-                android:background="@drawable/bg_campus_spinner"/>
+                android:background="@drawable/bg_campus_spinner"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_consultation_content"
@@ -177,12 +179,25 @@
                 android:maxLength="500" />
 
             <TextView
-                android:id="@+id/tv_consultation_attention"
+                android:id="@+id/tv_consultation_attention_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_consultation_content"
+                android:layout_marginTop="8dp"
+                android:text="※"
+                android:textColor="@color/red_sub"
+                android:textSize="@dimen/font_size_small"/>
+
+            <TextView
+                android:id="@+id/tv_consultation_attention"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toEndOf="@id/tv_consultation_attention_sub"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/et_consultation_content"
                 app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="4dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/consultation_request_attention"
                 android:textColor="@color/red_sub"
