@@ -132,28 +132,8 @@ public class MyWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
 
-        if (url.contains(BUS_ROUTE_URL)) {
-            view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
-
-        } else if (url.contains(SHIN_HAN_LOGIN_URL)) {
-
-            String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
-            LogMgr.e(TAG, "clipboard: " + getClipboard);
-            int clipboard = 0;
-
-            try{ clipboard = Integer.parseInt(getClipboard); }
-            catch (Exception e) {}
-
-            String jsCode = "javascript:(function() {" +
-                    "   var bankNumElement = document.getElementById('bankNum');" +
-                    "   if (bankNumElement) {" +
-                    "       bankNumElement.value = '" + clipboard + "';" +
-                    "   }" +
-                    "   window.scrollTo(0, 0);" +
-                    "})()";
-
-            view.loadUrl(jsCode);
-        }
+        if (url.contains(BUS_ROUTE_URL)) view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+        else if (url.contains(SHIN_HAN_LOGIN_URL)) view.loadUrl(shinhanJSCode());
 
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
@@ -192,5 +172,22 @@ public class MyWebViewClient extends WebViewClient {
         }catch (Exception e){
             LogMgr.e("hideProgressDialog()", e.getMessage());
         }
+    }
+
+    private String shinhanJSCode(){
+        String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
+        LogMgr.e(TAG, "clipboard: " + getClipboard);
+        int clipboard = 0;
+
+        try{ clipboard = Integer.parseInt(getClipboard); }
+        catch (Exception e) {}
+
+        return "javascript:(function() {" +
+                "   var bankNumElement = document.getElementById('bankNum');" +
+                "   if (bankNumElement) {" +
+                "       bankNumElement.value = '" + clipboard + "';" +
+                "   }" +
+                "   window.scrollTo(0, 0);" +
+                "})()";
     }
 }

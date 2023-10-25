@@ -567,7 +567,10 @@ public class Utils {
                 ClipData.Item item = clipData.getItemAt(0);
                 CharSequence text = item.getText();
 
-                if (text != null) return text.toString();
+                if (text != null) {
+                    clipMgr.setPrimaryClip(ClipData.newPlainText(null, ""));
+                    return text.toString();
+                }
                 else return "";
 
             } else {
