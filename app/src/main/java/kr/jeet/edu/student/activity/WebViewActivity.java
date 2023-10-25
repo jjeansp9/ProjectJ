@@ -36,11 +36,12 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.MyWebChromeClient;
 import kr.jeet.edu.student.utils.MyWebViewClient;
+import kr.jeet.edu.student.view.CustomAppbarLayout;
 
 public class WebViewActivity extends BaseActivity {
 
     private final static String TAG = "WebView Activity";
-
+    private String title = "";
     private WebView wv;
     private String url;
 
@@ -54,11 +55,15 @@ public class WebViewActivity extends BaseActivity {
         mContext = this;
         initData();
         initView();
+        initAppbar();
     }
 
     private void initData(){
         try {
             Intent intent = getIntent();
+            if (intent != null && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
+                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+            }
             if (intent != null){
                 if (intent.hasExtra(IntentParams.PARAM_WEB_VIEW_URL)){
                     url = intent.getStringExtra(IntentParams.PARAM_WEB_VIEW_URL);
@@ -73,7 +78,7 @@ public class WebViewActivity extends BaseActivity {
     @Override
     void initView() {
 
-        wv = findViewById(R.id.web_view);
+        wv = findViewById(R.id.webview);
 
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
         wv.getSettings().setSupportZoom(true);
@@ -95,5 +100,11 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @Override
-    void initAppbar() {}
+    void initAppbar() {
+        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
+        customAppbar.setTitle(title);
+        setSupportActionBar(customAppbar.getToolbar());
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 }

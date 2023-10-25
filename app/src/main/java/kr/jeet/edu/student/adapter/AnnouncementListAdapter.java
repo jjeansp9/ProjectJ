@@ -75,13 +75,13 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
                 holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
-                holder.tvLocation.setVisibility(View.VISIBLE);
+                //holder.tvLocation.setVisibility(View.VISIBLE);
 
                 str = TextUtils.isEmpty(item.acaName) ? "캠퍼스 정보없음" : item.acaName + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
                 holder.tvCampusAndAcaGubun.setText(str);
 
-                str = TextUtils.isEmpty(item.memberResponseVO.name) ? "이름 정보없음" : item.memberResponseVO.name;
-                holder.tvLocation.setText(str);
+                //str = TextUtils.isEmpty(item.memberResponseVO.name) ? "이름 정보없음" : item.memberResponseVO.name;
+                //holder.tvLocation.setText(str);
             }
 
             holder.tvState.setVisibility(View.GONE);

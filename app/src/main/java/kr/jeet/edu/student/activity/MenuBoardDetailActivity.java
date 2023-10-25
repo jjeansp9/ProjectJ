@@ -199,26 +199,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
     }
     private void initData() {
         if (_currentData != null) {
-//            LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
-//            mTvTitle.setText(_currentData.title); // 제목
-//            mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
-//            mTvDate.setText(_currentData.insertDate); // 작성날짜
-//            mTvContent.setText(_currentData.content); // 내용
-//
-//            if(_currentData.fileList != null && _currentData.fileList.size() > 0) {
-//
-//                for(FileData data : _currentData.fileList) {
-//                    String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
-//                    LogMgr.w(data.saveName + " / " + mimeType);
-//
-//                    // mimeType is checked for null here.
-//                    if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-//                    else mFileList.add(data);
-//
-//                }
-//            }
-//            if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
-//            if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
             mImgRdCnt.setVisibility(View.VISIBLE);
             mTvRdCnt.setVisibility(View.VISIBLE);
             LogMgr.e("Event5");
@@ -252,7 +232,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void setView(){
         LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
         mTvTitle.setText(_currentData.title); // 제목
-        mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
+        mTvName.setVisibility(View.GONE);
+        //mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
         mTvDate.setText(_currentData.insertDate); // 작성날짜
         mTvContent.setText(_currentData.content); // 내용
         mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(_currentData.rdcnt)));

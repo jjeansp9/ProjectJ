@@ -217,6 +217,7 @@
     <string name="menu_stu_info_consultation_request_header">상담요청</string>
     <string name="menu_stu_info_attendance_sheet">출석표</string>
     <string name="menu_stu_info_tuition">수강료 안내</string>
+    <string name="menu_stu_info_tuition_title">수강료 납부</string>
     <string name="menu_stu_info_book_pay">교재비</string>
     <string name="menu_stu_info_unpaid_amount">미납 금액</string>
     <string name="menu_stu_info_empty">정보 없음</string>

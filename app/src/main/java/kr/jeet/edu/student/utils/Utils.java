@@ -17,6 +17,8 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -59,6 +61,7 @@ import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -535,6 +538,44 @@ public class Utils {
         if (!editText.getText().toString().equals(textWithoutSpaces)) {
             editText.setText(textWithoutSpaces);
             editText.setSelection(textWithoutSpaces.length());
+        }
+    }
+
+    /**
+     * ClipBoard data set
+     * */
+    public static String setClipData(Context context, String str){
+        ClipboardManager clipMgr = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText("Account No Clipboard", str);
+        if (clipMgr != null) {
+            clipMgr.setPrimaryClip(clipData);
+            return str;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 저장된 ClipBoard data get
+     * */
+    public static String getClipData(Context context){
+        ClipboardManager clipMgr = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        if (clipMgr != null) {
+            ClipData clipData = clipMgr.getPrimaryClip();
+
+            if (clipData != null && clipData.getItemCount() > 0) {
+                ClipData.Item item = clipData.getItemAt(0);
+                CharSequence text = item.getText();
+
+                if (text != null) return text.toString();
+                else return "";
+
+            } else {
+                return "";
+            }
+
+        } else {
+            return "";
         }
     }
 }

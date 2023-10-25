@@ -30,6 +30,7 @@ public class MyWebViewClient extends WebViewClient {
     private AppCompatActivity activity;
     private AlertDialog mProgressDialog = null;
 
+    private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com/common/login#payer";
     private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
     private final String SHIN_HAN_JS_CODE = "javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');";
 
@@ -40,19 +41,22 @@ public class MyWebViewClient extends WebViewClient {
             "   if (element) {" +
             "       element.style.display = 'none';" +
             "   }" +
-            "   var leftDiv = document.querySelector('.left');" +
-            "   if (leftDiv) {" +
-            "       leftDiv.parentNode.removeChild(leftDiv);" +
+            "   var headerDiv = document.getElementById('header');" +
+            "   if (headerDiv) {" +
+            "       headerDiv.parentNode.removeChild(headerDiv);" +
             "   }" +
-            "   var rightDiv = document.querySelector('.right');" +
-            "   if (rightDiv) {" +
-            "       rightDiv.parentNode.removeChild(rightDiv);" +
+            "   var sub_common2Div = document.querySelector('.sub_common2');" +
+            "   if (sub_common2Div) {" +
+            "       sub_common2Div.parentNode.removeChild(sub_common2Div);" +
             "   }" +
-            "   var topDiv = document.querySelector('.top');" +
-            "   if (topDiv) {" +
-            "       topDiv.parentNode.removeChild(topDiv);" +
+            "   var footerDiv = document.getElementById('footer');" +
+            "   if (footerDiv) {" +
+            "       footerDiv.parentNode.removeChild(footerDiv);" +
             "   }" +
+            "   window.scrollTo(0, 0);" +
             "})()";
+
+
 
     public MyWebViewClient(AppCompatActivity mActivity, WebView webView) {
         this.activity = mActivity;
@@ -107,10 +111,11 @@ public class MyWebViewClient extends WebViewClient {
     public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         LogMgr.e(TAG, "onPageStarted() : " + url);
-        if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
-        else view.loadUrl(BUS_ROUTE_JS_CODE);
-
         showProgressDialog();
+
+        if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
+        view.loadUrl(BUS_ROUTE_JS_CODE);
+
         wv.setVisibility(View.GONE);
     }
 
@@ -119,7 +124,7 @@ public class MyWebViewClient extends WebViewClient {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
         if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
-        else view.loadUrl(BUS_ROUTE_JS_CODE);
+        view.loadUrl(BUS_ROUTE_JS_CODE);
     }
 
     @Override
@@ -127,7 +132,28 @@ public class MyWebViewClient extends WebViewClient {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
 
-        if (url.contains(BUS_ROUTE_URL)) view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+        if (url.contains(BUS_ROUTE_URL)) {
+            view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+
+        } else if (url.contains(SHIN_HAN_LOGIN_URL)) {
+
+            String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
+            LogMgr.e(TAG, "clipboard: " + getClipboard);
+            int clipboard = 0;
+
+            try{ clipboard = Integer.parseInt(getClipboard); }
+            catch (Exception e) {}
+
+            String jsCode = "javascript:(function() {" +
+                    "   var bankNumElement = document.getElementById('bankNum');" +
+                    "   if (bankNumElement) {" +
+                    "       bankNumElement.value = '" + clipboard + "';" +
+                    "   }" +
+                    "   window.scrollTo(0, 0);" +
+                    "})()";
+
+            view.loadUrl(jsCode);
+        }
 
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
