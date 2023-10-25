@@ -319,7 +319,7 @@ public class MenuBusActivity extends BaseActivity {
         switch(view.getId()) {
             case R.id.layout_timetable:
                 url = BUS_TIMETABLE_BASE_URL + _selectedBusCampus.bcCode;
-                navigate2WebViewActivity(getString(R.string.title_bus_timetable));
+                navigate2WebViewActivity(getString(R.string.title_whole_bus_timetable));
                 break;
         }
     }
