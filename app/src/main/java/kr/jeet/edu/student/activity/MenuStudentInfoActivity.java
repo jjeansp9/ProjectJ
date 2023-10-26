@@ -169,7 +169,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
 
-    private static final int LAYOUT_ANIM_DURATION = 300;
+    private static final int LAYOUT_ANIM_DURATION = 250;
 
     private Handler _handler = new Handler(Looper.getMainLooper()){
         @Override
@@ -358,8 +358,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         strYear = currentYear + getString(R.string.year);
         strMonth = currentMonth + getString(R.string.month);
-
-        requestMemberInfo(_stuSeq, _stCode);
+        long delayed = getResources().getInteger(R.integer.screen_in_time);
+        new Handler().postDelayed(() -> requestMemberInfo(_stuSeq, _stCode), delayed);
 
         mRecyclerTuition = findViewById(R.id.recycler_tuition);
         mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
