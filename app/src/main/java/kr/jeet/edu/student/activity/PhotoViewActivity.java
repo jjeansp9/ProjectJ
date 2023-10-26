@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
@@ -50,7 +51,7 @@ public class PhotoViewActivity extends BaseActivity {
     private String TAG = PhotoViewActivity.class.getSimpleName();
 
     private TextView tvPage;
-    private RelativeLayout layoutHeader;
+    private RelativeLayout layoutHeader, root;
 
     private ArrayList<FileData> mImageList = new ArrayList<>();
     private int position = 0;
@@ -94,6 +95,7 @@ public class PhotoViewActivity extends BaseActivity {
     void initView() {
         tvPage = findViewById(R.id.tv_photoview_page);
         layoutHeader = findViewById(R.id.layout_header);
+        root = findViewById(R.id.root_photo);
 
         findViewById(R.id.img_close).setOnClickListener(this);
         findViewById(R.id.img_photoview_download).setOnClickListener(this);

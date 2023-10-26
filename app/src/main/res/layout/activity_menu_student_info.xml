@@ -25,8 +25,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/layout_margin">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_consultation_request"
@@ -37,7 +36,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_16"
                 android:background="@drawable/bg_menu_student_info_layout"
-                android:paddingVertical="@dimen/layout_margin_12">
+                android:paddingVertical="@dimen/layout_margin_12"
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:alpha="0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_stu_info"
@@ -257,7 +258,9 @@
                 android:layout_marginTop="@dimen/layout_margin_12"
                 android:layout_marginBottom="@dimen/layout_margin_16"
                 android:background="@drawable/bg_menu_student_info_layout"
-                android:animateLayoutChanges="true">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:animateLayoutChanges="true"
+                android:alpha="0">
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guide_h50dp"
                     android:layout_width="match_parent"
@@ -373,7 +376,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_12"
                 android:paddingHorizontal="@dimen/layout_margin_16"
-                android:background="@drawable/bg_menu_student_info_layout">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:background="@drawable/bg_menu_student_info_layout"
+                android:alpha="0">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guide_tuition"

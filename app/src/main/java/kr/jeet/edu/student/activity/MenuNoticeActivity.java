@@ -108,7 +108,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_notice);
-
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);

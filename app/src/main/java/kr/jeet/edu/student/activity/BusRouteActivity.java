@@ -187,7 +187,7 @@ public class BusRouteActivity extends BaseActivity {
         _handler.removeMessages(CMD_REFRESH);
         super.onPause();
     }
-
+    boolean isScrollY = false;
     // 버스 노선조회
     private void requestRouteList(){
         doFABAnimation();
@@ -195,7 +195,7 @@ public class BusRouteActivity extends BaseActivity {
             RetrofitClient.getApiInterface().getBusRoute(bcName, _currentData.busCode).enqueue(new Callback<BusRouteResponse>() {
                 @Override
                 public void onResponse(Call<BusRouteResponse> call, Response<BusRouteResponse> response) {
-                    boolean isScrollY = false;
+                    //boolean isScrollY = false;
                     if(response.isSuccessful()) {
                         if(response.body() != null) {
                             if (mList!=null && mList.size() > 0) mList.clear();

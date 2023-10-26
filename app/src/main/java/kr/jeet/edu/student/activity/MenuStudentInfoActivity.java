@@ -6,11 +6,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -21,6 +21,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -39,7 +40,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -106,6 +106,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
     private ProgressBar progressBar;
+    private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
 
     private RecyclerView recyclerViewMonthlyAttend;
     private MonthlyAttendanceListAdapter _attendanceListAdapter;
@@ -168,6 +169,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
 
+    private static final int LAYOUT_ANIM_DURATION = 300;
+
     private Handler _handler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -189,6 +192,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_student_info);
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initAppbar();
         initView();
@@ -251,10 +255,63 @@ public class MenuStudentInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void animateLayout(final View view, long duration) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(duration);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addUpdateListener(animation -> {
+            float progress = (float) animation.getAnimatedValue();
+            view.setAlpha(progress); // 애니메이션 중간값을 알파값으로 설정하여 서서히 보이도록 함
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 애니메이션 종료 후 다음 레이아웃으로 전환
+                if (view == layoutFirst) {
+                    animateLayout(layoutSecond, LAYOUT_ANIM_DURATION);
+                    animateLayoutMoveLeft(layoutSecond);
+                }
+                else if (view == layoutSecond) {
+                    animateLayout(layoutThird, LAYOUT_ANIM_DURATION);
+                    animateLayoutMoveLeft(layoutThird);
+                }
+            }
+        });
+        animator.start();
+    }
+
+    private void animateLayoutMoveLeft(final View view) {
+        // 현재 위치
+        float startX = view.getX();
+        // 왼쪽으로 이동한 후의 위치 (예: 왼쪽으로 100dp 이동)
+        float endX = startX - getResources().getDimensionPixelSize(R.dimen.test);
+
+        // ObjectAnimator를 사용하여 X 좌표를 변경하는 애니메이션 생성
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", startX, endX);
+        animator.setDuration(LAYOUT_ANIM_DURATION); // 애니메이션 지속 시간
+        animator.setInterpolator(new AccelerateDecelerateInterpolator()); // 가속도 감속도 인터폴레이터 설정
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 애니메이션이 끝난 후, 다시 원래 위치로 돌아가는 애니메이션 시작
+                //animateBackLayout(view);
+            }
+        });
+
+        animator.start();
+    }
+
     @Override
     void initView() {
 
         initData();
+
+        layoutFirst = findViewById(R.id.layout_consultation_request);
+        layoutSecond = findViewById(R.id.layout_tuition);
+        layoutThird = findViewById(R.id.layout_attendance);
 
         mBtnConsultation = findViewById(R.id.btn_consultation_request);
         mBtnConsultation.setOnClickListener(this);
@@ -526,6 +583,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private void requestCls(){
         if(RetrofitClient.getInstance() != null) {
             String dateStr = _apiDateFormat.format(_selectedDate);
+
             RetrofitClient.getApiInterface().requestTeacherCls(_stCode, dateStr).enqueue(new Callback<TeacherClsResponse>() {
                 @Override
                 public void onResponse(Call<TeacherClsResponse> call, Response<TeacherClsResponse> response) {
@@ -637,6 +695,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     // 원생 정보 조회
     private void requestMemberInfo(int stuSeq, int stCode){
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -694,13 +753,19 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+
+                    hideProgressDialog();
+                    animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
+                    animateLayoutMoveLeft(layoutFirst);
                 }
 
                 @Override
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-
+                    hideProgressDialog();
+                    animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
+                    animateLayoutMoveLeft(layoutFirst);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -770,6 +835,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         if (RetrofitClient.getInstance() != null){
             LogMgr.e(TAG, "clsCode: " + _clsCode);
+
             RetrofitClient.getApiInterface().getMonthlyAttendanceInfo(date, _clsCode, _stCode).enqueue(new Callback<GetAttendanceInfoResponse>() {
                 @Override
                 public void onResponse(Call<GetAttendanceInfoResponse> call, Response<GetAttendanceInfoResponse> response) {

@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.utils.LogMgr;
 
@@ -123,5 +125,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
+    }
 }

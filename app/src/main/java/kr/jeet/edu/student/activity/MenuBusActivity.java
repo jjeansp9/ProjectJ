@@ -88,6 +88,7 @@ public class MenuBusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_bus);
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initView();
         initAppbar();

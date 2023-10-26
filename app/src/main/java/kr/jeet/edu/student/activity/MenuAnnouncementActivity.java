@@ -9,8 +9,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.transition.Explode;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,7 +22,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -131,6 +139,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_announcement);
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initAppbar();
         initView();
@@ -229,12 +238,14 @@ public class MenuAnnouncementActivity extends BaseActivity {
         });
     }
 
-    private void startBoardDetailActivity(AnnouncementData clickItem){
+    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title){
         if (clickItem != null){
-            Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
-            targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
-            targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-            resultLauncher.launch(targetIntent);
+            Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
+            intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, title, "title");
+            resultLauncher.launch(intent, options);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -413,6 +424,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         setResult(RESULT_OK, intent);
         finish();
+        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
         super.onBackPressed();
     }
 }

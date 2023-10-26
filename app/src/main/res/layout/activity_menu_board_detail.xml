@@ -23,7 +23,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/layout_margin">
+            android:paddingHorizontal="@dimen/layout_margin"
+            android:id="@+id/root">
 
             <TextView
                 android:id="@+id/tv_board_detail_title"
@@ -49,7 +50,8 @@
                 android:hint="이름 정보없음"
                 android:textSize="@dimen/font_size"
                 android:maxLines="1"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_board_detail_write_date"

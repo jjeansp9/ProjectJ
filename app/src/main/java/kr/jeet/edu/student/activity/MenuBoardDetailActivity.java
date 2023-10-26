@@ -1,5 +1,8 @@
 package kr.jeet.edu.student.activity;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DownloadManager;
@@ -11,6 +14,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
+import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +55,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     private String TAG = MenuBoardDetailActivity.class.getSimpleName();
 
+    private ConstraintLayout root;
     private ImageView mImgRdCnt;
     private TextView mTvTitle, mTvName, mTvDate, mTvContent, mTvRdCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
@@ -83,6 +90,19 @@ public class MenuBoardDetailActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
+    }
+
+    private void applyTransition(){
+        root = findViewById(R.id.root);
+        ViewCompat.setTransitionName(mTvTitle, "title");
+
+
+        Transition sharedElementTransition = TransitionInflater.from(this).inflateTransition(R.transition.change_bounds);
+        sharedElementTransition.excludeTarget(android.R.id.statusBarBackground, true);
+        sharedElementTransition.excludeTarget(android.R.id.navigationBarBackground, true);
+        sharedElementTransition.excludeTarget(R.id.customAppbar, true);
+        getWindow().setSharedElementEnterTransition(sharedElementTransition);
+        getWindow().setSharedElementExitTransition(sharedElementTransition);
     }
 
     private void initIntentData(){
@@ -165,7 +185,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 _pushData = (PushMessage) result;
                 _currentSeq = ((PushMessage) result).connSeq;
             }else{
-
+                finish();
             }
         }
     }
@@ -191,6 +211,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
         mRecyclerViewImages = findViewById(R.id.recycler_board_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_board_files);
+
+        applyTransition();
 
         setImageRecycler();
         setFileRecycler();
@@ -299,7 +321,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void requestNoticeDetail(int boardSeq){
         if (RetrofitClient.getInstance() != null){
 
-            showProgressDialog();
+            //showProgressDialog();
 
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getBoardDetail(boardSeq).enqueue(new Callback<BoardDetailResponse>() {
@@ -424,7 +446,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         setResult(RESULT_OK, intent);
-        finish();
+        finishAfterTransition();
         super.onBackPressed();
     }
 }

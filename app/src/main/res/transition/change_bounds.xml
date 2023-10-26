@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+<!--    <autoTransition android:duration="@integer/animation_duration"/>-->
+<!--    <explode android:interpolator="@android:anim/linear_interpolator"/>-->
+    <changeBounds android:interpolator="@android:anim/accelerate_interpolator" />
+    <!--    <slide android:duration="@integer/animation_duration"/>-->
+<!--    <changeClipBounds android:interpolator="@android:anim/linear_interpolator"/>-->
+
+</transitionSet>

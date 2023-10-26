@@ -317,7 +317,7 @@ public class MainActivity extends BaseActivity {
         announceRecycler.addItemDecoration(dividerItemDecoration);
     }
 
-    private void startBoardDetailActivity(AnnouncementData clickItem){
+    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title){
         if (clickItem != null){
             Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);

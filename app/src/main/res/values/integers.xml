@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="screen_out_time">250</integer>
+    <integer name="screen_in_time">250</integer>
+    <integer name="animation_duration">100</integer>
+</resources>

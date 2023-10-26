@@ -14,6 +14,16 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Hint Text Color -->
         <item name="android:textColorHint">@color/gray</item>
+
+        <item name="android:windowContentTransitions">true</item>
+
+        <item name="android:windowEnterTransition">@transition/change_bounds</item>
+        <item name="android:windowExitTransition">@transition/change_bounds</item>
+
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/change_bounds</item>
+        <item name="android:windowSharedElementExitTransition">
+            @transition/change_bounds</item>
     </style>
 
     <style name="CalendarDateTextAppearance" parent="TextAppearance.AppCompat.Medium">
