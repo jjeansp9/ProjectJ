@@ -43,6 +43,7 @@ import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
@@ -76,6 +77,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private AnnouncementListAdapter mAdapter;
     private ArrayList<AnnouncementData> mList = new ArrayList<>();
+    private ArrayList<PushMessage> mPushList = new ArrayList<>();
 
     private String _acaCode = "";
     private String _acaName = "";

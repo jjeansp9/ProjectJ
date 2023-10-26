@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -49,6 +50,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
         this.mList = mList;
         this.isMain = isMain;
     }
+
     public void setWholeCampusMode(boolean flag) {
         this.isWholeCampusMode = flag;
     }
