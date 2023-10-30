@@ -57,6 +57,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.transition.Fade;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -323,6 +325,7 @@ public class MainActivity extends BaseActivity {
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
             resultLauncher.launch(targetIntent);
+            overridePendingTransition(R.anim.horizon_enter, R.anim.horizontal_out);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -331,6 +334,7 @@ public class MainActivity extends BaseActivity {
         if(clickItem.getTargetClass() != null) {
             Intent targetIntent = new Intent(mContext, clickItem.getTargetClass());
             resultLauncher.launch(targetIntent);
+            overridePendingTransition(R.anim.vertical_enter, R.anim.none);
         }else{
             LogMgr.d("targetIntent is null at " + getString(clickItem.getTitleRes()));
         }

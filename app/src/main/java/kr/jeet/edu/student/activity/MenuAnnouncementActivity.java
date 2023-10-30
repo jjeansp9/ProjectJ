@@ -139,7 +139,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_announcement);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initAppbar();
         initView();
@@ -243,9 +242,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(this, title, "title");
-            resultLauncher.launch(intent, options);
+            resultLauncher.launch(intent);
+            overridePendingTransition(R.anim.horizon_enter, R.anim.horizontal_out);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -424,7 +422,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         setResult(RESULT_OK, intent);
         finish();
-        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
-        super.onBackPressed();
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }

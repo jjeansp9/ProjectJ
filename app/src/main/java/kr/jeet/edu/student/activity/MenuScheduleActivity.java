@@ -142,11 +142,11 @@ public class MenuScheduleActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_schedule);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initData();
         initView();
         initAppbar();
+        setAnim(true);
     }
 
     private void initData(){
@@ -411,6 +411,7 @@ public class MenuScheduleActivity extends BaseActivity {
             Intent targetIntent = new Intent(mContext, MenuScheduleDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_SCHEDULE_INFO, item);
             startActivity(targetIntent);
+            overridePendingTransition(R.anim.horizon_enter, R.anim.horizontal_out);
         }
     }
     private void requestGradeList(String acaCode){

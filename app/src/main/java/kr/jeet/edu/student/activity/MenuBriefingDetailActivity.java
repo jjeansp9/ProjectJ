@@ -119,6 +119,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_briefing_detail);
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initView();
         initAppbar();
@@ -135,6 +136,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
         setResult(RESULT_OK, intent);
         finish();
+        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
     }
 
     private void initIntentData(){
@@ -259,6 +261,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
 
         mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(mInfo.rdcnt)));
+
+        if (mImageList.size() > 0) mImageList.clear();
+        if (mFileList.size() > 0) mFileList.clear();
 
         if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
 

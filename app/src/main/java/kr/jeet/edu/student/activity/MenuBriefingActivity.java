@@ -130,7 +130,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                     //todo request logic
                     requestBriefingList();
                     break;
-
             }
         }
     };
@@ -139,11 +138,11 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_briefing);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initData();
         initAppbar();
         initView();
+        setAnim(true);
     }
 
     private void initData(){

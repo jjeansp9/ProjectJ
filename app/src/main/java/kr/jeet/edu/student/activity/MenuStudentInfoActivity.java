@@ -105,7 +105,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
-    private ProgressBar progressBar, progressBarTop;
+    private ProgressBar progressBar;
     private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
 
     private RecyclerView recyclerViewMonthlyAttend;
@@ -169,8 +169,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
 
-    private static final int LAYOUT_ANIM_DURATION = 250;
-
     private Handler _handler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -192,10 +190,10 @@ public class MenuStudentInfoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_student_info);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initAppbar();
         initView();
+        setAnim(true);
     }
 
     @Override
@@ -255,9 +253,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private void animateLayout(final View view, long duration) {
+    private void animateLayout(final View view) {
         ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-        animator.setDuration(duration);
+        animator.setDuration(Constants.LAYOUT_ANIM_DURATION);
         animator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         animator.addUpdateListener(animation -> {
@@ -270,28 +268,15 @@ public class MenuStudentInfoActivity extends BaseActivity {
             public void onAnimationEnd(Animator animation) {
                 // 애니메이션 종료 후 다음 레이아웃으로 전환
                 if (view == layoutFirst) {
-                    animateLayout(layoutSecond, LAYOUT_ANIM_DURATION);
-                    animateLayoutMoveLeft(layoutSecond);
+                    animateLayout(layoutSecond);
+                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
                 }
                 else if (view == layoutSecond) {
-                    animateLayout(layoutThird, LAYOUT_ANIM_DURATION);
-                    animateLayoutMoveLeft(layoutThird);
+                    animateLayout(layoutThird);
+                    Utils.animateLayoutMoveLeft(layoutThird, mContext);
                 }
             }
         });
-        animator.start();
-    }
-
-    private void animateLayoutMoveLeft(final View view) {
-        // 현재 위치
-        float startX = view.getX();
-        // 왼쪽으로 이동한 후의 위치 (예: 왼쪽으로 100dp 이동)
-        float endX = startX - getResources().getDimensionPixelSize(R.dimen.anim_move);
-
-        // ObjectAnimator를 사용하여 X 좌표를 변경하는 애니메이션 생성
-        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", startX, endX);
-        animator.setDuration(LAYOUT_ANIM_DURATION); // 애니메이션 지속 시간
-        animator.setInterpolator(new AccelerateDecelerateInterpolator()); // 가속도 감속도 인터폴레이터 설정
         animator.start();
     }
 
@@ -327,7 +312,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
         progressBar = findViewById(R.id.progress_bar);
-        progressBarTop = findViewById(R.id.progress_bar_top);
 
         mSpinnerCls = findViewById(R.id.spinner_cls);
         mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
@@ -352,6 +336,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         strMonth = currentMonth + getString(R.string.month);
         long delayed = getResources().getInteger(R.integer.screen_in_time);
         new Handler().postDelayed(() -> requestMemberInfo(_stuSeq, _stCode), delayed);
+        //requestMemberInfo(_stuSeq, _stCode);
 
         mRecyclerTuition = findViewById(R.id.recycler_tuition);
         mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
@@ -687,7 +672,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     // 원생 정보 조회
     private void requestMemberInfo(int stuSeq, int stCode){
-        progressBarTop.setVisibility(View.VISIBLE);
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -709,9 +694,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                                 SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
 
                                 Date birth = originalFormat.parse(getData.birth);
-                                if (birth != null){
-                                    mTvStuBirth.setText(targetFormat.format(birth));
-                                }
+                                if (birth != null) mTvStuBirth.setText(targetFormat.format(birth));
 
                                 if (getData.acaName != null) { // 캠퍼스명
                                     PreferenceUtil.setAcaName(mContext, getData.acaName);
@@ -746,23 +729,25 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
-                    animateLayoutMoveLeft(layoutFirst);
-                    progressBarTop.setVisibility(View.GONE);
+                    hideProgressDialog();
+                    animateLayout(layoutFirst);
+                    Utils.animateLayoutMoveLeft(layoutFirst, mContext);
                 }
 
                 @Override
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-                    animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
-                    animateLayoutMoveLeft(layoutFirst);
-                    progressBarTop.setVisibility(View.GONE);
+                    hideProgressDialog();
+                    animateLayout(layoutFirst);
+                    Utils.animateLayoutMoveLeft(layoutFirst, mContext);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
+
+    View view;
 
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinnerTeacher(){

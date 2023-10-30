@@ -71,7 +71,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_test_reserve_detail);
-
+        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         Intent intent = getIntent();
         if(intent != null) {
             if(intent.hasExtra(IntentParams.PARAM_LIST_ITEM)) {
@@ -350,9 +350,10 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
             setResult(RESULT_OK, intent);
             finish();
-            return;
+        }else{
+            super.onBackPressed();
         }
-        super.onBackPressed();
+        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
     }
 
     @Override

@@ -101,7 +101,7 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         mActivity = this;
         mContext = this;
-
+        setStatusAndNavigatinBar(true);
         mGoogleLogin = new GoogleLoginManager(mActivity);
         initAppbar();
         initView();

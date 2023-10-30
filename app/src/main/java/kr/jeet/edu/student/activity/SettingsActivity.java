@@ -1,13 +1,19 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +44,7 @@ public class SettingsActivity extends BaseActivity {
     private SwitchMaterial mSwAnnouncement, mSwInformationSession, mSwAttendance, mSwSystem;
     private AppCompatButton btnSetAccount;
     private RetrofitApi mRetrofitApi;
+    private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
 
     private UpdatePushStatusRequest updatePushStatus;
 
@@ -117,6 +124,10 @@ public class SettingsActivity extends BaseActivity {
         mTvPrivacy = findViewById(R.id.tv_set_privacy);
         mTvService = findViewById(R.id.tv_set_service);
 
+        layoutFirst = findViewById(R.id.layout_first);
+        layoutSecond = findViewById(R.id.layout_second);
+        layoutThird = findViewById(R.id.layout_third);
+
         mSwAnnouncement = (SwitchMaterial) findViewById(R.id.sw_set_announcement_state);
         mSwInformationSession = (SwitchMaterial) findViewById(R.id.sw_set_information_session_state);
         mSwAttendance = (SwitchMaterial) findViewById(R.id.sw_set_attendance_state);
@@ -146,6 +157,38 @@ public class SettingsActivity extends BaseActivity {
             e.printStackTrace();
         }
 
+        long delayed = getResources().getInteger(R.integer.screen_in_time);
+        new Handler().postDelayed(() -> {
+            animateLayout(layoutFirst);
+            Utils.animateLayoutMoveLeft(layoutFirst, mContext);
+        }, delayed);
+    }
+
+    private void animateLayout(final View view) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(Constants.LAYOUT_ANIM_DURATION);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addUpdateListener(animation -> {
+            float progress = (float) animation.getAnimatedValue();
+            view.setAlpha(progress); // 애니메이션 중간값을 알파값으로 설정하여 서서히 보이도록 함
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 애니메이션 종료 후 다음 레이아웃으로 전환
+                if (view == layoutFirst) {
+                    animateLayout(layoutSecond);
+                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
+                }
+                else if (view == layoutSecond) {
+                    animateLayout(layoutThird);
+                    Utils.animateLayoutMoveLeft(layoutThird, mContext);
+                }
+            }
+        });
+        animator.start();
     }
 
     @Override
@@ -304,6 +347,7 @@ public class SettingsActivity extends BaseActivity {
 
     private void startActivity(){
         startActivity(new Intent(mContext, SetAccountActivity.class));
+        overridePendingTransition(R.anim.vertical_enter, R.anim.none);
     }
 
     private void startPvyActivity(String title){

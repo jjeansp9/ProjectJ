@@ -24,17 +24,20 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/setting_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/layout_margin">
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_8"
                 android:paddingVertical="@dimen/layout_margin"
-                android:background="@drawable/bg_setting_layout">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:background="@drawable/bg_setting_layout"
+                android:alpha="0">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_set_first_v25"
@@ -132,10 +135,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/layout_first"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_8"
                 android:paddingHorizontal="@dimen/layout_margin_16"
                 android:paddingVertical="@dimen/layout_margin_8"
-                android:background="@drawable/bg_setting_layout">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:background="@drawable/bg_setting_layout"
+                android:alpha="0">
                 
                 <TextView
                     android:id="@+id/tv_set_notice_state"
@@ -253,9 +260,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/layout_second"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_8"
                 android:layout_marginBottom="@dimen/layout_margin_8"
-                android:background="@drawable/bg_setting_layout">
+                android:layout_marginHorizontal="@dimen/layout_margin"
+                android:background="@drawable/bg_setting_layout"
+                android:alpha="0">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_set_operation_policy"

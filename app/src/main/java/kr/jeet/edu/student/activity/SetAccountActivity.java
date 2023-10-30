@@ -85,6 +85,7 @@ public class SetAccountActivity extends BaseActivity {
         initData();
         initAppbar();
         initView();
+        setAnim(true);
     }
 
     @Override

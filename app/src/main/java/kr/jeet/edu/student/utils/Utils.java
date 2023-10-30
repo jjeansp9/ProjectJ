@@ -13,6 +13,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -35,6 +39,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -582,6 +587,19 @@ public class Utils {
         } else {
             return "";
         }
+    }
+
+    public static void animateLayoutMoveLeft(final View view, Context context) {
+        // 현재 위치
+        float startX = view.getX();
+        // 왼쪽으로 이동한 후의 위치 (예: 왼쪽으로 100dp 이동)
+        float endX = startX - context.getResources().getDimensionPixelSize(R.dimen.anim_move);
+
+        // ObjectAnimator를 사용하여 X 좌표를 변경하는 애니메이션 생성
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", startX, endX);
+        animator.setDuration(Constants.LAYOUT_ANIM_DURATION); // 애니메이션 지속 시간
+        animator.setInterpolator(new AccelerateDecelerateInterpolator()); // 가속도 감속도 인터폴레이터 설정
+        animator.start();
     }
 }
 

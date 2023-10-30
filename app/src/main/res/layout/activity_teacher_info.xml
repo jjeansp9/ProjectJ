@@ -24,7 +24,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
-        android:background="@color/bg_grey"/>
+        android:background="@color/bg_grey"
+        android:overScrollMode="never"/>
 
     <TextView
         android:id="@+id/tv_teacher_empty"

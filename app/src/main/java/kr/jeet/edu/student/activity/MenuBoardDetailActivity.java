@@ -87,22 +87,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_board_detail);
+        //overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initView();
         initAppbar();
-    }
-
-    private void applyTransition(){
-        root = findViewById(R.id.root);
-        ViewCompat.setTransitionName(mTvTitle, "title");
-
-
-        Transition sharedElementTransition = TransitionInflater.from(this).inflateTransition(R.transition.change_bounds);
-        sharedElementTransition.excludeTarget(android.R.id.statusBarBackground, true);
-        sharedElementTransition.excludeTarget(android.R.id.navigationBarBackground, true);
-        sharedElementTransition.excludeTarget(R.id.customAppbar, true);
-        getWindow().setSharedElementEnterTransition(sharedElementTransition);
-        getWindow().setSharedElementExitTransition(sharedElementTransition);
     }
 
     private void initIntentData(){
@@ -211,8 +199,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
         mRecyclerViewImages = findViewById(R.id.recycler_board_img);
         mRecyclerViewFiles = findViewById(R.id.recycler_board_files);
-
-        applyTransition();
 
         setImageRecycler();
         setFileRecycler();
@@ -446,7 +432,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         setResult(RESULT_OK, intent);
-        finishAfterTransition();
-        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.horizontal_in, R.anim.horizon_exit);
     }
 }

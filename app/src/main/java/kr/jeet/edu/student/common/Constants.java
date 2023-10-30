@@ -219,4 +219,6 @@ public class Constants {
             return nameList;
         }
     }
+
+    public static final int LAYOUT_ANIM_DURATION = 250;
 }

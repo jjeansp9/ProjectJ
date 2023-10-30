@@ -152,6 +152,7 @@ public class IntroActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
+        setStatusAndNavigatinBar(true);
         mContext = this;
         mActivity = this;
 
