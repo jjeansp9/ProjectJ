@@ -105,7 +105,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
-    private ProgressBar progressBar;
+    private ProgressBar progressBar, progressBarTop;
     private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
 
     private RecyclerView recyclerViewMonthlyAttend;
@@ -286,21 +286,12 @@ public class MenuStudentInfoActivity extends BaseActivity {
         // 현재 위치
         float startX = view.getX();
         // 왼쪽으로 이동한 후의 위치 (예: 왼쪽으로 100dp 이동)
-        float endX = startX - getResources().getDimensionPixelSize(R.dimen.test);
+        float endX = startX - getResources().getDimensionPixelSize(R.dimen.anim_move);
 
         // ObjectAnimator를 사용하여 X 좌표를 변경하는 애니메이션 생성
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationX", startX, endX);
         animator.setDuration(LAYOUT_ANIM_DURATION); // 애니메이션 지속 시간
         animator.setInterpolator(new AccelerateDecelerateInterpolator()); // 가속도 감속도 인터폴레이터 설정
-
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                // 애니메이션이 끝난 후, 다시 원래 위치로 돌아가는 애니메이션 시작
-                //animateBackLayout(view);
-            }
-        });
-
         animator.start();
     }
 
@@ -336,6 +327,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
         progressBar = findViewById(R.id.progress_bar);
+        progressBarTop = findViewById(R.id.progress_bar_top);
 
         mSpinnerCls = findViewById(R.id.spinner_cls);
         mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
@@ -695,7 +687,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     // 원생 정보 조회
     private void requestMemberInfo(int stuSeq, int stCode){
-        showProgressDialog();
+        progressBarTop.setVisibility(View.VISIBLE);
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -754,18 +746,18 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    hideProgressDialog();
                     animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
                     animateLayoutMoveLeft(layoutFirst);
+                    progressBarTop.setVisibility(View.GONE);
                 }
 
                 @Override
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-                    hideProgressDialog();
                     animateLayout(layoutFirst, LAYOUT_ANIM_DURATION);
                     animateLayoutMoveLeft(layoutFirst);
+                    progressBarTop.setVisibility(View.GONE);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
