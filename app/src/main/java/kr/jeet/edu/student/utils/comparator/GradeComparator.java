@@ -3,7 +3,7 @@ package kr.jeet.edu.student.utils.comparator;
 import java.util.Comparator;
 
 public class GradeComparator implements Comparator<String> {
-    private static final String[] GRADE_ORDER = {"초등", "중등", "고등"};
+    private static final String[] GRADE_ORDER = {"초등부", "중등부", "고등부"};
 
     @Override
     public int compare(String grade1, String grade2) {

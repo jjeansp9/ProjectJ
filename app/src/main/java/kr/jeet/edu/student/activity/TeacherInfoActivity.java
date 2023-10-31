@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.adapter.TeacherListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
@@ -45,6 +46,7 @@ public class TeacherInfoActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     @Override

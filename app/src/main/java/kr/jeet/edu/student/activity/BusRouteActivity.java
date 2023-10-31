@@ -75,7 +75,6 @@ public class BusRouteActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_route);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
 //        _timer = new CountDownTimer(REFRESH_SEC * 1000, 1000) {
 //            @Override
@@ -278,6 +277,6 @@ public class BusRouteActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
+        overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
     }
 }

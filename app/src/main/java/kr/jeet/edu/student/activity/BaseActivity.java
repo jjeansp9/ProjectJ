@@ -3,27 +3,18 @@ package kr.jeet.edu.student.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowInsetsController;
-import android.widget.EditText;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.utils.LogMgr;
 
@@ -34,13 +25,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     private PopupDialog popupDialog = null;
     TextView txt;
     private boolean setBar = false;
-    private boolean setAnim = false;
+    private int move = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
-        //initAppbar();
         setStatusAndNavigatinBar(setBar);
     }
     abstract void initView();
@@ -49,26 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View view) {
 
-    }
-
-    protected void setStatusAndNavigatinBar(boolean isNotSet){
-        Window window = getWindow();
-        int resColor = Color.BLACK;
-        boolean lightStatusBar = false;
-        boolean lightNavigationBar = false;
-
-        if (!isNotSet){
-            resColor = Color.WHITE;
-            lightStatusBar = true; // 상태표시줄 [ true - black, false - white ]
-            lightNavigationBar = true; // 네비게이션 [ true - black, false - white ]
-        }
-        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
-
-        window.setStatusBarColor(resColor);
-        window.setNavigationBarColor(resColor);
-
-        controller.setAppearanceLightStatusBars(lightStatusBar); // status bar
-        controller.setAppearanceLightNavigationBars(lightNavigationBar); // navigation bar
     }
 
     protected void showProgressDialog()
@@ -159,9 +129,46 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        if (setAnim) overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+        switch (move){
+            case Constants.MOVE_LEFT:
+                overridePendingTransition(R.anim.none, R.anim.horizontal_out);
+                LogMgr.e("EVENT_LEFT");
+                break;
+            case Constants.MOVE_RIGHT:
+                overridePendingTransition(R.anim.none, R.anim.horizontal_exit);
+                LogMgr.e("EVENT_RIGHT");
+                break;
+            case Constants.MOVE_UP:
+                overridePendingTransition(R.anim.none, R.anim.vertical_out);
+                LogMgr.e("EVENT_UP");
+                break;
+            case Constants.MOVE_DOWN:
+                overridePendingTransition(R.anim.none, R.anim.vertical_exit);
+                LogMgr.e("EVENT_DOWN");
+                break;
+        }
     }
-    protected void setAnim(boolean anim){
-        setAnim = anim;
+    protected void animSetMove(int setMove){
+        move = setMove;
+    }
+
+    protected void setStatusAndNavigatinBar(boolean isNotSet){
+        Window window = getWindow();
+        int resColor = Color.BLACK;
+        boolean lightStatusBar = false;
+        boolean lightNavigationBar = false;
+
+        if (!isNotSet){
+            resColor = Color.WHITE;
+            lightStatusBar = true; // 상태표시줄 [ true - black, false - white ]
+            lightNavigationBar = true; // 네비게이션 [ true - black, false - white ]
+        }
+        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
+
+        window.setStatusBarColor(resColor);
+        window.setNavigationBarColor(resColor);
+
+        controller.setAppearanceLightStatusBars(lightStatusBar); // status bar
+        controller.setAppearanceLightNavigationBars(lightNavigationBar); // navigation bar
     }
 }

@@ -1,57 +1,34 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TestReserveAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
-import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.model.response.TestTimeResponse;
-import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
-import kr.jeet.edu.student.utils.comparator.GradeComparator;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,7 +82,7 @@ public class MenuTestReserveActivity extends BaseActivity {
         initData();
         initAppbar();
         initView();
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){
@@ -164,6 +141,7 @@ public class MenuTestReserveActivity extends BaseActivity {
             Intent intent = new Intent(mContext, MenuTestReserveDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
             resultLauncher.launch(intent);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("item is null ");
     }
 

@@ -4,5 +4,5 @@
         android:duration="@integer/screen_out_time"
         android:fromYDelta="0%"
         android:interpolator="@android:anim/accelerate_decelerate_interpolator"
-        android:toYDelta="-50%" />
+        android:toYDelta="-100%" />
 </set>

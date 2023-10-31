@@ -588,7 +588,9 @@ public class Utils {
             return "";
         }
     }
-
+    /**
+    * view의 위치를 이동시키는 애니메이션 메소드
+    * */
     public static void animateLayoutMoveLeft(final View view, Context context) {
         // 현재 위치
         float startX = view.getX();

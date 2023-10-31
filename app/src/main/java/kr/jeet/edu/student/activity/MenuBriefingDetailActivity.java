@@ -1,12 +1,7 @@
 package kr.jeet.edu.student.activity;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.AnimatorInflater;
@@ -17,11 +12,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -31,10 +22,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,19 +31,15 @@ import java.util.Locale;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
-import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.BriefingReservedListData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.response.BaseResponse;
-import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
-import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -119,7 +102,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_briefing_detail);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initView();
         initAppbar();
@@ -136,7 +118,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
         setResult(RESULT_OK, intent);
         finish();
-        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
+        overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
     }
 
     private void initIntentData(){
@@ -209,6 +191,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        mTvReserve.setText(getString(R.string.briefing_reserve_loading));
+        layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+        layoutStartReserve.setStateListAnimator(null);
         if (mInfo != null) {
 
 //            if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
@@ -229,10 +214,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 //                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
 //            });
             requestBrfDetail(mInfo.seq);
-            requestBrfReservedListData(mInfo.seq);
         }else if(_currentSeq != -1) {
             requestBrfDetail(_currentSeq);
-            requestBrfReservedListData(_currentSeq);
         }
     }
 
@@ -279,7 +262,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
         if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
         if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
-
+        LogMgr.e(TAG, "EVENT123");
         try {
             String dateStr = mInfo.date+mInfo.ptTime;
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-ddHH:mm", Locale.KOREA);
@@ -293,24 +276,32 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) { // 종료
                 setTvInBtn(mTvReserve, getString(R.string.briefing_write_close), mTvCnt, View.GONE, mImgReserve, View.GONE);
 
-            }else{
-                if (canceled) { // 취소
-                    mTvReserve.setText(getString(R.string.briefing_reserve_cancel));
-                    mTvCnt.setVisibility(View.GONE);
-                    mImgReserve.setVisibility(View.VISIBLE);
-                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
-                    StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
-                    layoutStartReserve.setStateListAnimator(stateListAnimator);
+            }else {
+                if (canceled) {
+                    if (calCurrent.after(calBrf) || calCurrent.equals(calBrf)) { // 종료
+                        setTvInBtn(mTvReserve, getString(R.string.briefing_write_close), mTvCnt, View.GONE, mImgReserve, View.GONE);
 
-                } else if (mInfo.reservationCnt >= mInfo.participantsCnt) { // 마감
-                    setTvInBtn(mTvReserve, getString(R.string.briefing_write_finish), mTvCnt, View.GONE, mImgReserve, View.GONE);
-
+                    }else { // 취소
+                        mTvReserve.setText(getString(R.string.briefing_reserve_cancel));
+                        mTvCnt.setVisibility(View.GONE);
+                        mImgReserve.setVisibility(View.VISIBLE);
+                        layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
+                        StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
+                        layoutStartReserve.setStateListAnimator(stateListAnimator);
+                    }
                 } else {
-                    mTvReserve.setText(getString(R.string.briefing_reserve));
-                    mImgReserve.setVisibility(View.VISIBLE);
-                    layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_checked);
-                    StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
-                    layoutStartReserve.setStateListAnimator(stateListAnimator);
+                    if (mInfo.reservationCnt >= mInfo.participantsCnt) { // 마감
+                        setTvInBtn(mTvReserve, getString(R.string.briefing_write_finish), mTvCnt, View.GONE, mImgReserve, View.GONE);
+                        LogMgr.e(TAG, "EVENT");
+
+                    }else { // 예약하기
+                        mTvReserve.setText(getString(R.string.briefing_reserve));
+                        mImgReserve.setVisibility(View.VISIBLE);
+                        layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_checked);
+                        StateListAnimator stateListAnimator = AnimatorInflater.loadStateListAnimator(mContext, R.xml.animate_button_push);
+                        layoutStartReserve.setStateListAnimator(stateListAnimator);
+                        LogMgr.e(TAG, "EVENT1");
+                    }
                 }
             }
 
@@ -433,8 +424,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 BriefingData data = response.body().data;
                                 if (data != null){
                                     mInfo = data;
-                                    if (added) requestBrfReservedListData(ptSeq);
-                                    setView();
+
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
                         }else{
@@ -445,6 +435,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBrfDetail() Exception : ", e.getMessage());
                     }
 
+                    requestBrfReservedListData(ptSeq);
                     hideProgressDialog();
                 }
 
@@ -491,6 +482,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestBrfReservedListData() Exception: ", e.getMessage());
                     }
+                    setView();
                     hideProgressDialog();
                 }
 
@@ -500,6 +492,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                         LogMgr.e(TAG, "requestBrfReservedListData() onFailure >> " + t.getMessage());
                     } catch (Exception e) {
                     }
+                    setView();
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }

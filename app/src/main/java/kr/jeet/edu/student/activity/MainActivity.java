@@ -17,9 +17,7 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
-import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
-import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
@@ -27,7 +25,6 @@ import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
-import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
@@ -41,7 +38,6 @@ import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
-import kr.jeet.edu.student.view.decoration.GridSpaceItemDecoration;
 import kr.jeet.edu.student.view.decoration.LastIndexDeleteDecoration;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -57,9 +53,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.transition.Fade;
-import android.transition.Transition;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -67,16 +60,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.flexbox.FlexDirection;
@@ -85,9 +74,7 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -325,7 +312,7 @@ public class MainActivity extends BaseActivity {
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
             resultLauncher.launch(targetIntent);
-            overridePendingTransition(R.anim.horizon_enter, R.anim.horizontal_out);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
 
         }else LogMgr.e("clickItem is null ");
     }

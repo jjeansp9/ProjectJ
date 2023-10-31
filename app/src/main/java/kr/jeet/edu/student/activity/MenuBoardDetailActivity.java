@@ -1,12 +1,9 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
@@ -14,9 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,19 +18,16 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
-import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
@@ -433,6 +424,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
         setResult(RESULT_OK, intent);
         finish();
-        overridePendingTransition(R.anim.horizontal_in, R.anim.horizon_exit);
+        overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
     }
 }

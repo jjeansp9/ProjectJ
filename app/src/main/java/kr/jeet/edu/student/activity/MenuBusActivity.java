@@ -30,6 +30,7 @@ import java.util.regex.Pattern;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BusesListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.BCData;
 import kr.jeet.edu.student.model.data.BusInfoData;
@@ -92,7 +93,7 @@ public class MenuBusActivity extends BaseActivity {
         initView();
         initAppbar();
         _handler.sendEmptyMessage(CMD_GET_CAMPUS);
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     @Override
@@ -330,6 +331,7 @@ public class MenuBusActivity extends BaseActivity {
         targetIntent.putExtra(IntentParams.PARAM_BOARD_ITEM, item);
         targetIntent.putExtra(IntentParams.PARAM_BCNAME, _selectedBusCampus.bcName);
         startActivity(targetIntent);
+        overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
     }
     private void navigate2WebViewActivity(String title){
         Intent intent = new Intent(mContext, WebViewActivity.class);

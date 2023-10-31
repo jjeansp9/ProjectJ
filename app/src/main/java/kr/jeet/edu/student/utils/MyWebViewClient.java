@@ -70,7 +70,7 @@ public class MyWebViewClient extends WebViewClient {
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         if (!request.getUrl().toString().startsWith("http://") && !request.getUrl().toString().startsWith("https://")) {
-            if (request.getUrl().toString().startsWith("intent")) {
+            if (request.getUrl().toString().startsWith("intent") && activity != null) {
                 Intent schemeIntent;
                 try {
                     schemeIntent = Intent.parseUri(request.getUrl().toString(), Intent.URI_INTENT_SCHEME);
@@ -95,7 +95,7 @@ public class MyWebViewClient extends WebViewClient {
                 }
             } else {
                 try {
-                    activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(request.getUrl().toString())));
+                    if (activity != null) activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(request.getUrl().toString())));
                     return true;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -147,14 +147,14 @@ public class MyWebViewClient extends WebViewClient {
     public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
         super.onReceivedError(view, request, error);
 
-        Toast.makeText(activity, R.string.server_error, Toast.LENGTH_SHORT).show();
+        if (activity != null && !activity.isFinishing()) Toast.makeText(activity, R.string.server_error, Toast.LENGTH_SHORT).show();
 
         // 오류가 났을 때 대체 페이지 로드
         //wv.loadUrl("");
     }
 
     private void showProgressDialog() {
-        if (mProgressDialog == null){
+        if (mProgressDialog == null && activity != null && !activity.isFinishing()){
             View view = activity.getLayoutInflater().inflate(R.layout.dialog_progressbar, null, false);
             TextView txt = view.findViewById(R.id.text);
             txt.setText(activity.getString(R.string.requesting));
@@ -169,7 +169,7 @@ public class MyWebViewClient extends WebViewClient {
 
     private void hideProgressDialog() {
         try {
-            if (mProgressDialog != null) {
+            if (mProgressDialog != null && activity != null && !activity.isFinishing()) {
                 mProgressDialog.dismiss();
                 mProgressDialog = null;
             }
@@ -179,19 +179,24 @@ public class MyWebViewClient extends WebViewClient {
     }
 
     private String shinhanJSCode(){
-        String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
-        LogMgr.e(TAG, "clipboard: " + getClipboard);
-        int clipboard = 0;
-        Utils.setClipData(activity, "");
-        try{ clipboard = Integer.parseInt(getClipboard); }
-        catch (Exception e) {}
+        if (activity != null && !activity.isFinishing()) {
+            String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
+            LogMgr.e(TAG, "clipboard: " + getClipboard);
+            int clipboard = 0;
+            Utils.setClipData(activity, "");
+            try{ clipboard = Integer.parseInt(getClipboard); }
+            catch (Exception e) {}
 
-        return "javascript:(function() {" +
-                "   var bankNumElement = document.getElementById('bankNum');" +
-                "   if (bankNumElement) {" +
-                "       bankNumElement.value = '" + clipboard + "';" +
-                "   }" +
-                "   window.scrollTo(0, 0);" +
-                "})()";
+            return "javascript:(function() {" +
+                    "   var bankNumElement = document.getElementById('bankNum');" +
+                    "   if (bankNumElement) {" +
+                    "       bankNumElement.value = '" + clipboard + "';" +
+                    "   }" +
+                    "   window.scrollTo(0, 0);" +
+                    "})()";
+
+        } else {
+            return "";
+        }
     }
 }

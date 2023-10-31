@@ -193,7 +193,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mContext = this;
         initAppbar();
         initView();
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     @Override
@@ -335,7 +335,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         strYear = currentYear + getString(R.string.year);
         strMonth = currentMonth + getString(R.string.month);
         long delayed = getResources().getInteger(R.integer.screen_in_time);
-        new Handler().postDelayed(() -> requestMemberInfo(_stuSeq, _stCode), delayed);
+        _handler.postDelayed(() -> requestMemberInfo(_stuSeq, _stCode), delayed);
         //requestMemberInfo(_stuSeq, _stCode);
 
         mRecyclerTuition = findViewById(R.id.recycler_tuition);
@@ -654,20 +654,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 }
             });
         }
-    }
-
-    private void updateList(){
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
-        alphaAnimation.setDuration(1000);
-        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) { mTuitionAdapter.notifyDataSetChanged(); }
-            @Override
-            public void onAnimationEnd(Animation animation) {}
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
-        mRecyclerTuition.startAnimation(alphaAnimation);
     }
 
     // 원생 정보 조회

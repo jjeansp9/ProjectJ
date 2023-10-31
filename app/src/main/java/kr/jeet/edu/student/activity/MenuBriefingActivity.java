@@ -6,9 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.content.ComponentCallbacks;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -142,7 +140,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         initData();
         initAppbar();
         initView();
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){
@@ -298,6 +296,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             Intent intent = new Intent(mContext, MenuBriefingDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_BRIEFING_INFO, item);
             resultLauncher.launch(intent);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("clickItem is null ");
     }
 

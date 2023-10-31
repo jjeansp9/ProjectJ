@@ -1,33 +1,20 @@
 package kr.jeet.edu.student.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.transition.Explode;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,25 +28,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
-import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
-import kr.jeet.edu.student.model.data.BriefingData;
-import kr.jeet.edu.student.model.data.MainMenuItemData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.StudentGradeListResponse;
-import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -142,6 +124,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mContext = this;
         initAppbar();
         initView();
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     private void getData(){
@@ -243,7 +226,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
             resultLauncher.launch(intent);
-            overridePendingTransition(R.anim.horizon_enter, R.anim.horizontal_out);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
 
         }else LogMgr.e("clickItem is null ");
     }

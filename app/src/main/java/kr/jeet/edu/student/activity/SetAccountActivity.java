@@ -85,7 +85,7 @@ public class SetAccountActivity extends BaseActivity {
         initData();
         initAppbar();
         initView();
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     @Override

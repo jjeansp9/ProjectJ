@@ -46,7 +46,6 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_schedule_detail);
-        overridePendingTransition(R.anim.horizon_enter, R.anim.none);
         mContext = this;
         initView();
         Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_ACA_SCHEDULE);
@@ -180,6 +179,6 @@ public class MenuScheduleDetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.none, R.anim.horizon_exit);
+        overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
     }
 }

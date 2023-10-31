@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -22,12 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
-import org.threeten.bp.LocalDateTime;
-import org.threeten.bp.format.DateTimeFormatter;
-import org.threeten.bp.format.DateTimeFormatterBuilder;
-import org.threeten.bp.temporal.ChronoField;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -134,7 +126,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         initView();
 
         if (fromBottomMenu) changeMessageState2Read();
-        setAnim(true);
+        animSetMove(Constants.MOVE_DOWN);
     }
 
     void changeMessageState2Read() {
@@ -312,6 +304,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
             intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
             startActivity(intent);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("item is null ");
     }
 
