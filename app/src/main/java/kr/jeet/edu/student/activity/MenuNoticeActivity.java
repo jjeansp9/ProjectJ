@@ -126,7 +126,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         initView();
 
         if (fromBottomMenu) changeMessageState2Read();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     void changeMessageState2Read() {

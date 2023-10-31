@@ -1,24 +1,18 @@
 package kr.jeet.edu.student.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.skydoves.powerspinner.PowerSpinnerView;
-
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.adapter.TeacherListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -46,7 +40,7 @@ public class TeacherInfoActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     @Override

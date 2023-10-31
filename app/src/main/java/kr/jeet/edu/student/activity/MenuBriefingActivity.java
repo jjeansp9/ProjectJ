@@ -140,7 +140,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         initData();
         initAppbar();
         initView();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){

@@ -148,7 +148,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 break;
         }
     }
-    protected void animSetMove(int setMove){
+    protected void setAnimMove(int setMove){
         move = setMove;
     }
 

@@ -124,7 +124,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mContext = this;
         initAppbar();
         initView();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     private void getData(){

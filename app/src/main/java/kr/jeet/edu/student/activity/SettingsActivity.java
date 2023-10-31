@@ -164,33 +164,6 @@ public class SettingsActivity extends BaseActivity {
         }, delayed);
     }
 
-    private void animateLayout(final View view) {
-        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
-        animator.setDuration(Constants.LAYOUT_ANIM_DURATION);
-        animator.setInterpolator(new AccelerateDecelerateInterpolator());
-
-        animator.addUpdateListener(animation -> {
-            float progress = (float) animation.getAnimatedValue();
-            view.setAlpha(progress); // 애니메이션 중간값을 알파값으로 설정하여 서서히 보이도록 함
-        });
-
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                // 애니메이션 종료 후 다음 레이아웃으로 전환
-                if (view == layoutFirst) {
-                    animateLayout(layoutSecond);
-                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
-                }
-                else if (view == layoutSecond) {
-                    animateLayout(layoutThird);
-                    Utils.animateLayoutMoveLeft(layoutThird, mContext);
-                }
-            }
-        });
-        animator.start();
-    }
-
     @Override
     public void onClick(View view) {
         super.onClick(view);
@@ -343,6 +316,33 @@ public class SettingsActivity extends BaseActivity {
                 }
             });
         }
+    }
+
+    private void animateLayout(final View view) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(Constants.LAYOUT_ANIM_DURATION);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addUpdateListener(animation -> {
+            float progress = (float) animation.getAnimatedValue();
+            view.setAlpha(progress); // 애니메이션 중간값을 알파값으로 설정하여 서서히 보이도록 함
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 애니메이션 종료 후 다음 레이아웃으로 전환
+                if (view == layoutFirst) {
+                    animateLayout(layoutSecond);
+                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
+                }
+                else if (view == layoutSecond) {
+                    animateLayout(layoutThird);
+                    Utils.animateLayoutMoveLeft(layoutThird, mContext);
+                }
+            }
+        });
+        animator.start();
     }
 
     private void startActivity(){

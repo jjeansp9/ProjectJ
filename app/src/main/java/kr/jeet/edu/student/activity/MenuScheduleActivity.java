@@ -146,7 +146,7 @@ public class MenuScheduleActivity extends BaseActivity {
         initData();
         initView();
         initAppbar();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){

@@ -82,7 +82,7 @@ public class MenuTestReserveActivity extends BaseActivity {
         initData();
         initAppbar();
         initView();
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){

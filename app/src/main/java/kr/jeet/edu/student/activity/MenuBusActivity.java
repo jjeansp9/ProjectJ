@@ -93,7 +93,7 @@ public class MenuBusActivity extends BaseActivity {
         initView();
         initAppbar();
         _handler.sendEmptyMessage(CMD_GET_CAMPUS);
-        animSetMove(Constants.MOVE_DOWN);
+        setAnimMove(Constants.MOVE_DOWN);
     }
 
     @Override
