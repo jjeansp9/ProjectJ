@@ -32,6 +32,7 @@ import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
@@ -63,9 +64,7 @@ public class SelectStudentActivity extends BaseActivity {
         if(result.getResultCode() != RESULT_CANCELED) {
             if(intent != null && intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
-                if (added) {
-                    requestChildStudentInfo(_parentSeq);
-                }
+                if (added) requestChildStudentInfo(_parentSeq);
             }
         }
     });
@@ -175,6 +174,9 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
             }
         }
+
+        HttpUtils.requestSchoolList();
+        HttpUtils.requestLTCList();
     }
 
     private void startPushActivity(String pushType){

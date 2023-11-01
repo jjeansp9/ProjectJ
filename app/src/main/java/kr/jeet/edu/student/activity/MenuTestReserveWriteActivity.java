@@ -152,6 +152,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
 
                 } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
+                    LogMgr.e(TAG, "event new stu1");
                     intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                     setResult(RESULT_OK, intent);
                     finish();
@@ -1032,6 +1033,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 startQuestionActivity();
                 return true;
             case R.id.action_btn_sub:
+                testType = Constants.LEVEL_TEST_TYPE_NEW_CHILD;
                 mEtName.setText("");
                 mEtStuPhone.setText("");
                 mEtName.setEnabled(true);

@@ -151,7 +151,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                         if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                         LogMgr.e("Event here4", _pushData.connSeq+"");
 
-                    } else{
+                    } else {
                         LogMgr.e("Event here5");
                     }
                 }
@@ -163,8 +163,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
             } else if (result instanceof PushMessage) {
                 _pushData = (PushMessage) result;
                 _currentSeq = ((PushMessage) result).connSeq;
-            }else{
-                finish();
             }
         }
     }
@@ -231,8 +229,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void setView(){
         LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
         mTvTitle.setText(_currentData.title); // 제목
-        mTvName.setVisibility(View.GONE);
-        //mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
+        //mTvName.setVisibility(View.GONE);
+        mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
         mTvDate.setText(_currentData.insertDate); // 작성날짜
         mTvContent.setText(_currentData.content); // 내용
         mTvRdCnt.setText(Utils.getStr(Utils.decimalFormat(_currentData.rdcnt)));
@@ -361,8 +359,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 if (data != null){
                                     _systemNoticeData = data;
                                     mTvTitle.setText(TextUtils.isEmpty(_systemNoticeData.title) ? "" : _systemNoticeData.title); // 제목
-                                    mTvName.setVisibility(View.GONE);
-                                    //mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
+                                    mTvName.setVisibility(View.VISIBLE);
+                                    mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
                                     mTvDate.setText(TextUtils.isEmpty(_systemNoticeData.insertDate) ? "" : _systemNoticeData.insertDate); // 작성날짜
                                     mTvContent.setText(TextUtils.isEmpty(_systemNoticeData.content) ? "" : _systemNoticeData.content); // 내용
 

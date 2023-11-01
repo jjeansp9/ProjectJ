@@ -51,27 +51,42 @@ public class MenuTestReserveActivity extends BaseActivity {
     private int _memberSeq = 0;
     private final int LTC_CODE = 0; // 원생, 학부모인 경우는 0으로 고정
 
+    boolean isNew = false;
+
     // 등록했을 때 result =ActivityResult{resultCode=RESULT_CANCELED, data=null}
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if(result.getResultCode() != RESULT_CANCELED) {
             Intent intent = result.getData();
-            if (intent!= null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED)) {
-                LogMgr.e(TAG, "resultLauncher Event ADD");
-                boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
-                if (added) {
-                    requestTestReserveList();
-                    Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
-                }
+            boolean added = false;
+            if (intent != null) {
+                if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED)) {
+                    LogMgr.e(TAG, "resultLauncher Event ADD");
+                    added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
+                    if (added) {
+                        requestTestReserveList();
+                        Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
+                    }
 
-            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED)){
-                LogMgr.e(TAG, "resultLauncher Event EDIT");
-                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
-                if (edited) {
-                    requestTestReserveList();
-                    Utils.createNotification(mContext, "수정완료", getString(R.string.informed_question_update_success));
+                }else if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED)){
+                    LogMgr.e(TAG, "resultLauncher Event EDIT");
+                    boolean edited = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, false);
+                    if (edited) {
+                        requestTestReserveList();
+                        Utils.createNotification(mContext, "수정완료", getString(R.string.informed_question_update_success));
+                    }
+                } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
+                    LogMgr.e(TAG, "event new stu2");
+                    added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
+                    isNew = true;
+                    if (added) {
+                        LogMgr.e(TAG, "event new stu3");
+                        requestTestReserveList();
+                        Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
+                    }
                 }
             }
+
         }
     });
 
@@ -83,7 +98,6 @@ public class MenuTestReserveActivity extends BaseActivity {
         initData();
         initAppbar();
         initView();
-        setAnimMove(Constants.MOVE_DOWN);
     }
 
     private void initData(){
@@ -271,6 +285,15 @@ public class MenuTestReserveActivity extends BaseActivity {
                 resultLauncher.launch(intent);
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        if (isNew) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+        setResult(RESULT_OK, intent);
+        finish();
+        overridePendingTransition(R.anim.none, R.anim.vertical_exit);
     }
 }
 

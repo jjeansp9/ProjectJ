@@ -498,8 +498,13 @@ public class InformedQuestionActivity extends BaseActivity {
                                 intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
                             }else{
-                                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
-                                else intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) { // 자녀목록 화면에서 진입한 경우
+                                    PreferenceUtil.setUserType(mContext, Constants.MEMBER);
+                                    intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+
+                                } else {
+                                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                }
                                 Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             }
                             setResult(RESULT_OK, intent);

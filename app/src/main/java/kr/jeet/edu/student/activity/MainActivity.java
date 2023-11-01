@@ -127,25 +127,27 @@ public class MainActivity extends BaseActivity {
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent != null && Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED.equals(intent.getAction())){
-                LogMgr.w(TAG, "broadcast onReceived ");
-                if(intent.hasExtra(IntentParams.PARAM_ATTENDANCE_INFO)) {
-                    String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
-                    if(type.equals(MSG_TYPE_ATTEND)) {
-                        new Thread(() -> {
-                            try {
-                                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-                                if(pushMessages.isEmpty()) {
-                                    setNewAttendanceContent(false);
-                                }else{
-                                    for (PushMessage data : pushMessages) {
-                                        if (data.stCode == _stCode) setNewAttendanceContent(true);
+            if (intent != null) {
+                if(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED.equals(intent.getAction())){
+                    LogMgr.w(TAG, "broadcast onReceived ");
+                    if(intent.hasExtra(IntentParams.PARAM_ATTENDANCE_INFO)) {
+                        String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
+                        if(type.equals(MSG_TYPE_ATTEND)) {
+                            new Thread(() -> {
+                                try {
+                                    List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+                                    if(pushMessages.isEmpty()) {
+                                        setNewAttendanceContent(false);
+                                    }else{
+                                        for (PushMessage data : pushMessages) {
+                                            if (data.stCode == _stCode) setNewAttendanceContent(true);
+                                        }
                                     }
-                                }
-                            }catch(Exception e){
+                                }catch(Exception e){
 
-                            }
-                        }).start();
+                                }
+                            }).start();
+                        }
                     }
                 }
             }
@@ -211,6 +213,10 @@ public class MainActivity extends BaseActivity {
 
             }else {
                 mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
+            }
+            if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
+                boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
+                if (added) mHandler.sendEmptyMessage(CMD_GET_ACALIST);
             }
         }
     });
