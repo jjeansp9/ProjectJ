@@ -222,8 +222,10 @@ public class Constants {
 
     public static final int LAYOUT_ANIM_DURATION = 250;
 
+    public static final int MOVE_DEFAULT = -1;
     public static final int MOVE_LEFT = 0;
     public static final int MOVE_RIGHT = 1;
     public static final int MOVE_UP = 2;
     public static final int MOVE_DOWN = 3;
+    public static final int MOVE_DETAIL_RIGHT = 4;
 }

@@ -130,6 +130,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     public void onBackPressed() {
         super.onBackPressed();
         switch (move){
+            case Constants.MOVE_DEFAULT:
+                LogMgr.e("EVENT_DETAIL");
+                break;
             case Constants.MOVE_LEFT:
                 overridePendingTransition(R.anim.none, R.anim.horizontal_out);
                 LogMgr.e("EVENT_LEFT");
@@ -145,6 +148,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             case Constants.MOVE_DOWN:
                 overridePendingTransition(R.anim.none, R.anim.vertical_exit);
                 LogMgr.e("EVENT_DOWN");
+                break;
+            case Constants.MOVE_DETAIL_RIGHT:
+                overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
+                LogMgr.e("EVENT_DETAIL_RIGHT");
                 break;
         }
     }

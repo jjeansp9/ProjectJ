@@ -57,6 +57,7 @@ public class FindCredentialsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find_credentials);
+        setStatusAndNavigatinBar(true);
         mContext = this;
 
         Intent intent = getIntent();

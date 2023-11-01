@@ -31,6 +31,8 @@ public class ChildStudentInfo implements Parcelable {
     @SerializedName("stGrade")
     public String stGrade; // 학년 이름
 
+    public ChildStudentInfo() {}
+
     // Parcelable 구현 부분
     protected ChildStudentInfo(Parcel in) {
         seq = in.readInt();

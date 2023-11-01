@@ -44,6 +44,7 @@ public class AgreeTermsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_agree_terms);
+        setStatusAndNavigatinBar(true);
         mContext = this;
         mActivity = this;
 

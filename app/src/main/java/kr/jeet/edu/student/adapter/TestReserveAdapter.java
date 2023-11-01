@@ -6,6 +6,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,11 +20,16 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.LTCData;
+import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.utils.Utils;
 
-public class TestReserveAdapter extends RecyclerView.Adapter<TestReserveAdapter.ViewHolder> {
+public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public interface ItemClickListener{ public void onItemClick(TestReserveData item, int position); }
+
+    private static final int VIEW_TYPE_HEADER = 0;
+    private static final int VIEW_TYPE_BODY = 1;
 
     private Context mContext;
     private ArrayList<TestReserveData> mList;
@@ -37,24 +43,43 @@ public class TestReserveAdapter extends RecyclerView.Adapter<TestReserveAdapter.
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_test_reserve_list_item, parent, false);
-        return new TestReserveAdapter.ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_test_reserve_list_item, parent, false);
+//        return new TestReserveAdapter.ViewHolder(view);
+
+        LayoutInflater inflater = LayoutInflater.from(mContext);
+
+        if (viewType == VIEW_TYPE_HEADER){
+            View view = inflater.inflate(R.layout.layout_txt_header_item, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.layout_test_reserve_list_item, parent, false);
+            return new BodyViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        TestReserveData item = mList.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (position == NO_POSITION) return;
 
-        if (item != null){
-            holder.tvName.setText(item.name);
+        if (holder.getItemViewType() == VIEW_TYPE_HEADER){
+            HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
+            headerViewHolder.tvHeader.setText(mContext.getString(R.string.menu_test_reserve_header));
 
-            Optional<LTCData> acaData = DataManager.getInstance().getLTCList().stream().filter(
-                    ltcData -> ltcData.ltcCode.equals(item.bigo)
-            ).findFirst();
-            acaData.ifPresent(ltcData -> holder.tvCampus.setText(ltcData.ltcName));
+        }else {
+            TestReserveData item = mList.get(position);
+            BodyViewHolder bodyHolder = (BodyViewHolder) holder;
 
-            holder.tvDate.setText(item.reservationDate);
+            if (item != null) {
+                bodyHolder.tvName.setText(Utils.getStr(item.name));
+
+                Optional<LTCData> acaData = DataManager.getInstance().getLTCList().stream().filter(
+                        ltcData -> ltcData.ltcCode.equals(Utils.getStr(item.bigo))
+                ).findFirst();
+                acaData.ifPresent(ltcData -> bodyHolder.tvCampus.setText(ltcData.ltcName));
+
+                bodyHolder.tvDate.setText(Utils.getStr(item.reservationDate));
+            }
         }
     }
 
@@ -63,12 +88,25 @@ public class TestReserveAdapter extends RecyclerView.Adapter<TestReserveAdapter.
         if(mList == null) return 0;
         return mList.size();
     }
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return VIEW_TYPE_HEADER;
+        else return VIEW_TYPE_BODY;
+    }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvHeader;
 
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvHeader = itemView.findViewById(R.id.tv_header);
+        }
+    }
+
+    public class BodyViewHolder extends RecyclerView.ViewHolder {
         private TextView tvName, tvCampus, tvDate;
 
-        public ViewHolder(@NonNull View itemView) {
+        public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvName = itemView.findViewById(R.id.tv_test_reserve_name);

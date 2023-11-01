@@ -4,16 +4,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TeacherListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.TeacherClsData;
+import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -84,22 +87,30 @@ public class TeacherInfoActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful() && response.body() != null){
                             if (mList.size() > 0) mList.clear();
-                            mList.addAll(response.body().data);
+
+                            List<TeacherClsData> list = response.body().data;
                             mList.add(0, new TeacherClsData());
-                            if (mAdapter != null) mAdapter.notifyDataSetChanged();
+
+                            if (list != null && !list.isEmpty()) mList.addAll(list);
+
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
-
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                 }
 
                 @Override
                 public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
+                    mList.clear();
                     try { LogMgr.e(TAG, "requestTeacherCls() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
+
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }

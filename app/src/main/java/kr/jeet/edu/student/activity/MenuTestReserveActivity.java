@@ -21,6 +21,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TestReserveAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
@@ -161,9 +162,8 @@ public class MenuTestReserveActivity extends BaseActivity {
                             if (response.body() != null) {
                                 if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                 List<TestReserveData> list = response.body().data;
-                                if (list != null && !list.isEmpty()) {
-                                    mList.addAll(list);
-                                }
+                                mList.add(0, new TestReserveData());
+                                if (list != null && !list.isEmpty()) mList.addAll(list);
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

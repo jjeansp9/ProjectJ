@@ -68,6 +68,7 @@ public class JoinActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+        setStatusAndNavigatinBar(true);
         mContext = this;
 
         Intent intent = getIntent();
@@ -144,9 +145,9 @@ public class JoinActivity extends BaseActivity {
         } else {
             mViewGroupIdPwd.setVisibility(View.GONE);
 
-            if(mUserName != null) {
-                mEditName.setText(mUserName);
-            }
+//            if(mUserName != null) {
+//                mEditName.setText(mUserName);
+//            }
 
             if(mUserGender != null) {
                 if (mUserGender.equals("M")) {

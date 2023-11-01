@@ -57,6 +57,14 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             String clstName = "";
             String stGrade = "";
 
+            if (mList.size() - 1 == position) {
+                holder.rootNewStu.setVisibility(View.VISIBLE);
+                holder.rootSelStu.setVisibility(View.INVISIBLE);
+            } else {
+                holder.rootNewStu.setVisibility(View.INVISIBLE);
+                holder.rootSelStu.setVisibility(View.VISIBLE);
+            }
+
             if (item.stGrade.equals(item.clstName)) {
                 deptName = Utils.getStr(item.deptName);
                 clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
@@ -111,7 +119,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgProfile, imgGender, imgLineGender;
         private TextView tvName, tvBirth, tvDeptName, tvStGrade, tvClstName, tvAcaName, tvClass;
-        private ConstraintLayout layoutStudentInfo;
+        private ConstraintLayout rootSelStu, rootNewStu;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -123,14 +131,16 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             tvAcaName = itemView.findViewById(R.id.tv_aca_name);
             tvBirth = itemView.findViewById(R.id.tv_birth);
             tvClass = itemView.findViewById(R.id.tv_class);
-            layoutStudentInfo = itemView.findViewById(R.id.layout_student_info);
+            rootSelStu = itemView.findViewById(R.id.root_sel_stu);
+            rootNewStu = itemView.findViewById(R.id.root_new_stu);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAbsoluteAdapterPosition();
-                    if (position != NO_POSITION) ((SelectStudentActivity)mContext).goMain(position);
-                }
+            rootSelStu.setOnClickListener(v -> {
+                int position = getAbsoluteAdapterPosition();
+                if (position != NO_POSITION) ((SelectStudentActivity)mContext).goMain(position);
+            });
+
+            rootNewStu.setOnClickListener(v -> {
+
             });
 
         }

@@ -94,9 +94,14 @@ public class SelectStudentActivity extends BaseActivity {
 
                     if (childStudentInfoList != null) {
                         mList = childStudentInfoList;
+                        if (mList.size() == 0) mList.add(0, new ChildStudentInfo());
+                        else mList.add(mList.size(), new ChildStudentInfo());
+
                     } else {
 
                     }
+
+                    LogMgr.e("intent extra");
                 } else {
                     LogMgr.e("No intent extra");
                     requestChildStudentInfo(_parentSeq);
@@ -221,7 +226,7 @@ public class SelectStudentActivity extends BaseActivity {
     }
 
     private void requestChildStudentInfo(int parentMemberSeq) {
-
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.searchChildStudents(parentMemberSeq).enqueue(new Callback<SearchChildStudentsResponse>() {
@@ -231,8 +236,15 @@ public class SelectStudentActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<ChildStudentInfo> data = response.body().data;
-                            if (data.size() > 0 && data != null) mList.addAll(data);
-                        }else{}
+                            if (data != null && data.size() > 0) {
+                                mList.add(data.size(), new ChildStudentInfo());
+                                mList.addAll(data);
+                            } else {
+                                mList.add(0, new ChildStudentInfo());
+                            }
+                        }else{
+                            mList.add(0, new ChildStudentInfo());
+                        }
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestChildStudentInfo() Exception : ", e.getMessage()); }
 
