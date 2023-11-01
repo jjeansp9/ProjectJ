@@ -519,8 +519,8 @@ public class MainActivity extends BaseActivity {
                 break;
 
             case R.id.btn_teacher:
-                LogMgr.i(TAG, teacherCnt +"");
                 if (teacherCnt > 0) startActivityBottomMenu(TeacherInfoActivity.class);
+                else Toast.makeText(mContext, R.string.main_tv_teacher_empty, Toast.LENGTH_SHORT).show();
                 break;
         }
     }

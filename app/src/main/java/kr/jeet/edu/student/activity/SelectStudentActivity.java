@@ -2,12 +2,12 @@ package kr.jeet.edu.student.activity;
 
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -17,25 +17,18 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
-import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
-import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -63,6 +56,19 @@ public class SelectStudentActivity extends BaseActivity {
     boolean doubleBackToExitPressedOnce = false;
 
     private int _childCnt = 0;
+
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        LogMgr.w(TAG, "result = " + result);
+        Intent intent = result.getData();
+        if(result.getResultCode() != RESULT_CANCELED) {
+            if(intent != null && intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
+                boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
+                if (added) {
+                    requestChildStudentInfo(_parentSeq);
+                }
+            }
+        }
+    });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,8 +243,8 @@ public class SelectStudentActivity extends BaseActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<ChildStudentInfo> data = response.body().data;
                             if (data != null && data.size() > 0) {
-                                mList.add(data.size(), new ChildStudentInfo());
                                 mList.addAll(data);
+                                mList.add(data.size(), new ChildStudentInfo());
                             } else {
                                 mList.add(0, new ChildStudentInfo());
                             }
@@ -283,5 +289,11 @@ public class SelectStudentActivity extends BaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
+    }
+
+    public void goTestForNewStu() {
+        Intent intent = new Intent(mContext, InformedConsentActivity.class);
+        intent.putExtra(IntentParams.PARAM_TEST_TYPE, Constants.LEVEL_TEST_TYPE_NEW_CHILD);
+        resultLauncher.launch(intent);
     }
 }

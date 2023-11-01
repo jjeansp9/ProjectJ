@@ -112,6 +112,7 @@ public class InformedQuestionActivity extends BaseActivity {
     private String writeMode = "";
 
     private final String NOT_SEL = "선택";
+    private int testType = -1;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -190,17 +191,9 @@ public class InformedQuestionActivity extends BaseActivity {
             }
 
             if (intent.hasExtra(IntentParams.PARAM_WRITE_MODE)){
+
                 writeMode = intent.getStringExtra(IntentParams.PARAM_WRITE_MODE);
 
-//                if (writeMode.equals(Constants.WRITE_EDIT)){
-//                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
-//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
-//                        }else{
-//                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
-//                        }
-//                    }
-//                }
                 if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
                     LogMgr.e(TAG, "Event get mInfo");
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -211,6 +204,9 @@ public class InformedQuestionActivity extends BaseActivity {
                 }else{
                     mInfo = new TestReserveData();
                 }
+            }
+            if (intent.hasExtra(IntentParams.PARAM_TEST_TYPE)){
+                testType = intent.getIntExtra(IntentParams.PARAM_TEST_TYPE, testType);
             }
         }catch (Exception e) {
             LogMgr.e(TAG, e.getMessage());
@@ -502,7 +498,8 @@ public class InformedQuestionActivity extends BaseActivity {
                                 intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
                             }else{
-                                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                                else intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
                                 Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             }
                             setResult(RESULT_OK, intent);

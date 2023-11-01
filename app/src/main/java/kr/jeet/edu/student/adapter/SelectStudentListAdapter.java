@@ -61,7 +61,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 holder.rootNewStu.setVisibility(View.VISIBLE);
                 holder.rootSelStu.setVisibility(View.INVISIBLE);
             } else {
-                holder.rootNewStu.setVisibility(View.INVISIBLE);
+                holder.rootNewStu.setVisibility(View.GONE);
                 holder.rootSelStu.setVisibility(View.VISIBLE);
             }
 
@@ -135,12 +135,12 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             rootNewStu = itemView.findViewById(R.id.root_new_stu);
 
             rootSelStu.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
-                if (position != NO_POSITION) ((SelectStudentActivity)mContext).goMain(position);
+                int position = getBindingAdapterPosition();
+                if (position != NO_POSITION && mList.size() > 1) ((SelectStudentActivity)mContext).goMain(position);
             });
 
             rootNewStu.setOnClickListener(v -> {
-
+                if (mList.size() > 0) ((SelectStudentActivity)mContext).goTestForNewStu();
             });
 
         }

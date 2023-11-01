@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +25,7 @@ import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -66,9 +68,11 @@ import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.view.DrawableAlwaysCrossFadeFactory;
@@ -603,6 +607,10 @@ public class Utils {
         animator.setInterpolator(new AccelerateDecelerateInterpolator()); // 가속도 감속도 인터폴레이터 설정
         animator.start();
     }
+    /**
+    * dp값 가져오기
+    * */
+    public static int fromDpToPx(float dp) { return (int) (dp * Resources.getSystem().getDisplayMetrics().density); }
 }
 
 

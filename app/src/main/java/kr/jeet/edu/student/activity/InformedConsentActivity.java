@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,10 +21,14 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestReserveNoticeResponse;
+import kr.jeet.edu.student.model.response.TestTimeResponse;
+import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
@@ -36,6 +41,7 @@ public class InformedConsentActivity extends BaseActivity {
 
     private CheckBox mCbAll, mCbPvyCollection, mCbPvyThirdParty, mCbPvyConsignment, mCbPvyMarketing;
     private TextView mTvAll, mTvPvyCollection, mTvPvyThirdParty, mTvPvyConsignment, mTvPvyMarketing, mTvNotice;
+    private Button btnNext;
 
     private String check1, check2, check3, check4 = "";
     private ArrayList<String> checkItem = new ArrayList<>();
@@ -44,15 +50,26 @@ public class InformedConsentActivity extends BaseActivity {
     private static final String NON_CHECKED = "N";
 
     private String url = "";
+    private int testType = -1;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
-            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
-                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
-                setResult(RESULT_OK, intent);
+            if (intent != null) {
+                if (Constants.FINISH_COMPLETE.equals(intent.getAction())){
+                    boolean added = false;
+                    if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED)) {
+                        added = intent.getBooleanExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, false);
+                        intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, added);
+                        setResult(RESULT_OK, intent);
 
+                    } else if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
+                        added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
+                        intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, added);
+                        setResult(RESULT_OK, intent);
+                    }
+                }
             }
         }
         finish();
@@ -63,17 +80,26 @@ public class InformedConsentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informed_consent);
         mContext = this;
-        initData();
         initView();
         initAppbar();
     }
 
     private void initData(){
+
         for (int i = 0; i <= 3; i++) checkItem.add(CHECKED);
+        try{
+            Intent intent= getIntent();
+            if (intent.hasExtra(IntentParams.PARAM_TEST_TYPE)){
+                testType = intent.getIntExtra(IntentParams.PARAM_TEST_TYPE, testType);
+            }
+        }catch (Exception e){
+            LogMgr.e(TAG, e.getMessage());
+        }
     }
 
     @Override
     void initView() {
+        initData();
         mCbAll = findViewById(R.id.cb_check_all);
 
         mCbPvyCollection = findViewById(R.id.cb_check_privacy_collection);
@@ -86,6 +112,7 @@ public class InformedConsentActivity extends BaseActivity {
         mTvPvyConsignment = findViewById(R.id.tv_privacy_consignment);
         mTvPvyMarketing = findViewById(R.id.tv_privacy_marketing);
         mTvNotice = findViewById(R.id.tv_informed_consent_content);
+        btnNext = findViewById(R.id.btn_informed_consent_next);
 
         findViewById(R.id.layout_check_all).setOnClickListener(this);
 
@@ -102,9 +129,9 @@ public class InformedConsentActivity extends BaseActivity {
         findViewById(R.id.layout_view_marketing).setOnClickListener(this);
 
         // 다음 버튼
-        findViewById(R.id.btn_informed_consent_next).setOnClickListener(this);
-
+        btnNext.setOnClickListener(this);
         requestNotice();
+        if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) requestTestTime();
     }
 
     @Override
@@ -224,6 +251,7 @@ public class InformedConsentActivity extends BaseActivity {
 
             Intent intent = new Intent(mContext, MenuTestReserveWriteActivity.class);
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
+            intent.putExtra(IntentParams.PARAM_TEST_TYPE, testType);
             resultLauncher.launch(intent);
         }
         else Toast.makeText(mContext, R.string.informed_consent_impossible_activity_transition, Toast.LENGTH_SHORT).show();
@@ -264,35 +292,47 @@ public class InformedConsentActivity extends BaseActivity {
             });
         }
     }
+
+    // 테스트예약 시간조회
+    private void requestTestTime() {
+        showProgressDialog();
+        if (RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
+                @Override
+                public void onResponse(Call<TestTimeResponse> call, Response<TestTimeResponse> response) {
+
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                ArrayList<TestTimeData> getData = response.body().data;
+
+                                if (getData == null || getData.isEmpty()) {
+                                    setBtn(getString(R.string.menu_test_reserve_test_time_empty));
+                                }
+                            }
+
+                        } else {
+                            setBtn(getString(R.string.menu_test_reserve_test_time_empty));
+                        }
+
+                    } catch (Exception e) {
+                        setBtn(getString(R.string.menu_test_reserve_test_time_fail));
+                    }
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<TestTimeResponse> call, Throwable t) {
+                    setBtn(getString(R.string.menu_test_reserve_test_time_fail));
+                    hideProgressDialog();
+                }
+            });
+        }
+    }
+
+    private void setBtn(String msg) {
+        btnNext.setOnClickListener(null);
+        btnNext.setBackgroundResource(R.drawable.bt_click_cancel);
+        Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -12,11 +12,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/root_sel_stu"
         app:layout_constraintBottom_toBottomOf="@+id/root_sel_stu"
+        android:layout_marginBottom="@dimen/layout_margin_8"
         android:layerType="software"
         android:background="@drawable/bg_student_info_list_dot_line"
         android:stateListAnimator="@xml/animate_button_push"
-        android:gravity="center"
-        android:layout_marginHorizontal="@dimen/layout_margin_16">
+        android:layout_marginHorizontal="@dimen/layout_margin_16"
+        android:gravity="center">
 
         <ImageView
             android:layout_width="50dp"
@@ -37,12 +38,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="4dp"
         android:background="@drawable/bg_student_info_list"
         android:stateListAnimator="@xml/animate_button_push"
         android:gravity="center"
         android:layout_marginTop="@dimen/layout_margin_12"
         android:layout_marginHorizontal="@dimen/layout_margin_16"
-        android:visibility="invisible">
+        android:elevation="3dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_student_info"

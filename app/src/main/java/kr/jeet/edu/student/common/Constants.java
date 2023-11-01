@@ -228,4 +228,6 @@ public class Constants {
     public static final int MOVE_UP = 2;
     public static final int MOVE_DOWN = 3;
     public static final int MOVE_DETAIL_RIGHT = 4;
+
+    public static final int LEVEL_TEST_TYPE_NEW_CHILD = 0;
 }

@@ -88,7 +88,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private boolean isFilterTriggerChanged = false;
     private SchoolData _selectedSchoolData = null;
 
-
     private String _stuGender = "";
     private String _ltcCode = "";
     private String _ltcName = "";
@@ -120,35 +119,43 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private ArrayList<Integer> gradeIndex = new ArrayList<>();
 
     private int _childCnt = -1;
+    private int testType = -1;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if (result.getResultCode() == RESULT_OK) {
             Intent intent = result.getData();
-            if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
-                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
-                setResult(RESULT_OK, intent);
-                finish();
+            if (intent != null) {
+                if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_ADDED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
+                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                    setResult(RESULT_OK, intent);
+                    finish();
 
-            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
-                intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
-                intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
-                setResult(RESULT_OK, intent);
-                finish();
+                }else if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_EDITED) && Constants.FINISH_COMPLETE.equals(intent.getAction())) {
+                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
+                    intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
+                    setResult(RESULT_OK, intent);
+                    finish();
 
-            }else if (intent != null && intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_SAVED)) {
-                if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
-                    LogMgr.e(TAG, "Event get mInfo");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                }else if (intent.hasExtra(IntentParams.PARAM_TEST_RESERVE_SAVED)) {
+                    if (intent.hasExtra(IntentParams.PARAM_LIST_ITEM)){
+                        LogMgr.e(TAG, "Event get mInfo");
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, TestReserveData.class);
+                        }else{
+                            mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                        }
                     }else{
-                        mInfo = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
+                        mInfo = new TestReserveData();
                     }
-                }else{
-                    mInfo = new TestReserveData();
-                }
 
-                if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
+                    if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
+
+                } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
+                    intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         }
     });
@@ -162,16 +169,28 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         initAppbar();
     }
 
+    /**
+     == 회원 ==
+      - 원생
+       1. 테스트등록 - 개인정보 수정 X
+      - 부모
+       1. 테스트등록 - 개인정보 수정 X
+       2. 신규원생 - 개인정보 수정 O
+
+     == 비회원 ==
+      - 원생
+       1. 테스트등록 - 개인정보 수정 X
+      - 부모
+       1. 테스트등록 - 개인정보 수정 X
+       2. 신규원생 - 개인정보 수정 O [isOriginal "Y"로 변경]
+    * */
+
     private void initData(){
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
         testDateMinYear = calendar.get(Calendar.YEAR);
         birthMaxYear = calendar.get(Calendar.YEAR);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
-        _stName = PreferenceUtil.getStName(mContext);
-        _stuGender = PreferenceUtil.getStuGender(mContext);
-        _birth = PreferenceUtil.getStuBirth(mContext);
-        _stPhone = PreferenceUtil.getStuPhoneNum(mContext);
         _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
         _stParentName = PreferenceUtil.getParentName(mContext);
         _selectedSchoolData = new SchoolData("", 0);
@@ -195,12 +214,20 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             }else{
                 mInfo = new TestReserveData();
             }
+            if (intent.hasExtra(IntentParams.PARAM_TEST_TYPE)){
+                testType = intent.getIntExtra(IntentParams.PARAM_TEST_TYPE, testType);
+            }
 
         }catch (Exception e) {
             LogMgr.e(TAG, e.getMessage());
         }
 
-
+        if (testType != Constants.LEVEL_TEST_TYPE_NEW_CHILD) {
+            _stName = PreferenceUtil.getStName(mContext);
+            _stuGender = PreferenceUtil.getStuGender(mContext);
+            _birth = PreferenceUtil.getStuBirth(mContext);
+            _stPhone = PreferenceUtil.getStuPhoneNum(mContext);
+        }
     }
 
     @Override
@@ -780,6 +807,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             Intent intent = new Intent(mContext, InformedQuestionActivity.class);
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_WRITE, request);
             intent.putExtra(IntentParams.PARAM_WRITE_MODE, writeMode);
+            intent.putExtra(IntentParams.PARAM_TEST_TYPE, testType);
             if (mInfo != null) {
                 LogMgr.e(TAG, "Event put mInfo");
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
@@ -967,11 +995,26 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_next, menu);
-        if (writeMode.equals(Constants.WRITE_EDIT)) menu.findItem(R.id.action_btn_sub).setVisible(false);
-        else {
-            if (_childCnt > 0) menu.findItem(R.id.action_btn_sub).setVisible(true);
-            else menu.findItem(R.id.action_btn_sub).setVisible(false);
+
+        boolean visibility = false;
+
+        if (writeMode.equals(Constants.WRITE_EDIT)) {
+
+            visibility = false;
+
+        } else {
+            if (_childCnt > 0) {
+                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) {
+                    visibility = false;
+                } else {
+                    visibility = true;
+                }
+            } else {
+                visibility = false;
+            }
         }
+
+        menu.findItem(R.id.action_btn_sub).setVisible(visibility);
 
         try {
             setMenuItemTextStyling(menu.findItem(R.id.action_next), R.color.red, true, 16);
