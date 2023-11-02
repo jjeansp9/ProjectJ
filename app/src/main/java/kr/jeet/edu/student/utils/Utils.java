@@ -48,6 +48,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -67,6 +68,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
+import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
@@ -81,6 +83,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Utils {
+
+    protected static PopupDialog popupDialog = null;
 
     /**
      * 6자리 난수 생성
@@ -570,6 +574,7 @@ public class Utils {
      * */
     public static String getClipData(Context context){
         ClipboardManager clipMgr = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+
         if (clipMgr != null) {
             ClipData clipData = clipMgr.getPrimaryClip();
 
@@ -577,21 +582,15 @@ public class Utils {
                 ClipData.Item item = clipData.getItemAt(0);
                 CharSequence text = item.getText();
 
-                if (text != null) {
+                if (!TextUtils.isEmpty(text)) {
                     return text.toString();
-
-                } else {
-                    return "";
                 }
-
-            } else {
-                return "";
             }
-
-        } else {
-            return "";
         }
+        return "";
     }
+
+
     /**
     * view의 위치를 이동시키는 애니메이션 메소드
     * */
@@ -611,6 +610,36 @@ public class Utils {
     * dp값 가져오기
     * */
     public static int fromDpToPx(float dp) { return (int) (dp * Resources.getSystem().getDisplayMetrics().density); }
+
+    /**
+    * Normal Message Dialog Show
+    * */
+    public static  void showMessageDialog(String title, String msg, View.OnClickListener okListener, View.OnClickListener cancelListener, boolean setEditText, Context mContext) {
+        if(popupDialog != null && popupDialog.isShowing()) {
+            popupDialog.dismiss();
+            popupDialog = null;
+        }
+        if (popupDialog == null && mContext != null) {
+            popupDialog = new PopupDialog(mContext);
+            popupDialog.setTitle(title);
+            popupDialog.setContent(msg);
+            popupDialog.setEdit(setEditText);
+            popupDialog.setOnOkButtonClickListener(okListener);
+            if(cancelListener != null) {
+                popupDialog.setOnCancelButtonClickListener(cancelListener);
+            }
+
+            popupDialog.show();
+        }
+    }
+    /**
+     * Normal Message Dialog Hide
+     * */
+    public static  void hideMessageDialog(Context mContext) {
+        if(popupDialog != null && popupDialog.isShowing() && mContext != null) {
+            popupDialog.dismiss();
+        }
+    }
 }
 
 

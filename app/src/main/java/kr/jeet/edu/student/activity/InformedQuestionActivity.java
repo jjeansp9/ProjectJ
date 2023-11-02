@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +61,7 @@ import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -104,6 +106,8 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private int _memberSeq = 0;
     private int _userGubun = -1;
+    private String _userType = "";
+    private int _loginType = -1;
 
     private static final String PREF= "Y";
     private static final String NON_PREF= "N";
@@ -113,6 +117,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private final String NOT_SEL = "선택";
     private int testType = -1;
+    private AppCompatActivity mActivity;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
@@ -139,6 +144,7 @@ public class InformedQuestionActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informed_question);
+        mActivity = this;
         mContext = this;
 
         if (savedInstanceState != null){
@@ -183,6 +189,8 @@ public class InformedQuestionActivity extends BaseActivity {
 
             _memberSeq = PreferenceUtil.getUserSeq(mContext);
             _userGubun = PreferenceUtil.getUserGubun(mContext);
+            _userType = PreferenceUtil.getUserType(mContext);
+            _loginType = PreferenceUtil.getLoginType(mContext);
 
             Intent intent= getIntent();
 
@@ -485,6 +493,7 @@ public class InformedQuestionActivity extends BaseActivity {
                 @Override
                 public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                     try {
+                        hideProgressDialog();
                         if (response.isSuccessful() && response.body() != null){
                             String getData = "";
                             getData= response.body().msg;
@@ -496,19 +505,38 @@ public class InformedQuestionActivity extends BaseActivity {
                             if (writeMode.equals(Constants.WRITE_EDIT)){
                                 intent.putExtra(IntentParams.PARAM_TEST_RESERVE_EDITED, true);
                                 intent.putExtra(IntentParams.PARAM_SUCCESS_DATA, request);
+                                setResult(RESULT_OK, intent);
+                                finish();
                                 Toast.makeText(mContext, R.string.informed_question_update_success, Toast.LENGTH_SHORT).show();
                             }else{
-                                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) { // 자녀목록 화면에서 진입한 경우
-                                    PreferenceUtil.setUserType(mContext, Constants.MEMBER);
-                                    intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) { // 신규원생 추가하는 경우
+                                    if (_userType.equals(Constants.MEMBER)) {
+                                        intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                        Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        HttpUtils.requestLogOut(mActivity);
+                                    }
 
                                 } else {
-                                    intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                    if (_userType.equals(Constants.MEMBER)) {
+                                        intent.putExtra(IntentParams.PARAM_TEST_RESERVE_ADDED, true);
+                                        setResult(RESULT_OK, intent);
+                                        finish();
+                                        Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
+                                    } else {
+//                                            if (_loginType == Constants.LOGIN_TYPE_NORMAL) {
+//                                                HttpUtils.requestLogin(mActivity);
+//                                            }
+//                                            else {
+//                                                HttpUtils.requestLoginFromSns(mActivity);
+//                                            }
+                                        HttpUtils.requestLogOut(mActivity);
+                                    }
                                 }
-                                Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                             }
-                            setResult(RESULT_OK, intent);
-                            finish();
 
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -516,7 +544,6 @@ public class InformedQuestionActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTestReserve() Exception : ", e.getMessage()); }
-                    hideProgressDialog();
                 }
 
                 @Override

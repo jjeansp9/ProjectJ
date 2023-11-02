@@ -43,6 +43,7 @@ public class IntentParams {
     public final static String PARAM_TEST_RESERVE_EDITED = "testReserveEdited"; // 테스트 예약 수정 resultLauncher
     public final static String PARAM_TEST_RESERVE_SAVED = "testReserveSaved"; // 테스트 예약 입력한 데이터 저장
     public final static String PARAM_TEST_NEW_CHILD = "testReserveNewChild"; // 테스트 예약 신규원생 등록
+    public final static String PARAM_TEST_NEW_CHILD_FROM_MAIN = "testReserveNewChildFromMain"; // 테스트 예약 신규원생 등록
     public final static String PARAM_TEST_TYPE = "testReserveType"; // 테스트 예약 타입
 
     public final static String PARAM_BRIEFING_INFO = "briefingInfo";  // 선택한 설명회 정보
@@ -60,4 +61,5 @@ public class IntentParams {
     public final static String PARAM_TEACHER_INFO = "teacherInfo";  // Main에서 지도강사 클릭 시 전달
 
     public final static String PARAM_RD_CNT_ADD = "rdCntAdd";  // 게시글 조회수
+    public final static String PARAM_ACCOUNT_NO = "accountNo"; // 수강료 계좌
 }

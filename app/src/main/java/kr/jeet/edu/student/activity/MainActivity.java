@@ -34,6 +34,7 @@ import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -63,6 +64,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -211,13 +213,16 @@ public class MainActivity extends BaseActivity {
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
                 if(added) requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
 
-            }else {
+            } else if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
+                intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD_FROM_MAIN, true);
+                setResult(RESULT_OK, intent);
+                finish();
+
+            } else {
                 mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
             }
-            if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
-                boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
-                if (added) mHandler.sendEmptyMessage(CMD_GET_ACALIST);
-            }
+
         }
     });
 
@@ -226,17 +231,22 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-        initAppbar();
         initView();
+        initAppbar();
     }
 
     @Override
     public void onBackPressed() {
-        if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우 뒤로가기 버튼 활성화
-            startActivity(new Intent(mContext, SelectStudentActivity.class));
-            finish();
-            return;
-        }
+//        if (_userGubun == Constants.USER_TYPE_PARENTS) {
+//            startActivity(new Intent(mContext, SelectStudentActivity.class));
+//            finish();
+//            return;
+//        }
+//        if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우
+//            startActivity(new Intent(mContext, SelectStudentActivity.class));
+//            finish();
+//            return;
+//        }
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             return;
@@ -259,10 +269,12 @@ public class MainActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setLogoVisible(true);
         setSupportActionBar(customAppbar.getToolbar());
-
-        if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우 뒤로가기 버튼 활성화
-            customAppbar.setMainBtnLeftClickListener(v -> { startActivity(new Intent(mContext, SelectStudentActivity.class)); });
+        if (_userGubun == Constants.USER_TYPE_PARENTS) {
+            customAppbar.setMainBtnLeftClickListener( v -> startActivity(new Intent(mContext, SelectStudentActivity.class)) );
         }
+//        if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우 뒤로가기 버튼 활성화
+//            customAppbar.setMainBtnLeftClickListener(v -> { startActivity(new Intent(mContext, SelectStudentActivity.class)); });
+//        }
 
     }
     @Override

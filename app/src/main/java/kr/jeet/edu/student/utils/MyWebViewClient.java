@@ -33,6 +33,7 @@ public class MyWebViewClient extends WebViewClient {
 
     private AppCompatActivity activity;
     private AlertDialog mProgressDialog = null;
+    private String accountNo = "";
 
     private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com/common/login#payer";
     private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
@@ -65,6 +66,12 @@ public class MyWebViewClient extends WebViewClient {
     public MyWebViewClient(AppCompatActivity mActivity, WebView webView) {
         this.activity = mActivity;
         this.wv = webView;
+    }
+
+    public MyWebViewClient(AppCompatActivity mActivity, WebView webView, String accountNo) {
+        this.activity = mActivity;
+        this.wv = webView;
+        this.accountNo = accountNo;
     }
 
     @Override
@@ -135,12 +142,17 @@ public class MyWebViewClient extends WebViewClient {
     public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
         LogMgr.e(TAG, "onPageFinished() : " + url);
-
-        if (url.contains(BUS_ROUTE_URL)) view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
-        else if (url.contains(SHIN_HAN_LOGIN_URL)) view.loadUrl(shinhanJSCode());
-
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
+
+        if (url.contains(BUS_ROUTE_URL)) {
+            view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+            return;
+        }
+        else if (url.contains(SHIN_HAN_LOGIN_URL)) {
+            view.loadUrl(shinhanJSCode());
+            return;
+        }
     }
 
     @Override
@@ -180,17 +192,20 @@ public class MyWebViewClient extends WebViewClient {
 
     private String shinhanJSCode(){
         if (activity != null && !activity.isFinishing()) {
-            String getClipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
-            LogMgr.e(TAG, "clipboard: " + getClipboard);
-            int clipboard = 0;
+            String inputValue = "";
+
+            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
             Utils.setClipData(activity, "");
-            try{ clipboard = Integer.parseInt(getClipboard); }
-            catch (Exception e) {}
+
+            LogMgr.e(TAG, "clipboard: " + clipboard + ", accountNo: " + accountNo);
+
+            if (clipboard.equals("")) inputValue = accountNo;
+            else inputValue = clipboard;
 
             return "javascript:(function() {" +
                     "   var bankNumElement = document.getElementById('bankNum');" +
                     "   if (bankNumElement) {" +
-                    "       bankNumElement.value = '" + clipboard + "';" +
+                    "       bankNumElement.value = '" + inputValue + "';" +
                     "   }" +
                     "   window.scrollTo(0, 0);" +
                     "})()";

@@ -36,6 +36,7 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.MyWebChromeClient;
 import kr.jeet.edu.student.utils.MyWebViewClient;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 
 public class WebViewActivity extends BaseActivity {
@@ -44,6 +45,7 @@ public class WebViewActivity extends BaseActivity {
     private String title = "";
     private WebView wv;
     private String url;
+    private String accountNo = "";
 
     private AppCompatActivity mActivity;
 
@@ -53,7 +55,6 @@ public class WebViewActivity extends BaseActivity {
         setContentView(R.layout.activity_web_view);
         mActivity = this;
         mContext = this;
-        initData();
         initView();
         initAppbar();
     }
@@ -61,14 +62,18 @@ public class WebViewActivity extends BaseActivity {
     private void initData(){
         try {
             Intent intent = getIntent();
-            if (intent != null && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
-            }
-            if (intent != null){
+            if (intent != null) {
+                if (intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
+                    title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                }
                 if (intent.hasExtra(IntentParams.PARAM_WEB_VIEW_URL)){
                     url = intent.getStringExtra(IntentParams.PARAM_WEB_VIEW_URL);
                 }
+                if (intent.hasExtra(IntentParams.PARAM_ACCOUNT_NO)){
+                    accountNo = intent.getStringExtra(IntentParams.PARAM_ACCOUNT_NO);
+                }
             }
+
         }catch (Exception e){
 
         }
@@ -77,7 +82,7 @@ public class WebViewActivity extends BaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     void initView() {
-
+        initData();
         wv = findViewById(R.id.webview);
 
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -93,7 +98,7 @@ public class WebViewActivity extends BaseActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        wv.setWebViewClient(new MyWebViewClient(mActivity, wv));
+        wv.setWebViewClient(new MyWebViewClient(mActivity, wv, accountNo));
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 
         if (url != null) wv.loadUrl(url);

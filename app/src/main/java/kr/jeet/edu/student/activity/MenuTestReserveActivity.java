@@ -78,11 +78,14 @@ public class MenuTestReserveActivity extends BaseActivity {
                 } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
                     LogMgr.e(TAG, "event new stu2");
                     added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
-                    isNew = true;
+                    //isNew = true;
                     if (added) {
                         LogMgr.e(TAG, "event new stu3");
-                        requestTestReserveList();
+                        //requestTestReserveList();
                         Utils.createNotification(mContext, "예약완료", getString(R.string.informed_question_success));
+                        intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
                 }
             }

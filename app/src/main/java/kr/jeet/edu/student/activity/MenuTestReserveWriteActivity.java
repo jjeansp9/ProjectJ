@@ -186,6 +186,14 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
        2. 신규원생 - 개인정보 수정 O [isOriginal "Y"로 변경]
     * */
 
+    // 신규 테스트예약
+    // 학부모 -> 원생선택화면 (비회원 학부모의 경우 원생이 1명이라 원생정보로 메인화면이동)
+    // 비회원 원생 -> 메인화면
+    // 회원 원생 -> 신규 생성 불가능
+
+    // 기존원생 테스트예약, 수정
+    // 학부모, 원생 -> 테스트예약 리스트
+
     private void initData(){
         _selectedDate = new Date();
         Calendar calendar = Calendar.getInstance();
@@ -221,6 +229,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         }catch (Exception e) {
             LogMgr.e(TAG, e.getMessage());
+        }
+
+        LogMgr.e(TAG, "childCnt: " + _childCnt);
+        if (_childCnt < 1) {
+            if (_userGubun == Constants.USER_TYPE_PARENTS) { // 부모인 경우 신규원생 추가로 변경
+                testType = Constants.LEVEL_TEST_TYPE_NEW_CHILD;
+            }
         }
 
         if (testType != Constants.LEVEL_TEST_TYPE_NEW_CHILD) {
@@ -997,29 +1012,15 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_next, menu);
 
-        boolean visibility = false;
-
-        if (writeMode.equals(Constants.WRITE_EDIT)) {
-
-            visibility = false;
-
-        } else {
-            if (_childCnt > 0) {
-                if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) {
-                    visibility = false;
-                } else {
-                    visibility = true;
-                }
-            } else {
-                visibility = false;
-            }
-        }
-
-        menu.findItem(R.id.action_btn_sub).setVisible(visibility);
+//        if (writeMode.equals(Constants.WRITE_EDIT)) {
+//
+//        } else {
+//
+//        }
 
         try {
             setMenuItemTextStyling(menu.findItem(R.id.action_next), R.color.red, true, 16);
-            setMenuItemTextStyling(menu.findItem(R.id.action_btn_sub), R.color.font_color_default, true, 16);
+            //setMenuItemTextStyling(menu.findItem(R.id.action_btn_sub), R.color.font_color_default, true, 16);
 
         }catch(Exception ex){}
         return (super.onCreateOptionsMenu(menu));
@@ -1032,15 +1033,15 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 clearFocusAndHideKeyboard();
                 startQuestionActivity();
                 return true;
-            case R.id.action_btn_sub:
-                testType = Constants.LEVEL_TEST_TYPE_NEW_CHILD;
-                mEtName.setText("");
-                mEtStuPhone.setText("");
-                mEtName.setEnabled(true);
-                mEtStuPhone.setEnabled(true);
-                item.setVisible(false);
-                mTvStuPhoneIsEmpty.setVisibility(View.VISIBLE);
-                return true;
+//            case R.id.action_btn_sub:
+//                testType = Constants.LEVEL_TEST_TYPE_NEW_CHILD;
+//                mEtName.setText("");
+//                mEtStuPhone.setText("");
+//                mEtName.setEnabled(true);
+//                mEtStuPhone.setEnabled(true);
+//                item.setVisible(false);
+//                mTvStuPhoneIsEmpty.setVisibility(View.VISIBLE);
+//                return true;
         }
         return super.onOptionsItemSelected(item);
     }

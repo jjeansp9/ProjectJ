@@ -57,6 +57,7 @@ public class SelectStudentActivity extends BaseActivity {
     boolean doubleBackToExitPressedOnce = false;
 
     private int _childCnt = 0;
+    boolean fromMain = false;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w(TAG, "result = " + result);
@@ -64,6 +65,11 @@ public class SelectStudentActivity extends BaseActivity {
         if(result.getResultCode() != RESULT_CANCELED) {
             if(intent != null && intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD, false);
+
+                if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD_FROM_MAIN)) {
+                    fromMain = intent.getBooleanExtra(IntentParams.PARAM_TEST_NEW_CHILD_FROM_MAIN, false);
+                }
+
                 if (added) requestChildStudentInfo(_parentSeq);
             }
         }
@@ -74,12 +80,11 @@ public class SelectStudentActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_student);
         mContext = this;
-        initData();
-        initAppbar();
         initView();
     }
 
     private void initData(){
+        initAppbar();
         try {
             _parentSeq = PreferenceUtil.getUserSeq(mContext);
             _childCnt = PreferenceUtil.getNumberOfChild(mContext);
@@ -103,8 +108,10 @@ public class SelectStudentActivity extends BaseActivity {
                         else mList.add(mList.size(), new ChildStudentInfo());
 
                     } else {
-
+                        if (mList.size() == 0) mList.add(0, new ChildStudentInfo());
                     }
+
+                    setBackBtn();
 
                     LogMgr.e("intent extra");
                 } else {
@@ -200,32 +207,41 @@ public class SelectStudentActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
+        LogMgr.e(TAG, "childCnt: " + _childCnt);
+        if (_childCnt >= 0) {
+
             super.onBackPressed();
-            return;
-        }
-
-        this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, R.string.msg_backbutton_to_exit, Toast.LENGTH_SHORT).show();
-
-        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                doubleBackToExitPressedOnce=false;
+        } else {
+            if (doubleBackToExitPressedOnce) {
+                super.onBackPressed();
+                return;
             }
-        }, 2000);
-    }
 
+            this.doubleBackToExitPressedOnce = true;
+            Toast.makeText(this, R.string.msg_backbutton_to_exit, Toast.LENGTH_SHORT).show();
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    doubleBackToExitPressedOnce=false;
+                }
+            }, 2000);
+        }
+    }
+    CustomAppbarLayout customAppbar;
     @Override
     void initAppbar(){
-        CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setLogoVisible(true);
-        setSupportActionBar(customAppbar.getToolbar());
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        customAppbar = findViewById(R.id.customAppbar);
+        if (customAppbar != null) {
+            customAppbar.setLogoVisible(true);
+            setSupportActionBar(customAppbar.getToolbar());
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
     }
     @Override
     void initView() {
+        initData();
         tvEmpty = findViewById(R.id.tv_sel_stu_empty);
 
         mListView = (RecyclerView) findViewById(R.id.listView);
@@ -244,21 +260,33 @@ public class SelectStudentActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful() && response.body() != null) {
                             ArrayList<ChildStudentInfo> data = response.body().data;
-                            if (data != null && data.size() > 0) {
-                                mList.addAll(data);
-                                mList.add(data.size(), new ChildStudentInfo());
-                            } else {
-                                mList.add(0, new ChildStudentInfo());
+                            if (data != null) {
+                                if (data.size() > 0) {
+                                    mList.addAll(data);
+                                    mList.add(data.size(), new ChildStudentInfo());
+
+                                    PreferenceUtil.setNumberOfChild(mContext, data.size());
+                                } else {
+                                    mList.add(0, new ChildStudentInfo());
+                                    PreferenceUtil.setNumberOfChild(mContext, 0);
+                                }
                             }
+
                         }else{
                             mList.add(0, new ChildStudentInfo());
                         }
+
+                        setBackBtn();
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestChildStudentInfo() Exception : ", e.getMessage()); }
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     tvEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     hideProgressDialog();
+
+                    if (fromMain) {
+                        if (mList.size() == 1) goMain(0);
+                    }
                 }
 
                 @Override
@@ -274,6 +302,16 @@ public class SelectStudentActivity extends BaseActivity {
                     hideProgressDialog();
                 }
             });
+        }
+    }
+
+    private void setBackBtn() {
+        if (mList.size() > 1) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+        } else {
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
 

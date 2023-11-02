@@ -230,6 +230,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 Intent intent = new Intent(mContext, WebViewActivity.class);
                 intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
                 intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
                 startActivity(intent);
 
             } else {

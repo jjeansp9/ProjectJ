@@ -529,7 +529,7 @@ public class IntroActivity extends BaseActivity {
                                 if (getData != null){
                                     PreferenceUtil.setNumberOfChild(mContext, getData.size());
 
-                                    if (getData.size() == 1){ // 자녀가 1명인 경우
+                                    if (getData.size() <= 1){ // 자녀가 1명인 경우
                                         int lastIndex = getData.size() - 1;
                                         goMain(getData.get(lastIndex));
                                         PreferenceUtil.setStuGender(mContext, getData.get(lastIndex).gender);

@@ -25,6 +25,7 @@
 
     <color name="line">#BCBCBC</color>
     <color name="line_2">#DDDDDD</color>
+    <color name="line_3">#BBBBBB</color>
     <color name="line_set">#EDEDED</color>
     <color name="gray">#cccccc</color>
     <color name="blackgray_sub">#444444</color>

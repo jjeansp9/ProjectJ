@@ -49,23 +49,22 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
     @Override
     public void onBindViewHolder(@NonNull SelectStudentListAdapter.ViewHolder holder, int position) {
         ChildStudentInfo item = mList.get(position);
+        String itemClass = "";
 
-        try{
-            String itemClass = "";
+        String deptName = "";
+        String clstName = "";
+        String stGrade = "";
 
-            String deptName = "";
-            String clstName = "";
-            String stGrade = "";
+        if (mList.size() - 1 == position) {
+            holder.rootNewStu.setVisibility(View.VISIBLE);
+            holder.rootSelStu.setVisibility(View.INVISIBLE);
+        } else {
+            holder.rootNewStu.setVisibility(View.GONE);
+            holder.rootSelStu.setVisibility(View.VISIBLE);
+        }
 
-            if (mList.size() - 1 == position) {
-                holder.rootNewStu.setVisibility(View.VISIBLE);
-                holder.rootSelStu.setVisibility(View.INVISIBLE);
-            } else {
-                holder.rootNewStu.setVisibility(View.GONE);
-                holder.rootSelStu.setVisibility(View.VISIBLE);
-            }
-
-            if (item.stGrade.equals(item.clstName)) {
+        if (item != null) {
+            if (Utils.getStr(item.stGrade).equals(Utils.getStr(item.clstName))) {
                 deptName = Utils.getStr(item.deptName);
                 clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
                 itemClass = deptName + clstName;
@@ -82,7 +81,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
 
             try {
-                Date birthDate = originalFormat.parse(item.birth);
+                Date birthDate = originalFormat.parse(Utils.getStr(item.birth));
                 if (birthDate != null) item.birth = targetFormat.format(birthDate);
 
             } catch (ParseException e) {
@@ -95,7 +94,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             holder.tvClass.setText(itemClass);
 
             // gender
-            if(item.gender.equals("M")) {
+            if(Utils.getStr(item.gender).equals("M")) {
                 Glide.with(mContext).load(R.drawable.img_dot_man).into(holder.imgGender);
                 Glide.with(mContext).load(R.drawable.img_profile_man).into(holder.imgProfile);
                 Glide.with(mContext).load(R.drawable.bg_student_list_gender_man).into(holder.imgLineGender);
@@ -104,10 +103,66 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 Glide.with(mContext).load(R.drawable.img_profile_woman).into(holder.imgProfile);
                 Glide.with(mContext).load(R.drawable.bg_student_list_gender_woman).into(holder.imgLineGender);
             }
-
-        }catch(Exception e){
-            LogMgr.e("Adapter Exception : ", e.getMessage());
         }
+
+//        try{
+//            String itemClass = "";
+//
+//            String deptName = "";
+//            String clstName = "";
+//            String stGrade = "";
+//
+//            if (mList.size() - 1 == position) {
+//                holder.rootNewStu.setVisibility(View.VISIBLE);
+//                holder.rootSelStu.setVisibility(View.INVISIBLE);
+//            } else {
+//                holder.rootNewStu.setVisibility(View.GONE);
+//                holder.rootSelStu.setVisibility(View.VISIBLE);
+//            }
+//
+//            if (item.stGrade.equals(item.clstName)) {
+//                deptName = Utils.getStr(item.deptName);
+//                clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+//                itemClass = deptName + clstName;
+//            }
+//            else {
+//                deptName = Utils.getStr(item.deptName);
+//                stGrade = Utils.getStr(item.stGrade);
+//                clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+//
+//                itemClass = deptName + stGrade + clstName;
+//            }
+//
+//            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
+//            SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
+//
+//            try {
+//                Date birthDate = originalFormat.parse(item.birth);
+//                if (birthDate != null) item.birth = targetFormat.format(birthDate);
+//
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//
+//            holder.tvName.setText(Utils.getStr(item.stName));
+//            holder.tvBirth.setText(Utils.getStr(item.birth));
+//            holder.tvAcaName.setText(Utils.getStr(item.acaName));
+//            holder.tvClass.setText(itemClass);
+//
+//            // gender
+//            if(item.gender.equals("M")) {
+//                Glide.with(mContext).load(R.drawable.img_dot_man).into(holder.imgGender);
+//                Glide.with(mContext).load(R.drawable.img_profile_man).into(holder.imgProfile);
+//                Glide.with(mContext).load(R.drawable.bg_student_list_gender_man).into(holder.imgLineGender);
+//            } else {
+//                Glide.with(mContext).load(R.drawable.img_dot_woman).into(holder.imgGender);
+//                Glide.with(mContext).load(R.drawable.img_profile_woman).into(holder.imgProfile);
+//                Glide.with(mContext).load(R.drawable.bg_student_list_gender_woman).into(holder.imgLineGender);
+//            }
+//
+//        }catch(Exception e){
+//            LogMgr.e("Adapter Exception : ", e.getMessage());
+//        }
     }
 
     @Override
