@@ -383,7 +383,8 @@ public class HttpUtils {
                             );
 
                         }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             startLogin(mContext);
                             LogMgr.e(TAG, "requestLogOut() errBody : " + response.errorBody().string());
                         }
@@ -396,7 +397,7 @@ public class HttpUtils {
                     try { LogMgr.e(TAG, "requestLogOut() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
                     startLogin(mContext);
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }

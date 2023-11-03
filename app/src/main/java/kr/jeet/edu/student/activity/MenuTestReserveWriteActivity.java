@@ -8,12 +8,16 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -43,6 +47,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.SchoolListAdapter;
@@ -62,6 +67,8 @@ import kr.jeet.edu.student.model.response.TestTimeResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.random.RandomNumStrCreator;
+import kr.jeet.edu.student.utils.random.RandomStringCreator;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.utils.comparator.GradeComparator;
 import kr.jeet.edu.student.view.ClearableTextView;
@@ -169,30 +176,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         initView();
         initAppbar();
     }
-
-    /**
-     == 회원 ==
-      - 원생
-       1. 테스트등록 - 개인정보 수정 X
-      - 부모
-       1. 테스트등록 - 개인정보 수정 X
-       2. 신규원생 - 개인정보 수정 O
-
-     == 비회원 ==
-      - 원생
-       1. 테스트등록 - 개인정보 수정 X
-      - 부모
-       1. 테스트등록 - 개인정보 수정 X
-       2. 신규원생 - 개인정보 수정 O [isOriginal "Y"로 변경]
-    * */
-
-    // 신규 테스트예약
-    // 학부모 -> 원생선택화면 (비회원 학부모의 경우 원생이 1명이라 원생정보로 메인화면이동)
-    // 비회원 원생 -> 메인화면
-    // 회원 원생 -> 신규 생성 불가능
-
-    // 기존원생 테스트예약, 수정
-    // 학부모, 원생 -> 테스트예약 리스트
 
     private void initData(){
         _selectedDate = new Date();
@@ -321,6 +304,20 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
             mTvBirthDate.setText(Utils.getStr(_birth));
 
+            if (LogMgr.DEBUG) {
+                Toast.makeText(mContext, "DEBUG ON. 현금영수증에 '01010101' 입력", Toast.LENGTH_SHORT).show();
+                mEtCashReceipt.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.toString().equals("01010101")) setTestData();
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
+            }
         }
 
         setSpinner();
@@ -1069,5 +1066,79 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         int sizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, textSizeInDp, mContext.getResources().getDisplayMetrics());
         spannableTitle.setSpan(new AbsoluteSizeSpan(sizeInPx), 0, spannableTitle.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         menuItem.setTitle(spannableTitle);
+    }
+
+    private void setTestData() {
+        String s = "";
+        int n = -1;
+
+        if (TextUtils.isEmpty(mEtName.getText().toString())) {
+            s = "test[" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4) + "]";
+            mEtName.setText(s); // 학생이름
+            mEtName.setEnabled(false);
+        }
+
+        s = "테스트주소 " + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(8, 12);
+        mTvAddress.setText(s); // 주소
+
+        s = "테스트상세주소 " + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(3, 4);
+        mEtAddressDetail.setText(s); // 상세주소
+
+        if (TextUtils.isEmpty(mEtStuPhone.getText().toString())){
+            s = "011" + new RandomNumStrCreator().generateRandomNumberString();
+            mEtStuPhone.setText(s); // 학생번호
+            mEtStuPhone.setEnabled(false);
+        }
+        if (!TextUtils.isEmpty(mEtStuPhone.getText().toString())) mTvStuPhoneIsEmpty.setVisibility(View.GONE);
+
+        if (TextUtils.isEmpty(mEtParentName.getText().toString())){
+            s = "test[" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4) + "]";
+            mEtParentName.setText(s); // 부모이름
+            mEtParentName.setEnabled(false);
+        }
+
+        if (TextUtils.isEmpty(mEtparentPhone.getText().toString())){
+            s = "011" + new RandomNumStrCreator().generateRandomNumberString();
+            mEtparentPhone.setText(s); // 부모폰
+            mEtparentPhone.setEnabled(false);
+        }
+
+        mEtCashReceipt.setText("");
+
+        String[] array = getResources().getStringArray(R.array.grade);
+
+        Random random = new Random();
+        int randomIndex;
+
+        do randomIndex = random.nextInt(array.length - 1);
+        while (randomIndex == 0); // index가 0인 경우 do 영역 실행
+
+        s = array[randomIndex];
+
+        mSpinnerGrade.setText(s); // 학년
+        _stGrade = mSpinnerGrade.getText().toString();
+
+//        ArrayList<SchoolData> schoolList = new ArrayList<>(DataManager.getInstance().getSchoolListMap().values());
+//        s = schoolList.get(random.nextInt(schoolList.size() - 1)).scName;
+//        tvSchool.setText(s); // 학교
+//        _selectedSchoolData.scName = tvSchool.toString();
+//        n = schoolList.get(random.nextInt(schoolList.size() - 1)).scCode;
+//        _selectedSchoolData.scCode = n;
+
+        array = getResources().getStringArray(R.array.funnel);
+        randomIndex = random.nextInt(array.length - 1);
+        s = array[randomIndex];
+        mSpinnerFunnel.setText(s); // 유입경로
+        _stReason = mSpinnerFunnel.getText().toString();
+
+        List<LTCData> ltcList = DataManager.getInstance().getLTCList();
+        randomIndex = random.nextInt(ltcList.size() - 1);
+        s = ltcList.get(randomIndex).ltcName;
+        mSpinnerCampus.setText(s); // 캠퍼스
+        _ltcName = s;
+        s = ltcList.get(randomIndex).ltcCode;
+        _ltcCode = s;
+
+        clearFocusAndHideKeyboard();
     }
 }

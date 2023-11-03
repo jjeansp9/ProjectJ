@@ -108,6 +108,7 @@ public class InformedQuestionActivity extends BaseActivity {
     private int _userGubun = -1;
     private String _userType = "";
     private int _loginType = -1;
+    private int _childCnt = -1;
 
     private static final String PREF= "Y";
     private static final String NON_PREF= "N";
@@ -191,6 +192,9 @@ public class InformedQuestionActivity extends BaseActivity {
             _userGubun = PreferenceUtil.getUserGubun(mContext);
             _userType = PreferenceUtil.getUserType(mContext);
             _loginType = PreferenceUtil.getLoginType(mContext);
+            _childCnt = PreferenceUtil.getNumberOfChild(mContext);
+
+            LogMgr.e(TAG, "childCnt: " + _childCnt);
 
             Intent intent= getIntent();
 
@@ -511,10 +515,14 @@ public class InformedQuestionActivity extends BaseActivity {
                             }else{
                                 if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) { // 신규원생 추가하는 경우
                                     if (_userType.equals(Constants.MEMBER)) {
-                                        intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
-                                        setResult(RESULT_OK, intent);
-                                        finish();
-                                        Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
+                                        if (_childCnt < 1) {
+                                            HttpUtils.requestLogOut(mActivity);
+                                        } else {
+                                            intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
+                                            setResult(RESULT_OK, intent);
+                                            finish();
+                                            Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
+                                        }
 
                                     } else {
                                         HttpUtils.requestLogOut(mActivity);
