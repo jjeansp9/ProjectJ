@@ -161,6 +161,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     protected void setStatusAndNavigatinBar(boolean isNotSet){
         Window window = getWindow();
+        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
+
         int resColor = Color.BLACK;
         boolean lightStatusBar = false;
         boolean lightNavigationBar = false;
@@ -169,13 +171,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             resColor = Color.WHITE;
             lightStatusBar = true; // 상태표시줄 [ true - black, false - white ]
             lightNavigationBar = true; // 네비게이션 [ true - black, false - white ]
+
+            window.setNavigationBarColor(resColor);
+            controller.setAppearanceLightNavigationBars(true); // navigation bar
         }
-        WindowInsetsControllerCompat controller = new WindowInsetsControllerCompat(window, window.getDecorView());
 
         window.setStatusBarColor(resColor);
-        window.setNavigationBarColor(resColor);
-
         controller.setAppearanceLightStatusBars(lightStatusBar); // status bar
-        controller.setAppearanceLightNavigationBars(lightNavigationBar); // navigation bar
     }
 }

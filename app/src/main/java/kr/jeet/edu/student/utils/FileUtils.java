@@ -78,6 +78,55 @@ public class FileUtils {
         }
         return attachFileData;
     }
+    public static boolean isExistBoardTempFile(Context context, FileData fileData) {
+        String type = fileData.path.replaceAll("/", "");
+        File file = new File(context.getExternalFilesDir(type).getPath() + "/" + fileData.tempFileName);
+        return file.exists();
+    }
+    public static FileData copyBoardTempFile(Context context, Uri originalUri, FileData fileData) {
+        if(fileData == null) return null;
+        String type = fileData.path.replaceAll("/", "");
+        File destParentPath = new File(context.getExternalFilesDir(type).getPath());
+        if(!destParentPath.exists()) {
+            destParentPath.mkdir();
+        }
+//        String destFilePath = destParentPath + File.pathSeparator + attachFileData.fileName;
+        String destFilePath = destParentPath + "/" +  fileData.tempFileName;
+
+        File destFile = new File(destFilePath);
+        InputStream is = null;
+        OutputStream os = null;
+        try{
+            is = context.getContentResolver().openInputStream(originalUri);
+            if(is != null) {
+                os = new FileOutputStream(destFile);
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = is.read(buf)) > 0){
+                    os.write(buf, 0, len);
+                }
+//                fileData.tempFileName = destFilePath;
+            }
+        }catch(IOException ex) {
+            ex.printStackTrace();
+        }finally{
+            try {
+                if(is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return fileData;
+    }
     public static AttachFileData initAttachFileFromServer(Context context, FileData data) {
         AttachFileData attachFileData = new AttachFileData();
         String uriString = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;

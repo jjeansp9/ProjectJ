@@ -552,6 +552,7 @@ public class InformedQuestionActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTestReserve() Exception : ", e.getMessage()); }
+                    hideProgressDialog();
                 }
 
                 @Override

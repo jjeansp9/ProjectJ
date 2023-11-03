@@ -71,6 +71,7 @@ public interface RetrofitApi {
     public final static int RESPONSE_CODE_DUPLICATE_ERROR= 409;
     public final static int RESPONSE_CODE_INERNAL_SERVER_ERROR= 500;
 
+
     // 회원가입
     @POST("member/signUp")
     Call<BaseResponse> signUp(@Body SignupRequest signUpRequest);

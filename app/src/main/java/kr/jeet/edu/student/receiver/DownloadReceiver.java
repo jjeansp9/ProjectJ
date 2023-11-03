@@ -5,17 +5,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.widget.Toast;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.model.data.FileData;
 
 public class DownloadReceiver extends BroadcastReceiver {
-
-    public interface DownloadCompleteListener { void onDownloadComplete();}
-    DownloadCompleteListener listener;
-
-    public DownloadReceiver(DownloadCompleteListener listener){ this.listener = listener; }
-
+    int position;
+    FileData currentFileData;
+//    String originalDownloadPath;
+    boolean isRequireRun = false;
+    public interface DownloadListener {
+        void onDownloadComplete(int position, FileData fileData, Uri uri);
+        void onShow(FileData data);
+    }
+    DownloadListener _listener;
+    public DownloadReceiver(DownloadListener listener) {
+        this._listener = listener;
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -26,6 +34,16 @@ public class DownloadReceiver extends BroadcastReceiver {
 
         }
     }
+    public void setCurrentPosition(int position) {
+        this.position = position;
+    }
+    public void setCurrentFileData(FileData data) {
+        this.currentFileData = data;
+    }
+//    public void setOriginalDownloadPath(String path) {
+//        this.originalDownloadPath = path;
+//    }
+    public void setRequireRun(boolean flag) {this.isRequireRun = flag; }
 
     private void handleDownloadComplete(Context context, long downloadId) {
         DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
@@ -37,10 +55,12 @@ public class DownloadReceiver extends BroadcastReceiver {
             int status = cursor.getInt(columnIndex);
             if (status == DownloadManager.STATUS_SUCCESSFUL) {
                 Toast.makeText(context, R.string.msg_success_to_download, Toast.LENGTH_SHORT).show();
-                listener.onDownloadComplete();
+                Uri uri = downloadManager.getUriForDownloadedFile(downloadId);
+                _listener.onDownloadComplete(position, currentFileData, uri);
+                if(isRequireRun) _listener.onShow(currentFileData);
             } else {
                 Toast.makeText(context, R.string.error_msg_fail_to_download, Toast.LENGTH_SHORT).show();
-                listener.onDownloadComplete();
+                _listener.onDownloadComplete(position, currentFileData, null);
             }
         }
         cursor.close();

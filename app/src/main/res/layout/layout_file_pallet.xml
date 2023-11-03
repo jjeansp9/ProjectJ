@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/layout_margin_4"
     android:layout_marginVertical="@dimen/layout_margin_4"
+    android:foreground="?android:attr/selectableItemBackground"
     >
 
     <ImageView
@@ -26,29 +27,36 @@
     <TextView
         android:id="@+id/tv_file_name"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:ellipsize="middle"
         android:maxLines="1"
         android:textColor="@color/font_color_default"
-        android:textSize="@dimen/font_size_small"
+        android:textSize="@dimen/font_size"
         android:hint="test_test.hwp"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/iv_action"
+        app:layout_constraintEnd_toStartOf="@id/layout_action"
         app:layout_constraintStart_toEndOf="@id/iv_icon"
          />
-    <ImageView
-        android:id="@+id/iv_action"
-        android:layout_width="@dimen/file_icon_size"
-        android:layout_height="@dimen/file_icon_size"
-        android:src="@drawable/ic_vector_close"
-        android:layout_marginVertical="@dimen/layout_margin_4"
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layout_action"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_file_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        android:stateListAnimator="@xml/animate_button_push"
-        />
+        android:paddingStart="@dimen/layout_margin_8"
+        android:stateListAnimator="@xml/animate_button_push" >
+        <ImageView
+            android:id="@+id/iv_action"
+            android:layout_width="@dimen/file_icon_size"
+            android:layout_height="@dimen/file_icon_size"
+            android:src="@drawable/ic_vector_close"
+            android:layout_marginVertical="@dimen/layout_margin_4"
+            />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.constraintlayout.widget.ConstraintLayout>

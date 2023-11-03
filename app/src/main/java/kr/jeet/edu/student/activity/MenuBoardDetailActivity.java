@@ -1,11 +1,13 @@
 package kr.jeet.edu.student.activity;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,16 +20,19 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
+import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
@@ -46,7 +51,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
     private String TAG = MenuBoardDetailActivity.class.getSimpleName();
 
-    private ConstraintLayout root;
     private ImageView mImgRdCnt;
     private TextView mTvTitle, mTvName, mTvDate, mTvContent, mTvRdCnt;
     private RecyclerView mRecyclerViewImages, mRecyclerViewFiles;
@@ -78,7 +82,26 @@ public class MenuBoardDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_board_detail);
-        //overridePendingTransition(R.anim.horizon_enter, R.anim.none);
+        _downloadReceiver = new DownloadReceiver(new DownloadReceiver.DownloadListener() {
+            @Override
+            public void onDownloadComplete(int position, FileData fileData, Uri downloadFileUri) {
+                hideProgressDialog();
+                try {
+                    mContext.unregisterReceiver(_downloadReceiver);
+                }catch(IllegalArgumentException e){}
+//                File destFile = new File(downloadPath);
+//                Uri uri = Uri.fromFile(destFile);
+                if(downloadFileUri == null) return;
+                FileData tempFileData = FileUtils.copyBoardTempFile(mContext, downloadFileUri, fileData);
+                LogMgr.e(TAG, "tempFileData = " + tempFileData.tempFileName);
+                mFileAdapter.notifyItemChanged(position);
+            }
+
+            @Override
+            public void onShow(FileData data) {
+                showFile(data);
+            }
+        });
         mContext = this;
         initView();
         initAppbar();
@@ -243,7 +266,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
                 // mimeType is checked for null here.
                 if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-                else mFileList.add(data);
+                else {
+                    data.initTempFileName();
+                    mFileList.add(data);
+                }
 
             }
         }
@@ -268,24 +294,25 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void setFileRecycler(){
         mFileAdapter = new BoardDetailFileListAdapter(mContext, mFileList, BoardDetailFileListAdapter.Action.Download, new BoardDetailFileListAdapter.onItemClickListener() {
             @Override
-            public void onItemClick(FileData file) {
-
+            public void onItemClick(int position, FileData data) {
+                LogMgr.e(TAG, "data.tempFileName=" + data.tempFileName);
+                String type = data.path.replaceAll("/", "");
+                File file = new File(mContext.getExternalFilesDir(type).getPath() + "/" + data.tempFileName);
+                if(file.exists()) {
+                    showFile(data);
+                }else{
+                    _downloadReceiver.setRequireRun(true);
+                    _downloadReceiver.setCurrentPosition(position);
+                    downloadFile(data);
+                }
             }
 
             @Override
-            public void onActionBtnClick(FileData data, BoardDetailFileListAdapter.Action action) {
+            public void onActionBtnClick(int position, FileData data, BoardDetailFileListAdapter.Action action) {
                 if(action == BoardDetailFileListAdapter.Action.Download) {
-
-                    String url = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;
-                    url = FileUtils.replaceMultipleSlashes(url);
-                    LogMgr.w("download file uri = " + url);
-                    String fileName = data.orgName;
-                    String destinationPath = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + File.separator + fileName;
-                    FileUtils.downloadFile(mContext, url, fileName);
-
-                    // BroadcastReceiver 등록
-                    _downloadReceiver = new DownloadReceiver(() -> mContext.unregisterReceiver(_downloadReceiver));
-                    mContext.registerReceiver(_downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                    _downloadReceiver.setRequireRun(false);
+                    _downloadReceiver.setCurrentPosition(position);
+                    downloadFile(data);
                 }
             }
         });
@@ -296,7 +323,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void requestNoticeDetail(int boardSeq){
         if (RetrofitClient.getInstance() != null){
 
-            //showProgressDialog();
+            showProgressDialog();
 
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getBoardDetail(boardSeq).enqueue(new Callback<BoardDetailResponse>() {
@@ -372,7 +399,10 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
                                             // mimeType is checked for null here.
                                             if (mimeType != null && mimeType.startsWith("image")) mImageList.add(file);
-                                            else mFileList.add(file);
+                                            else {
+                                                file.initTempFileName();
+                                                mFileList.add(file);
+                                            }
 
                                         }
                                     }
@@ -423,5 +453,80 @@ public class MenuBoardDetailActivity extends BaseActivity {
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
+    }
+
+    private void showFile(FileData data) {
+        String url = data.tempFileName;
+        LogMgr.w("view file uri = " + url);
+        url = FileUtils.replaceMultipleSlashes(url);
+
+        String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+//                new ShareCompat.IntentBuilder(mContext)
+//                        .setStream(Uri.parse(url))
+//                        .setType(mimeType)
+//                                .startChooser();
+//                intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        String type = data.path.replaceAll("/", "");
+        File file = new File(mContext.getExternalFilesDir(type).getPath() + "/" + data.tempFileName);
+        if(file.exists()) {
+            Uri uri = FileProvider.getUriForFile(mContext, getApplicationContext().getPackageName() + ".provider", file);
+            intent.setDataAndType(uri, mimeType);
+            startActivity(Intent.createChooser(intent, getString(R.string.open_with)));
+            if (intent.resolveActivity(getPackageManager()) == null) {
+                Toast.makeText(mContext, R.string.msg_empty_open_with, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void downloadFile(FileData data) {
+        String url = RetrofitApi.FILE_SUFFIX_URL + data.path + "/" + data.saveName;
+        url = FileUtils.replaceMultipleSlashes(url);
+        LogMgr.w("download file uri = " + url);
+        String fileName = data.orgName;
+        String destinationPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + fileName;
+//
+        File downloadFile = new File(destinationPath);
+        if(downloadFile.exists()) {
+            final String finalUrl = url;
+            showMessageDialog(getString(R.string.dialog_title_alarm)
+                    , getString(R.string.board_item_confirm_download)
+                    , new View.OnClickListener() {  //OKClickListener
+                        @Override
+                        public void onClick(View view) {
+                            try {
+
+                                downloadFile.setWritable(true);
+                                downloadFile.delete();
+                            }catch(Exception ex) {
+                                ex.printStackTrace();
+                            }
+
+                            _downloadReceiver.setCurrentFileData(data);
+//                            _downloadReceiver.setOriginalDownloadPath(destinationPath);
+                            showProgressDialog();
+                            FileUtils.downloadFile(mContext, finalUrl, fileName);
+                            // BroadcastReceiver 등록
+
+                            mContext.registerReceiver(_downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+                            hideMessageDialog();
+                        }
+                    },
+                    new View.OnClickListener() {    //cancelClickListener
+                        @Override
+                        public void onClick(View view) {
+                            hideMessageDialog();
+                        }
+                    }, false);
+        }else {
+            _downloadReceiver.setCurrentFileData(data);
+//            _downloadReceiver.setOriginalDownloadPath(destinationPath);
+            showProgressDialog();
+            FileUtils.downloadFile(mContext, url, fileName);
+            // BroadcastReceiver 등록
+
+            mContext.registerReceiver(_downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        }
     }
 }

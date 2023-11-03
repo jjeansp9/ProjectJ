@@ -693,5 +693,9 @@
     <string name="msg_empty_schedule">일정이 없습니다.\n • 표시가 있는 날짜를 선택하여\n 일정을 확인해 주세요.</string>
 
     <string name="success_leave">계정을 탈퇴하였습니다.</string>
+    <string name="open_with">연결 프로그램</string>
+    <string name="msg_empty_open_with">파일을 실행할 앱이 확인되지 않습니다. 실행할 앱을 다운로드해 주세요.</string>
+    <string name="board_item_confirm_download">Download 폴더에 동일한 이름의 파일이 이미 있습니다.\n다운로드하시겠습니까?</string>
+    <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
 </resources>
 

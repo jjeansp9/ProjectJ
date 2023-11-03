@@ -23,6 +23,8 @@ public class FileData implements Parcelable {
     @SerializedName("extension")
     public String extension;
 
+    public String tempFileName;
+
     @SerializedName("contentType")
     public String contentType;
 
@@ -33,7 +35,25 @@ public class FileData implements Parcelable {
         saveName = in.readString();
         path = in.readString();
         extension = in.readString();
+        tempFileName = in.readString();
         contentType = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(seq);
+        dest.writeString(fileId);
+        dest.writeString(orgName);
+        dest.writeString(saveName);
+        dest.writeString(path);
+        dest.writeString(extension);
+        dest.writeString(tempFileName);
+        dest.writeString(contentType);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<FileData> CREATOR = new Creator<FileData>() {
@@ -48,19 +68,7 @@ public class FileData implements Parcelable {
         }
     };
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(seq);
-        dest.writeString(fileId);
-        dest.writeString(orgName);
-        dest.writeString(saveName);
-        dest.writeString(path);
-        dest.writeString(extension);
-        dest.writeString(contentType);
+    public void initTempFileName() {
+        this.tempFileName = String.format("%d_%s", seq, orgName);
     }
 }

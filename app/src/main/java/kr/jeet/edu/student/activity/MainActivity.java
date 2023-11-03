@@ -82,17 +82,6 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
-    // TODO
-    /**
-    * 1. 원생정보에 있는 출석부, 수강료 레이아웃 독립화
-     *  - 출석부 - 메뉴아이콘 추가
-     *  - 수강료 - 하단 버튼 출석현황을 수강료로 변경
-     *
-     * 2. 관리자앱 글 작성자 모두 추가
-     *
-     * 3. 관리자앱 캠퍼스일정 등록할 때 시작날짜, 종료날짜 추가
-    * */
-
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;

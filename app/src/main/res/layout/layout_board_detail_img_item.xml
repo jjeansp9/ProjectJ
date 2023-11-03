@@ -11,6 +11,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:scaleType="fitCenter"
-        android:layout_marginBottom="@dimen/layout_margin_12"/>
+        android:layout_marginVertical="@dimen/layout_margin_4"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

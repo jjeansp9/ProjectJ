@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -20,10 +22,11 @@ import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 
 public class BoardDetailFileListAdapter extends RecyclerView.Adapter<BoardDetailFileListAdapter.ViewHolder> {
+    private static final String TAG = "fileAdapter";
     public enum Action{Delete, Download};
     public interface onItemClickListener{
-        public void onItemClick(FileData file);
-        public void onActionBtnClick(FileData file, Action action);
+        void onItemClick(int position, FileData file);
+        void onActionBtnClick(int position, FileData file, Action action);
     }
     private Context mContext;
     private List<FileData> mList;
@@ -48,12 +51,19 @@ public class BoardDetailFileListAdapter extends RecyclerView.Adapter<BoardDetail
         try {
             if(position != NO_POSITION) {
                 FileData item = mList.get(position);
-//            holder.tvFileName.setText(Utils.getFileName(item.filePath));
-                String mimeType = FileUtils.getMimeTypeFromExtension(item.extension);
-                if(mimeType != null & mimeType.startsWith("application")){
-                    holder.ivFileIcon.setImageResource(R.drawable.ic_vector_application_file);
-                }else if(mimeType != null & mimeType.startsWith("text")) {
-                    holder.ivFileIcon.setImageResource(R.drawable.ic_vector_text_file);
+                String type = item.path.replaceAll("/", "");
+                boolean isExistDownloadTempFile = FileUtils.isExistBoardTempFile(mContext, item);
+                if(isExistDownloadTempFile) {
+                    holder.ivFileIcon.setImageResource(R.drawable.ic_vector_file_open);
+                }else{
+                    String mimeType = FileUtils.getMimeTypeFromExtension(item.extension);
+                    if(mimeType.startsWith("application")){
+                        holder.ivFileIcon.setImageResource(R.drawable.ic_vector_application_file);
+                    }else if(mimeType.startsWith("text")) {
+                        holder.ivFileIcon.setImageResource(R.drawable.ic_vector_text_file);
+                    }else{
+                        holder.ivFileIcon.setImageResource(R.drawable.ic_vector_application_file);
+                    }
                 }
                 holder.tvFileName.setText(item.orgName);
             }
@@ -70,32 +80,41 @@ public class BoardDetailFileListAdapter extends RecyclerView.Adapter<BoardDetail
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+        private ConstraintLayout rootView;
         private ImageView ivFileIcon;
         private TextView tvFileName;
+        private LinearLayoutCompat layoutAction;
         private ImageView ivAction;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
+            rootView = itemView.findViewById(R.id.root);
             ivFileIcon = itemView.findViewById(R.id.iv_icon);
             tvFileName = itemView.findViewById(R.id.tv_file_name);
+            layoutAction = itemView.findViewById(R.id.layout_action);
             ivAction = itemView.findViewById(R.id.iv_action);
+
+            rootView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if(position != NO_POSITION) {
+                    _listener.onItemClick(position, mList.get(position));
+                }
+            });
             switch(_action) {
                 case Delete:
+                    rootView.setClickable(false);
                     ivAction.setImageResource(R.drawable.ic_vector_close);
                     break;
                 case Download:
+                    rootView.setClickable(true);
                     ivAction.setImageResource(R.drawable.ic_vector_download);
                     break;
             }
-            itemView.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
-                if (mList.size() > 0) _listener.onItemClick(mList.get(position));
-            });
-            ivAction.setOnClickListener(v -> {
-                int position = getAbsoluteAdapterPosition();
+            layoutAction.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
                 if(position != NO_POSITION) {
                     FileData data = mList.get(position);
-                    if (mList.size() > 0) _listener.onActionBtnClick(data, _action);
+                    _listener.onActionBtnClick(position, data, _action);
                 }
             });
         }

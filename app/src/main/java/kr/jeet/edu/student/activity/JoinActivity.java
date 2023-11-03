@@ -245,9 +245,9 @@ public class JoinActivity extends BaseActivity {
             }
         }
 
-        if(_authPhoneNoView != null) { // 휴대폰번호 인증
-            return _authPhoneNoView.checkValid();
-        }
+//        if(_authPhoneNoView != null) { // 휴대폰번호 인증
+//            return _authPhoneNoView.checkValid();
+//        }
 
         return true;
     }

@@ -3,7 +3,6 @@ package kr.jeet.edu.student.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +16,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,7 +52,7 @@ public class PhotoViewActivity extends BaseActivity {
     private String TAG = PhotoViewActivity.class.getSimpleName();
 
     private TextView tvPage;
-    private RelativeLayout layoutHeader, root;
+    private RelativeLayout layoutHeader;
 
     private ArrayList<FileData> mImageList = new ArrayList<>();
     private int position = 0;
@@ -96,7 +96,6 @@ public class PhotoViewActivity extends BaseActivity {
     void initView() {
         tvPage = findViewById(R.id.tv_photoview_page);
         layoutHeader = findViewById(R.id.layout_header);
-        root = findViewById(R.id.root_photo);
 
         findViewById(R.id.img_close).setOnClickListener(this);
         findViewById(R.id.img_photoview_download).setOnClickListener(this);
@@ -275,9 +274,15 @@ public class PhotoViewActivity extends BaseActivity {
 
         FileUtils.downloadFile(mContext, url, fileName);
         // BroadcastReceiver 등록
-        _downloadReceiver = new DownloadReceiver(new DownloadReceiver.DownloadCompleteListener() {
+        _downloadReceiver = new DownloadReceiver(new DownloadReceiver.DownloadListener() {
             @Override
-            public void onDownloadComplete() { mContext.unregisterReceiver(_downloadReceiver); }
+            public void onDownloadComplete(int position, FileData data, Uri downloadFileUri) { mContext.unregisterReceiver(_downloadReceiver); }
+
+            @Override
+            public void onShow(FileData data) {
+
+            }
+
         });
         mContext.registerReceiver(_downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
