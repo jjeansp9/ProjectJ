@@ -305,7 +305,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             mTvBirthDate.setText(Utils.getStr(_birth));
 
             if (LogMgr.DEBUG) {
-                Toast.makeText(mContext, "DEBUG ON. 현금영수증에 '01010101' 입력", Toast.LENGTH_SHORT).show();
                 mEtCashReceipt.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
