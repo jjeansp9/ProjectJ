@@ -203,9 +203,22 @@ public class MyWebViewClient extends WebViewClient {
             else inputValue = clipboard;
 
             return "javascript:(function() {" +
-                    "   var bankNumElement = document.getElementById('bankNum');" +
-                    "   if (bankNumElement) {" +
-                    "       bankNumElement.value = '" + inputValue + "';" +
+                    "   var element = document.getElementById('btn-sitemap');" +
+                    "   if (element) {" +
+                    "       element.style.display = 'none';" +
+                    "   }" +
+                    "   var personalInfoCheckbox = document.querySelector('input#by-personal-info');" +
+                    "   if (personalInfoCheckbox) {" +
+                    "       var parentDiv = personalInfoCheckbox.parentElement;" +
+                    "       parentDiv.remove();" +
+                    "   }" +
+                    "   var footer = document.querySelector('footer');" +
+                    "   if (footer) {" +
+                    "       footer.style.display = 'none';" +
+                    "   }" +
+                    "   var bankNum = document.getElementById('bankNum');" +
+                    "   if (bankNum) {" +
+                    "       bankNum.value = '" + inputValue + "';" +
                     "   }" +
                     "   window.scrollTo(0, 0);" +
                     "})()";
