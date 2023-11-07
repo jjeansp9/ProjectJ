@@ -104,14 +104,15 @@ public class MainActivity extends BaseActivity {
     private RetrofitApi mRetrofitApi;
     boolean doubleBackToExitPressedOnce = false;
 
-    private final int CMD_GET_ACALIST = 1;  // ACA정보 가져오기
-    private final int CMD_GET_LOCAL_ACALIST = 2;  // 지역별 캠퍼스정보 가져오기
-    private final int CMD_GET_MEMBER_INFO = 3;       // 자녀정보 가져오기
-    private final int CMD_GET_NOTIFY_INFO = 4;       // 공지사항 정보 가져오기
-    private final int CMD_GET_BOARD_ATTRIBUTE = 5;       // 게시판 속성 조회하기
-    private final int CMD_GET_SCHOOL_LIST = 6;       // 학교 목록 조회하기
-    private final int CMD_GET_LTC_LIST = 7;       // LTC 목록 가져오기
-    private final int CMD_GET_TEACHER = 8;       // LTC 목록 가져오기
+    private final int CMD_GET_ACALIST = 1;  // ACA정보
+    private final int CMD_GET_LOCAL_ACALIST = 2;  // 지역별 캠퍼스정보
+    private final int CMD_GET_MEMBER_INFO = 3;       // 자녀정보
+    private final int CMD_GET_NOTIFY_INFO = 4;       // 공지사항 정보
+    private final int CMD_GET_BOARD_ATTRIBUTE = 5;       // 게시판 속성
+    private final int CMD_GET_SCHOOL_LIST = 6;       // 학교 목록
+    private final int CMD_GET_LTC_LIST = 7;       // LTC 목록
+    private final int CMD_GET_TEACHER = 8;       // 지도강사 목록
+    private final int CMD_GET_LTC_SUBJECT = 9;       // LTC 과목 목록
 
     private String _userType = "";
     private String _stName = "";
@@ -203,6 +204,9 @@ public class MainActivity extends BaseActivity {
                     break;
                 case CMD_GET_TEACHER:
                     requestTeacherCls();
+                    break;
+                case CMD_GET_LTC_SUBJECT:
+                    HttpUtils.requestLTCSubjectList();
                     break;
             }
         }
@@ -959,6 +963,7 @@ public class MainActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
                     hideProgressDialog();
+                    mHandler.sendEmptyMessage(CMD_GET_LTC_SUBJECT);
                 }
 
                 @Override
@@ -966,6 +971,7 @@ public class MainActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestTeacherCls() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
                     hideProgressDialog();
+                    mHandler.sendEmptyMessage(CMD_GET_LTC_SUBJECT);
                 }
             });
         }

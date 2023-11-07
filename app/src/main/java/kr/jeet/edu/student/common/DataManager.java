@@ -8,6 +8,7 @@ import java.util.List;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
+import kr.jeet.edu.student.model.data.LTCSubjectData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
 
@@ -30,9 +31,10 @@ public class DataManager {
     //Dot size
     public float DOT_SIZE = 10f;
     public boolean isSelectedChild = false;
-    // 캠퍼스, 레벨캠퍼스, 학교 리스트
+    // 캠퍼스, 레벨캠퍼스, 레벨테스트 과목, 학교 리스트
     private List<ACAData> ACAList = new ArrayList<>();
     private List<LTCData> LTCList = new ArrayList<>();
+    private List<LTCSubjectData> LTCSubjectList = new ArrayList<>();
     private List<SchoolData> SchoolList = new ArrayList<>();
     //지역별 캠퍼스 리스트
     private ArrayMap<String, ACAData> LocalACAListMap = new ArrayMap<>();
@@ -78,7 +80,7 @@ public class DataManager {
 
     /**
      * JEET 학교 리스트 정보 조회
-     * @return List<SchoolData>
+     * @return List<LTCSubjectList>
      */
     public List<SchoolData> getSchoolList() {
         return SchoolList;
@@ -90,6 +92,22 @@ public class DataManager {
      */
     public void setSchoolList(List<SchoolData> SchoolList) {
         this.SchoolList = SchoolList;
+    }
+
+    /**
+     * JEET 테스트 과목 리스트 정보 조회
+     * @return List<LTCSubjectData>
+     */
+    public List<LTCSubjectData> getLTCSubjectList() {
+        return LTCSubjectList;
+    }
+
+    /**
+     * JEET 테스트 과목 리스트 정보 저장
+     * @param LTCSubjectList
+     */
+    public void setLTCSubjectList(List<LTCSubjectData> LTCSubjectList) {
+        this.LTCSubjectList = LTCSubjectList;
     }
 
     /**

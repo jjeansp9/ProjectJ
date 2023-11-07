@@ -120,7 +120,7 @@
     <string name="loading">로딩중</string>
     <string name="requesting">요청중</string>
     <string name="write_empty">필수 입력 항목이 누락되었는지 확인해주세요</string>
-    <string name="write_before_study_empty">테스트 전까지 학습한 방법을 입력해주세요</string>
+    <string name="write_before_study_empty">테스트 전까지 학습한 방법 항목을 입력해주세요</string>
     <string name="write_process_empty">진도/심화학습 여부를 입력해주세요</string>
     <string name="write_phone_impossible">연락처 항목이 올바르게 입력되었는지 확인해주세요</string>
     <string name="write_empty_2">항목에 입력해주세요</string>
@@ -259,18 +259,19 @@
     <string name="menu_test_reserve_campus_test">캠퍼스</string>
     <string name="menu_test_reserve_campus_date">테스트일시</string>
     <string name="stu_name_empty">학생 이름을 입력해주세요.</string>
-    <string name="birth_empty">생년월일을 입력해주세요.</string>
-    <string name="grade_empty">학년을 입력해주세요.</string>
+    <string name="birth_empty">생년월일을 선택해주세요.</string>
+    <string name="grade_empty">학년을 선택해주세요.</string>
     <string name="school_empty">학교를 선택해주세요.</string>
     <string name="parent_phone_empty">부모님 연락처를 입력해주세요.</string>
     <string name="phone_empty">학생 전화번호를 입력해주세요.</string>
     <string name="parent_name_empty">부모님 성함을 입력해주세요.</string>
     <string name="reservation_date_empty">테스트 예약일을 선택해주세요.</string>
     <string name="reservation_time_empty">테스트 시간을 선택해주세요.</string>
-    <string name="bigo_empty">캠퍼스 비고를 입력해주세요.</string>
+    <string name="bigo_empty">캠퍼스를 선택해주세요.</string>
+    <string name="subject_empty">과목을 선택해주세요.</string>
     <string name="address_empty">주소를 입력해주세요.</string>
     <string name="address_sub_empty">상세주소를 입력해주세요.</string>
-    <string name="reason_empty">유입 경로를 입력해주세요.</string>
+    <string name="reason_empty">유입 경로를 선택해주세요.</string>
 
     <string name="informed_consent_title">사전동의</string>
     <string name="informed_consent_notice">
@@ -434,6 +435,7 @@
     <string name="test_reserve_write_registration_date"><font color="@color/red">* </font>등록일</string>
     <string name="test_reserve_write_test_date"><font color="@color/red">* </font>테스트예약일</string>
     <string name="test_reserve_write_campus"><font color="@color/red">* </font>캠퍼스</string>
+    <string name="test_reserve_write_subject"><font color="@color/red">* </font>테스트 과목</string>
     <string name="test_reserve_write_test_time"><font color="@color/red">* </font>테스트 시간</string>
     <string name="test_reserve_write_select_school">학교 선택</string>
     <string name="test_reserve_grade_sel_please">학년을 먼저 선택해주세요.</string>
@@ -479,6 +481,7 @@
     <string name="informed_question_class_path_2">과외</string>
     <string name="informed_question_class_path_3">가정학습\n(자기주도)</string>
     <string name="informed_question_class_path_4">학습지</string>
+    <string name="informed_question_class_path_hint_name">학원명</string>
     <string name="informed_question_class_path_hint_hours">주간수업량 (시간)</string>
     <string name="informed_question_class_path_hint_month">수강기간 (개월)</string>
     <string name="informed_question_success">테스트예약이 등록되었습니다. 신규테스트 취소 시 데스크로 연락주시기 바랍니다.</string>

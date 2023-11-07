@@ -50,6 +50,10 @@ public class TestReserveData implements Parcelable {
     public String gifted;          // 영재센터 입학 희망 (Y/N)
     public String etc;             // 궁금사항
 
+    public String progress1Name;   // 진도/심화학습여부(1) 학원명
+    public int subjectCode;        // 과목코드
+    public String subjectName;     // 과목명
+
     public String check1;          // 개인정보 동의 1 (Y/N )
     public String check2;          // 개인정보 동의 2 (Y/N)
     public String check3;          // 개인정보 동의 3 (Y/N)
@@ -98,6 +102,9 @@ public class TestReserveData implements Parcelable {
         highSchool = in.readString();
         gifted = in.readString();
         etc = in.readString();
+        progress1Name = in.readString();
+        subjectCode = in.readInt();
+        subjectName = in.readString();
         check1 = in.readString();
         check2 = in.readString();
         check3 = in.readString();
@@ -152,6 +159,9 @@ public class TestReserveData implements Parcelable {
         dest.writeString(highSchool);
         dest.writeString(gifted);
         dest.writeString(etc);
+        dest.writeString(progress1Name);
+        dest.writeInt(subjectCode);
+        dest.writeString(subjectName);
         dest.writeString(check1);
         dest.writeString(check2);
         dest.writeString(check3);

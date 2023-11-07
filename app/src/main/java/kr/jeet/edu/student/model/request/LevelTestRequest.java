@@ -127,6 +127,15 @@ public class LevelTestRequest implements Parcelable {
     @SerializedName("etc")
     public String etc;
 
+    @SerializedName("progress1Name")
+    public String progress1Name;
+
+    @SerializedName("subjectCode")
+    public int subjectCode;
+
+    @SerializedName("subjectName")
+    public String subjectName;
+
     @SerializedName("check1")
     public String check1;
 
@@ -187,6 +196,9 @@ public class LevelTestRequest implements Parcelable {
         highSchool = in.readString();
         gifted = in.readString();
         etc = in.readString();
+        progress1Name = in.readString();
+        subjectCode = in.readInt();
+        subjectName = in.readString();
         check1 = in.readString();
         check2 = in.readString();
         check3 = in.readString();
@@ -254,6 +266,9 @@ public class LevelTestRequest implements Parcelable {
         dest.writeString(highSchool);
         dest.writeString(gifted);
         dest.writeString(etc);
+        dest.writeString(progress1Name);
+        dest.writeInt(subjectCode);
+        dest.writeString(subjectName);
         dest.writeString(check1);
         dest.writeString(check2);
         dest.writeString(check3);

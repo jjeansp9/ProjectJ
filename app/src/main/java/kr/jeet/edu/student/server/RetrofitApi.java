@@ -30,6 +30,7 @@ import kr.jeet.edu.student.model.response.FindPWResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
 import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
+import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
@@ -205,6 +206,10 @@ public interface RetrofitApi {
     // 레벨 테스트 테스트시간 조회
     @GET("levelTest/testTimes")
     Call<TestTimeResponse> getTestTime();
+
+    // 레벨 테스트 테스트과목 조회
+    @GET("levelTest/subject")
+    Call<LevelTestSubjectResponse> getLTCSubject();
 
     // 레벨테스트 신규등록 공지사항
     @GET("policy/leveltest/notice")

@@ -58,6 +58,7 @@ import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.dialog.SchoolListBottomSheetDialog;
 import kr.jeet.edu.student.model.data.InflowData;
 import kr.jeet.edu.student.model.data.LTCData;
+import kr.jeet.edu.student.model.data.LTCSubjectData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.data.TestTimeData;
@@ -87,7 +88,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private EditText[] mEditList;
     private RadioGroup mRgGender;
     private RadioButton mGenderRbMale, mGenderRbFemale;
-    private PowerSpinnerView mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime;
+    private PowerSpinnerView mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime, mSpinnerSubject;
 
     ClearableTextView tvSchool;
     SchoolListBottomSheetDialog _schoolListBottomSheetDialog;
@@ -109,6 +110,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String _stParentName = "";
     private String _stParentPhone = "";
     private String _birth = "";
+
+    private int _subjectCode = -1;
+    private String _subjectName = "";
 
     Date _selectedDate;
     private int birthMinYear = 1950;
@@ -157,6 +161,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     }
 
                     if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
+                    else LogMgr.e(TAG, "progress1Name2: " + mInfo.progress1Name);
 
                 } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
                     LogMgr.e(TAG, "event new stu1");
@@ -263,6 +268,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerFunnel = findViewById(R.id.spinner_reserve_funnel);
         mSpinnerCampus = findViewById(R.id.spinner_reserve_campus);
         mSpinnerTestTime = findViewById(R.id.spinner_reserve_test_class);
+        mSpinnerSubject = findViewById(R.id.spinner_reserve_subject);
         tvSchool = findViewById(R.id.tv_content_school);
 
         LogMgr.e(TAG, "Gender: " + _stuGender);
@@ -368,6 +374,9 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
         _ltcCode = Utils.getStr(mInfo.bigo);
         _ltcName = Utils.getStr(mInfo.bigoText);
+        mSpinnerSubject.setTag(Utils.getStr(mInfo.subjectName));
+        _subjectCode = mInfo.subjectCode;
+        _subjectName = Utils.getStr(mInfo.subjectName);
         _selectedSchoolData.scName = Utils.getStr(tvSchool.toString());
         _selectedSchoolData.scCode = _scCode;
 
@@ -385,6 +394,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
         mTvReserveDate.setText(Utils.getStr(date)); // yyyy-MM-dd
         mSpinnerTestTime.setText(Utils.getStr(time)); // HH:mm
+
 
         mSpinnerCampus.setOnClickListener(null);
         mSpinnerCampus.setEnabled(false);
@@ -518,6 +528,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerTestTime.setIsFocusable(true);
         mSpinnerGrade.setIsFocusable(true);
         mSpinnerFunnel.setIsFocusable(true);
+        mSpinnerSubject.setIsFocusable(true);
 
         List<LTCData> ltcList = DataManager.getInstance().getLTCList();
         List<String> ltcNames = new ArrayList<>();
@@ -529,6 +540,18 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _ltcCode = ltcList.get(newIndex).ltcCode;
             _ltcName = ltcList.get(newIndex).ltcName;
+        });
+
+        List<LTCSubjectData> ltcSubjectList = DataManager.getInstance().getLTCSubjectList();
+        List<String> subjectNames = new ArrayList<>();
+
+        for (LTCSubjectData data : ltcSubjectList) subjectNames.add(data.subName);
+        mSpinnerSubject.setItems(subjectNames);
+        mSpinnerSubject.setSpinnerPopupHeight(500);
+
+        mSpinnerSubject.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            _subjectCode = ltcSubjectList.get(newIndex).subCode;
+            _subjectName = ltcSubjectList.get(newIndex).subName;
         });
 
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
@@ -553,6 +576,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
         mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
         mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
+        mSpinnerSubject.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerTestTime.setOnTouchListener((v, event) -> {
             switch (event.getAction()){
@@ -710,6 +734,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         request.reservationDate = str; // 테스트예약일 [필수]
         request.bigo = _ltcCode; // 캠퍼스 비고 [필수]
         request.bigoText = _ltcName; // 캠퍼스 비고(캠퍼스 이름) [필수]
+        request.subjectCode = _subjectCode; // 과목 코드 [필수]
+        request.subjectName = _subjectName; // 과목 명 [필수]
         //request.cashReceiptNumber = TextUtils.isEmpty(mEtCashReceipt.getText().toString()) ? "010-000-1234" : mEtCashReceipt.getText().toString(); // 현금영수증 (010-000-1234) [선택]
         request.cashReceiptNumber = Utils.formatCashReceiptNum(mEtCashReceipt.getText().toString()); // 현금영수증 (010-000-1234) [선택]
 
@@ -727,6 +753,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 + "\n테스트예약일 : " + request.reservationDate
                 + "\n레벨캠퍼스 비고 : " + request.bigo
                 + "\n레벨캠퍼스 비고(캠퍼스 이름) : " + request.bigoText
+                + "\n과목코드 : " + request.subjectCode
+                + "\n과목명 : " + request.subjectName
                 + "\n현금영수증 : " + request.cashReceiptNumber
                 + "\ncheck1 : " + request.check1
                 + "\ncheck2 : " + request.check2
@@ -812,6 +840,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             mSpinnerCampus.setSpinnerPopupHeight(500);
             if (mSpinnerCampus != null) mSpinnerCampus.show();
 
+        } else if (request.subjectCode == -1 || request.subjectName.equals("")) {
+            Toast.makeText(mContext, R.string.subject_empty, Toast.LENGTH_SHORT).show();
+            mSpinnerSubject.setSpinnerPopupHeight(500);
+            if (mSpinnerSubject != null) mSpinnerSubject.show();
+
         } else if (mTvReserveDate.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.reservation_date_empty, Toast.LENGTH_SHORT).show();
             showDatePicker(mTvReserveDate, true, birthMinYear, birthMaxYear, false);
@@ -831,6 +864,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             if (mInfo != null) {
                 LogMgr.e(TAG, "Event put mInfo");
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+
+                LogMgr.e(TAG, "progress1Name1: " + mInfo.progress1Name);
             }else{
                 LogMgr.e(TAG, "Event put mInfo null");
             }

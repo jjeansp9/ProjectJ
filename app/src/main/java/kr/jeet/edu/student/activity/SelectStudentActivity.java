@@ -185,6 +185,7 @@ public class SelectStudentActivity extends BaseActivity {
 
         HttpUtils.requestSchoolList();
         HttpUtils.requestLTCList();
+        HttpUtils.requestLTCSubjectList();
     }
 
     private void startPushActivity(String pushType){

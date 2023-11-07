@@ -78,7 +78,7 @@ public class InformedQuestionActivity extends BaseActivity {
     private TextView tvQuestionNo1, tvQuestionNo2, tvQuestionNo3, tvQuestionNo4, tvQuestionNo5, tvQuestionNo6;
     private EditText[] mEditList;
     private EditText mEtWeekLessonVol, mEtClassTerm, mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
-            mEtStTime1,  mEtStTime2,  mEtStTime3,  mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4;
+            mEtStName1, mEtStTime1,  mEtStTime2,  mEtStTime3,  mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4;
     private RadioGroup rgSelDay, rgPrefArea;
     private RadioButton rbSelDay1, rbSelDay2, rbSelDay3, rbSelDay4, rbGiftedPref, rbGiftedNonPref;
     private RadioButton[] rbList;
@@ -263,6 +263,7 @@ public class InformedQuestionActivity extends BaseActivity {
         mEtLearningProc2 = findViewById(R.id.et_learning_process_2);
         mEtLearningProc3 = findViewById(R.id.et_learning_process_3);
         mEtAnyQuestion = findViewById(R.id.et_any_question);
+        mEtStName1 = findViewById(R.id.et_st_name_1);
         mEtStTime1 = findViewById(R.id.et_st_time_1);
         mEtStTime2 = findViewById(R.id.et_st_time_2);
         mEtStTime3 = findViewById(R.id.et_st_time_3);
@@ -301,7 +302,7 @@ public class InformedQuestionActivity extends BaseActivity {
         setSpinner();
 
         mEditList = new EditText[]{mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
-                mEtStTime1, mEtStTime2, mEtStTime3, mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4};
+                mEtStName1, mEtStTime1, mEtStTime2, mEtStTime3, mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4};
         rbList = new RadioButton[]{rbSelDay1, rbSelDay2, rbSelDay3, rbSelDay4};
 
         CompoundButton.OnCheckedChangeListener listener = (buttonView, isChecked) -> {
@@ -364,6 +365,9 @@ public class InformedQuestionActivity extends BaseActivity {
             }
         }
 
+        LogMgr.e(TAG, "progress1Name1: " + mInfo.progress1Name);
+
+        mEtStName1.setText(Utils.getStr(mInfo.progress1Name));
         mEtStTime1.setText(Utils.getStr(mInfo.time1));
         mEtStTime2.setText(Utils.getStr(mInfo.time2));
         mEtStTime3.setText(Utils.getStr(mInfo.time3));
@@ -589,6 +593,7 @@ public class InformedQuestionActivity extends BaseActivity {
             else if (rbSelDay3.isChecked()) selDay = "2";
             else if (rbSelDay4.isChecked()) selDay = "3";
 
+            request.progress1Name = mEtStName1.getText().toString();
             request.time1 = mEtStTime1.getText().toString();
             request.time2 = mEtStTime2.getText().toString();
             request.time3 = mEtStTime3.getText().toString();
@@ -657,7 +662,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
             }else request.gifted = "";
 
-                    request.etc = mEtAnyQuestion.getText().toString();
+            request.etc = mEtAnyQuestion.getText().toString();
             request.registerDate = currentDate();
 
             if (writeMode.equals(Constants.WRITE_EDIT)){
@@ -695,6 +700,7 @@ public class InformedQuestionActivity extends BaseActivity {
                         + "\n수강기간 과외 : " + request.date2
                         + "\n수강기간 가정학습(자기주도) : " + request.date3
                         + "\n수강기간 구몬/눈높이/재능 : " + request.date4
+                        + "\n진도/심화학습여부(1) 학원명 : " + request.progress1Name
                         + "\n진도 심화학습여부(1) 과정 : " + request.process1
                         + "\n진도 심화학습여부(1) 사용교재 : " + request.processEtc1
                         + "\n진도 심화학습여부(1) 과정 텍스트 : " + request.processText1
@@ -708,6 +714,8 @@ public class InformedQuestionActivity extends BaseActivity {
                         + "\n희망학교 : " + request.highSchool
                         + "\n영재센터 입학희망 : " + request.gifted
                         + "\n궁금사항 : " + request.etc
+                        + "\n과목코드 : " + request.subjectCode
+                        + "\n과목명 : " + request.subjectName
                         + "\ncheck1 : " + request.check1
                         + "\ncheck2 : " + request.check2
                         + "\ncheck3 : " + request.check3
@@ -721,7 +729,7 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private boolean checked(){
-        if (!mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
+        if (!mEtStName1.getText().toString().equals("") && !mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
                 !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
                 !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
                 !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
@@ -749,7 +757,10 @@ public class InformedQuestionActivity extends BaseActivity {
             }
 
         }else{
-            if (mEtStTime1.getText().toString().equals("")) {
+            if (mEtStName1.getText().toString().equals("")) {
+                checkEtStudy(mEtStName1);
+
+            } else if (mEtStTime1.getText().toString().equals("")) {
                 checkEtStudy(mEtStTime1);
 
             } else if (mEtStDate1.getText().toString().equals("")){
@@ -788,6 +799,7 @@ public class InformedQuestionActivity extends BaseActivity {
             else if (rbSelDay3.isChecked()) selDay = "2";
             else if (rbSelDay4.isChecked()) selDay = "3";
 
+            mInfo.progress1Name = mEtStName1.getText().toString();
             mInfo.time1 = mEtStTime1.getText().toString();
             mInfo.time2 = mEtStTime2.getText().toString();
             mInfo.time3 = mEtStTime3.getText().toString();
@@ -937,6 +949,7 @@ public class InformedQuestionActivity extends BaseActivity {
         if (intent != null){
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, true);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
+            LogMgr.e(TAG, "progress1Name4: " + mInfo.progress1Name);
         }
 
         setResult(RESULT_OK, intent);

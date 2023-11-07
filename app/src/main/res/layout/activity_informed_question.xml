@@ -151,6 +151,19 @@
                         android:orientation="vertical"
                         android:paddingEnd="16dp">
                         <EditText
+                            android:id="@+id/et_st_name_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/bg_edittext"
+                            android:textSize="@dimen/font_size"
+                            android:hint="@string/informed_question_class_path_hint_name"
+                            android:maxLines="1"
+                            android:inputType="text"
+                            android:textColor="@color/font_color_default"
+                            android:paddingHorizontal="@dimen/editbox_padding"
+                            android:paddingVertical="@dimen/editbox_padding_vertical"/>
+                        <EditText
                             android:id="@+id/et_st_time_1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
