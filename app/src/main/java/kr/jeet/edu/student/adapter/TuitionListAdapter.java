@@ -96,8 +96,8 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 str = TextUtils.isEmpty(contentItem.payment) ? "0원" : contentItem.payment+"원";
                 contentHolder.tvContentPay.setText(str);
-                contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
                 contentHolder.tvContentDate.setText(Utils.getStr(contentItem.payDate));
+                contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
 
                 // 마지막 아이템 체크
                 if (position == mList.size() - 1) {

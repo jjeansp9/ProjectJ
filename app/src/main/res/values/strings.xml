@@ -149,6 +149,8 @@
     <string name="main_menu_vehicle_info">차량정보</string>
     <string name="title_bus_route_info">운행정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
+    <string name="main_menu_attendance">출석부</string>
+    <string name="main_menu_tuition">수강료납부</string>
 
     <string name="settings_title">설정</string>
     <string name="settings_notice_system">시스템알림</string>
@@ -442,7 +444,7 @@
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
     <string name="test_reserve_detail_wish_day_week">등원희망요일</string>
     <string name="test_reserve_detail_study">이전학습방법</string>
-<!--    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>-->
+    <!--    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>-->
     <string name="hint_test_reserve_detail_study"> 주간수업량 (시간) / 수강기간 (개월) </string>
     <string name="test_reserve_detail_process">진도/심화학습</string>
     <string name="test_reserve_detail_option">희망분야</string>

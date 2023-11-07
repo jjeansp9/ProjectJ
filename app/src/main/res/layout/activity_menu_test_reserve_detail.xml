@@ -610,11 +610,10 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/hint_test_reserve_detail_study"
                         android:textColor="@color/font_color_default"
-                        android:textSize="@dimen/font_size_small"
+                        android:textSize="@dimen/font_size"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guideline"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/txt_study_sub"/>
+                        app:layout_constraintTop_toTopOf="parent"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/layout_study_sub_1"
@@ -622,7 +621,7 @@
                         android:layout_height="wrap_content"
                         app:layout_constraintEnd_toStartOf="@+id/guideline"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/txt_study_sub"
+                        app:layout_constraintTop_toBottomOf="@+id/txt_study_column"
                         android:layout_marginTop="@dimen/test_reserve_detail_layout_study_sub">
 
                         <androidx.constraintlayout.widget.Guideline

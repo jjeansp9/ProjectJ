@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.model.request.SigninRequest;
@@ -107,6 +108,12 @@ public class LoginActivity extends BaseActivity {
         initView();
         //String HashKey = Utility.INSTANCE.getKeyHash(mContext);
         //LogMgr.e(TAG, HashKey);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DataManager.getInstance().isSelectedChild = false;
     }
 
     @Override
@@ -606,6 +613,7 @@ public class LoginActivity extends BaseActivity {
 
     public void goMain(ChildStudentInfo data) {
         if (data != null){
+            DataManager.getInstance().isSelectedChild = true;
             PreferenceUtil.setStuSeq(mContext, data.seq);
             PreferenceUtil.setStName(mContext, data.stName);
             PreferenceUtil.setUserSTCode(mContext, data.stCode);

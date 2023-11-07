@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +18,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.MainActivity;
 
 public class CustomAppbarLayout extends AppBarLayout {
@@ -24,6 +27,7 @@ public class CustomAppbarLayout extends AppBarLayout {
     private ConstraintLayout _layoutBtnBack;
     private ImageView _ivLogo, _btnBack;
     private TextView _tvBack;
+    Animation animSpin;
     public CustomAppbarLayout(@NonNull Context context) {
         super(context);
         _context = context;
@@ -50,6 +54,25 @@ public class CustomAppbarLayout extends AppBarLayout {
         _layoutBtnBack = view.findViewById(R.id.layout_btn_back);
         _btnBack = view.findViewById(R.id.btn_back);
         _tvBack = view.findViewById(R.id.tv_back_sub);
+        animSpin = AnimationUtils.loadAnimation(_context, R.anim.anim_spin);
+        animSpin.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(_context, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                _context.startActivity(intent);
+                ((BaseActivity)_context).overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                ((BaseActivity) _context).finish();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
     }
     public MaterialToolbar getToolbar() {
         return _toolbar;
@@ -60,9 +83,8 @@ public class CustomAppbarLayout extends AppBarLayout {
                 _ivLogo.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(_context, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        _context.startActivity(intent);
+                        if(_ivLogo != null && animSpin != null)
+                            _ivLogo.startAnimation(animSpin);
 
                     }
                 });

@@ -29,6 +29,7 @@ public class DataManager {
     public final String BOARD_MESSAGE_NOTICE = "messageNotice";
     //Dot size
     public float DOT_SIZE = 10f;
+    public boolean isSelectedChild = false;
     // 캠퍼스, 레벨캠퍼스, 학교 리스트
     private List<ACAData> ACAList = new ArrayList<>();
     private List<LTCData> LTCList = new ArrayList<>();

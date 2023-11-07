@@ -33,7 +33,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="@dimen/layout_margin_8"
+                android:layout_marginTop="@dimen/layout_margin_12"
                 android:paddingVertical="@dimen/layout_margin"
                 android:layout_marginHorizontal="@dimen/layout_margin"
                 android:background="@drawable/bg_setting_layout"

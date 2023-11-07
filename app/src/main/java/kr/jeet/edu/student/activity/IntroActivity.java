@@ -595,7 +595,7 @@ public class IntroActivity extends BaseActivity {
 
     public void goMain(ChildStudentInfo data) {
         if (data != null){
-
+            DataManager.getInstance().isSelectedChild = true;
             PreferenceUtil.setStuSeq(mContext, data.seq);
             PreferenceUtil.setStName(mContext, data.stName);
             PreferenceUtil.setUserSTCode(mContext, data.stCode);

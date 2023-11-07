@@ -82,6 +82,11 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
+    /**
+     * 1. 수강료납부 -> 출석현황 대체. 원생정보에 있는 수강료 납부 레이아웃을 옮겨야함
+     * 2. 출석부 아이콘 추가 - 원생정보에 있는 출석부 레이아웃을 옮겨야함
+    * */
+
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;
@@ -575,6 +580,8 @@ public class MainActivity extends BaseActivity {
             mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_vehicle_info, MenuBusActivity.class));
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            //출석부
+            mList.add(new MainMenuItemData(R.drawable.bt_delete_nor, R.string.main_menu_attendance, MenuAttendanceActivity.class));
 
         }else{ // 비회원
             //공지사항

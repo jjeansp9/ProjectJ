@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
@@ -316,6 +317,7 @@ public class SelectStudentActivity extends BaseActivity {
     }
 
     public void goMain(int position) {
+        DataManager.getInstance().isSelectedChild = true;
         PreferenceUtil.setStuSeq(mContext, mList.get(position).seq);
         PreferenceUtil.setStName(mContext, mList.get(position).stName);
         PreferenceUtil.setUserSTCode(mContext, mList.get(position).stCode);

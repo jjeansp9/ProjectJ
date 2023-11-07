@@ -53,6 +53,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.ClassPathListAdapter;
 import kr.jeet.edu.student.adapter.PrefCheckListAdapter;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ClassPathData;
 import kr.jeet.edu.student.model.data.PrefAreaData;
@@ -231,7 +232,14 @@ public class InformedQuestionActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) customAppbar.setTitle(R.string.informed_question_update_title);
         else customAppbar.setTitle(R.string.informed_question_title);
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+//        customAppbar.setLogoClickable(true);
+        LogMgr.e(TAG, "stCode = " + PreferenceUtil.getUserSTCode(mContext));
+        boolean isHomeBtnEnable = //Home 이동 가능한 Case 는
+                PreferenceUtil.getUserGubun(mContext) == Constants.USER_TYPE_STUDENT    //학생이거나
+                        || (DataManager.getInstance().isSelectedChild)    // 자녀를 선택했거나
+                        || (PreferenceUtil.getUserSTCode(mContext) == 0)    //비회원이거나
+                ;
+        customAppbar.setLogoClickable(isHomeBtnEnable);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

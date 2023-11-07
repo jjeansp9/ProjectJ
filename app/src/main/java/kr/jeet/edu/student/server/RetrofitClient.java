@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.server;
 
+import kr.jeet.edu.student.BuildConfig;
 import kr.jeet.edu.student.utils.LogMgr;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -21,7 +22,7 @@ public class RetrofitClient {
                 .build();
 
         Retrofit retrofit = null;
-        if(LogMgr.DEBUG) {
+        if(BuildConfig.DEBUG) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(RetrofitApi.SERVER_BASE_URL + RetrofitApi.PREFIX)   // 꼭 / 로 끝나야함
                     //.baseUrl(RetrofitApi.SERVER_BASE_URL)   // 꼭 / 로 끝나야함

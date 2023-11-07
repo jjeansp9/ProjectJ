@@ -396,7 +396,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) customAppbar.setTitle(R.string.test_reserve_update_title);
         else customAppbar.setTitle(R.string.test_reserve_write_title);
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+        LogMgr.e(TAG, "stCode = " + PreferenceUtil.getUserSTCode(mContext));
+        boolean isHomeBtnEnable = //Home 이동 가능한 Case 는
+                PreferenceUtil.getUserGubun(mContext) == Constants.USER_TYPE_STUDENT    //학생이거나
+                        || (DataManager.getInstance().isSelectedChild)    // 자녀를 선택했거나
+                        || (PreferenceUtil.getUserSTCode(mContext) == 0)    //비회원이거나
+                ;
+        customAppbar.setLogoClickable(isHomeBtnEnable);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -798,7 +804,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.reason.equals("")) {
             Toast.makeText(mContext, R.string.reason_empty, Toast.LENGTH_SHORT).show();
-            mSpinnerFunnel.setSpinnerPopupHeight(500);
+            mSpinnerFunnel.setSpinnerPopupHeight(1000);
             if (mSpinnerFunnel != null) mSpinnerFunnel.show();
 
         } else if (request.bigo.equals("")) {
