@@ -139,7 +139,7 @@
     <string name="main_null_teacher">배정되지 않음</string>
 
     <string name="main_title">메인화면</string>
-    <string name="main_menu_test_reserve_title">테스트 예약조회</string>
+    <string name="main_menu_test_reserve_title">테스트예약</string>
     <string name="main_menu_student_info">원생정보</string>
     <string name="main_menu_announcement">공지사항</string>
     <string name="main_menu_announcement_new">최근 공지사항</string>

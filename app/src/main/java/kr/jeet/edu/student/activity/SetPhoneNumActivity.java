@@ -63,6 +63,8 @@ public class SetPhoneNumActivity extends BaseActivity {
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.settings_account_phone_title);
+        customAppbar.setLogoVisible(true);
+        customAppbar.setLogoClickable(true);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

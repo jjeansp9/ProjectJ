@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:titleTextColor="@color/font_color_default"
-        app:titleCentered="true"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -56,7 +55,9 @@
             android:layout_gravity="center"
             android:background="@drawable/img_jeet_logo"
             android:scaleType="fitCenter"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:stateListAnimator="@xml/animate_button_pull"/>
+        />
 <!--        <TextView-->
 <!--            android:id="@+id/title"-->
 <!--            android:layout_width="wrap_content"-->

@@ -395,6 +395,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         if (writeMode.equals(Constants.WRITE_EDIT)) customAppbar.setTitle(R.string.test_reserve_update_title);
         else customAppbar.setTitle(R.string.test_reserve_write_title);
+        customAppbar.setLogoVisible(true);
+        customAppbar.setLogoClickable(true);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

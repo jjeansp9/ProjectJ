@@ -1,6 +1,7 @@
 package kr.jeet.edu.student.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.MainActivity;
 
 public class CustomAppbarLayout extends AppBarLayout {
     private Context _context;
@@ -43,6 +45,7 @@ public class CustomAppbarLayout extends AppBarLayout {
         LayoutInflater inflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.layout_custom_appbar, this, true);
         _toolbar = view.findViewById(R.id.toolbar);
+        _toolbar.setTitle("");
         _ivLogo = view.findViewById(R.id.iv_logo);
         _layoutBtnBack = view.findViewById(R.id.layout_btn_back);
         _btnBack = view.findViewById(R.id.btn_back);
@@ -51,10 +54,27 @@ public class CustomAppbarLayout extends AppBarLayout {
     public MaterialToolbar getToolbar() {
         return _toolbar;
     }
+    public void setLogoClickable(boolean flag) {
+        if(flag) {
+            if(_ivLogo != null) {
+                _ivLogo.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(_context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        _context.startActivity(intent);
+
+                    }
+                });
+            }
+        }else{
+            _ivLogo.setOnClickListener(null);
+        }
+    }
 
     public void setLogoVisible(boolean flag) {
         if(flag) {
-            _toolbar.setTitle("");
+//            _toolbar.setTitle("");
             _ivLogo.setVisibility(View.VISIBLE);
         }else{
             _ivLogo.setVisibility(View.GONE);

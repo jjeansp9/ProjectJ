@@ -115,6 +115,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.briefing_write_title);
+        customAppbar.setLogoVisible(true);
+        customAppbar.setLogoClickable(true);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

@@ -267,7 +267,9 @@ public class MainActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
+        customAppbar.setTitle("");
         customAppbar.setLogoVisible(true);
+        customAppbar.setLogoClickable(false);
         setSupportActionBar(customAppbar.getToolbar());
         if (_userGubun == Constants.USER_TYPE_PARENTS) {
             customAppbar.setMainBtnLeftClickListener( v -> startActivity(new Intent(mContext, SelectStudentActivity.class)) );
