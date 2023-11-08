@@ -317,32 +317,11 @@
                             app:layout_constraintTop_toTopOf="parent"
                             android:visibility="invisible"
                             />
-<!--                        <ImageView-->
-<!--                            android:id="@+id/img_attendance_state"-->
-<!--                            android:layout_width="50dp"-->
-<!--                            android:layout_height="50dp"-->
-<!--                            android:src="@drawable/bt_delete_nor"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintTop_toTopOf="parent"/>-->
-
-<!--                        <TextView-->
-<!--                            android:id="@+id/tv_attendance_state"-->
-<!--                            android:layout_width="0dp"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:gravity="center"-->
-<!--                            android:text="@string/main_menu_tuition"-->
-<!--                            android:textSize="@dimen/font_size_large"-->
-<!--                            android:textColor="@color/black"-->
-<!--                            android:textStyle="bold"-->
-<!--                            app:layout_constraintEnd_toEndOf="parent"-->
-<!--                            app:layout_constraintStart_toStartOf="parent"-->
-<!--                            app:layout_constraintTop_toBottomOf="@+id/img_attendance_state"/>-->
                         <ImageView
                             android:id="@+id/img_attendance_state"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/icon_menu_attend"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/bt_delete_nor"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>
@@ -352,13 +331,34 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="@string/main_tv_attendance_state"
+                            android:text="@string/main_menu_tuition"
                             android:textSize="@dimen/font_size_large"
                             android:textColor="@color/black"
                             android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/img_attendance_state"/>
+<!--                        <ImageView-->
+<!--                            android:id="@+id/img_attendance_state"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:src="@drawable/icon_menu_attend"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintTop_toTopOf="parent"/>-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/tv_attendance_state"-->
+<!--                            android:layout_width="0dp"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="center"-->
+<!--                            android:text="@string/main_tv_attendance_state"-->
+<!--                            android:textSize="@dimen/font_size_large"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textStyle="bold"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/img_attendance_state"/>-->
                         <TextView
                             android:id="@+id/tv_attendance_confirm"
                             android:layout_width="0dp"

@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity {
     private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember,
             mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty, mTvNameSub;
     private ImageView imgStudentAttendance;
-    private ImageView ivAttendanceNew;
+    //private ImageView ivAttendanceNew;
     private LinearLayoutCompat mLayoutBottom;
     private ConstraintLayout layoutAttend, layoutNotify;
 
@@ -140,41 +140,42 @@ public class MainActivity extends BaseActivity {
                     LogMgr.w(TAG, "broadcast onReceived ");
                     if(intent.hasExtra(IntentParams.PARAM_ATTENDANCE_INFO)) {
                         String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
-                        if(type.equals(MSG_TYPE_ATTEND)) {
-                            new Thread(() -> {
-                                try {
-                                    List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-                                    if(pushMessages.isEmpty()) {
-                                        setNewAttendanceContent(false);
-                                    }else{
-                                        for (PushMessage data : pushMessages) {
-                                            if (data.stCode == _stCode) setNewAttendanceContent(true);
-                                        }
-                                    }
-                                }catch(Exception e){
-
-                                }
-                            }).start();
-                        }
+//                        if(type.equals(MSG_TYPE_ATTEND)) {
+//                            new Thread(() -> {
+//                                try {
+//                                    List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+//                                    if(pushMessages.isEmpty()) {
+//                                        setNewAttendanceContent(false);
+//                                    }else{
+//                                        for (PushMessage data : pushMessages) {
+//                                            if (data.stCode == _stCode) setNewAttendanceContent(true);
+//                                        }
+//                                    }
+//                                }catch(Exception e){
+//
+//                                }
+//                            }).start();
+//                        }
                     }
                 }
             }
         }
     };
 
-    void setNewAttendanceContent(boolean isNew) {
-        runOnUiThread(()->{
-            if(ivAttendanceNew != null) {
-                if (isNew) {
-                    ivAttendanceNew.setVisibility(View.VISIBLE);
-//                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
-                } else {
-                    ivAttendanceNew.setVisibility(View.INVISIBLE);
-//                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
-                }
-            }
-        });
-    }
+    // 출석상태 업데이트되었을 때 New 표시
+//    void setNewAttendanceContent(boolean isNew) {
+//        runOnUiThread(()->{
+//            if(ivAttendanceNew != null) {
+//                if (isNew) {
+//                    ivAttendanceNew.setVisibility(View.VISIBLE);
+////                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
+//                } else {
+//                    ivAttendanceNew.setVisibility(View.INVISIBLE);
+////                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
+//                }
+//            }
+//        });
+//    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -296,7 +297,7 @@ public class MainActivity extends BaseActivity {
     void initView() {
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
-        ivAttendanceNew = findViewById(R.id.img_attendance_new);
+        //ivAttendanceNew = findViewById(R.id.img_attendance_new);
         layoutAttend = findViewById(R.id.btn_attendance_state);
 
         mTvStudentName = findViewById(R.id.tv_student_name);
@@ -513,20 +514,20 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
         registerReceiver(pushNotificationReceiver, intentFilter);
 
-        new Thread(() -> {
-            try {
-                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-                if(pushMessages.isEmpty()) {
-                    setNewAttendanceContent(false);
-                }else{
-                    for (PushMessage data : pushMessages) {
-                        if (data.stCode == _stCode) setNewAttendanceContent(true);
-                    }
-                }
-            }catch(Exception e){
-
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
+//                if(pushMessages.isEmpty()) {
+//                    setNewAttendanceContent(false);
+//                }else{
+//                    for (PushMessage data : pushMessages) {
+//                        if (data.stCode == _stCode) setNewAttendanceContent(true);
+//                    }
+//                }
+//            }catch(Exception e){
+//
+//            }
+//        }).start();
     }
 
     private void startDetailActivity(Intent intent, Class<?> targetActivity) {
@@ -548,7 +549,7 @@ public class MainActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_attendance_state:
-                startActivityBottomMenu(MenuNoticeActivity.class);
+                startActivityBottomMenu(TuitionActivity.class);
                 break;
 
             case R.id.btn_teacher:
@@ -561,7 +562,7 @@ public class MainActivity extends BaseActivity {
     private void startActivityBottomMenu(Class<?> cls){
         Intent targetIntent = new Intent(mContext, cls);
 
-        if (cls == MenuNoticeActivity.class){
+        if (cls == TuitionActivity.class){
             targetIntent.putExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, true);
             startActivity(targetIntent);
 
@@ -589,7 +590,7 @@ public class MainActivity extends BaseActivity {
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
             //출석부
-            //mList.add(new MainMenuItemData(R.drawable.bt_delete_nor, R.string.main_menu_attendance, MenuAttendanceActivity.class));
+            mList.add(new MainMenuItemData(R.drawable.bt_delete_nor, R.string.main_menu_attendance, MenuAttendanceActivity.class));
 
         }else{ // 비회원
             //공지사항
