@@ -2,23 +2,21 @@ package kr.jeet.edu.student.utils;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import android.text.Html;
+import android.os.Message;
 import android.view.View;
-import android.webkit.ValueCallback;
+import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.net.URISyntaxException;
@@ -35,12 +33,12 @@ public class MyWebViewClient extends WebViewClient {
     private AlertDialog mProgressDialog = null;
     private String accountNo = "";
 
-    private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com/common/login#payer";
+    private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com";
     private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
     private final String SHIN_HAN_JS_CODE = "javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');";
 
-    private final String BUS_ROUTE_URL = "http://m.jeet.kr/intro/table/index.jsp?route_type=1&campus_fk=";
-    private final String BUS_ROUTE_JS_CODE = "javascript:var meta = document.createElement('meta'); meta.name = 'viewport'; meta.content = 'width=device-width, user-scalable = yes'; var header = document.getElementsByTagName('head')[0]; header.appendChild(meta)";
+    private final String BUS_ROUTE_URL = "http://m.jeet.kr/intro/table/index.jsp";
+    private final String ADJUST_SCREEN_SIZE_JS_CODE = "javascript:var meta = document.createElement('meta'); meta.name = 'viewport'; meta.content = 'width=device-width, user-scalable = yes'; var header = document.getElementsByTagName('head')[0]; header.appendChild(meta)";
     private final String BUS_ROUTE_JS_CODE_MENU_CLEAR = "javascript:(function() {" +
             "   var element = document.querySelector('.mobile_quick');" +
             "   if (element) {" +
@@ -125,7 +123,7 @@ public class MyWebViewClient extends WebViewClient {
         showProgressDialog();
 
         if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
-        view.loadUrl(BUS_ROUTE_JS_CODE);
+        view.loadUrl(ADJUST_SCREEN_SIZE_JS_CODE);
 
         wv.setVisibility(View.GONE);
     }
@@ -135,7 +133,20 @@ public class MyWebViewClient extends WebViewClient {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
         if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
-        view.loadUrl(BUS_ROUTE_JS_CODE);
+        view.loadUrl(ADJUST_SCREEN_SIZE_JS_CODE);
+    }
+
+    @Override
+    public void onPageCommitVisible(WebView view, String url) {
+        super.onPageCommitVisible(view, url);
+        LogMgr.e(TAG, "onPageCommitVisible() : " + url);
+
+        if (url.contains(BUS_ROUTE_URL)) {
+            view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
+
+        } else if (url.contains(SHIN_HAN_LOGIN_URL)) {
+            view.loadUrl(shinhanJSCode());
+        }
     }
 
     @Override
@@ -144,15 +155,6 @@ public class MyWebViewClient extends WebViewClient {
         LogMgr.e(TAG, "onPageFinished() : " + url);
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
-
-        if (url.contains(BUS_ROUTE_URL)) {
-            view.loadUrl(BUS_ROUTE_JS_CODE_MENU_CLEAR);
-            return;
-        }
-        else if (url.contains(SHIN_HAN_LOGIN_URL)) {
-            view.loadUrl(shinhanJSCode());
-            return;
-        }
     }
 
     @Override
