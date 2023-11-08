@@ -110,6 +110,7 @@ public class InformedQuestionActivity extends BaseActivity {
     private String _userType = "";
     private int _loginType = -1;
     private int _childCnt = -1;
+    private int _stCode = 0;
 
     private static final String PREF= "Y";
     private static final String NON_PREF= "N";
@@ -194,6 +195,7 @@ public class InformedQuestionActivity extends BaseActivity {
             _userType = PreferenceUtil.getUserType(mContext);
             _loginType = PreferenceUtil.getLoginType(mContext);
             _childCnt = PreferenceUtil.getNumberOfChild(mContext);
+            _stCode = PreferenceUtil.getUserSTCode(mContext);
 
             LogMgr.e(TAG, "childCnt: " + _childCnt);
 
@@ -365,9 +367,9 @@ public class InformedQuestionActivity extends BaseActivity {
             }
         }
 
-        LogMgr.e(TAG, "progress1Name1: " + mInfo.progress1Name);
+        LogMgr.e(TAG, "progress1Name1: " + mInfo.progressName1);
 
-        mEtStName1.setText(Utils.getStr(mInfo.progress1Name));
+        mEtStName1.setText(Utils.getStr(mInfo.progressName1));
         mEtStTime1.setText(Utils.getStr(mInfo.time1));
         mEtStTime2.setText(Utils.getStr(mInfo.time2));
         mEtStTime3.setText(Utils.getStr(mInfo.time3));
@@ -584,7 +586,10 @@ public class InformedQuestionActivity extends BaseActivity {
     private void requestData(){
         try {
 
-            if (writeMode.equals(Constants.WRITE_EDIT)) request.seq = mInfo.seq+"";
+            if (writeMode.equals(Constants.WRITE_EDIT)) {
+                request.seq = mInfo.seq+"";
+                request.stCode = mInfo.stCode;
+            }
 
             request.memberSeq = _memberSeq;
 
@@ -593,7 +598,7 @@ public class InformedQuestionActivity extends BaseActivity {
             else if (rbSelDay3.isChecked()) selDay = "2";
             else if (rbSelDay4.isChecked()) selDay = "3";
 
-            request.progress1Name = mEtStName1.getText().toString();
+            request.progressName1 = mEtStName1.getText().toString();
             request.time1 = mEtStTime1.getText().toString();
             request.time2 = mEtStTime2.getText().toString();
             request.time3 = mEtStTime3.getText().toString();
@@ -663,6 +668,7 @@ public class InformedQuestionActivity extends BaseActivity {
             }else request.gifted = "";
 
             request.etc = mEtAnyQuestion.getText().toString();
+
             request.registerDate = currentDate();
 
             if (writeMode.equals(Constants.WRITE_EDIT)){
@@ -676,6 +682,7 @@ public class InformedQuestionActivity extends BaseActivity {
             if (request != null){
                 LogMgr.i(TAG+ "putData", "\nmemberSeq : " + request.memberSeq
                         + "\nseq : " + request.seq
+                        + "\nstCode : " + request.stCode
                         + "\n학생이름 : " + request.name
                         + "\n생년월일 : " + request.birth
                         + "\n성별 : " + request.sex
@@ -700,7 +707,7 @@ public class InformedQuestionActivity extends BaseActivity {
                         + "\n수강기간 과외 : " + request.date2
                         + "\n수강기간 가정학습(자기주도) : " + request.date3
                         + "\n수강기간 구몬/눈높이/재능 : " + request.date4
-                        + "\n진도/심화학습여부(1) 학원명 : " + request.progress1Name
+                        + "\n진도/심화학습여부(1) 학원명 : " + request.progressName1
                         + "\n진도 심화학습여부(1) 과정 : " + request.process1
                         + "\n진도 심화학습여부(1) 사용교재 : " + request.processEtc1
                         + "\n진도 심화학습여부(1) 과정 텍스트 : " + request.processText1
@@ -799,7 +806,7 @@ public class InformedQuestionActivity extends BaseActivity {
             else if (rbSelDay3.isChecked()) selDay = "2";
             else if (rbSelDay4.isChecked()) selDay = "3";
 
-            mInfo.progress1Name = mEtStName1.getText().toString();
+            mInfo.progressName1 = mEtStName1.getText().toString();
             mInfo.time1 = mEtStTime1.getText().toString();
             mInfo.time2 = mEtStTime2.getText().toString();
             mInfo.time3 = mEtStTime3.getText().toString();
@@ -921,6 +928,9 @@ public class InformedQuestionActivity extends BaseActivity {
                         + "\n희망학교 : " + mInfo.highSchool
                         + "\n영재센터 입학희망 : " + mInfo.gifted
                         + "\n궁금사항 : " + mInfo.etc
+                        + "\n진도/심화학습여부(1) 학원명  : " + mInfo.progressName1
+                        + "\n과목코드 : " + mInfo.subjectCode
+                        + "\n과목명 : " + mInfo.subjectName
                         + "\ncheck1 : " + mInfo.check1
                         + "\ncheck2 : " + mInfo.check2
                         + "\ncheck3 : " + mInfo.check3
@@ -949,7 +959,7 @@ public class InformedQuestionActivity extends BaseActivity {
         if (intent != null){
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, true);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
-            LogMgr.e(TAG, "progress1Name4: " + mInfo.progress1Name);
+            LogMgr.e(TAG, "progress1Name4: " + mInfo.progressName1);
         }
 
         setResult(RESULT_OK, intent);

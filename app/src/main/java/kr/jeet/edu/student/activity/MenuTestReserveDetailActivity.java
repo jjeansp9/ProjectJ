@@ -172,6 +172,7 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             }
         }
 
+        ((TextView)findViewById(R.id.txt_subject)).setText(TextUtils.isEmpty(mInfo.subjectName) ? "" : mInfo.subjectName);
         ((TextView)findViewById(R.id.txt_insert_date)).setText(TextUtils.isEmpty(mInfo.registerDate) ? "" : mInfo.registerDate);
 
         str = "";
@@ -201,7 +202,14 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             //str = "학원 : ";
             str = "";
             String subStr = "";
-            if(!TextUtils.isEmpty(mInfo.time1)) subStr += mInfo.time1;
+            if(!TextUtils.isEmpty(mInfo.progressName1)) {
+                if (mInfo.progressName1.contains("교습소")) subStr += mInfo.progressName1;
+                else subStr += removeLastSpace(mInfo.progressName1.replace("학원", "")) + " 학원";
+            }
+            if(!TextUtils.isEmpty(mInfo.time1)) {
+                if(TextUtils.isEmpty(mInfo.progressName1)) subStr += mInfo.time1;
+                else subStr += "\n" + mInfo.time1;
+            }
             if(!TextUtils.isEmpty(mInfo.date1)) subStr += (subStr.isEmpty()?"":" / ") + mInfo.date1;
             str += subStr.isEmpty() ? "" : subStr;
 
@@ -300,6 +308,15 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
         else {
             ((ConstraintLayout)findViewById(R.id.ly_etc)).setVisibility(View.GONE);
         }
+    }
+
+    private String removeLastSpace(String str) {
+        if (str == null || str.length() == 0) return str;
+
+        char lastChar = str.charAt(str.length() - 1);
+        if (lastChar == ' ') str = str.substring(0, str.length() - 1);
+
+        return str;
     }
 
     private void requestTestTime() {

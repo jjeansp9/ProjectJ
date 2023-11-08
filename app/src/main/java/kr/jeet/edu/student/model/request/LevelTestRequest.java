@@ -8,8 +8,13 @@ import com.google.gson.annotations.SerializedName;
 public class LevelTestRequest implements Parcelable {
     @SerializedName("seq")
     public String seq;
+
+    @SerializedName("stCode")
+    public int stCode;
+
     @SerializedName("userGubun")
     public int userGubun;
+
     @SerializedName("memberSeq")
     public int memberSeq;
 
@@ -127,8 +132,8 @@ public class LevelTestRequest implements Parcelable {
     @SerializedName("etc")
     public String etc;
 
-    @SerializedName("progress1Name")
-    public String progress1Name;
+    @SerializedName("progressName1")
+    public String progressName1;
 
     @SerializedName("subjectCode")
     public int subjectCode;
@@ -156,6 +161,7 @@ public class LevelTestRequest implements Parcelable {
 
     protected LevelTestRequest(Parcel in) {
         seq = in.readString();
+        stCode = in.readInt();
         userGubun = in.readInt();
         memberSeq = in.readInt();
         name = in.readString();
@@ -196,7 +202,7 @@ public class LevelTestRequest implements Parcelable {
         highSchool = in.readString();
         gifted = in.readString();
         etc = in.readString();
-        progress1Name = in.readString();
+        progressName1 = in.readString();
         subjectCode = in.readInt();
         subjectName = in.readString();
         check1 = in.readString();
@@ -226,6 +232,7 @@ public class LevelTestRequest implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(seq);
+        dest.writeInt(stCode);
         dest.writeInt(memberSeq);
         dest.writeInt(userGubun);
         dest.writeString(name);
@@ -266,7 +273,7 @@ public class LevelTestRequest implements Parcelable {
         dest.writeString(highSchool);
         dest.writeString(gifted);
         dest.writeString(etc);
-        dest.writeString(progress1Name);
+        dest.writeString(progressName1);
         dest.writeInt(subjectCode);
         dest.writeString(subjectName);
         dest.writeString(check1);

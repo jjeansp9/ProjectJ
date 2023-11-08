@@ -444,6 +444,7 @@
     <string name="test_reserve_test_time_empty">선택된 예약일에 등록된 테스트시간이 없습니다.</string>
 
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
+    <string name="test_reserve_detail_subject">테스트과목</string>
     <string name="test_reserve_detail_wish_day_week">등원희망요일</string>
     <string name="test_reserve_detail_study">이전학습방법</string>
     <!--    <string name="hint_test_reserve_detail_study"> ( 주간수업량 / 수강기간 ) </string>-->

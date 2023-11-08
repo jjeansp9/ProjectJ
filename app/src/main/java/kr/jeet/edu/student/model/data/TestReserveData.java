@@ -6,7 +6,8 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 
 public class TestReserveData implements Parcelable {
-    public int seq;
+    public int seq;                // 게시글 seq
+    public int stCode;             // 원생 stCode
     public int memberSeq;          // member seq
 
     public String name;            // 이름
@@ -50,7 +51,7 @@ public class TestReserveData implements Parcelable {
     public String gifted;          // 영재센터 입학 희망 (Y/N)
     public String etc;             // 궁금사항
 
-    public String progress1Name;   // 진도/심화학습여부(1) 학원명
+    public String progressName1;   // 진도/심화학습여부(1) 학원명
     public int subjectCode;        // 과목코드
     public String subjectName;     // 과목명
 
@@ -64,6 +65,7 @@ public class TestReserveData implements Parcelable {
 
     protected TestReserveData(Parcel in) {
         seq = in.readInt();
+        stCode = in.readInt();
         memberSeq = in.readInt();
         name = in.readString();
         sex = in.readString();
@@ -102,7 +104,7 @@ public class TestReserveData implements Parcelable {
         highSchool = in.readString();
         gifted = in.readString();
         etc = in.readString();
-        progress1Name = in.readString();
+        progressName1 = in.readString();
         subjectCode = in.readInt();
         subjectName = in.readString();
         check1 = in.readString();
@@ -121,6 +123,7 @@ public class TestReserveData implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(seq);
+        dest.writeInt(stCode);
         dest.writeInt(memberSeq);
         dest.writeString(name);
         dest.writeString(sex);
@@ -159,7 +162,7 @@ public class TestReserveData implements Parcelable {
         dest.writeString(highSchool);
         dest.writeString(gifted);
         dest.writeString(etc);
-        dest.writeString(progress1Name);
+        dest.writeString(progressName1);
         dest.writeInt(subjectCode);
         dest.writeString(subjectName);
         dest.writeString(check1);

@@ -5,11 +5,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,9 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -128,6 +122,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private TestReserveData mInfo;
     private String writeMode = "";
     private ArrayList<Integer> gradeIndex = new ArrayList<>();
+    private List<String> inflowNamesList = new ArrayList<>();
 
     private int _childCnt = -1;
     private int testType = -1;
@@ -161,7 +156,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     }
 
                     if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
-                    else LogMgr.e(TAG, "progress1Name2: " + mInfo.progress1Name);
+                    else LogMgr.e(TAG, "progress1Name2: " + mInfo.progressName1);
 
                 } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
                     LogMgr.e(TAG, "event new stu1");
@@ -317,7 +312,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.toString().equals("01010101")) setTestData();
+                        if (s.toString().equals("01010101")) createData();
                     }
                     @Override
                     public void afterTextChanged(Editable s) {}
@@ -374,7 +369,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerCampus.setText(Utils.getStr(mInfo.bigoText));
         _ltcCode = Utils.getStr(mInfo.bigo);
         _ltcName = Utils.getStr(mInfo.bigoText);
-        mSpinnerSubject.setTag(Utils.getStr(mInfo.subjectName));
+        mSpinnerSubject.setText(Utils.getStr(mInfo.subjectName));
+        mSpinnerSubject.setEnabled(false);
         _subjectCode = mInfo.subjectCode;
         _subjectName = Utils.getStr(mInfo.subjectName);
         _selectedSchoolData.scName = Utils.getStr(tvSchool.toString());
@@ -567,6 +563,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             _selectedSchoolData = new SchoolData("", 0);
         });
 
+        mSpinnerFunnel.setSpinnerPopupHeight(1000);
         mSpinnerFunnel.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             _stReason = newItem.toString();
         });
@@ -865,7 +862,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 LogMgr.e(TAG, "Event put mInfo");
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
 
-                LogMgr.e(TAG, "progress1Name1: " + mInfo.progress1Name);
+                LogMgr.e(TAG, "progress1Name1: " + mInfo.progressName1);
             }else{
                 LogMgr.e(TAG, "Event put mInfo null");
             }
@@ -963,14 +960,12 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                             List<InflowData> getData = response.body().data;
 
                             if (getData != null){
-                                List<String> inflowNames = new ArrayList<>();
-
                                 for (InflowData inflowData : getData) {
-                                    inflowNames.add(inflowData.inflowName);
+                                    inflowNamesList.add(inflowData.inflowName);
                                 }
-                                Collections.sort(inflowNames, Collections.reverseOrder());
+                                Collections.sort(inflowNamesList, Collections.reverseOrder());
 
-                                mSpinnerFunnel.setItems(inflowNames);
+                                mSpinnerFunnel.setItems(inflowNamesList);
                             }
                         }
                     } else {
@@ -1110,7 +1105,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         menuItem.setTitle(spannableTitle);
     }
 
-    private void setTestData() {
+    private void createData() {
         String s = "";
         int n = -1;
 
@@ -1157,29 +1152,74 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         s = array[randomIndex];
 
-        mSpinnerGrade.setText(s); // 학년
+        mSpinnerGrade.setText(Utils.getStr(s)); // 학년
         _stGrade = mSpinnerGrade.getText().toString();
 
-//        ArrayList<SchoolData> schoolList = new ArrayList<>(DataManager.getInstance().getSchoolListMap().values());
-//        s = schoolList.get(random.nextInt(schoolList.size() - 1)).scName;
-//        tvSchool.setText(s); // 학교
-//        _selectedSchoolData.scName = tvSchool.toString();
-//        n = schoolList.get(random.nextInt(schoolList.size() - 1)).scCode;
-//        _selectedSchoolData.scCode = n;
+        List<SchoolData> _schoolList = new ArrayList<>();
+        List<SchoolData> schoolAllList = new ArrayList<>(DataManager.getInstance().getSchoolListMap().values());
 
-        array = getResources().getStringArray(R.array.funnel);
-        randomIndex = random.nextInt(array.length - 1);
-        s = array[randomIndex];
-        mSpinnerFunnel.setText(s); // 유입경로
-        _stReason = mSpinnerFunnel.getText().toString();
+        if (_stGrade.contains(getString(R.string.informed_question_elementary))){
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.middleSchool) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        } else if (_stGrade.contains(getString(R.string.informed_question_middle))){
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.highSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        } else{
+            for (SchoolData data : schoolAllList) {
+                if (!data.scName.contains(Constants.elementary) && !data.scName.contains(Constants.middleSchool)){
+                    _schoolList.add(new SchoolData(data.scName, data.scCode));
+                }
+            }
+        }
+
+        if (_schoolList.size() > 0) {
+            if (_schoolList.size() > 1) randomIndex = random.nextInt(_schoolList.size() - 1);
+            else randomIndex = 0;
+            s = Utils.getStr(_schoolList.get(randomIndex).scName);
+            tvSchool.setText(Utils.getStr(s));
+            _scName = s;
+            n = _schoolList.get(randomIndex).scCode;
+            _scCode = n;
+
+            _selectedSchoolData.scName = Utils.getStr(tvSchool.toString());
+            _selectedSchoolData.scCode = _scCode;
+        }
+
+        if (inflowNamesList.size() > 0) {
+            if (inflowNamesList.size() > 1) randomIndex = random.nextInt(inflowNamesList.size() - 1);
+            else randomIndex = 0;
+            s = Utils.getStr(inflowNamesList.get(randomIndex));
+            mSpinnerFunnel.setText(Utils.getStr(s)); // 유입경로
+            _stReason = mSpinnerFunnel.getText().toString();
+        }
 
         List<LTCData> ltcList = DataManager.getInstance().getLTCList();
-        randomIndex = random.nextInt(ltcList.size() - 1);
-        s = ltcList.get(randomIndex).ltcName;
-        mSpinnerCampus.setText(s); // 캠퍼스
-        _ltcName = s;
-        s = ltcList.get(randomIndex).ltcCode;
-        _ltcCode = s;
+        if (ltcList.size() > 0) {
+            if (ltcList.size() > 1) randomIndex = random.nextInt(ltcList.size() - 1);
+            else randomIndex = 0;
+
+            s = Utils.getStr(ltcList.get(randomIndex).ltcName);
+            mSpinnerCampus.setText(s); // 캠퍼스
+            _ltcName = s;
+            s = Utils.getStr(ltcList.get(randomIndex).ltcCode);
+            _ltcCode = s;
+        }
+
+        List<LTCSubjectData> ltcSubjectList = DataManager.getInstance().getLTCSubjectList();
+        if (ltcSubjectList.size() > 0) {
+            if (ltcSubjectList.size() > 1) randomIndex = random.nextInt(ltcSubjectList.size() - 1);
+            else randomIndex = 0;
+            s = Utils.getStr(ltcSubjectList.get(randomIndex).subName);
+            mSpinnerSubject.setText(s);
+            _subjectName = s;
+            _subjectCode = ltcSubjectList.get(randomIndex).subCode;
+        }
 
         clearFocusAndHideKeyboard();
     }

@@ -258,6 +258,8 @@ public class MainActivity extends BaseActivity {
 //        }
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            DataManager.getInstance().isSelectedChild = false;
+            finishAffinity();
             return;
         }
 
