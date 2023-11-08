@@ -367,8 +367,6 @@ public class InformedQuestionActivity extends BaseActivity {
             }
         }
 
-        LogMgr.e(TAG, "progress1Name1: " + mInfo.progressName1);
-
         mEtStName1.setText(Utils.getStr(mInfo.progressName1));
         mEtStTime1.setText(Utils.getStr(mInfo.time1));
         mEtStTime2.setText(Utils.getStr(mInfo.time2));
@@ -588,7 +586,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
             if (writeMode.equals(Constants.WRITE_EDIT)) {
                 request.seq = mInfo.seq+"";
-                request.stCode = mInfo.stCode;
+                request.stCode = mInfo.stCode+"";
             }
 
             request.memberSeq = _memberSeq;
@@ -959,7 +957,6 @@ public class InformedQuestionActivity extends BaseActivity {
         if (intent != null){
             intent.putExtra(IntentParams.PARAM_TEST_RESERVE_SAVED, true);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
-            LogMgr.e(TAG, "progress1Name4: " + mInfo.progressName1);
         }
 
         setResult(RESULT_OK, intent);

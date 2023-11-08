@@ -17,6 +17,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.sns.AppleLoginManager;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -61,6 +62,8 @@ public class IntroActivity extends BaseActivity {
 
     private AppCompatActivity mActivity = null;
     private PushMessage _pushMessage = null;
+
+    private int stCodeParent = 0;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -297,6 +300,9 @@ public class IntroActivity extends BaseActivity {
                                 PreferenceUtil.setUserIsOriginal(mContext, res.data.isOriginalMember);
                                 PreferenceUtil.setSNSUserId(mContext, "");
                                 PreferenceUtil.setNumberOfChild(mContext, 0);
+
+                                if (res.data.userGubun == Constants.USER_TYPE_PARENTS) HttpUtils.requestMemberInfo(res.data.seq, stCodeParent, mContext);
+
                                 if(res.data.pushStatus != null){
                                     //공지사항
                                     PreferenceUtil.setNotificationAnnouncement(mContext, res.data.pushStatus.pushNotice.equals("Y"));
@@ -414,6 +420,9 @@ public class IntroActivity extends BaseActivity {
                                 PreferenceUtil.setUserId(mContext, "");
                                 PreferenceUtil.setUserPw(mContext, "");
                                 PreferenceUtil.setNumberOfChild(mContext, 0);
+
+                                if (res.data.userGubun == Constants.USER_TYPE_PARENTS) HttpUtils.requestMemberInfo(res.data.seq, stCodeParent, mContext);
+
                                 if(res.data.pushStatus != null){
                                     //공지사항
                                     PreferenceUtil.setNotificationAnnouncement(mContext, res.data.pushStatus.pushNotice.equals("Y"));

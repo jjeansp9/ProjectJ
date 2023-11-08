@@ -10,7 +10,7 @@ public class LevelTestRequest implements Parcelable {
     public String seq;
 
     @SerializedName("stCode")
-    public int stCode;
+    public String stCode;
 
     @SerializedName("userGubun")
     public int userGubun;
@@ -161,7 +161,7 @@ public class LevelTestRequest implements Parcelable {
 
     protected LevelTestRequest(Parcel in) {
         seq = in.readString();
-        stCode = in.readInt();
+        stCode = in.readString();
         userGubun = in.readInt();
         memberSeq = in.readInt();
         name = in.readString();
@@ -232,7 +232,7 @@ public class LevelTestRequest implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(seq);
-        dest.writeInt(stCode);
+        dest.writeString(stCode);
         dest.writeInt(memberSeq);
         dest.writeInt(userGubun);
         dest.writeString(name);

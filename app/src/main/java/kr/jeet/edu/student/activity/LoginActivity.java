@@ -44,6 +44,7 @@ import kr.jeet.edu.student.sns.AppleLoginManager;
 import kr.jeet.edu.student.sns.GoogleLoginManager;
 import kr.jeet.edu.student.sns.KaKaoLoginManager;
 import kr.jeet.edu.student.sns.NaverLoginManager;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -66,6 +67,7 @@ public class LoginActivity extends BaseActivity {
     private GoogleLoginManager mGoogleLogin = null;
     private AppleLoginManager mAppleLogin = null;
     private int selectedSNSLoginType = -1;
+    private int stCodeParent = 0;
 
     private AppCompatActivity mActivity = null;
     private String snsName = "";
@@ -274,6 +276,9 @@ public class LoginActivity extends BaseActivity {
                                 PreferenceUtil.setUserIsOriginal(mContext, res.data.isOriginalMember);
                                 PreferenceUtil.setSNSUserId(mContext, "");
                                 PreferenceUtil.setNumberOfChild(mContext, 0);
+
+                                if (res.data.userGubun == Constants.USER_TYPE_PARENTS) HttpUtils.requestMemberInfo(res.data.seq, stCodeParent, mContext);
+
                                 if(res.data.pushStatus != null){
                                     //공지사항
                                     PreferenceUtil.setNotificationAnnouncement(mContext, res.data.pushStatus.pushNotice.equals("Y"));
@@ -414,6 +419,9 @@ public class LoginActivity extends BaseActivity {
                                 PreferenceUtil.setUserId(mContext, "");
                                 PreferenceUtil.setUserPw(mContext, "");
                                 PreferenceUtil.setNumberOfChild(mContext, 0);
+
+                                if (res.data.userGubun == Constants.USER_TYPE_PARENTS) HttpUtils.requestMemberInfo(res.data.seq, stCodeParent, mContext);
+
                                 if(res.data.pushStatus != null){
                                     //공지사항
                                     PreferenceUtil.setNotificationAnnouncement(mContext, res.data.pushStatus.pushNotice.equals("Y"));

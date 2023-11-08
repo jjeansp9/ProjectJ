@@ -16,15 +16,18 @@ import kr.jeet.edu.student.activity.MainActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.LTCSubjectData;
 import kr.jeet.edu.student.model.data.SchoolData;
+import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.request.SigninRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
+import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import retrofit2.Call;
@@ -186,6 +189,56 @@ public class HttpUtils {
                     catch (Exception e) { LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
                     startLogin(mContext);
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    // 원생 정보 조회
+    public static void requestMemberInfo(int memberSeq, int stCode, Context mContext){
+        if(RetrofitClient.getInstance() != null) {
+            RetrofitClient.getApiInterface().studentInfo(memberSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
+                @Override
+                public void onResponse(Call<StudentInfoResponse> call, Response<StudentInfoResponse> response) {
+                    try {
+                        if (response.isSuccessful()){
+                            StudentInfo getData = new StudentInfo();
+                            if (response.body() != null)  getData= response.body().data;
+
+                            if (getData != null) {
+
+                                if (stCode == 0) {
+                                    PreferenceUtil.setParentName(mContext, getData.name);
+                                    PreferenceUtil.setParentPhoneNum(mContext, getData.phoneNumber);
+                                }else{
+                                    PreferenceUtil.setStuPhoneNum(mContext, getData.phoneNumber);
+                                    PreferenceUtil.setStName(mContext, getData.name);
+
+                                    PreferenceUtil.setStuGender(mContext, getData.gender);
+                                    PreferenceUtil.setStuBirth(mContext, getData.birth);
+
+                                    if (getData.acaName != null) { // 캠퍼스명
+                                        PreferenceUtil.setAcaName(mContext, getData.acaName);
+                                    }
+                                    if (getData.acaCode != null) {
+                                        PreferenceUtil.setAcaCode(mContext, getData.acaCode);
+                                    }
+                                    PreferenceUtil.setAppAcaCode(mContext, getData.appAcaCode);
+                                    PreferenceUtil.setAppAcaName(mContext, getData.appAcaName);
+                                }
+                            }
+
+                        }else{
+                            LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());
+                        }
+
+                    }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+                }
+
+                @Override
+                public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
+                    try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
                 }
             });
         }

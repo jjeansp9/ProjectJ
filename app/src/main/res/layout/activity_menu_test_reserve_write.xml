@@ -594,6 +594,7 @@
                 app:spinner_divider_show="true"
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_animation="normal"
+                app:spinner_popup_max_height="1000dp"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
                 app:spinner_popup_focusable="true" />
@@ -731,6 +732,8 @@
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_focusable="true"
                 app:spinner_popup_animation="normal"
+                app:spinner_item_height="@dimen/spinner_item_height"
+                app:spinner_popup_max_height="600dp"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
                 android:background="@drawable/bg_edittext"/>
@@ -773,6 +776,7 @@
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_focusable="true"
                 app:spinner_popup_animation="normal"
+                app:spinner_popup_max_height="600dp"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
                 android:background="@drawable/bg_edittext"/>
@@ -818,6 +822,7 @@
                 app:spinner_divider_show="true"
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_animation="normal"
+                app:spinner_popup_max_height="600dp"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
                 app:spinner_popup_focusable="true" />

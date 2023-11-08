@@ -156,7 +156,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     }
 
                     if (mInfo == null) LogMgr.i(TAG, "get mInfo null");
-                    else LogMgr.e(TAG, "progress1Name2: " + mInfo.progressName1);
 
                 } else if (intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD) && Constants.FINISH_COMPLETE.equals(intent.getAction())) { // 신규원생을 추가했을 경우
                     LogMgr.e(TAG, "event new stu1");
@@ -790,7 +789,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.grade.equals("")) {
             Toast.makeText(mContext, R.string.grade_empty, Toast.LENGTH_SHORT).show();
-            mSpinnerGrade.setSpinnerPopupHeight(600);
+            mSpinnerGrade.setSpinnerPopupHeight(1000);
             if (mSpinnerGrade != null) mSpinnerGrade.show();
 
         } else if (TextUtils.isEmpty(_selectedSchoolData.scName)) {
@@ -862,7 +861,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 LogMgr.e(TAG, "Event put mInfo");
                 intent.putExtra(IntentParams.PARAM_LIST_ITEM, mInfo);
 
-                LogMgr.e(TAG, "progress1Name1: " + mInfo.progressName1);
             }else{
                 LogMgr.e(TAG, "Event put mInfo null");
             }

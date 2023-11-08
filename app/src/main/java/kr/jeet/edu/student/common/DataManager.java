@@ -80,7 +80,7 @@ public class DataManager {
 
     /**
      * JEET 학교 리스트 정보 조회
-     * @return List<LTCSubjectList>
+     * @return List<SchoolData>
      */
     public List<SchoolData> getSchoolList() {
         return SchoolList;

@@ -604,7 +604,7 @@ public class MainActivity extends BaseActivity {
 
     // 캠퍼스 목록 조회
     private void requestACAList(){
-        showProgressDialog();
+//        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getACAList().enqueue(new Callback<GetACAListResponse>() {
@@ -964,7 +964,7 @@ public class MainActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
-                    hideProgressDialog();
+//                    hideProgressDialog();
                     mHandler.sendEmptyMessage(CMD_GET_LTC_SUBJECT);
                 }
 
@@ -972,7 +972,7 @@ public class MainActivity extends BaseActivity {
                 public void onFailure(Call<TeacherClsResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestTeacherCls() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestTeacherCls() Exception : ", e.getMessage()); }
-                    hideProgressDialog();
+//                    hideProgressDialog();
                     mHandler.sendEmptyMessage(CMD_GET_LTC_SUBJECT);
                 }
             });
