@@ -128,27 +128,16 @@ public class MenuTestReserveDetailActivity extends BaseActivity {
             }
         }
         if(!TextUtils.isEmpty(mInfo.grade)) {
-            String[] l = mInfo.grade.split("");
-            if(l.length > 1) {
-//                if(l[0].contains("초")) str = "초등학생 ";
-//                else if(l[0].contains("중")) str = "중학생 ";
-//                else if(l[0].contains("고")) str = "고등학생 ";
-                str += TextUtils.isEmpty(l[1]) ? "" : l[1]+"학년";
+            try {
+                if (mInfo.grade.length() > 0) {
+                    int lastChar = mInfo.grade.length() - 1;
+                    str += TextUtils.isEmpty(mInfo.grade) ? "" : mInfo.grade.replace("학년", "").charAt(lastChar)+"학년";
+                }
+            }catch (Exception e) {
+                LogMgr.e(TAG, e.getMessage());
             }
         }
         ((TextView)findViewById(R.id.txt_school)).setText(str);
-
-//        str = "";
-//        if(!TextUtils.isEmpty(mInfo.grade)) {
-//            String[] l = mInfo.grade.split("");
-//            if(l.length > 1) {
-////                if(l[0].contains("초")) str = "초등학생 ";
-////                else if(l[0].contains("중")) str = "중학생 ";
-////                else if(l[0].contains("고")) str = "고등학생 ";
-//                str += TextUtils.isEmpty(l[1]) ? "" : l[1]+"학년";
-//            }
-//        }
-//        ((TextView)findViewById(R.id.txt_grade)).setText(str);
 
         ((TextView)findViewById(R.id.txt_st_phone_num)).setText(TextUtils.isEmpty(mInfo.phoneNumber) ? "" : Utils.formatCashReceiptNum(mInfo.phoneNumber));
 

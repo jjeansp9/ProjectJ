@@ -691,7 +691,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                                 if (getData.gender.equals(MAN)) mImgStuProfile.setImageResource(R.drawable.img_profile_man);
                                 else mImgStuProfile.setImageResource(R.drawable.img_profile_woman);
 
-                                mTvDeptName.setText(getData.deptName); // 부서
+                                mTvDeptName.setText(getData.deptName + " "); // 부서
                                 mTvStGrade.setText(getData.stGrade); // 학년
                                 mTvClstName.setText(" / " + getData.clstName); // 학급
 

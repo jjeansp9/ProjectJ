@@ -270,6 +270,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
         } else{
+            clearFocusAndHideKeyboard();
             if (_stuGender.equals("F")){
                 mGenderRbMale.setChecked(false);
                 mGenderRbFemale.setChecked(true);
@@ -1108,7 +1109,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         int n = -1;
 
         if (TextUtils.isEmpty(mEtName.getText().toString())) {
-            s = "test[" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4) + "]";
+            s = "test" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4);
             mEtName.setText(s); // 학생이름
             mEtName.setEnabled(false);
         }
@@ -1127,7 +1128,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (!TextUtils.isEmpty(mEtStuPhone.getText().toString())) mTvStuPhoneIsEmpty.setVisibility(View.GONE);
 
         if (TextUtils.isEmpty(mEtParentName.getText().toString())){
-            s = "test[" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4) + "]";
+            s = "test" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4);
             mEtParentName.setText(s); // 부모이름
             mEtParentName.setEnabled(false);
         }
