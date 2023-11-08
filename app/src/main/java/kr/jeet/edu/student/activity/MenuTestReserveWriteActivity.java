@@ -1138,7 +1138,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             mEtparentPhone.setText(s); // 부모폰
             mEtparentPhone.setEnabled(false);
         }
-
         mEtCashReceipt.setText("");
 
         String[] array = getResources().getStringArray(R.array.grade);
