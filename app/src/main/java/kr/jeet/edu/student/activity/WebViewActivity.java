@@ -102,7 +102,6 @@ public class WebViewActivity extends BaseActivity {
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 
         if (url != null) wv.loadUrl(url);
-
     }
 
     @Override
@@ -112,5 +111,12 @@ public class WebViewActivity extends BaseActivity {
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = getIntent();
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

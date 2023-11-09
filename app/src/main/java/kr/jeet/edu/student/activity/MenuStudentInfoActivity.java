@@ -87,11 +87,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     private final String TAG = "studentInfo Activity";
 
-    public interface PayListItem extends Comparable<PayListItem> {
-        boolean isHeader();
-        Constants.PayType getPay();
-    }
-
     private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum,
             mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty;//, mTvAttendanceEmpty;
     private ImageView mImgStuProfile;
@@ -113,7 +108,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
     String strMonth = "";
     private SimpleDateFormat yearFormat, monthFormat;
 
-    private ArrayList<PayListItem> mTuitionList = new ArrayList<>();
+    private ArrayList<Constants.PayListItem> mTuitionList = new ArrayList<>();
 
     private String _userType = "";
     private String _stName = "";
@@ -145,6 +140,8 @@ public class MenuStudentInfoActivity extends BaseActivity {
     private Set<AttendanceSummaryData> calendarDaySet = new HashSet<>();
     private ArrayList<HolidayData> calHolidayList = new ArrayList<>();
     private Set<CalendarDay> calHoliday = new HashSet<>();
+    private Set<TuitionData> acaName = new HashSet<>();
+    private ArrayList<TuitionData> payList = new ArrayList<>();
 
     AttendanceDecorator attendDecorator = null;
     AttendanceDecorator absenceDecorator = null;
@@ -176,9 +173,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
                     requestGetAttendanceList();
                     break;
 
-                case CMD_GET_TUITION_INFO:
-                    requestTuitionList(currentDate);
-                    break;
+//                case CMD_GET_TUITION_INFO:
+//                    requestTuitionList(currentDate);
+//                    break;
             }
         }
     };
@@ -219,7 +216,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mListCls.addAll(DataManager.getInstance().getClsListMap().values());
     }
 
-    private void startWebView(PayListItem item) {
+    private void startWebView(Constants.PayListItem item) {
         if (!((TuitionHeaderData)item).accountNO.isEmpty()){
 
             String str = Utils.setClipData(mContext, ((TuitionHeaderData)item).accountNO);
@@ -268,13 +265,15 @@ public class MenuStudentInfoActivity extends BaseActivity {
             public void onAnimationEnd(Animator animation) {
                 // 애니메이션 종료 후 다음 레이아웃으로 전환
                 if (view == layoutFirst) {
-                    animateLayout(layoutSecond);
-                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
-                }
-                else if (view == layoutSecond) {
+//                    animateLayout(layoutSecond);
+//                    Utils.animateLayoutMoveLeft(layoutSecond, mContext);
                     animateLayout(layoutThird);
                     Utils.animateLayoutMoveLeft(layoutThird, mContext);
                 }
+//                else if (view == layoutSecond) {
+//                    animateLayout(layoutThird);
+//                    Utils.animateLayoutMoveLeft(layoutThird, mContext);
+//                }
             }
         });
         animator.start();
@@ -286,7 +285,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         initData();
 
         layoutFirst = findViewById(R.id.layout_consultation_request);
-        layoutSecond = findViewById(R.id.layout_tuition);
+        //layoutSecond = findViewById(R.id.layout_tuition);
         layoutThird = findViewById(R.id.layout_attendance);
 
         mBtnConsultation = findViewById(R.id.btn_consultation_request);
@@ -306,12 +305,12 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mTvClstName = findViewById(R.id.tv_stu_info_clst_name);
         mTvStuPhoneNum = findViewById(R.id.tv_stu_info_stu_phone_num);
         mTvParentPhoneNum = findViewById(R.id.tv_stu_info_parent_phone_num);
-        mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
+        //mTvTuitionEmpty = findViewById(R.id.tv_tuition_empty);
 //        mTvAttendanceEmpty = findViewById(R.id.tv_attendance_empty);
         //mTvBookPayEmpty = findViewById(R.id.tv_book_pay_empty);
 
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
-        progressBar = findViewById(R.id.progress_bar);
+        //progressBar = findViewById(R.id.progress_bar);
 
         mSpinnerCls = findViewById(R.id.spinner_cls);
         mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
@@ -338,9 +337,9 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _handler.postDelayed(() -> requestMemberInfo(_stuSeq, _stCode), delayed);
         //requestMemberInfo(_stuSeq, _stCode);
 
-        mRecyclerTuition = findViewById(R.id.recycler_tuition);
-        mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
-        mRecyclerTuition.setAdapter(mTuitionAdapter);
+//        mRecyclerTuition = findViewById(R.id.recycler_tuition);
+//        mTuitionAdapter = new TuitionListAdapter(mContext, mTuitionList, this::startWebView);
+//        mRecyclerTuition.setAdapter(mTuitionAdapter);
 
         recyclerViewMonthlyAttend = findViewById(R.id.recyclerview_attendance);
         _attendanceListAdapter = new MonthlyAttendanceListAdapter(mContext, _attendanceList);
@@ -507,9 +506,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         }
     }
 
-    private Set<TuitionData> acaName = new HashSet<>();
-    private ArrayList<TuitionData> payList = new ArrayList<>();
-
     private void initHeaderData(ArrayList<TuitionData> item) {
 
         acaName.clear();
@@ -590,71 +586,71 @@ public class MenuStudentInfoActivity extends BaseActivity {
         }
     }
     // 수강료, 교재비 조회
-    private void requestTuitionList(String yearMonth){
-        progressBar.setVisibility(View.VISIBLE);
-        if (RetrofitClient.getInstance() != null){
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
-                @Override
-                public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
-                    if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
-                    if (response.isSuccessful()) {
-
-                        if (response.body() != null && response.body().data != null) {
-
-                            mTuitionList.clear();
-
-                            ArrayList<TuitionData> getData = response.body().data;
-                            initHeaderData(getData);
-                            getData.forEach(t -> t.isHeader());
-
-                            LogMgr.e(TAG, "data2:" + getData.size());
-
-                                for (TuitionData data : getData) {
-
-                                    try {
-                                        int payment = Integer.parseInt(data.payment);
-                                        data.payment = Utils.decimalFormat(payment);
-
-                                        mTuitionList.add(data);
-
-                                        LogMgr.e(TAG, "data: " + data.acaName);
-
-                                    } catch (NumberFormatException e) {
-                                        LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);
-                                    }
-                                }
-
-                            Collections.sort(mTuitionList);
-
-                        } else {
-                            LogMgr.e(TAG, "Response or ListData is null");
-                        }
-                    } else {
-                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                    }
-                    //updateList();
-                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
-                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onFailure(Call<TuitionResponse> call, Throwable t) {
-                    //updateList();
-                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
-                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
-                    try {
-                        LogMgr.e(TAG, "requestTuitionList() onFailure >> " + t.getMessage());
-                    } catch (Exception e) {
-                    }
-                    hideProgressDialog();
-                    progressBar.setVisibility(View.GONE);
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
+//    private void requestTuitionList(String yearMonth){
+//        progressBar.setVisibility(View.VISIBLE);
+//        if (RetrofitClient.getInstance() != null){
+//            mRetrofitApi = RetrofitClient.getApiInterface();
+//            mRetrofitApi.getTuitionList(Utils.currentDate("yyyyMM"), _stCode).enqueue(new Callback<TuitionResponse>() {
+//                @Override
+//                public void onResponse(Call<TuitionResponse> call, Response<TuitionResponse> response) {
+//                    if (mTuitionList != null && mTuitionList.size() > 0) mTuitionList.clear();
+//                    if (response.isSuccessful()) {
+//
+//                        if (response.body() != null && response.body().data != null) {
+//
+//                            mTuitionList.clear();
+//
+//                            ArrayList<TuitionData> getData = response.body().data;
+//                            initHeaderData(getData);
+//                            getData.forEach(t -> t.isHeader());
+//
+//                            LogMgr.e(TAG, "data2:" + getData.size());
+//
+//                                for (TuitionData data : getData) {
+//
+//                                    try {
+//                                        int payment = Integer.parseInt(data.payment);
+//                                        data.payment = Utils.decimalFormat(payment);
+//
+//                                        mTuitionList.add(data);
+//
+//                                        LogMgr.e(TAG, "data: " + data.acaName);
+//
+//                                    } catch (NumberFormatException e) {
+//                                        LogMgr.e(TAG, "Payment is not a valid integer: " + data.payment);
+//                                    }
+//                                }
+//
+//                            Collections.sort(mTuitionList);
+//
+//                        } else {
+//                            LogMgr.e(TAG, "Response or ListData is null");
+//                        }
+//                    } else {
+//                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+//                    }
+//                    //updateList();
+//                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+//                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
+//                    progressBar.setVisibility(View.GONE);
+//                }
+//
+//                @Override
+//                public void onFailure(Call<TuitionResponse> call, Throwable t) {
+//                    //updateList();
+//                    if (mTuitionAdapter != null) mTuitionAdapter.notifyDataSetChanged();
+//                    mTvTuitionEmpty.setVisibility(mTuitionList.isEmpty() ? View.VISIBLE : View.GONE);
+//                    try {
+//                        LogMgr.e(TAG, "requestTuitionList() onFailure >> " + t.getMessage());
+//                    } catch (Exception e) {
+//                    }
+//                    hideProgressDialog();
+//                    progressBar.setVisibility(View.GONE);
+//                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+//    }
 
     // 원생 정보 조회
     private void requestMemberInfo(int stuSeq, int stCode){

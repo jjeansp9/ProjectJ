@@ -3,27 +3,21 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
-import android.os.Build;
-import android.text.Html;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.chip.Chip;
 
 import java.util.List;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.activity.MenuStudentInfoActivity;
-import kr.jeet.edu.student.model.data.AnnouncementData;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.model.data.TuitionData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -33,17 +27,17 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final String TAG = "TuitionListAdapter";
 
-    public interface ItemClickListener{ public void onItemClick(MenuStudentInfoActivity.PayListItem item); }
+    public interface ItemClickListener{ public void onItemClick(Constants.PayListItem item); }
 
     public static int LAYOUT_HEADER = 0;
     public static int LAYOUT_CONTENT = 1;
 
     private Context mContext;
-    private List<MenuStudentInfoActivity.PayListItem> mList;
+    private List<Constants.PayListItem> mList;
     private ItemClickListener _listener;
     private LayoutInflater inflater;
 
-    public TuitionListAdapter(Context mContext, List<MenuStudentInfoActivity.PayListItem> mList, ItemClickListener _listener) {
+    public TuitionListAdapter(Context mContext, List<Constants.PayListItem> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
         this._listener = _listener;
@@ -72,7 +66,7 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        MenuStudentInfoActivity.PayListItem item = mList.get(position);
+        Constants.PayListItem item = mList.get(position);
 
         if (holder == null) return;
 
@@ -94,7 +88,7 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 ContentViewHolder contentHolder = (ContentViewHolder) holder;
                 TuitionData contentItem = (TuitionData) item;
 
-                str = TextUtils.isEmpty(contentItem.payment) ? "0원" : contentItem.payment+"원";
+                str = TextUtils.isEmpty(contentItem.payment) ? "0" : contentItem.payment;
                 contentHolder.tvContentPay.setText(str);
                 contentHolder.tvContentDate.setText(Utils.getStr(contentItem.payDate));
                 contentHolder.tvContentClsName.setText(Utils.getStr(contentItem.clsName));
@@ -102,16 +96,24 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 // 마지막 아이템 체크
                 if (position == mList.size() - 1) {
                     // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
-                    contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
-                } else {
-                    // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
-                    int nextPosition = position + 1;
-                    if (nextPosition < mList.size() && getItemViewType(nextPosition) == LAYOUT_HEADER) {
-                        contentHolder.lineContentBottom.setVisibility(View.VISIBLE);
-                    } else {
-                        contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
-                    }
+                    //contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+                    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentHolder.lineContentBottom.getLayoutParams();
+                    int marginInDp = (int) TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            0,
+                            mContext.getResources().getDisplayMetrics()
+                    );
+                    params.leftMargin = marginInDp;
+                    params.rightMargin = marginInDp;
+                    contentHolder.lineContentBottom.setLayoutParams(params);
                 }
+//                else {
+//                    // 마지막 아이템이 아닌 경우, contentHolder.line을 visible로 설정
+//                    int nextPosition = position + 1;
+//                    if (nextPosition < mList.size()) {
+//                        //contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+//                    }
+//                }
             }
 
         }catch (Exception e){

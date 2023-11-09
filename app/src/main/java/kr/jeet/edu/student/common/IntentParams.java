@@ -33,7 +33,8 @@ public class IntentParams {
 
     public final static String PARAM_WEB_VIEW_URL = "webViewUrl";  // 웹뷰에서 로드할 url
     public final static String PARAM_PUSH_MESSAGE = "pushMessage";  // pushMessage
-    public final static String PARAM_APPBAR_TITLE = "privacyTitle";  // 개인정보 동의 내용보기 title
+    public final static String PARAM_APPBAR_TITLE = "appbarTitle";  // appbarTitle
+    public final static String PARAM_DATA_TYPE = "dataType";  // 데이터 타입
     public final static String PARAM_TEST_RESERVE_WRITE = "testReserveWrite";  // 테스트예약 등록 항목
 
     public final static String PARAM_LIST_ITEM = "listItem"; // 리스트 내의 Model Info Key

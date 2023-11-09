@@ -66,6 +66,9 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
             headerViewHolder.tvHeader.setText(mContext.getString(R.string.menu_test_reserve_header));
 
+            if (mList.size() <= 1) headerViewHolder.lineHeader.setVisibility(View.GONE);
+            else headerViewHolder.lineHeader.setVisibility(View.VISIBLE);
+
         }else {
             TestReserveData item = mList.get(position);
             BodyViewHolder bodyHolder = (BodyViewHolder) holder;
@@ -96,10 +99,12 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         private TextView tvHeader;
+        private View lineHeader;
 
         public HeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             tvHeader = itemView.findViewById(R.id.tv_header);
+            lineHeader = itemView.findViewById(R.id.line_header);
         }
     }
 

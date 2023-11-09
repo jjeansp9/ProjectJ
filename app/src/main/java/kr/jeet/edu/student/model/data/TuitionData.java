@@ -7,7 +7,7 @@ import kr.jeet.edu.student.activity.MenuStudentInfoActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.utils.LogMgr;
 
-public class TuitionData implements MenuStudentInfoActivity.PayListItem {
+public class TuitionData implements Constants.PayListItem {
     public String acaName;    // 캠퍼스명
     public String clsName;    // 학급명
     public String payment;    // 금액
@@ -22,7 +22,7 @@ public class TuitionData implements MenuStudentInfoActivity.PayListItem {
     public Constants.PayType getPay() { return Constants.PayType.getByName(gubun); }
 
     @Override
-    public int compareTo(MenuStudentInfoActivity.PayListItem item) {
+    public int compareTo(Constants.PayListItem item) {
         int gubunComparison = 0;
         Constants.PayType type = Constants.PayType.getByName(gubun);
         Constants.PayType itemType = null;

@@ -56,7 +56,6 @@ public class PrivacySeeContentActivity extends BaseActivity {
 
     @Override
     void initView() {
-        showProgressDialog();
         mScrollView = findViewById(R.id.scroll_privacy_content);
         mTvContent = findViewById(R.id.tv_privacy_content);
         findViewById(R.id.btn_pvy_consent_confirm).setOnClickListener(this);
@@ -106,7 +105,6 @@ public class PrivacySeeContentActivity extends BaseActivity {
                 mTvContent.setText(R.string.briefing_privacy_content);
             }
         }
-        hideProgressDialog();
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -155,7 +156,6 @@ public class JoinActivity extends BaseActivity {
                     mGenderRadioFemale.setChecked(false);
                     mGenderRadioMale.setEnabled(false);
                     mGenderRadioFemale.setEnabled(false);
-
                 } else if (mUserGender.equals("F")){
                     mGenderRadioMale.setChecked(false);
                     mGenderRadioFemale.setChecked(true);
@@ -220,8 +220,16 @@ public class JoinActivity extends BaseActivity {
     }
 
     private boolean checkJoin() {
-        if(TextUtils.isEmpty(mEditName.getText().toString())) {
+
+        String name = mEditName.getText().toString();
+
+        if(TextUtils.isEmpty(name)) {
             Toast.makeText(mContext, R.string.empty_name, Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if(!Utils.nameCheck(name)) {
+            Toast.makeText(mContext, R.string.check_name_pattern, Toast.LENGTH_SHORT).show();
             return false;
         }
 

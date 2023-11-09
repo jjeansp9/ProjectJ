@@ -6,6 +6,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT_REZ_CNL;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 
@@ -498,6 +499,15 @@ public class MainActivity extends BaseActivity {
                 {
                     intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuScheduleDetailActivity.class);
+                }
+                break;
+                case MSG_TYPE_REPORT_CARD: // 성적표
+                {
+                    if (_pushMessage.stCode == _stCode){
+                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_report_card));
+                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+                    }
                 }
                 break;
                 default:

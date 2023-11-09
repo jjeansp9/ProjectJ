@@ -230,4 +230,9 @@ public class Constants {
     public static final int MOVE_DETAIL_RIGHT = 4;
 
     public static final int LEVEL_TEST_TYPE_NEW_CHILD = 0;
+
+    public interface PayListItem extends Comparable<PayListItem> {
+        boolean isHeader();
+        Constants.PayType getPay();
+    }
 }

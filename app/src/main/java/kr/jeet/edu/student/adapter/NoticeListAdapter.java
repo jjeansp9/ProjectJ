@@ -80,9 +80,19 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 holder.root.setOnClickListener(null);
                 holder.root.setBackgroundResource(R.color.transparent);
             }
+            else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
+                holder.tvType.setText("성적표");
+                holder.btnNext.setVisibility(View.VISIBLE);
+                //holder.tvAttState.setVisibility(View.VISIBLE);
+                TypedValue typedValue = new TypedValue();
+                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+                holder.root.setBackgroundResource(typedValue.resourceId);
+
+                holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+            }
             else {
                 holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
-                holder.tvAttState.setVisibility(View.GONE);
+                //holder.tvAttState.setVisibility(View.GONE);
                 holder.btnNext.setVisibility(View.GONE);
             }
 

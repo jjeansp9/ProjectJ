@@ -15,7 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.TestReserveAdapter;
@@ -137,7 +140,6 @@ public class MenuTestReserveActivity extends BaseActivity {
     private void setRecycler(){
         mAdapter = new TestReserveAdapter(mContext, mList, this::startActivity);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -147,8 +149,25 @@ public class MenuTestReserveActivity extends BaseActivity {
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
                 {
-                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    requestTestReserveList(lastNoticeSeq);
+//                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    // 컨셉 변경 -> 리스트 내에서 최소 seq 값을 lastNoticeSeq 로 변경
+                    Optional optional = mList.stream().min(new Comparator<TestReserveData>() {
+                        @Override
+                        public int compare(TestReserveData t1, TestReserveData t2) {
+                            if (t1.seq > t2.seq) return 1;
+                            else if(t1.seq < t2.seq) return -1;
+                            else return 0;
+                        }
+                    });
+
+                    if(optional.isPresent()){
+                        int lastNoticeSeq = ((TestReserveData)optional.get()).seq;
+                        LogMgr.w(TAG, "scroll listener lastNoticeSeq= " + lastNoticeSeq);
+                        requestTestReserveList(lastNoticeSeq);
+                    }else{
+                        LogMgr.w(TAG, "optional is not present");
+                    }
+
                 }
             }
         });
@@ -185,6 +204,8 @@ public class MenuTestReserveActivity extends BaseActivity {
                                 if (list != null && !list.isEmpty()) mList.addAll(list);
                             }
                         } else {
+                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                            mList.add(0, new TestReserveData());
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
@@ -192,7 +213,7 @@ public class MenuTestReserveActivity extends BaseActivity {
                     }
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                     hideProgressDialog();
                 }
@@ -200,8 +221,9 @@ public class MenuTestReserveActivity extends BaseActivity {
                 @Override
                 public void onFailure(Call<TestReserveListResponse> call, Throwable t) {
                     mList.clear();
+                    mList.add(0, new TestReserveData());
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
 
                     mSwipeRefresh.setRefreshing(false);
                     hideProgressDialog();

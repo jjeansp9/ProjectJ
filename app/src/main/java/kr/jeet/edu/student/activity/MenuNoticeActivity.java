@@ -62,6 +62,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String allType = "";
     private String systemType = "";
     private String attendanceType = "";
+    private String reportCardType = "";
 
     private String selYear = "";
     private String selMonth = "";
@@ -74,13 +75,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private boolean fromBottomMenu = false;
 
-    // 페이징 관련 변수들
-    private boolean isTargetItemVisible = false;
-    private static final int PAGE_SIZE = 20;
-    private long currentMaxSeq = 0;
-    private int systemCnt = 0;
-    private int attendanceCnt = 0;
-    int mListIndex = 0;
+    private final int TYPE_SYSTEM = 3;
+    private final int TYPE_REPORT_CARD = 4;
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
@@ -100,27 +96,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_notice);
-        _memberSeq = PreferenceUtil.getUserSeq(mContext);
-        _stuSeq = PreferenceUtil.getStuSeq(mContext);
-        _stCode = PreferenceUtil.getUserSTCode(mContext);
-        _stuName = PreferenceUtil.getStName(mContext);
-        _userGubun = PreferenceUtil.getUserGubun(mContext);
-
-        noticeType = getResources().getStringArray(R.array.notice_type);
-        //allType = noticeType[0];
-        systemType = noticeType[0];
-        attendanceType = noticeType[1];
-
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU)){
-            fromBottomMenu = intent.getBooleanExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, fromBottomMenu);
-        }
-
-        new Thread(() -> {
-            //currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
-            mHandler.sendEmptyMessage(CMD_GET_LIST);
-        }).start();
-
         mContext = this;
         initAppbar();
         initView();
@@ -150,52 +125,25 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private void getListData(String selType, boolean isUpdate){
 
         new Thread(() -> {
-            //if (isUpdate) currentMaxSeq = JeetDatabase.getInstance(mContext).pushMessageDao().getAllMessage().size(); // 페이징 관련
 
             LogMgr.i("year", selYear);
             LogMgr.i("month", selMonth);
             List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
             List<PushMessage> newMessage = new ArrayList<>();
 
-            //if (item.size() > 0) currentMaxSeq = item.get(item.size() - 1).id - 1; // 페이징 관련
-
             for (PushMessage msg : item){
 
                 Map<String, String> type = new HashMap<>();
                 type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
                 type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
+                type.put(reportCardType, FCMManager.MSG_TYPE_REPORT_CARD);
 
                 String mappedType = type.get(selType);
                 if (mappedType!=null) {
                     if (msg.pushType.equals(mappedType)){
-                        if (_stCode == msg.stCode){
-                            newMessage.add(msg);
-                        }
-//                        if (_userGubun == Constants.USER_TYPE_PARENTS){
-////                            if (msg.memberSeq == _stuSeq){
-////                                newMessage.add(msg);
-////                            }
-//                            if (selType.equals(attendanceType)){
-//                                if (!TextUtils.isEmpty(msg.body)){
-//                                    if (msg.body.contains(_stuName)){
-//                                        newMessage.add(msg);
-//                                    }
-//                                }
-//                            }else{
-//                                // TODO : 시스템알림도 자녀마다 목록을 분리해서 보여줘야함
-//                                if (msg.memberSeq == _memberSeq){
-//                                    newMessage.add(msg);
-//                                }
-//                            }
-//
-//                        }else{
-//                            if (msg.memberSeq == _memberSeq) {
-//                                newMessage.add(msg);
-//                            }
-//                        }
+                        if (_stCode == msg.stCode) newMessage.add(msg);
                     }
                 }
-
                 LogMgr.w(TAG,
                         "RoomDB LIST \npushType : " + msg.pushType + "\n" +
                                 "acaCode : " + msg.acaCode + "\n" +
@@ -231,8 +179,28 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    private void initData(){
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _stuSeq = PreferenceUtil.getStuSeq(mContext);
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
+        _stuName = PreferenceUtil.getStName(mContext);
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
+
+        noticeType = getResources().getStringArray(R.array.notice_type);
+        //allType = noticeType[0];
+        systemType = noticeType[0];
+        attendanceType = noticeType[1];
+        reportCardType = noticeType[2];
+
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU)){
+            fromBottomMenu = intent.getBooleanExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, fromBottomMenu);
+        }
+    }
+
     @Override
     void initView() {
+        initData();
         findViewById(R.id.btn_notice_previous).setOnClickListener(this);
         findViewById(R.id.btn_notice_next).setOnClickListener(this);
 
@@ -250,6 +218,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         setSpinner();
         setRecycler();
         mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString(), true));
+
+        mHandler.sendEmptyMessage(CMD_GET_LIST);
     }
 
     private void setSpinner(){
@@ -272,38 +242,20 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         dividerItemDecoration.setDrawable(dividerColor);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
-
-//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-//                if (layoutManager != null) {
-//                    int firstItemPosition = layoutManager.findFirstVisibleItemPosition(); // 화면에 보이는 item 중 가장 위의 position
-//                    int lastItemPosition = layoutManager.findLastVisibleItemPosition(); // 화면에 보이는 item 중 가장 아래의 position
-//
-//                    // mList.size() - 5 위치의 아이템 확인
-//                    int targetItemPosition = mList.size() - 5;
-//
-//                    if (!isTargetItemVisible && targetItemPosition >= firstItemPosition && targetItemPosition <= lastItemPosition) {
-//                        getListData(_spinnerType.getText().toString(), false);
-//                        isTargetItemVisible = true;
-//                        LogMgr.i("getListData");
-//
-//                    } else if (targetItemPosition < firstItemPosition || targetItemPosition > lastItemPosition) {
-//                        isTargetItemVisible = false;
-//                    }
-//                }
-//            }
-//        });
     }
 
     private void startActivity(PushMessage item){
         if (item != null){
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
+
+            if (item.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                intent.putExtra(IntentParams.PARAM_DATA_TYPE, TYPE_SYSTEM);
+
+            }else if (item.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
+                intent.putExtra(IntentParams.PARAM_DATA_TYPE, TYPE_REPORT_CARD);
+            }
+
             intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
             startActivity(intent);
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);

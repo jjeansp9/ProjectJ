@@ -35,6 +35,7 @@ import android.graphics.drawable.InsetDrawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -635,11 +636,15 @@ public class Utils {
     /**
      * Normal Message Dialog Hide
      * */
-    public static  void hideMessageDialog(Context mContext) {
+    public static void hideMessageDialog(Context mContext) {
         if(popupDialog != null && popupDialog.isShowing() && mContext != null) {
             popupDialog.dismiss();
         }
     }
+    /**
+    * 한글(자음,모음 비허용), 영어, 공백만 허용, 이외의 문자를 입력했는지 체크
+    * */
+    public static boolean nameCheck(String str){ return Pattern.compile("^[a-zA-Z가-힣\\s]+$").matcher(str).find(); }
 }
 
 

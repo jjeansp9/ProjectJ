@@ -104,6 +104,7 @@
     <string name="empty_phonenumber">휴대폰번호 정보가 없습니다.</string>
     <string name="msg_re_auth">휴대폰번호를 다시 인증해 주세요.</string>
     <string name="check_id_empty">아이디를 입력해 주세요.</string>
+    <string name="check_name_pattern">이름 형식이 올바르지 않습니다.</string>
     <string name="check_id_min_length">아이디는 최소 4글자 이상 입력해주세요.</string>
     <string name="check_id_duplicate">아이디 중복체크 확인이 필요합니다.</string>
     <string name="password_does_not_match">비밀번호가 일치하지 않습니다.</string>
@@ -150,7 +151,7 @@
     <string name="title_bus_route_info">운행정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
     <string name="main_menu_attendance">출석부</string>
-    <string name="main_menu_tuition">수강료납부</string>
+    <string name="main_menu_tuition">수강료 납부</string>
 
     <string name="settings_title">설정</string>
     <string name="settings_notice_system">시스템알림</string>
@@ -188,6 +189,7 @@
     <string name="push_type_leveltest">테스트예약 알림</string>
     <string name="push_type_pt">설명회예약 알림</string>
     <string name="push_type_system">시스템 알림</string>
+    <string name="push_type_report_card">성적표</string>
 
     <string name="main_tv_first_notify">공지안내</string>
     <string name="main_tv_second_notify">공지내용 없음</string>
@@ -428,8 +430,8 @@
     <string name="test_reserve_write_stu_contact"><font color="@color/red">* </font>학생 연락처</string>
     <string name="test_reserve_write_stu_contact_notice">학생 연락처가 없을 경우 [ 학부모 연락처 ]를 입력바랍니다.</string>
     <string name="test_reserve_write_parent_contact"><font color="@color/red">* </font>학부모 연락처</string>
-    <string name="test_reserve_write_cash_receipts">현금영수증</string>
-    <string name="test_reserve_write_cash_receipts_notice">미입력 시(010-000-1234)로 등록됩니다</string>
+    <string name="test_reserve_write_cash_receipts">현금영수증 번호</string>
+    <string name="test_reserve_write_cash_receipts_notice">미입력 시 [ 010-000-1234 ]로 등록됩니다</string>
     <string name="test_reserve_write_parent_name"><font color="@color/red">* </font>학부모 성함</string>
     <string name="test_reserve_write_funnel"><font color="@color/red">* </font>유입경로</string>
     <string name="test_reserve_write_registration_date"><font color="@color/red">* </font>등록일</string>
@@ -442,6 +444,8 @@
     <string name="test_reserve_campus_sel_please">테스트예약일을 먼저 선택해주세요.</string>
     <string name="test_reserve_sunday_impossible_sel">일요일은 테스트예약을 진행하지 않습니다.</string>
     <string name="test_reserve_test_time_empty">선택된 예약일에 등록된 테스트시간이 없습니다.</string>
+    <string name="test_reserve_test_time_error">테스트시간 목록을 불러오지 못했습니다.</string>
+    <string name="test_reserve_inflow_error">유입경로 목록을 불러오지 못했습니다.</string>
 
     <string name="test_reserve_detail_wish_date">테스트희망일</string>
     <string name="test_reserve_detail_subject">테스트과목</string>

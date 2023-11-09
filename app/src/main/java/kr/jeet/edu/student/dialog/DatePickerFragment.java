@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.utils.LogMgr;
 
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
     private OnDateSetListener listener;
@@ -27,6 +28,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     private boolean isBirth = false;
     private int minYear = 0;
     private int maxYear = 0;
+    private int maxMonth = 0;
+    private int maxDay = 0;
     private final int SET_MIN = Calendar.getInstance().get(Calendar.MONTH);
     private final int SET_DAY = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 
@@ -41,6 +44,16 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         this.setDate = setDate;
         this.minYear = minYear;
         this.maxYear = maxYear;
+        this.isBirth = isBirth;
+    }
+
+    public DatePickerFragment(OnDateSetListener listener, boolean setDate, int minYear, int maxYear, int maxMonth, int maxDay, boolean isBirth) {
+        this.listener = listener;
+        this.setDate = setDate;
+        this.minYear = minYear;
+        this.maxYear = maxYear;
+        this.maxMonth = maxMonth;
+        this.maxDay = maxDay;
         this.isBirth = isBirth;
     }
 
@@ -78,7 +91,8 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
 
         //최대날짜
         Calendar maxDate = Calendar.getInstance();
-        maxDate.set(maxYear, 12, 31);
+        if (isBirth) maxDate.set(maxYear, maxMonth, maxDay);
+        else maxDate.set(maxYear, 11, 31);
         dialog.getDatePicker().setMaxDate(maxDate.getTime().getTime());
 
         return dialog;

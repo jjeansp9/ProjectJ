@@ -414,7 +414,7 @@ public class SetAccountActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()){
                             //Utils.refreshPushToken(mContext, PreferenceUtil.getUserSeq(mContext), "");
-                            PreferenceUtil.setUserSeq(mContext, 0);
+                            PreferenceUtil.setUserSeq(mContext, -1);
                             PreferenceUtil.setLoginType(mContext, Constants.LOGIN_TYPE_NORMAL);
                             PreferenceUtil.setUserId(mContext, "");
                             PreferenceUtil.setUserPw(mContext, "");

@@ -76,18 +76,9 @@ public class MenuAttendanceActivity extends BaseActivity {
 
     private static final String TAG = "MenuAttendanceActivity";
 
-    private TextView mTvTotalPayment, mTvYear, mTvMonth, mTvStuName, mTvStuBirth, mTvStuCampus, mTvStuPhoneNum, mTvParentPhoneNum,
-            mTvDeptName, mTvStGrade, mTvClstName, mTvTuitionEmpty, mTvBookPayEmpty;//, mTvAttendanceEmpty;
-    private ImageView mImgStuProfile;
-    private AppCompatButton mBtnConsultation;
-    private RecyclerView mRecyclerTuition;
-    private TuitionListAdapter mTuitionAdapter;
-    private RetrofitApi mRetrofitApi;
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
-    private ProgressBar progressBar;
-    private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
 
     private RecyclerView recyclerViewMonthlyAttend;
     private MonthlyAttendanceListAdapter _attendanceListAdapter;
@@ -97,7 +88,7 @@ public class MenuAttendanceActivity extends BaseActivity {
     String strMonth = "";
     private SimpleDateFormat yearFormat, monthFormat;
 
-    private ArrayList<MenuStudentInfoActivity.PayListItem> mTuitionList = new ArrayList<>();
+    private ArrayList<Constants.PayListItem> mTuitionList = new ArrayList<>();
 
     private String _userType = "";
     private String _stName = "";
@@ -107,19 +98,9 @@ public class MenuAttendanceActivity extends BaseActivity {
     private int _clsCode = 0;
 //    private String _clsName = "";
 
-    private final String MAN = "M";
-    private final String WOMAN = "F";
-
     private String currentYear = "";
     private String currentMonth = "";
     private String currentDate = "";
-
-    private static final int ADD = 1;
-    private static final int SUBTRACT = -1;
-    private static final String NEXT = "CLICK_NEXT";
-    private static final String PREVIOUS = "CLICK_PREVIOUS";
-
-    private static final String WEB_VIEW_URL = "https://www.shinhandamoa.com/common/login#payer";
 
     private ArrayList<AttendanceData> _attendanceList = new ArrayList<>();
     private ArrayList<TeacherClsData> mListCls = new ArrayList<>();
@@ -127,8 +108,6 @@ public class MenuAttendanceActivity extends BaseActivity {
     SimpleDateFormat _apiDateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYYMM);
     //calendar
     private Set<AttendanceSummaryData> calendarDaySet = new HashSet<>();
-    private ArrayList<HolidayData> calHolidayList = new ArrayList<>();
-    private Set<CalendarDay> calHoliday = new HashSet<>();
 
     AttendanceDecorator attendDecorator = null;
     AttendanceDecorator absenceDecorator = null;
@@ -144,10 +123,7 @@ public class MenuAttendanceActivity extends BaseActivity {
     private Date _selectedDate = new Date();
     private TeacherClsData _selectedClass = null;
 
-    private final int CMD_GET_TUITION_INFO = 0;
     private static final int CMD_GET_CLASS_INFO = 1;
-    private static final int CMD_GET_STU_INFO = 1;
-    private static final int CMD_GET_PARENT_NOTIFICATION_INFO = 2;
     private static final int CMD_GET_ATTENDANCE_INFO = 3;
 
     private Handler _handler = new Handler(Looper.getMainLooper()){
@@ -253,18 +229,10 @@ public class MenuAttendanceActivity extends BaseActivity {
                     _attendanceList.clear();
                     _attendanceListAdapter.notifyDataSetChanged();
                 }
-
-//                if(!isContainClassInfo) {   //클래스정보가 없는 경우 출석을 표시할 수 없으므로 gone 처리함
-//                    layoutAttendanceArea.setVisibility(View.GONE);
-//                }
                 return;
             }
-//            List<String> sfNames = new ArrayList<>();
-
-//            for (TeacherClsData data : _classList) sfNames.add(data.clsName);
 
             Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
-
             if(_selectedClass != null){
                 Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
                 if (optional.isPresent()) {
@@ -298,13 +266,11 @@ public class MenuAttendanceActivity extends BaseActivity {
         TodayBackgroundDecorator todayDec = new TodayBackgroundDecorator(mContext);
         HighlightSaturdayDecorator saturdayDec = new HighlightSaturdayDecorator(mContext);
         HighlightSundayDecorator sundayDec = new HighlightSundayDecorator(mContext);
-//        SelBackgroundDecorator bgDec = new SelBackgroundDecorator(mContext);
         otherDec = new OtherMonthDecorator(mContext);
         otherSundayDec = new OtherSundayDecorator(mContext);
         otherSaturdayDec = new OtherSaturdayDecorator(mContext);
         holidayDec = new HolidayDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
         selectionDec = new SelectionDecorator(mContext);
-//        eventDecorator = new EventDecorator(mContext, new HashSet<CalendarDay>(Collections.<CalendarDay>emptyList()));
         attendDecorator = new AttendanceDecorator(mContext, new HashSet<AttendanceSummaryData>(Collections.<AttendanceSummaryData>emptyList()), Constants.AttendanceStatus.ATTENDANCE);
         absenceDecorator = new AttendanceDecorator(mContext, new HashSet<AttendanceSummaryData>(Collections.<AttendanceSummaryData>emptyList()), Constants.AttendanceStatus.ABSENCE);
         earlyLeaveDecorator = new AttendanceDecorator(mContext, new HashSet<AttendanceSummaryData>(Collections.<AttendanceSummaryData>emptyList()), Constants.AttendanceStatus.EARLY_LEAVE);
@@ -313,7 +279,6 @@ public class MenuAttendanceActivity extends BaseActivity {
         onlineLectureDecorator = new AttendanceDecorator(mContext, new HashSet<AttendanceSummaryData>(Collections.<AttendanceSummaryData>emptyList()), Constants.AttendanceStatus.ONLINE_LECTURE);
         CalendarDay today = CalendarDay.from(_selectedDate);
         todayDec.setSelectedDay(today);
-//        bgDec.setSelectedDay(today);
         otherDec.setSelectedDay(today);
         otherSundayDec.setSelectedDay(today);
         otherSaturdayDec.setSelectedDay(today);
@@ -361,8 +326,6 @@ public class MenuAttendanceActivity extends BaseActivity {
             Date selectedTime = calendar.getTime();
             if(_selectedDate.compareTo(selectedTime) == 0) return;
             _selectedDate = calendar.getTime();
-
-//            setTvHolidayDate();
 
             otherDec.setSelectedDay(date);
             otherSundayDec.setSelectedDay(date);
@@ -429,7 +392,6 @@ public class MenuAttendanceActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestCls() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-//                    _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
                 }
             });
         }

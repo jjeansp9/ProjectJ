@@ -111,6 +111,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     Date _selectedDate;
     private int birthMinYear = 1950;
     private int birthMaxYear = 0;
+    private int birthMaxMonth = 0;
+    private int birthMaxDay = 0;
     private int testDateMinYear = 0;
     private int testDateMaxYear = 2100;
 
@@ -181,6 +183,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         testDateMinYear = calendar.get(Calendar.YEAR);
         birthMaxYear = calendar.get(Calendar.YEAR);
+        birthMaxMonth = calendar.get(Calendar.MONTH);
+        birthMaxDay = calendar.get(Calendar.DAY_OF_MONTH);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stParentPhone = PreferenceUtil.getParentPhoneNum(mContext);
         _stParentName = PreferenceUtil.getParentName(mContext);
@@ -270,7 +274,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
         } else{
-            clearFocusAndHideKeyboard();
             if (_stuGender.equals("F")){
                 mGenderRbMale.setChecked(false);
                 mGenderRbFemale.setChecked(true);
@@ -492,7 +495,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 tv.setText(formattedDate);
             }
         };
-        datePickerDialog = new DatePickerFragment(listener, setDate, minYear, maxYear, isBirth);
+        LogMgr.e("dateTest2", "maxMonth: " + birthMaxMonth + ", maxDay: " + birthMaxDay);
+        datePickerDialog = new DatePickerFragment(listener, setDate, minYear, maxYear, birthMaxMonth, birthMaxDay, isBirth);
 
         Calendar calendar = Calendar.getInstance();
         String strDate = tv.getText().toString();
@@ -764,15 +768,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 //        3. 사업자등록번호 : 12* ** *1234
 //        4. 휴대전화번호 : 010 **** 1234
 
-//        if (request.name.equals("") || request.birth.equals("") || request.grade.equals("") || mSpinnerSchool.getText().toString().equals("") ||
-//                request.parentPhoneNumber.equals("") || request.phoneNumber.equals("") || request.parentName.equals("") || request.reservationDate.equals("") ||
-//                request.bigo.equals("") || request.address.equals("") || request.reason.equals("")){
-//            Toast.makeText(mContext, R.string.write_empty, Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-
         if (request.name.equals("")) {
             Toast.makeText(mContext, R.string.stu_name_empty, Toast.LENGTH_SHORT).show();
+            mEtName.requestFocus();
+            Utils.showKeyboard(mContext, mEtName);
+
+        } else if (!Utils.nameCheck(request.name)) {
+            Toast.makeText(mContext, R.string.check_name_pattern, Toast.LENGTH_SHORT).show();
             mEtName.requestFocus();
             Utils.showKeyboard(mContext, mEtName);
 
@@ -872,9 +874,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     ArrayList<SpannableString> testTimeList = new ArrayList<>();
 
     private void requestTestTime() {
-
-        showProgressDialog();
-
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
                 @Override
@@ -929,20 +928,19 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                 }
                             }
                         } else {
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            mSpinnerTestTime.setEnabled(false);
+                            Toast.makeText(mContext, R.string.test_reserve_test_time_error, Toast.LENGTH_SHORT).show();
                         }
 
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestTestTime() Exception : ", e.getMessage());
                     }
-
-                    hideProgressDialog();
                 }
 
                 @Override
                 public void onFailure(Call<TestTimeResponse> call, Throwable t) {
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                    hideProgressDialog();
+                    mSpinnerTestTime.setEnabled(false);
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -968,14 +966,16 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                             }
                         }
                     } else {
-                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        mSpinnerFunnel.setEnabled(false);
+                        Toast.makeText(mContext, R.string.test_reserve_inflow_error, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<TestInflowResponse> call, Throwable t) {
                     //mSpinnerFunnel.setItems(testTimeList);
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    mSpinnerFunnel.setEnabled(false);
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }
