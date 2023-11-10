@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
+        android:animateLayoutChanges="true"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
         <com.skydoves.powerspinner.PowerSpinnerView
@@ -72,7 +73,9 @@
             android:background="@drawable/bg_lightgray_panel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cv_attendance">
+            app:layout_constraintTop_toBottomOf="@id/cv_attendance"
+            android:layout_marginTop="16dp"
+            android:layout_marginHorizontal="8dp">
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/chipgroup_legend"
                 android:layout_width="wrap_content"
@@ -81,7 +84,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-
                 android:foregroundGravity="center"
                 app:chipSpacingHorizontal="0dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -94,8 +96,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/legend_attendance"
+            android:background="@drawable/bg_lightgray_panel"
             android:layout_marginTop="@dimen/layout_margin_8"
             android:paddingHorizontal="@dimen/layout_margin_8"
+            android:paddingVertical="4dp"
+            tools:listitem="@layout/layout_monthly_attendance_list_item"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             android:nestedScrollingEnabled="false"

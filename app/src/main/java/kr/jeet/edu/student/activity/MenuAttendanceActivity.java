@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
@@ -347,7 +348,7 @@ public class MenuAttendanceActivity extends BaseActivity {
             if(attendance == null) break;
             Chip chip = new Chip(MenuAttendanceActivity.this);
             chip.setText(attendance.getName());
-            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10F);
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F);
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.bg_white)));
             chip.setChipStrokeWidth(0);
             chip.setCloseIconVisible(false);
@@ -417,7 +418,7 @@ public class MenuAttendanceActivity extends BaseActivity {
                             if (response.body() != null) {
 
                                 getData = response.body().data;
-                                _attendanceList.addAll(getData);
+                                if (getData != null && _attendanceList != null) _attendanceList.addAll(getData);
                             }
                         }else{
                             //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

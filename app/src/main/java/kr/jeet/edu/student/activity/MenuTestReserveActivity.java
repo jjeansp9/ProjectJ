@@ -197,17 +197,15 @@ public class MenuTestReserveActivity extends BaseActivity {
             RetrofitClient.getApiInterface().getTestReserveListResponse(_memberSeq, LTC_CODE, lastNoticeSeq).enqueue(new Callback<TestReserveListResponse>() {
                 @Override
                 public void onResponse(Call<TestReserveListResponse> call, Response<TestReserveListResponse> response) {
+                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                    mList.add(0, new TestReserveData());
                     try {
                         if (response.isSuccessful()) {
                             if (response.body() != null) {
-                                if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                 List<TestReserveData> list = response.body().data;
-                                mList.add(0, new TestReserveData());
                                 if (list != null && !list.isEmpty()) mList.addAll(list);
                             }
                         } else {
-                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
-                            mList.add(0, new TestReserveData());
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {

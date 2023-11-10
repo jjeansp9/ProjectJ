@@ -319,9 +319,9 @@
                             />
                         <ImageView
                             android:id="@+id/img_attendance_state"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:src="@drawable/bt_delete_nor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/icon_menu_payment"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintTop_toTopOf="parent"/>

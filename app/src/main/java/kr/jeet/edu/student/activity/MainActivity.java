@@ -600,7 +600,7 @@ public class MainActivity extends BaseActivity {
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
             //출석부
-            mList.add(new MainMenuItemData(R.drawable.bt_delete_nor, R.string.main_menu_attendance, MenuAttendanceActivity.class));
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
 
         }else{ // 비회원
             //공지사항
