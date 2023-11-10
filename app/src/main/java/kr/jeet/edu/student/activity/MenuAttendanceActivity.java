@@ -350,7 +350,7 @@ public class MenuAttendanceActivity extends BaseActivity {
             if(attendance == null) break;
             Chip chip = new Chip(MenuAttendanceActivity.this);
             chip.setText(attendance.getName());
-            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14F);
+            chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F);
             chip.setChipBackgroundColor(ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.bg_white)));
             chip.setChipStrokeWidth(0);
             chip.setCloseIconVisible(false);
