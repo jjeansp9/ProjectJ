@@ -17,6 +17,8 @@ import android.os.Message;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
