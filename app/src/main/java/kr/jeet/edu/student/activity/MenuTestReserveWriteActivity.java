@@ -495,7 +495,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 tv.setText(formattedDate);
             }
         };
-        LogMgr.e("dateTest2", "maxMonth: " + birthMaxMonth + ", maxDay: " + birthMaxDay);
         datePickerDialog = new DatePickerFragment(listener, setDate, minYear, maxYear, birthMaxMonth, birthMaxDay, isBirth);
 
         Calendar calendar = Calendar.getInstance();

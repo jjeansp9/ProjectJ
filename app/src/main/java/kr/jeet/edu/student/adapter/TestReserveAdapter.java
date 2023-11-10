@@ -12,11 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Optional;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.LTCData;
@@ -30,7 +35,8 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_BODY = 1;
-
+    SimpleDateFormat _dateSecondFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Locale.KOREA);
+    SimpleDateFormat _dateMinuteFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm, Locale.KOREA);
     private Context mContext;
     private ArrayList<TestReserveData> mList;
     private ItemClickListener _listener;
@@ -81,7 +87,17 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 ).findFirst();
                 acaData.ifPresent(ltcData -> bodyHolder.tvCampus.setText(ltcData.ltcName));
 
-                bodyHolder.tvDate.setText(Utils.getStr(item.reservationDate));
+                try {
+                    Date insertDate = _dateSecondFormat.parse(item.insertDate);
+
+                    bodyHolder.tvRegisterDate.setText(_dateMinuteFormat.format(insertDate));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
+//                bodyHolder.tvReserveDate.setText(item.reservationDate);
             }
         }
     }
@@ -109,14 +125,15 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public class BodyViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvName, tvCampus, tvDate;
+        private TextView tvName, tvCampus, tvRegisterDate;
 
         public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvName = itemView.findViewById(R.id.tv_test_reserve_name);
             tvCampus = itemView.findViewById(R.id.tv_test_reserve_campus);
-            tvDate = itemView.findViewById(R.id.tv_test_reserve_date);
+            tvRegisterDate = itemView.findViewById(R.id.tv_test_register_date);
+//            tvReserveDate = itemView.findViewById(R.id.tv_test_reserve_date);
 
             itemView.setOnClickListener(v -> {
                 // 2개의 Adapter를 ConcatAdapter로 연결한 경우

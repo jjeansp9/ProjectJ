@@ -35,7 +35,6 @@ import android.graphics.drawable.InsetDrawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.util.TypedValue;

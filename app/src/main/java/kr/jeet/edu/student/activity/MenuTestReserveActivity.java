@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -149,24 +148,27 @@ public class MenuTestReserveActivity extends BaseActivity {
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
                 {
-//                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    // 희망일 순 정렬된 리스트 데이터의 마지막 seq로 페이징 요청
                     // 컨셉 변경 -> 리스트 내에서 최소 seq 값을 lastNoticeSeq 로 변경
-                    Optional optional = mList.stream().min(new Comparator<TestReserveData>() {
-                        @Override
-                        public int compare(TestReserveData t1, TestReserveData t2) {
-                            if (t1.seq > t2.seq) return 1;
-                            else if(t1.seq < t2.seq) return -1;
-                            else return 0;
-                        }
-                    });
-
-                    if(optional.isPresent()){
-                        int lastNoticeSeq = ((TestReserveData)optional.get()).seq;
-                        LogMgr.w(TAG, "scroll listener lastNoticeSeq= " + lastNoticeSeq);
-                        requestTestReserveList(lastNoticeSeq);
-                    }else{
-                        LogMgr.w(TAG, "optional is not present");
-                    }
+                    // 컨셉 변경 -> 서버에서 등록일 순으로 데이터를 정렬해서 주는 것으로 변경-> 앱에서는 rollback
+                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    LogMgr.w(TAG, "scroll listener lastNoticeSeq= " + lastNoticeSeq);
+                    requestTestReserveList(lastNoticeSeq);
+//                    Optional optional = mList.stream().min(new Comparator<TestReserveData>() {
+//                        @Override
+//                        public int compare(TestReserveData t1, TestReserveData t2) {
+//                            if (t1.seq > t2.seq) return 1;
+//                            else if(t1.seq < t2.seq) return -1;
+//                            else return 0;
+//                        }
+//                    });
+//                    if(optional.isPresent()){
+//                        int lastNoticeSeq = ((TestReserveData)optional.get()).seq;
+//                        LogMgr.w(TAG, "scroll listener lastNoticeSeq= " + lastNoticeSeq);
+//                        requestTestReserveList(lastNoticeSeq);
+//                    }else{
+//                        LogMgr.w(TAG, "optional is not present");
+//                    }
 
                 }
             }

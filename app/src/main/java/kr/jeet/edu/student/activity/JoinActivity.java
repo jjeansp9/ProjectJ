@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -156,6 +155,7 @@ public class JoinActivity extends BaseActivity {
                     mGenderRadioFemale.setChecked(false);
                     mGenderRadioMale.setEnabled(false);
                     mGenderRadioFemale.setEnabled(false);
+
                 } else if (mUserGender.equals("F")){
                     mGenderRadioMale.setChecked(false);
                     mGenderRadioFemale.setChecked(true);
