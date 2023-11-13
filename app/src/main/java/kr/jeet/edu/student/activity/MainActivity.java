@@ -374,7 +374,6 @@ public class MainActivity extends BaseActivity {
             if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                 LogMgr.e(TAG, "push msg ");
                 _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                LogMgr.e(TAG, "msg = " + _pushMessage.body);
             } else {
                 LogMgr.e(TAG, "push msg is null");
             }
@@ -439,9 +438,10 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                    startDetailActivity(intent, MenuBoardDetailActivity.class);
+//                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+//                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+//                    startDetailActivity(intent, MenuBoardDetailActivity.class);
+                    if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
                 }
                 break;
 
@@ -456,8 +456,6 @@ public class MainActivity extends BaseActivity {
                             pushPopupDialog.dismiss();
                         });
                         pushPopupDialog.show();
-                    } else {
-
                     }
                 }
                 break;
@@ -477,9 +475,10 @@ public class MainActivity extends BaseActivity {
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
                     if (_pushMessage.stCode == _stCode){
-                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
-                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+//                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
+//                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+//                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+                        if (intent != null) startBoardDetail(intent, getString(R.string.push_type_system));
                     }
                 }
                 break;
@@ -494,9 +493,10 @@ public class MainActivity extends BaseActivity {
                 case MSG_TYPE_REPORT_CARD: // 성적표
                 {
                     if (_pushMessage.stCode == _stCode){
-                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_report_card));
-                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+//                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_report_card));
+//                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+//                        startDetailActivity(intent, MenuBoardDetailActivity.class);
+                        if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
                     }
                 }
                 break;
@@ -515,6 +515,12 @@ public class MainActivity extends BaseActivity {
         }
 
         mHandler.sendEmptyMessage(CMD_GET_ACALIST);
+    }
+
+    private void startBoardDetail(Intent intent, String title) {
+        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, title);
+        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+        startDetailActivity(intent, MenuBoardDetailActivity.class);
     }
 
     @Override

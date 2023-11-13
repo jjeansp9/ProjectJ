@@ -239,7 +239,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
         switch (getType) {
             case FCMManager.MSG_TYPE_SYSTEM:
-                _spinnerType.selectItemByIndex(0);
+
                 break;
             case FCMManager.MSG_TYPE_ATTEND:
                 _spinnerType.selectItemByIndex(1);
@@ -251,6 +251,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 _spinnerType.selectItemByIndex(3);
                 break;
             default:
+                _spinnerType.selectItemByIndex(0);
                 break;
         }
     }
