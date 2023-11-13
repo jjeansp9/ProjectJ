@@ -182,6 +182,8 @@
     <string name="push_noti_received_pt">설명회예약 알림 도착</string>
     <string name="push_noti_received_system">시스템 알림 도착</string>
     <string name="push_noti_received_schedule">캠퍼스일정 알림 도착</string>
+    <string name="push_noti_received_report_card">성적표 알림 도착</string>
+    <string name="push_noti_received_tuition">미납 알림 도착</string>
 
     <string name="push_type_announcement">공지사항 알림</string>
     <string name="push_type_attendance">출결 알림</string>

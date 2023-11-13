@@ -38,6 +38,7 @@ public class FCMManager {
     public static final String MSG_TYPE_NOTICE = "NOTICE";  //공지사항
     public static final String MSG_TYPE_ATTEND = "ATTEND";  //출결
     public static final String MSG_TYPE_REPORT_CARD = "REPORTCARD";  //성적표
+    public static final String MSG_TYPE_TUITION = "TUITION";  //미납
     public static final String MSG_TYPE_PT = "PT";  //설명회
     public static final String MSG_TYPE_PT_REZ_CNL = "PT_REZ_CNL";  //설명회 예약 취소
     public static final String MSG_TYPE_SYSTEM = "SYSTEM";  //시스템
@@ -56,6 +57,8 @@ public class FCMManager {
     public static final int NOTIFICATION_ID_SYSTEM = 1000007;
     public static final int NOTIFICATION_ID_TEST_APPT = 1000008;
     public static final int NOTIFICATION_ID_COUNSEL = 1000009;
+    public static final int NOTIFICATION_ID_REPORT_CARD = 1000010;
+    public static final int NOTIFICATION_ID_TUITION = 1000011;
 
     Context _context;
     PushMessage _pushMessage;
@@ -117,6 +120,20 @@ public class FCMManager {
                 _notifyID = NOTIFICATION_ID_ACA_SCHEDULE;
             }
         }
+        else if (message.pushType.equals(MSG_TYPE_REPORT_CARD)) {
+            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
+                isReject = true;
+                isRequireConfirmReceived = true;
+                _notifyID = NOTIFICATION_ID_REPORT_CARD;
+            }
+        }
+        else if (message.pushType.equals(MSG_TYPE_TUITION)) {
+            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
+                isReject = true;
+                isRequireConfirmReceived = true;
+                _notifyID = NOTIFICATION_ID_TUITION;
+            }
+        }
         LogMgr.d(TAG, "isReject = " + isReject);
         if(!isReject) {
             createNotification(message);
@@ -176,7 +193,6 @@ public class FCMManager {
         request.pushId = list;
         request.pushType = pushMsg.pushType;
         request.seq = pushMsg.connSeq;
-        //request.stCode = PreferenceUtil.getUserSTCode(_context);
         request.stCode = stCode;
         request.userGubun = PreferenceUtil.getUserGubun(_context);
 
@@ -244,6 +260,12 @@ public class FCMManager {
                 break;
             case MSG_TYPE_ACA_SCHEDULE:
                 tickerText = _context.getString(R.string.push_noti_received_schedule);
+                break;
+            case MSG_TYPE_REPORT_CARD:
+                tickerText = _context.getString(R.string.push_noti_received_report_card);
+                break;
+            case MSG_TYPE_TUITION:
+                tickerText = _context.getString(R.string.push_noti_received_tuition);
                 break;
             default :
                 tickerText = "JEET알림";

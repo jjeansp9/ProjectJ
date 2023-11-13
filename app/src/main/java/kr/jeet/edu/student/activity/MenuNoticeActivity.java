@@ -63,6 +63,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String systemType = "";
     private String attendanceType = "";
     private String reportCardType = "";
+    private String tuitionType = "";
 
     private String selYear = "";
     private String selMonth = "";
@@ -73,10 +74,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private String _stuName = "";
     private int _userGubun = 0;
 
-    private boolean fromBottomMenu = false;
+    //private boolean fromBottomMenu = false;
+    private String getType = "";
 
     private final int TYPE_SYSTEM = 3;
     private final int TYPE_REPORT_CARD = 4;
+    private final int TYPE_TUITION = 5;
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
@@ -85,8 +88,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case CMD_GET_LIST:
-                    if (fromBottomMenu) getListData(attendanceType, false);
-                    else getListData(systemType, false);
+                    if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) getListData(attendanceType);
+                    else if (getType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) getListData(reportCardType);
+                    else if (getType.equals(FCMManager.MSG_TYPE_TUITION)) getListData(tuitionType);
+                    else getListData(systemType);
                     break;
             }
         }
@@ -100,7 +105,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         initAppbar();
         initView();
 
-        if (fromBottomMenu) changeMessageState2Read();
+        if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) changeMessageState2Read();
         setAnimMove(Constants.MOVE_DOWN);
     }
 
@@ -122,7 +127,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         }).start();
     }
 
-    private void getListData(String selType, boolean isUpdate){
+    private void getListData(String selType){
 
         new Thread(() -> {
 
@@ -137,6 +142,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
                 type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
                 type.put(reportCardType, FCMManager.MSG_TYPE_REPORT_CARD);
+                type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
 
                 String mappedType = type.get(selType);
                 if (mappedType!=null) {
@@ -191,10 +197,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         systemType = noticeType[0];
         attendanceType = noticeType[1];
         reportCardType = noticeType[2];
+        tuitionType = noticeType[3];
 
         Intent intent = getIntent();
-        if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU)){
-            fromBottomMenu = intent.getBooleanExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, fromBottomMenu);
+        if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_NOTICE)){
+            getType = intent.getStringExtra(IntentParams.PARAM_TYPE_NOTICE);
         }
     }
 
@@ -217,7 +224,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         setSpinner();
         setRecycler();
-        mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString(), true));
+        mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString()));
 
         mHandler.sendEmptyMessage(CMD_GET_LIST);
     }
@@ -226,12 +233,26 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            getListData(_spinnerType.getText().toString(), true);
+            getListData(_spinnerType.getText().toString());
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
-        if (fromBottomMenu) _spinnerType.selectItemByIndex(1);
-        else _spinnerType.selectItemByIndex(0);
+        switch (getType) {
+            case FCMManager.MSG_TYPE_SYSTEM:
+                _spinnerType.selectItemByIndex(0);
+                break;
+            case FCMManager.MSG_TYPE_ATTEND:
+                _spinnerType.selectItemByIndex(1);
+                break;
+            case FCMManager.MSG_TYPE_REPORT_CARD:
+                _spinnerType.selectItemByIndex(2);
+                break;
+            case FCMManager.MSG_TYPE_TUITION:
+                _spinnerType.selectItemByIndex(3);
+                break;
+            default:
+                break;
+        }
     }
 
     private void setRecycler(){
@@ -249,15 +270,19 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
 
-            if (item.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
-                intent.putExtra(IntentParams.PARAM_DATA_TYPE, TYPE_SYSTEM);
+            switch (item.pushType) {
+                case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
+                    startBoardDetailActivity(item, TYPE_SYSTEM);
+                    break;
 
-            }else if (item.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
-                intent.putExtra(IntentParams.PARAM_DATA_TYPE, TYPE_REPORT_CARD);
+                case FCMManager.MSG_TYPE_REPORT_CARD:  // 성적표
+                    startBoardDetailActivity(item, TYPE_REPORT_CARD);
+                    break;
+
+                case FCMManager.MSG_TYPE_TUITION:  // 미납
+                    startActivity(new Intent(mContext, TuitionActivity.class));
+                    break;
             }
-
-            intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
-            startActivity(intent);
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("item is null ");
     }
@@ -303,6 +328,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         selMonth = _monthFormat.format(_selectedDate);
 
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
-        getListData(_spinnerType.getText().toString(), true);
+        getListData(_spinnerType.getText().toString());
+    }
+
+    private void startBoardDetailActivity(PushMessage item, int type) {
+        Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
+        intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
+        intent.putExtra(IntentParams.PARAM_DATA_TYPE, type);
+        intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
+        startActivity(intent);
     }
 }

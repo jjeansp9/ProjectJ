@@ -63,36 +63,26 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             PushMessage item = mList.get(position);
 
             String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
-            if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
-                holder.tvType.setText("시스템알림");
-                holder.btnNext.setVisibility(View.VISIBLE);
-                //holder.tvAttState.setVisibility(View.GONE);
-                TypedValue typedValue = new TypedValue();
-                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
-                holder.root.setBackgroundResource(typedValue.resourceId);
+            String strType = "";
 
-                holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+            if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                strType = "시스템알림";
+                setView(strType, holder, position);
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
-                holder.tvType.setText("출결현황");
-                holder.btnNext.setVisibility(View.GONE);
-                //holder.tvAttState.setVisibility(View.VISIBLE);
-                holder.root.setOnClickListener(null);
-                holder.root.setBackgroundResource(R.color.transparent);
+                strType = "출결현황";
+                setAttendView(strType, holder);
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
-                holder.tvType.setText("성적표");
-                holder.btnNext.setVisibility(View.VISIBLE);
-                //holder.tvAttState.setVisibility(View.VISIBLE);
-                TypedValue typedValue = new TypedValue();
-                mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
-                holder.root.setBackgroundResource(typedValue.resourceId);
-
-                holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+                strType = "성적표";
+                setView(strType, holder, position);
+            }
+            else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
+                strType = "미납";
+                setView(strType, holder, position);
             }
             else {
                 holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
-                //holder.tvAttState.setVisibility(View.GONE);
                 holder.btnNext.setVisibility(View.GONE);
             }
 
@@ -104,6 +94,23 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         }
     }
 
+    private void setAttendView(String str, ViewHolder holder) {
+        holder.tvType.setText(str);
+        holder.btnNext.setVisibility(View.GONE);
+        holder.root.setOnClickListener(null);
+        holder.root.setBackgroundResource(R.color.transparent);
+    }
+
+    private void setView(String str, ViewHolder holder, int position) {
+        holder.tvType.setText(str);
+        holder.btnNext.setVisibility(View.VISIBLE);
+        TypedValue typedValue = new TypedValue();
+        mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
+        holder.root.setBackgroundResource(typedValue.resourceId);
+
+        holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+    }
+
     @Override
     public int getItemCount() {
         if(mList == null) return 0;
@@ -113,7 +120,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private ConstraintLayout root;
-        private TextView tvType, tvAttState, tvDate, tvReceiver, tvTitle;
+        private TextView tvType, tvDate, tvReceiver, tvTitle;
         private ImageView imgSenderAndReceiver;
         private ImageButton btnNext;
 
@@ -123,7 +130,6 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             root = itemView.findViewById(R.id.notice_root);
             btnNext = itemView.findViewById(R.id.btn_notice_next);
             tvType = itemView.findViewById(R.id.tv_notice_type);
-            //tvAttState = itemView.findViewById(R.id.tv_notice_attendance_state);
             tvDate = itemView.findViewById(R.id.tv_notice_date);
             tvReceiver = itemView.findViewById(R.id.tv_notice_receiver);
             tvTitle = itemView.findViewById(R.id.tv_system_notice_title);

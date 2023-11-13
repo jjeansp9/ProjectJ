@@ -118,6 +118,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
             String extraKey = null;
 
+            // 공지사항 목록 -> 공지사항 상세
             if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 LogMgr.w(TAG,"param is recived");
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
@@ -125,12 +126,14 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 dataType = TYPE_ANNOUNCEMENT;
                 LogMgr.e(TAG,"Event heres3");
 
+            // 푸쉬
             } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
                 title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
                 dataType = TYPE_PUSH;
                 LogMgr.e(TAG,"Event heres2");
 
+            // 시스템알림 목록 -> 시스템알림 상세
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_DATA_TYPE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
                 title = getString(R.string.title_detail);
@@ -229,22 +232,22 @@ public class MenuBoardDetailActivity extends BaseActivity {
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
 
         }else if (dataType == TYPE_PUSH){ // 푸쉬를 통해 온 경우
-            if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) {
+            if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) { // 공지사항
                 LogMgr.e("Event1", _pushData.connSeq+"");
                 requestNoticeDetail(_pushData.connSeq);
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
             }
-            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) { // 시스템알림
                 LogMgr.e("Event2");
                 requestSystemDetail();
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
             }
-            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
+            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) { // 성적표 push
                 // TODO : 푸쉬 성적표 데이터 갱신
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
             }
 
-        }else if (dataType == TYPE_SYSTEM){ // 시스템알림
+        }else if (dataType == TYPE_SYSTEM){ // 목록 item 클릭해서 온 경우, dataType = 시스템알림
             LogMgr.e("Event3");
             requestSystemDetail();
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);

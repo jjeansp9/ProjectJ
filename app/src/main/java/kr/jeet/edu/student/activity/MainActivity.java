@@ -9,6 +9,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT_REZ_CNL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
@@ -133,6 +134,8 @@ public class MainActivity extends BaseActivity {
     private final String MR_PARENT = "학부모님";
     private final String STR_NON_MEMBER = " (비회원)";
 
+    private final int TWO_PERSON_OR_LESS = 2;
+
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -244,7 +247,6 @@ public class MainActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
-
         LogMgr.e(TAG, "stCode: " + _stCode);
     }
 
@@ -442,50 +444,36 @@ public class MainActivity extends BaseActivity {
                     startDetailActivity(intent, MenuBoardDetailActivity.class);
                 }
                 break;
+
                 case MSG_TYPE_ATTEND: // 출결알림
                 {
-                    if (PreferenceUtil.getNumberOfChild(mContext) < 2){
+                    if (PreferenceUtil.getNumberOfChild(mContext) < TWO_PERSON_OR_LESS){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
-//                                List<String> list = new ArrayList<>();
-//                                list.add(_pushMessage.pushId);
-//                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage, _stCode);
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage, _stCode);
                             }
                             pushPopupDialog.dismiss();
                         });
                         pushPopupDialog.show();
+                    } else {
+
                     }
                 }
-                case MSG_TYPE_TEST_APPT:
-                case MSG_TYPE_COUNSEL:
-                {
-//                    PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
-//                    pushPopupDialog.setOnOkButtonClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            if(!TextUtils.isEmpty(_pushMessage.pushId)) {
-//                                List<String> list = new ArrayList<>();
-//                                list.add(_pushMessage.pushId);
-//                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(list);
-//                            }
-//                            pushPopupDialog.dismiss();
-//                        }
-//                    });
-//                    pushPopupDialog.show();
-                }
                 break;
+
+                case MSG_TYPE_TEST_APPT: // 테스트예약
+                {
+
+                }
+
                 case MSG_TYPE_PT: // 설명회예약
                 {
                     intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuBriefingDetailActivity.class);
                 }
                 break;
-                case MSG_TYPE_PT_REZ_CNL: // 설명회예약 취소
-                {
 
-                }
-                break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
                     if (_pushMessage.stCode == _stCode){
@@ -495,12 +483,14 @@ public class MainActivity extends BaseActivity {
                     }
                 }
                 break;
+
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
                     intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                     startDetailActivity(intent, MenuScheduleDetailActivity.class);
                 }
                 break;
+
                 case MSG_TYPE_REPORT_CARD: // 성적표
                 {
                     if (_pushMessage.stCode == _stCode){
@@ -510,6 +500,15 @@ public class MainActivity extends BaseActivity {
                     }
                 }
                 break;
+
+                case MSG_TYPE_TUITION: // 미납
+                {
+                    if (_pushMessage.stCode == _stCode){
+                        startActivity(new Intent(mContext, TuitionActivity.class));
+                    }
+                }
+                break;
+
                 default:
                     break;
             }
@@ -559,7 +558,7 @@ public class MainActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_attendance_state:
-                startActivityBottomMenu(TuitionActivity.class);
+                startActivityBottomMenu(MenuNoticeActivity.class);
                 break;
 
             case R.id.btn_teacher:
@@ -572,8 +571,8 @@ public class MainActivity extends BaseActivity {
     private void startActivityBottomMenu(Class<?> cls){
         Intent targetIntent = new Intent(mContext, cls);
 
-        if (cls == TuitionActivity.class){
-            targetIntent.putExtra(IntentParams.PARAM_TYPE_FROM_BOTTOM_MENU, true);
+        if (cls == MenuNoticeActivity.class){
+            targetIntent.putExtra(IntentParams.PARAM_TYPE_NOTICE, MSG_TYPE_ATTEND);
             startActivity(targetIntent);
 
         }else if (cls == TeacherInfoActivity.class){

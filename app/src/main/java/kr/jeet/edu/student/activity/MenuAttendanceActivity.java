@@ -79,6 +79,7 @@ public class MenuAttendanceActivity extends BaseActivity {
 
     private static final String TAG = "MenuAttendanceActivity";
 
+    private TextView mTvListEmpty;
     private MaterialCalendarView _calendarView;
     private PowerSpinnerView mSpinnerCls;
     private ChipGroup chipGroupLegend;  //범례
@@ -174,6 +175,7 @@ public class MenuAttendanceActivity extends BaseActivity {
     @Override
     void initView() {
         initData();
+        mTvListEmpty = findViewById(R.id.tv_attendance_list_empty);
         mSpinnerCls = findViewById(R.id.spinner_cls);
         mSpinnerCls.setSpinnerOutsideTouchListener((view, event) -> mSpinnerCls.dismiss());
 
@@ -219,8 +221,10 @@ public class MenuAttendanceActivity extends BaseActivity {
                 if(mSpinnerCls.getVisibility() != View.VISIBLE) {
                     Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
                     mSpinnerCls.setVisibility(View.VISIBLE);
+                    mTvListEmpty.setVisibility(View.GONE);
                 }
             }else{
+                mTvListEmpty.setVisibility(View.VISIBLE);
                 mSpinnerCls.setVisibility(View.GONE);
                 mSpinnerCls.clearSelectedItem();
                 if(_selectedClass != null) {

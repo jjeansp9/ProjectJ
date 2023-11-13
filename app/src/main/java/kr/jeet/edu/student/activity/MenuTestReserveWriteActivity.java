@@ -125,6 +125,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private String writeMode = "";
     private ArrayList<Integer> gradeIndex = new ArrayList<>();
     private List<String> inflowNamesList = new ArrayList<>();
+    private ArrayList<SpannableString> testTimeList = new ArrayList<>();
 
     private int _childCnt = -1;
     private int testType = -1;
@@ -870,8 +871,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
     }
 
-    ArrayList<SpannableString> testTimeList = new ArrayList<>();
-
     private void requestTestTime() {
         if (RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getTestTime().enqueue(new Callback<TestTimeResponse>() {
@@ -909,11 +908,13 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                                     ArrayList<String> grades = new ArrayList<>();
                                     for (TestTimeData item : getData) if (weekend == item.weekend) if (!grades.contains(item.grade)) grades.add(item.grade);
 
-                                    grades.sort(new GradeComparator());
+                                    grades.sort(new GradeComparator()); // 학년 sort (초, 중, 고)
+
+                                    LogMgr.e(TAG, grades.toString());
 
                                     for (String grade : grades) {
                                         SpannableString gradeSpan = createColoredSpan(grade, redColor);
-                                        testTimeList.add(gradeSpan);
+                                        testTimeList.add(gradeSpan); // 초, 중, 고 add
                                         int lastIndex = testTimeList.lastIndexOf(gradeSpan);
                                         gradeIndex.add(lastIndex);
                                         getTestTime(testTimeList, getData, grade, weekend);

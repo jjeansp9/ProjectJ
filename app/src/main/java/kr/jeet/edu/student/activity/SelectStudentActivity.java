@@ -4,7 +4,9 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -59,6 +61,7 @@ public class SelectStudentActivity extends BaseActivity {
 
     private int _childCnt = 0;
     boolean fromMain = false;
+    private final int TWO_OR_MORE_PEOPLE = 2;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w(TAG, "result = " + result);
@@ -123,7 +126,9 @@ public class SelectStudentActivity extends BaseActivity {
                 if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                     LogMgr.e(TAG, "push msg ");
                     _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                    LogMgr.e(TAG, "msg = " + _pushMessage.body);
+                    if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body);
+
+
                 } else {
                     LogMgr.e(TAG, "push msg is null");
                 }
@@ -134,21 +139,25 @@ public class SelectStudentActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-
+//            if(_pushMessage != null) {
+//                if (mList != null && mList.size() > TWO_OR_MORE_PEOPLE) {
+//                    for (int i = 0; i < mList.size(); i++) {
+//                        if (_pushMessage.stCode == mList.get(i).stCode) {
+//                            goMain(i);
+//                            return;
+//                        }
+//                    }
+//                }
+//            }
+            LogMgr.e(TAG, "ChildCnt: " + _childCnt);
             switch(_pushMessage.pushType) {
-                case MSG_TYPE_ATTEND:
+                case MSG_TYPE_ATTEND: // 출결상태
                 {
                     if (PreferenceUtil.getNumberOfChild(mContext) > 1){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
-
-//                                PushConfirmRequest request = new PushConfirmRequest();
-//
-//                                List<String> list = new ArrayList<>();
-//                                list.add(_pushMessage.pushId);
-
-                                //pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage);
+                                pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage, _pushMessage.stCode);
                             }
                             pushPopupDialog.dismiss();
                         });
@@ -156,40 +165,51 @@ public class SelectStudentActivity extends BaseActivity {
                     }
                 }
                     break;
-
-                case MSG_TYPE_NOTICE:
+                case MSG_TYPE_NOTICE: // 공지사항
                 {
-                    if (_childCnt > 1) startPushActivity(MSG_TYPE_NOTICE);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_NOTICE, MenuBoardDetailActivity.class);
                 }
                     break;
-                case MSG_TYPE_SYSTEM:
+                case MSG_TYPE_SYSTEM: // 시스템알림
                 {
-                    if (_childCnt > 1) startPushActivity(MSG_TYPE_SYSTEM);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_SYSTEM, MenuBoardDetailActivity.class);
                 }
                     break;
-                case MSG_TYPE_PT:
+                case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (_childCnt > 1) startPushActivity(MSG_TYPE_PT);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_PT, MenuBriefingDetailActivity.class);
                 }
                     break;
-                case MSG_TYPE_ACA_SCHEDULE:
+                case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    if (_childCnt > 1) startPushActivity(MSG_TYPE_ACA_SCHEDULE);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_ACA_SCHEDULE, MenuScheduleDetailActivity.class);
                 }
                     break;
+                case MSG_TYPE_REPORT_CARD: // 성적표
+                {
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_REPORT_CARD, MenuScheduleDetailActivity.class);
+                }
+                break;
+                case MSG_TYPE_TUITION: // 미납알림
+                {
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) {
+                        startActivity(new Intent(mContext, TuitionActivity.class));
+                        _pushMessage = null;
+                    }
+                }
+                break;
 
                 default:
                     break;
             }
         }
-
         HttpUtils.requestSchoolList();
         HttpUtils.requestLTCList();
         HttpUtils.requestLTCSubjectList();
     }
 
-    private void startPushActivity(String pushType){
-        Intent intent = new Intent(mContext, MainActivity.class);
+    private void startPushActivity(String pushType, Class<?> targetActivity){
+        Intent intent = new Intent(mContext, targetActivity);
         if (pushType.equals(MSG_TYPE_SYSTEM)){
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
 
@@ -201,7 +221,7 @@ public class SelectStudentActivity extends BaseActivity {
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         _pushMessage = null;
     }
@@ -288,6 +308,12 @@ public class SelectStudentActivity extends BaseActivity {
 
                     if (fromMain) {
                         if (mList.size() == 1) goMain(0);
+                    }
+
+                    for (int i = 0; i < mList.size(); i++) {
+                        if (_pushMessage != null && mList.size() > TWO_OR_MORE_PEOPLE) {
+                            if (_pushMessage.stCode == mList.get(i).stCode) goMain(i);
+                        }
                     }
                 }
 
