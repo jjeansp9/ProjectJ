@@ -243,7 +243,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
             }
             else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) { // 성적표 push
-                // TODO : 푸쉬 성적표 데이터 갱신
+                // TODO : 푸쉬 -> 성적표 데이터 갱신
                 Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
             }
 
@@ -254,7 +254,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
         }else if (dataType == TYPE_REPORT_CARD){ // 성적표
             LogMgr.e("Event3-1");
-            // TODO : 목록에서 왔을 때 성적표 데이터 갱신
+            // TODO : 목록 -> 성적표 데이터 갱신
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
 
         } else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){ // 메인에서 공지사항
