@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/layout_margin_2"
+    android:layout_marginVertical="@dimen/layout_margin_4"
     android:layout_marginHorizontal="@dimen/layout_margin_8"
     android:background="@drawable/bg_monthly_attendance_item"
     android:id="@+id/layout_root">

@@ -89,9 +89,11 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                     e.printStackTrace();
                 }
 
+                if (TextUtils.isEmpty(item.acaName)) holder.tvAcaName.setVisibility(View.GONE);
+                else holder.tvAcaName.setText(item.acaName);
+
                 holder.tvName.setText(Utils.getStr(item.stName));
                 holder.tvBirth.setText(Utils.getStr(item.birth));
-                holder.tvAcaName.setText(Utils.getStr(item.acaName));
                 holder.tvClass.setText(itemClass);
 
                 // gender
