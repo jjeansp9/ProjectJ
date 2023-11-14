@@ -16,6 +16,7 @@ import androidx.core.app.NotificationCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.IntroActivity;

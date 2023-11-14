@@ -1,50 +1,20 @@
 package kr.jeet.edu.student.model.request;
 
-import com.google.gson.annotations.SerializedName;
-
 public class CounselRequest {
-    @SerializedName("memberSeq")
-    public int memberSeq;
-
-    @SerializedName("memberName")
-    public String memberName;
-
-    @SerializedName("userGubun")
-    public int userGubun;
-
-    @SerializedName("writerName")
-    public String writerName;
-
-    @SerializedName("counselDate")
-    public String counselDate;
-
-    @SerializedName("acaCode")
-    public String acaCode;
-
-    @SerializedName("acaName")
-    public String acaName;
-
-    @SerializedName("sfCode")
-    public int sfCode;
-
-    @SerializedName("sfName")
-    public String sfName;
-
-    @SerializedName("memo")
-    public String memo;
-
-    @SerializedName("clsName")
-    public String clsName;
-
-    @SerializedName("phoneNumber")
-    public String phoneNumber;
-
-    @SerializedName("managerPhoneNumber")
-    public String managerPhoneNumber;
-
-    @SerializedName("smsSender")
-    public String smsSender;
-
-    @SerializedName("isSendNoti")
-    public String isSendNoti;
+    public int memberSeq;  // 멤버 seq
+    public String memberName;  // 멤버 이름
+    public int userGubun;  // 유저구분
+    public String writerName;  // 작성자 이름
+    public String counselDate;  // 상담 날짜
+    public String acaCode;  // 캠퍼스 코드
+    public String acaName;  // 캠퍼스 이름
+    public int stCode;  // 원생 고유 값
+    public int sfCode;  // 강사 고유 값
+    public String sfName;  // 강사 이름
+    public String memo;  // 메모
+    public String clsName;  // 반 이름
+    public String phoneNumber;  // 상담요청자 폰번호
+    public String managerPhoneNumber;  // 강사 폰번호
+    public String smsSender;  // 캠퍼스 대표번호
+    public String isSendNoti;  // (사용안함)알림전송여부(Y/N)-API문서작성시필요
 }

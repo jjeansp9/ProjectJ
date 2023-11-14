@@ -129,7 +129,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             // 푸쉬
             } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
-                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
+                title = getString(R.string.title_detail);
                 dataType = TYPE_PUSH;
                 LogMgr.e(TAG,"Event heres2");
 
@@ -232,19 +232,23 @@ public class MenuBoardDetailActivity extends BaseActivity {
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
 
         }else if (dataType == TYPE_PUSH){ // 푸쉬를 통해 온 경우
-            if (_pushData.pushType.equals(FCMManager.MSG_TYPE_NOTICE)) { // 공지사항
-                LogMgr.e("Event1", _pushData.connSeq+"");
-                requestNoticeDetail(_pushData.connSeq);
-                Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
-            }
-            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_SYSTEM)) { // 시스템알림
-                LogMgr.e("Event2");
-                requestSystemDetail();
-                Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
-            }
-            else if (_pushData.pushType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) { // 성적표 push
-                // TODO : 푸쉬 -> 성적표 데이터 갱신
-                Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
+            switch (_pushData.pushType) {
+                case FCMManager.MSG_TYPE_NOTICE:  // 공지사항
+                    LogMgr.e("Event1", _pushData.connSeq + "");
+                    requestNoticeDetail(_pushData.connSeq);
+                    Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
+                    break;
+
+                case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
+                    LogMgr.e("Event2");
+                    requestSystemDetail();
+                    Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
+                    break;
+
+                case FCMManager.MSG_TYPE_REPORT_CARD:  // 성적표 push
+                    // TODO : 푸쉬 -> 성적표 데이터 갱신
+                    Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
+                    break;
             }
 
         }else if (dataType == TYPE_SYSTEM){ // 목록 item 클릭해서 온 경우, dataType = 시스템알림
@@ -427,7 +431,13 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
                         }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            int responseCode = response.code();
+                            if (responseCode == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+                                Toast.makeText(mContext, R.string.server_not_found_board, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                            }
+                            finish();
                         }
                     }catch (Exception e){
                         LogMgr.e(TAG + "requestSystemDetail() Exception : ", e.getMessage());
@@ -443,7 +453,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     }catch (Exception e){
                     }
                     hideProgressDialog();
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }

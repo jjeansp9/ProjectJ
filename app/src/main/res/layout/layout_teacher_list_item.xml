@@ -9,7 +9,7 @@
     android:gravity="center"
     android:layout_marginTop="@dimen/layout_margin_12"
     android:layout_marginHorizontal="@dimen/layout_margin_16"
-    android:elevation="4dp">
+    android:elevation="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_teacher_info"

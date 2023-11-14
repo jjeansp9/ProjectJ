@@ -149,11 +149,10 @@ public class SelectStudentActivity extends BaseActivity {
 //                    }
 //                }
 //            }
-            LogMgr.e(TAG, "ChildCnt: " + _childCnt);
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
                 {
-                    if (PreferenceUtil.getNumberOfChild(mContext) > 1){
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
@@ -217,7 +216,6 @@ public class SelectStudentActivity extends BaseActivity {
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
         }
 
-        LogMgr.e(TAG, "EVENT pushActivity()");
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
         }

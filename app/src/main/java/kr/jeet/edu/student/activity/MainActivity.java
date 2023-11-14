@@ -2,10 +2,8 @@ package kr.jeet.edu.student.activity;
 
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_COUNSEL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT_REZ_CNL;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
@@ -17,7 +15,6 @@ import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
 import kr.jeet.edu.student.model.data.ACAData;
@@ -66,7 +63,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
@@ -83,11 +79,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
-
-    /**
-     * 1. 수강료납부 -> 출석현황 대체. 원생정보에 있는 수강료 납부 레이아웃을 옮겨야함
-     * 2. 출석부 아이콘 추가 - 원생정보에 있는 출석부 레이아웃을 옮겨야함
-    * */
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -125,12 +116,13 @@ public class MainActivity extends BaseActivity {
     private int teacherCnt = 0;
     private int _memberSeq = 0;
     private int stCodeParent = 0;
+    private int _childCnt = -1;
 
     private PushMessage _pushMessage;
 
     private boolean isMain = true;
 
-    private final String MR = "님";
+    private final String MR_STUDENT = "님";
     private final String MR_PARENT = "학부모님";
     private final String STR_NON_MEMBER = " (비회원)";
 
@@ -391,6 +383,7 @@ public class MainActivity extends BaseActivity {
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
+        _childCnt = PreferenceUtil.getNumberOfChild(mContext);
 
         try {
             initMenusMember();
@@ -406,10 +399,8 @@ public class MainActivity extends BaseActivity {
                     mTvAttendanceDate.setVisibility(View.GONE);
                     mTvNonMember.setVisibility(View.GONE);
 
-                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR; // 원생
+                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR_STUDENT; // 원생
                     else str = MR_PARENT; // 부모
-
-                    mTvNameSub.setText(str);
 
                 }else{ // 비회원
                     mTvSchoolAndGradeName.setVisibility(View.GONE);
@@ -422,12 +413,12 @@ public class MainActivity extends BaseActivity {
 
                     mLayoutBottom.setVisibility(View.GONE); // 화면 하단 레이아웃 gone
 
-                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR+STR_NON_MEMBER; // 원생
+                    if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR_STUDENT +STR_NON_MEMBER; // 원생
                     else str = MR_PARENT+STR_NON_MEMBER; // 부모
 
-                    mTvNameSub.setText(str);
                     LogMgr.e(TAG, "No Member");
                 }
+                mTvNameSub.setText(str);
             }
 
         }catch (Exception e){ LogMgr.e(TAG + "initData() Exception : ", e.getMessage()); }
@@ -438,16 +429,13 @@ public class MainActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-//                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-//                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-//                    startDetailActivity(intent, MenuBoardDetailActivity.class);
                     if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
                 }
                 break;
 
                 case MSG_TYPE_ATTEND: // 출결알림
                 {
-                    if (PreferenceUtil.getNumberOfChild(mContext) < TWO_PERSON_OR_LESS){
+                    if (_childCnt < TWO_PERSON_OR_LESS){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
@@ -467,45 +455,31 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                    startDetailActivity(intent, MenuBriefingDetailActivity.class);
+                    if (intent != null) startDetailActivity(intent, MenuBriefingDetailActivity.class);
                 }
                 break;
 
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
-                    if (_pushMessage.stCode == _stCode){
-//                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
-//                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-//                        startDetailActivity(intent, MenuBoardDetailActivity.class);
-                        if (intent != null) startBoardDetail(intent, getString(R.string.push_type_system));
-                    }
+                    if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_system));
                 }
                 break;
 
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                    startDetailActivity(intent, MenuScheduleDetailActivity.class);
+                    if (intent != null) startDetailActivity(intent, MenuScheduleDetailActivity.class);
                 }
                 break;
 
                 case MSG_TYPE_REPORT_CARD: // 성적표
                 {
-                    if (_pushMessage.stCode == _stCode){
-//                        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_report_card));
-//                        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-//                        startDetailActivity(intent, MenuBoardDetailActivity.class);
-                        if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
-                    }
+                    if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
                 }
                 break;
 
                 case MSG_TYPE_TUITION: // 미납
                 {
-                    if (_pushMessage.stCode == _stCode){
-                        startActivity(new Intent(mContext, TuitionActivity.class));
-                    }
+                    if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
                 }
                 break;
 
@@ -547,6 +521,7 @@ public class MainActivity extends BaseActivity {
 
     private void startDetailActivity(Intent intent, Class<?> targetActivity) {
         if (targetActivity != null) {
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
             Intent noticeIntent = new Intent(this, targetActivity);
             noticeIntent.putExtras(intent);
             resultLauncher.launch(noticeIntent);

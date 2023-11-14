@@ -206,47 +206,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         datePickerDialog.show(getSupportFragmentManager(), "date");
     }
 
-//    @SuppressLint("ClickableViewAccessibility")
-//    private void setSpinnerTeacher(){
-//        mSpinnerTeacher.setIsFocusable(true);
-//        try {
-//
-//            if (mListTeacher.size() <= 0) {
-//                finish();
-//            }else{
-//                List<String> sfNames = new ArrayList<>();
-//                for (TeacherClsData data : mListTeacher) sfNames.add(data.sfName + " / " + data.clsName);
-//
-//                if (sfNames.size() > 0 && sfNames != null) mSpinnerTeacher.setText(sfNames.get(0));
-//                mSpinnerTeacher.setItems(sfNames);
-//                _clsName = mListTeacher.get(0).clsName;
-//                _sfCode = mListTeacher.get(0).sfCode;
-//                _sfName = mListTeacher.get(0).sfName;
-//                _managerPhoneNumber = mListTeacher.get(0).phoneNumber;
-//
-//                mSpinnerTeacher.setOnTouchListener((v, event) -> {
-//                    mEtConsultContent.clearFocus();
-//                    Utils.hideKeyboard(mContext, mEtConsultContent);
-//                    return false;
-//                });
-//
-//                mSpinnerTeacher.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-//                    _sfCode = mListTeacher.get(newIndex).sfCode;
-//                    _sfName = mListTeacher.get(newIndex).sfName;
-//                    _clsName = mListTeacher.get(newIndex).clsName;
-//                    _managerPhoneNumber = mListTeacher.get(newIndex).phoneNumber;
-//                    LogMgr.e("TEST",
-//                            "\nsfCode:" + _sfCode +
-//                                    "\nsfName:" + _sfName +
-//                                    "\nclsName:" + _clsName +
-//                                    "\nphoneNum:" + _managerPhoneNumber
-//                    );
-//                });
-//            }
-//
-//        }catch (Exception e){}
-//    }
-
     private void putConsultRequest(){
 
         String str = "";
@@ -266,6 +225,7 @@ public class ConsultationRequestActivity extends BaseActivity {
 //        request.sfName = _sfName;
 //        request.clsName = _clsName;
         //request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
+        request.stCode = _stCode;
         request.sfCode = mInfo.sfCode;
         request.sfName = mInfo.sfName;
         request.clsName = mInfo.clsName;
@@ -285,6 +245,7 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\ncounselDate: " + request.counselDate +
                 "\nacaCode: " + request.acaCode +
                 "\nacaName: " + request.acaName +
+                "\nstCode: " + request.stCode +
                 "\nsfCode: " + request.sfCode +
                 "\nsfName: " + request.sfName +
                 "\nmemo: " + request.memo +

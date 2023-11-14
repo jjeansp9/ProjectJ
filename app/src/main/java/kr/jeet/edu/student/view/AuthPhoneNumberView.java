@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import java.io.IOException;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.model.request.SmsRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
@@ -209,6 +210,8 @@ public class AuthPhoneNumberView extends LinearLayout implements View.OnClickLis
         request.msg = _context.getString(R.string.auth_number_msg, mAuthNum);
         request.receiver = mAuthPhoneNo;
         request.sender = "@";
+        request.senderCode = Constants.SMS_SENDER_CODE;
+        request.receiverCode = Constants.SMS_RECEIVER_CODE;
 
         if(RetrofitClient.getInstance() != null) {
 //            showProgressDialog();

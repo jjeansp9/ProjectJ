@@ -219,7 +219,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
 
         LogMgr.e(TAG, "childCnt: " + _childCnt);
-        if (_childCnt < 1) {
+        if (_childCnt < 1) { // 자녀가 없는 경우
             if (_userGubun == Constants.USER_TYPE_PARENTS) { // 부모인 경우 신규원생 추가로 변경
                 testType = Constants.LEVEL_TEST_TYPE_NEW_CHILD;
             }

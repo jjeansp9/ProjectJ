@@ -114,6 +114,7 @@
     <string name="server_data_empty">알 수 없는 에러가 발생하였습니다.</string>
     <string name="server_error">서버 요청 중 에러가 발생하였습니다.</string>
     <string name="server_fail">서버 요청에 실패하였습니다.</string>
+    <string name="server_not_found_board">해당 글이 존재하지 않습니다.</string>
     <string name="auth_number_msg">[지트에듀케이션] 인증번호는 [%d] 입니다.</string>
     <string name="check_auth_number">인증번호 시간이 초과 되었거나 정보가 일치하지 않습니다.</string>
     <string name="login_not_found_member">비밀번호가 일치하지 않거나 사용자 정보가 없습니다.</string>

@@ -96,8 +96,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/legend_attendance"
-            android:background="@drawable/bg_lightgray_panel"
-            android:layout_marginTop="@dimen/layout_margin_8"
+            android:background="@color/bg_lightgray_2"
+            android:layout_marginTop="@dimen/layout_margin_12"
             android:paddingHorizontal="@dimen/layout_margin_8"
             android:paddingVertical="4dp"
             tools:listitem="@layout/layout_monthly_attendance_list_item"
@@ -115,8 +115,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/legend_attendance"
             android:text="@string/menu_stu_info_attendance_empty"
-            android:textColor="@color/font_color_bc"
-            android:textSize="@dimen/font_size_large"
+            android:textColor="@color/font_color_999"
+            android:textSize="@dimen/font_size_xlarge"
             android:textStyle="bold"
             android:visibility="gone"/>
 
