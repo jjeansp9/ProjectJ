@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
@@ -362,7 +363,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                 }else LogMgr.e(TAG+" requestNoticeDetail is null");
                             }
                         }else{
-                            finish();
+                            finishActivity();
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
@@ -379,7 +380,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     }catch (Exception e){
                     }
                     hideProgressDialog();
-                    finish();
+                    finishActivity();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -437,7 +438,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                             } else {
                                 Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             }
-                            finish();
+                            finishActivity();
                         }
                     }catch (Exception e){
                         LogMgr.e(TAG + "requestSystemDetail() Exception : ", e.getMessage());
@@ -454,10 +455,17 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     }
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                    finish();
+                    finishActivity();
                 }
             });
         }
+    }
+
+    private void finishActivity() {
+        new Handler().postDelayed(() -> {
+            finish();
+            overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
+        }, 500);
     }
 
     @Override

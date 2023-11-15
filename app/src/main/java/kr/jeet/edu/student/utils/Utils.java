@@ -70,6 +70,7 @@ import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.fcm.NotificationID;
 import kr.jeet.edu.student.model.data.TestTimeData;
 import kr.jeet.edu.student.model.data.TuitionHeaderData;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
@@ -85,6 +86,7 @@ import retrofit2.Response;
 public class Utils {
 
     protected static PopupDialog popupDialog = null;
+    protected static int _notifyID;
 
     /**
      * 6자리 난수 생성
@@ -518,15 +520,8 @@ public class Utils {
             notificationManager.createNotificationChannel(channel);
         }
 
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyMdmsS", Locale.getDefault());
-//        String currentTimeStamp = dateFormat.format(new Date());
-//
-//        int _notifyID = Integer.parseInt(currentTimeStamp);
-        long timestamp = System.currentTimeMillis();
+        _notifyID = NotificationID.getID();
 
-        Random random = new Random(timestamp);
-        int maxInt = Integer.MAX_VALUE; // 32비트 정수 최대값
-        int _notifyID = random.nextInt(maxInt);
         notificationManager.notify(_notifyID, notificationBuilder.build());
     }
     /**

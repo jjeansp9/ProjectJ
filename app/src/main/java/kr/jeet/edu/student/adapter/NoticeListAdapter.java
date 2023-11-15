@@ -67,19 +67,19 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
             if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
                 strType = "시스템알림";
-                setView(strType, holder, position);
+                setClickEnabled(strType, holder, position);
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
                 strType = "출결현황";
-                setAttendView(strType, holder);
+                setClickDisabled(strType, holder);
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
                 strType = "성적표";
-                setView(strType, holder, position);
+                setClickEnabled(strType, holder, position);
             }
             else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
                 strType = "미납";
-                setView(strType, holder, position);
+                setClickDisabled(strType, holder);
             }
             else {
                 holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
@@ -94,14 +94,14 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         }
     }
 
-    private void setAttendView(String str, ViewHolder holder) {
+    private void setClickDisabled(String str, ViewHolder holder) {
         holder.tvType.setText(str);
         holder.btnNext.setVisibility(View.GONE);
         holder.root.setOnClickListener(null);
         holder.root.setBackgroundResource(R.color.transparent);
     }
 
-    private void setView(String str, ViewHolder holder, int position) {
+    private void setClickEnabled(String str, ViewHolder holder, int position) {
         holder.tvType.setText(str);
         holder.btnNext.setVisibility(View.VISIBLE);
         TypedValue typedValue = new TypedValue();
