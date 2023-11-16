@@ -219,27 +219,20 @@ public class Utils {
     /**
      * 파라미터로 받은 editText의 개수만큼 focus 얻어오고 키보드를 내리는 메소드
      * */
-    public static void hideKeyboard(Context mContext, View[] focusList) {
-        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager == null) return;
-        for (int i = 0; i < focusList.length; i++) {
-            View view = focusList[i];
-            if (view != null) inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    public static void hideKeyboard(Context mContext, View focus) {
-        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager == null) return;
-        inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-    }
-
-    public static void showKeyboard(Context context, View view) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-        }
-    }
+//    public static void hideKeyboard(Context mContext, View[] focusList) {
+//        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        if (inputMethodManager == null) return;
+//        for (int i = 0; i < focusList.length; i++) {
+//            View view = focusList[i];
+//            if (view != null) inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+//        }
+//    }
+//
+//    public static void hideKeyboard(Context mContext, View focus) {
+//        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        if (inputMethodManager == null) return;
+//        inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+//    }
 
     /**
      * EditText List Focus Clear

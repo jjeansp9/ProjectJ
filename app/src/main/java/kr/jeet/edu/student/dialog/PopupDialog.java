@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
 import org.w3c.dom.Text;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
 
@@ -108,7 +110,12 @@ public class PopupDialog extends Dialog {
     }
 
     public void setEdit(boolean isVisible){
-        if (isVisible) editText.setVisibility(View.VISIBLE);
+        if (isVisible) {
+            editText.setVisibility(View.VISIBLE);
+            editText.requestFocus();
+            InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+            editText.postDelayed(() -> imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT), Constants.SHOW_KEBOARD_DELAY);
+        }
         else editText.setVisibility(View.GONE);
     }
 

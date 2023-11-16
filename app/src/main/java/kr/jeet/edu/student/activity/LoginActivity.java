@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -29,13 +30,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.fcm.NotificationID;
 import kr.jeet.edu.student.model.data.ChildStudentInfo;
 import kr.jeet.edu.student.model.request.SigninRequest;
 import kr.jeet.edu.student.model.response.LoginResponse;
@@ -125,7 +124,6 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     void initView() {
-        findViewById(R.id.login_root).setOnClickListener(this);
         findViewById(R.id.tv_find).setOnClickListener(this);
         findViewById(R.id.tv_join).setOnClickListener(this);
         findViewById(R.id.btn_naver).setOnClickListener(this);
@@ -154,12 +152,6 @@ public class LoginActivity extends BaseActivity {
         int loginType = Constants.LOGIN_TYPE_NORMAL;
 
         switch (view.getId()) {
-            case R.id.login_root:
-                mEditId.clearFocus();
-                mEditPw.clearFocus();
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-
             case R.id.btn_naver:
                 if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
 
@@ -224,8 +216,8 @@ public class LoginActivity extends BaseActivity {
                 if (!btnPush) {
                     btnPush = true;
                     if(checkLogin()) requestLogin();
+                    else btnPush = false;
                 }
-                Utils.hideKeyboard(mContext, mEditList);
                 // 자동로그인 체크 저장
                 if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
                 else PreferenceUtil.setAutoLogin(mContext, false);
@@ -237,14 +229,15 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-
     private boolean checkLogin() {
         if(mEditId.getText().toString().trim().isEmpty()) {
             Toast.makeText(mContext, getString(R.string.id) + " " + getString(R.string.empty_info), Toast.LENGTH_SHORT).show();
+            showKeyboard(mContext, mEditId);
             return false;
         }
         if(mEditPw.getText().toString().trim().isEmpty()) {
             Toast.makeText(mContext, getString(R.string.password) + " " + getString(R.string.empty_info), Toast.LENGTH_SHORT).show();
+            showKeyboard(mContext, mEditPw);
             return false;
         }
 

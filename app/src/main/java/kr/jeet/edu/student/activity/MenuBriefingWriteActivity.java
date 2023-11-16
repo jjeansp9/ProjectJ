@@ -128,7 +128,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
         initData();
 
-        findViewById(R.id.root_brf_write).setOnClickListener(this);
         findViewById(R.id.layout_brf_privacy).setOnClickListener(this);
         findViewById(R.id.layout_brf_view_privacy).setOnClickListener(this);
         findViewById(R.id.btn_brf_write_complete).setOnClickListener(this);
@@ -178,7 +177,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         }
 
         mSpinnerGrade.setIsFocusable(true);
-        mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerGrade.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             if (newIndex > 0) _stGrade = newItem.toString();
@@ -237,16 +236,16 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 //        });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_UP:
-                Utils.clearFocus(mEtList);
-                Utils.hideKeyboard(mContext, mEtList);
-                break;
-        }
-        return false;
-    };
+//    @SuppressLint("ClickableViewAccessibility")
+//    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
+//        switch (event.getAction()){
+//            case MotionEvent.ACTION_UP:
+//                Utils.clearFocus(mEtList);
+//                Utils.hideKeyboard(mContext, mEtList);
+//                break;
+//        }
+//        return false;
+//    };
 
     private void setSchoolSpinner(){
         toggleFilterLayout();
@@ -264,8 +263,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                     _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
                     _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
                 }
-                Utils.clearFocus(mEtList);
-                Utils.hideKeyboard(mContext, mEtList);
             }
 
             @Override
@@ -330,11 +327,6 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.root_brf_write:
-                Utils.clearFocus(mEtList);
-                Utils.hideKeyboard(mContext, mEtList);
-                break;
-
             case R.id.layout_brf_privacy:
                 cbPrivacy.setChecked(!cbPrivacy.isChecked());
                 if (cbPrivacy.isChecked()) btnComplete.setBackgroundResource(R.drawable.selector_bt_ubderbox);
@@ -452,20 +444,17 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
         if (mEtName.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.briefing_write_empty_stu_name, Toast.LENGTH_SHORT).show();
-            mEtName.requestFocus();
-            Utils.showKeyboard(mContext, mEtName);
+            showKeyboard(mContext, mEtName);
             return false;
 
         } else if (mEtPhoneNum.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.briefing_write_empty_phone_num, Toast.LENGTH_SHORT).show();
-            mEtPhoneNum.requestFocus();
-            Utils.showKeyboard(mContext, mEtPhoneNum);
+            showKeyboard(mContext, mEtPhoneNum);
             return false;
 
         } else if (!Utils.checkPhoneNumber(mEtPhoneNum.getText().toString())){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            mEtPhoneNum.requestFocus();
-            Utils.showKeyboard(mContext, mEtPhoneNum);
+            showKeyboard(mContext, mEtPhoneNum);
             return false;
 
         } else if (!cbPrivacy.isChecked()) {

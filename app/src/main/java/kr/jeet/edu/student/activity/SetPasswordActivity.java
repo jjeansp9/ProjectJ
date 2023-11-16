@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -61,7 +62,6 @@ public class SetPasswordActivity extends BaseActivity {
 
     @Override
     void initView() {
-        findViewById(R.id.set_pw_root).setOnClickListener(this);
         findViewById(R.id.btn_update_pw_complete).setOnClickListener(this);
 
         mEtPw = findViewById(R.id.et_set_pw);
@@ -69,7 +69,7 @@ public class SetPasswordActivity extends BaseActivity {
         mCheckPwTxt = findViewById(R.id.check_txt_pw);
 
         mEditList = new EditText[]{mEtPw, mEtPwConfirm};
-
+        new Handler().postDelayed(() -> showKeyboard(mContext, mEtPw), Constants.SHOW_KEBOARD_DELAY);
         mEtPw.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -99,11 +99,6 @@ public class SetPasswordActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.set_pw_root:
-                mEtPw.clearFocus();
-                mEtPwConfirm.clearFocus();
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
             case R.id.btn_update_pw_complete:
                 if (checkPw()){
                     requestSetPw();

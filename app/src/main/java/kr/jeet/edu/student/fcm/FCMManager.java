@@ -48,17 +48,6 @@ public class FCMManager {
     public static final String MSG_TYPE_ACA_SCHEDULE = "SCHEDULE";    //캠퍼스일정
     //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
 
-    public static final int NOTIFICATION_ID_NOTICE = 1000001;
-    public static final int NOTIFICATION_ID_VIDEO = 1000002;
-    public static final int NOTIFICATION_ID_ATTEND = 1000003;
-    public static final int NOTIFICATION_ID_ACA_SCHEDULE = 1000004;
-    public static final int NOTIFICATION_ID_PT = 1000005;
-    public static final int NOTIFICATION_ID_PT_REZ_CNL = 1000006;
-    public static final int NOTIFICATION_ID_SYSTEM = 1000007;
-    public static final int NOTIFICATION_ID_TEST_APPT = 1000008;
-    public static final int NOTIFICATION_ID_COUNSEL = 1000009;
-    public static final int NOTIFICATION_ID_REPORT_CARD = 1000010;
-    public static final int NOTIFICATION_ID_TUITION = 1000011;
     public static final int NOTIFICATION_ID_NONE = 20;
 
     Context _context;
@@ -266,7 +255,7 @@ public class FCMManager {
                 break;
         }
         PendingIntent pendingIntent;
-        requestCode = NotificationID.getID();
+        requestCode = NotificationID.getID(); // notification 생성될 때 마다 다른 값을 추가해줘야함. [ 각각의 notify가 가지고있는 데이터를 구분하기 위함 ]
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             pendingIntent = PendingIntent.getActivity(_context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         }else{
@@ -299,7 +288,7 @@ public class FCMManager {
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             notificationManager.createNotificationChannel(channel);
         }
-        _notifyID = NotificationID.getID();
+        _notifyID = NotificationID.getID(); // notification 생성될 때 마다 다른 값을 추가해줘야함. [ 기존에 생성된 notify가 덮어쓰기 되지않게 하기 위함 ]
         notificationManager.notify(_notifyID, notificationBuilder.build());
     }
 }

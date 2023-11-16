@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 
 public class Confirm2LeaveDialog extends Dialog {
     private Context context;
@@ -84,6 +86,10 @@ public class Confirm2LeaveDialog extends Dialog {
 
             }
         });
+
+        editTextContent.requestFocus();
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextContent.postDelayed(() -> imm.showSoftInput(editTextContent, InputMethodManager.SHOW_IMPLICIT), Constants.SHOW_KEBOARD_DELAY);
     }
 
     public void setTitle(String str) {

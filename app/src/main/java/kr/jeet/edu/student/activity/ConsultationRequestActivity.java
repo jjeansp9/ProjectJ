@@ -141,7 +141,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         initData();
 
         findViewById(R.id.layout_calendar).setOnClickListener(this);
-        findViewById(R.id.root_consult).setOnClickListener(this);
 
         mEtConsultContent = findViewById(R.id.et_consultation_content);
         mTvCal = findViewById(R.id.tv_consultation_request_cal);
@@ -167,10 +166,6 @@ public class ConsultationRequestActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.root_consult:
-                mEtConsultContent.clearFocus();
-                Utils.hideKeyboard(mContext, mEtConsultContent);
-                break;
             case R.id.layout_calendar:
                 showDatePicker();
                 break;
@@ -353,8 +348,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         switch(item.getItemId()) {
             case R.id.action_complete:
                 putConsultRequest();
-                mEtConsultContent.clearFocus();
-                Utils.hideKeyboard(mContext, mEtConsultContent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

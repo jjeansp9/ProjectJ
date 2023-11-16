@@ -2,13 +2,16 @@ package kr.jeet.edu.student.activity;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -83,6 +86,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     private RadioGroup mRgGender;
     private RadioButton mGenderRbMale, mGenderRbFemale;
     private PowerSpinnerView mSpinnerGrade, mSpinnerFunnel, mSpinnerCampus, mSpinnerTestDay, mSpinnerTestTime, mSpinnerSubject;
+    private AppCompatButton mBtnAddress;
+    private NestedScrollView scrollView;
 
     ClearableTextView tvSchool;
     SchoolListBottomSheetDialog _schoolListBottomSheetDialog;
@@ -240,11 +245,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         findViewById(R.id.layout_reserve_birth).setOnClickListener(this);
         findViewById(R.id.layout_reserve_test_date).setOnClickListener(this);
-        findViewById(R.id.root_reserve_write).setOnClickListener(this);
         findViewById(R.id.btn_test_reserve_write_next).setOnClickListener(this);
-        findViewById(R.id.btn_address_search).setOnClickListener(this);
         findViewById(R.id.tv_reserve_address_result).setOnClickListener(this);
 
+        scrollView = ((NestedScrollView)findViewById(R.id.scroll_view));
+        mBtnAddress = findViewById(R.id.btn_address_search);
         mTvReserveDate = findViewById(R.id.tv_reserve_test_date_cal);
         mTvBirthDate = findViewById(R.id.tv_reserve_birth_date_cal);
         mTvAddress = findViewById(R.id.tv_reserve_address_result);
@@ -270,7 +275,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         mSpinnerSubject = findViewById(R.id.spinner_reserve_subject);
         tvSchool = findViewById(R.id.tv_content_school);
 
-        LogMgr.e(TAG, "Gender: " + _stuGender);
+        mBtnAddress.setOnClickListener(this);
 
         if (writeMode.equals(Constants.WRITE_EDIT)) {
             setView();
@@ -422,37 +427,29 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.root_reserve_write:
-                clearFocusAndHideKeyboard();
-                break;
-
             case R.id.layout_reserve_birth:
-                clearFocusAndHideKeyboard();
                 showDatePicker(mTvBirthDate, false, birthMinYear, birthMaxYear, true);
                 break;
 
             case R.id.layout_reserve_test_date:
-                clearFocusAndHideKeyboard();
                 showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
                 break;
 
             case R.id.btn_test_reserve_write_next:
-                clearFocusAndHideKeyboard();
                 startQuestionActivity();
                 break;
 
             case R.id.btn_address_search:
             case R.id.tv_reserve_address_result:
-                clearFocusAndHideKeyboard();
                 searchAddress();
                 break;
         }
     }
 
-    private void clearFocusAndHideKeyboard(){
-        Utils.clearFocus(mEditList);
-        Utils.hideKeyboard(mContext, mEditList);
-    }
+//    private void clearFocusAndHideKeyboard(){
+//        Utils.clearFocus(mEditList);
+//        Utils.hideKeyboard(mContext, mEditList);
+//    }
 
     private void searchAddress(){
         dialogDismiss();
@@ -574,10 +571,10 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         setSchoolSpinner();
 
-        mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
-        mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
-        mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
-        mSpinnerSubject.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerFunnel.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerCampus.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerGrade.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerSubject.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerTestTime.setOnTouchListener((v, event) -> {
             switch (event.getAction()){
@@ -591,8 +588,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                             Toast.makeText(mContext, R.string.test_reserve_test_time_empty, Toast.LENGTH_SHORT).show();
                         }
                     }
-                    Utils.clearFocus(mEditList);
-                    Utils.hideKeyboard(mContext, mEditList);
+//                    Utils.clearFocus(mEditList);
+//                    Utils.hideKeyboard(mContext, mEditList);
                     break;
             }
             return false;
@@ -649,8 +646,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                     _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
                     _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
                 }
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
+//                Utils.clearFocus(mEditList);
+//                Utils.hideKeyboard(mContext, mEditList);
             }
 
             @Override
@@ -770,21 +767,19 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         if (request.name.equals("")) {
             Toast.makeText(mContext, R.string.stu_name_empty, Toast.LENGTH_SHORT).show();
-            mEtName.requestFocus();
-            Utils.showKeyboard(mContext, mEtName);
+            showKeyboard(mContext, mEtName);
 
         } else if (!Utils.nameCheck(request.name)) {
             Toast.makeText(mContext, R.string.check_name_pattern, Toast.LENGTH_SHORT).show();
-            mEtName.requestFocus();
-            Utils.showKeyboard(mContext, mEtName);
+            showKeyboard(mContext, mEtName);
 
         } else if (request.address.equals("")) {
             Toast.makeText(mContext, R.string.address_empty, Toast.LENGTH_SHORT).show();
+            showBtnAnimation();
 
         } else if (request.addressSub.equals("")) {
             Toast.makeText(mContext, R.string.address_sub_empty, Toast.LENGTH_SHORT).show();
-            mEtAddressDetail.requestFocus();
-            Utils.showKeyboard(mContext, mEtAddressDetail);
+            showKeyboard(mContext, mEtAddressDetail);
 
         } else if (request.birth.equals("")) {
             Toast.makeText(mContext, R.string.birth_empty, Toast.LENGTH_SHORT).show();
@@ -806,28 +801,23 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.phoneNumber.equals("")) {
             Toast.makeText(mContext, R.string.phone_empty, Toast.LENGTH_SHORT).show();
-            mEtStuPhone.requestFocus();
-            Utils.showKeyboard(mContext, mEtStuPhone);
+            showKeyboard(mContext, mEtStuPhone);
 
         } else if (!Utils.checkPhoneNumber(request.phoneNumber)){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            mEtStuPhone.requestFocus();
-            Utils.showKeyboard(mContext, mEtStuPhone);
+            showKeyboard(mContext, mEtStuPhone);
 
         } else if (request.parentName.equals("")) {
             Toast.makeText(mContext, R.string.parent_name_empty, Toast.LENGTH_SHORT).show();
-            mEtParentName.requestFocus();
-            Utils.showKeyboard(mContext, mEtParentName);
+            showKeyboard(mContext, mEtParentName);
 
         } else if (request.parentPhoneNumber.equals("")) {
             Toast.makeText(mContext, R.string.parent_phone_empty, Toast.LENGTH_SHORT).show();
-            mEtparentPhone.requestFocus();
-            Utils.showKeyboard(mContext, mEtparentPhone);
+            showKeyboard(mContext, mEtparentPhone);
 
         } else if (!Utils.checkPhoneNumber(request.parentPhoneNumber)){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            mEtparentPhone.requestFocus();
-            Utils.showKeyboard(mContext, mEtparentPhone);
+            showKeyboard(mContext, mEtparentPhone);
 
         } else if (request.reason.equals("")) {
             Toast.makeText(mContext, R.string.reason_empty, Toast.LENGTH_SHORT).show();
@@ -869,6 +859,22 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             }
             resultLauncher.launch(intent);
         }
+    }
+
+    private void showBtnAnimation() {
+        int[] location = new int[2];
+        mBtnAddress.getLocationOnScreen(location);
+
+        int scrollDuration = 500;
+        int duration = getResources().getInteger(R.integer.btn_push_duration) + 300;
+        int scrollY = scrollView.getScrollY();
+
+        if (location[1] <= scrollY) scrollView.smoothScrollTo(0 ,location[1], scrollDuration);
+
+        new Handler().postDelayed(() -> {
+            mBtnAddress.setPressed(true);
+            new Handler().postDelayed(() -> mBtnAddress.setPressed(false), duration);
+        }, scrollDuration);
     }
 
     private void requestTestTime() {
@@ -1030,16 +1036,16 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_UP:
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-        }
-        return false;
-    };
+//    @SuppressLint("ClickableViewAccessibility")
+//    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
+//        switch (event.getAction()){
+//            case MotionEvent.ACTION_UP:
+//                Utils.clearFocus(mEditList);
+//                Utils.hideKeyboard(mContext, mEditList);
+//                break;
+//        }
+//        return false;
+//    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1063,7 +1069,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_next:
-                clearFocusAndHideKeyboard();
                 startQuestionActivity();
                 return true;
 //            case R.id.action_btn_sub:
@@ -1219,6 +1224,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             _subjectCode = ltcSubjectList.get(randomIndex).subCode;
         }
 
-        clearFocusAndHideKeyboard();
+//        clearFocusAndHideKeyboard();
     }
 }

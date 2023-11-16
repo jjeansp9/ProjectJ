@@ -250,7 +250,6 @@ public class InformedQuestionActivity extends BaseActivity {
     @Override
     void initView() {
         initData();
-        findViewById(R.id.root_inform_question).setOnClickListener(this);
         findViewById(R.id.btn_informed_question_complete).setOnClickListener(this);
         //findViewById(R.id.btn_class_path_add).setOnClickListener(this);
 
@@ -431,9 +430,9 @@ public class InformedQuestionActivity extends BaseActivity {
     @SuppressLint("ClickableViewAccessibility")
     private void setSpinner(){
 
-        mSpinnerProcess_1.setOnTouchListener(spinnerTouchListener);
-        mSpinnerProcess_2.setOnTouchListener(spinnerTouchListener);
-        mSpinnerProcess_3.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerProcess_1.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerProcess_2.setOnTouchListener(spinnerTouchListener);
+//        mSpinnerProcess_3.setOnTouchListener(spinnerTouchListener);
 
         mSpinnerProcess_1.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             //selProcess1 = newItem.toString();
@@ -453,12 +452,12 @@ public class InformedQuestionActivity extends BaseActivity {
         });
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
-        Utils.clearFocus(mEditList);
-        Utils.hideKeyboard(mContext, mEditList);
-        return false;
-    };
+//    @SuppressLint("ClickableViewAccessibility")
+//    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
+//        Utils.clearFocus(mEditList);
+//        Utils.hideKeyboard(mContext, mEditList);
+//        return false;
+//    };
 
     private void setRecycler(){
 
@@ -488,14 +487,7 @@ public class InformedQuestionActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()){
-            case R.id.root_inform_question:
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-
             case R.id.btn_informed_question_complete:
-                Utils.clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
                 if (checked()) requestTestReserve();
                 break;
         }
@@ -740,16 +732,13 @@ public class InformedQuestionActivity extends BaseActivity {
                 return true;
             }else{
                 if (mEtLearningProc1.getText().toString().equals("")){
-                    mEtLearningProc1.requestFocus();
-                    Utils.showKeyboard(mContext, mEtLearningProc1);
+                    showKeyboard(mContext, mEtLearningProc1);
 
                 } else if (mEtLearningProc2.getText().toString().equals("")){
-                    mEtLearningProc2.requestFocus();
-                    Utils.showKeyboard(mContext, mEtLearningProc2);
+                    showKeyboard(mContext, mEtLearningProc2);
 
                 } else if (mEtLearningProc3.getText().toString().equals("")){
-                    mEtLearningProc3.requestFocus();
-                    Utils.showKeyboard(mContext, mEtLearningProc3);
+                    showKeyboard(mContext, mEtLearningProc3);
                 }
                 Toast.makeText(mContext, R.string.write_process_empty, Toast.LENGTH_SHORT).show();
                 return false;
@@ -958,8 +947,7 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private void checkEtStudy(View view){
-        view.requestFocus();
-        Utils.showKeyboard(mContext, view);
+        showKeyboard(mContext, view);
     }
 
     private String currentDate(){

@@ -94,7 +94,6 @@ public class SetProfileInfoActivity extends BaseActivity {
 
     @Override
     void initView() {
-        findViewById(R.id.set_account_info_root).setOnClickListener(this);
         findViewById(R.id.btn_update_complete).setOnClickListener(this);
 
         mRgProfileGender = findViewById(R.id.rg_profile_gender);
@@ -122,15 +121,7 @@ public class SetProfileInfoActivity extends BaseActivity {
     public void onClick(View view) {
         super.onClick(view);
         switch (view.getId()) {
-            case R.id.set_account_info_root:
-                clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-
             case R.id.btn_update_complete:
-                clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-
                 if(checkName()) {
                     updateProfile();
                 }

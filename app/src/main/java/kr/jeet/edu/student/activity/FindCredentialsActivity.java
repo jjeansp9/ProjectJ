@@ -89,8 +89,6 @@ public class FindCredentialsActivity extends BaseActivity {
         mEditPhoneNo = authPhoneLayout.findViewById(R.id.edit_phonenum);
         mEditAuthNo = authPhoneLayout.findViewById(R.id.edit_phone_authnum);
 
-        findViewById(R.id.login_sub_root).setOnClickListener(this);
-        findViewById(R.id.login_main_root).setOnClickListener(this);
         findViewById(R.id.btn_next).setOnClickListener(this);
 
         mViewGroupIdPwd = findViewById(R.id.layout_idpwd);
@@ -136,23 +134,7 @@ public class FindCredentialsActivity extends BaseActivity {
         super.onClick(view);
 
         switch (view.getId()) {
-            case R.id.login_main_root: // 스크롤 뷰 바깥 영역을 클릭했을 때 [ 스크롤뷰 안쪽 영역을 클릭하면 이부분이 동작 안함 ]
-                clearFocus(mEditList);
-
-                authPhoneLayout.findViewById(R.id.edit_phonenum).clearFocus();
-                authPhoneLayout.findViewById(R.id.edit_phone_authnum).clearFocus();
-
-                mEditPhoneNo.clearFocus();
-                mEditAuthNo.clearFocus();
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-            case R.id.login_sub_root: // 스크롤 뷰 안쪽 영역을 클릭했을 때 [ 스크롤뷰 바깥 영역을 클릭하면 이부분이 동작 안함 ]
-                clearFocus(mEditList);
-                Utils.hideKeyboard(mContext, mEditList);
-                break;
-
             case R.id.btn_next:
-                hideKeyboard();
                 if(checkFind()) {
                     if(mFindType == Constants.FIND_TYPE_ID) {
                         findID();
@@ -172,6 +154,7 @@ public class FindCredentialsActivity extends BaseActivity {
         // ID 인 경우 id 체크
         if(mFindType == Constants.FIND_TYPE_PW) {
             if (TextUtils.isEmpty(mEditId.getText().toString())) {
+                showKeyboard(mContext, mEditId);
                 Toast.makeText(mContext, R.string.check_id_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -354,11 +337,11 @@ public class FindCredentialsActivity extends BaseActivity {
         }
     }
 
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(mEditId.getWindowToken(), 0);
-        _authPhoneNoView.hideKeyboard(imm);
-    }
+//    private void hideKeyboard() {
+//        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.hideSoftInputFromWindow(mEditId.getWindowToken(), 0);
+//        _authPhoneNoView.hideKeyboard(imm);
+//    }
 
 
 
