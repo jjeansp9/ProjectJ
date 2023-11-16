@@ -200,7 +200,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         return super.dispatchTouchEvent( event );
     }
 
-    public static void showKeyboard(Context context, View view) {
+    protected void showKeyboard(Context context, View view) {
         view.requestFocus();
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {

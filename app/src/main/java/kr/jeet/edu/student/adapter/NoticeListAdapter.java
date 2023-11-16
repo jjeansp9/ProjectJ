@@ -2,7 +2,6 @@ package kr.jeet.edu.student.adapter;
 
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -15,26 +14,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Optional;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.common.Constants;
-import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
-import kr.jeet.edu.student.model.data.LTCData;
-import kr.jeet.edu.student.model.data.NoticeListData;
-import kr.jeet.edu.student.model.data.TestReserveData;
-import kr.jeet.edu.student.utils.Converters;
-import kr.jeet.edu.student.utils.Utils;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
@@ -73,7 +61,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 strType = "출결현황";
                 setClickDisabled(strType, holder);
             }
-            else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) {
+            else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
                 strType = "성적표";
                 setClickEnabled(strType, holder, position);
             }

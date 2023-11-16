@@ -4,7 +4,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
@@ -166,27 +166,28 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_NOTICE: // 공지사항
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_NOTICE, MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_SYSTEM, MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_PT, MenuBriefingDetailActivity.class);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBriefingDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_ACA_SCHEDULE, MenuScheduleDetailActivity.class);
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuScheduleDetailActivity.class);
                 }
                     break;
-                case MSG_TYPE_REPORT_CARD: // 성적표
+                case MSG_TYPE_REPORT: // 성적표
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MSG_TYPE_REPORT_CARD, MenuScheduleDetailActivity.class);
+                    LogMgr.e(TAG, "Event sel stu");
+                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(WebViewActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
@@ -207,19 +208,16 @@ public class SelectStudentActivity extends BaseActivity {
         HttpUtils.requestLTCSubjectList();
     }
 
-    private void startPushActivity(String pushType, Class<?> targetActivity){
+    private void startPushActivity(Class<?> targetActivity){
         Intent intent = new Intent(mContext, targetActivity);
-        if (pushType.equals(MSG_TYPE_SYSTEM)){
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.push_type_system));
-
-        } else if (pushType.equals(MSG_TYPE_NOTICE)){
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
-        }
-
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
+                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
+                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
+            }
         }
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         startActivity(intent);
         _pushMessage = null;
     }

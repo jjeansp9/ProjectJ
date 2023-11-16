@@ -37,7 +37,7 @@ public class FCMManager {
 
     public static final String MSG_TYPE_NOTICE = "NOTICE";  //공지사항
     public static final String MSG_TYPE_ATTEND = "ATTEND";  //출결
-    public static final String MSG_TYPE_REPORT_CARD = "REPORTCARD";  //성적표
+    public static final String MSG_TYPE_REPORT = "REPORT";  //성적표
     public static final String MSG_TYPE_TUITION = "TUITION";  //미납
     public static final String MSG_TYPE_PT = "PT";  //설명회
     public static final String MSG_TYPE_PT_REZ_CNL = "PT_REZ_CNL";  //설명회 예약 취소
@@ -105,7 +105,7 @@ public class FCMManager {
                 isRequireConfirmReceived = true;
             }
         }
-        else if (message.pushType.equals(MSG_TYPE_REPORT_CARD)) {
+        else if (message.pushType.equals(MSG_TYPE_REPORT)) {
             if (PreferenceUtil.getNotificationSchedule(_context) == false) {
                 isReject = true;
                 isRequireConfirmReceived = true;
@@ -244,7 +244,7 @@ public class FCMManager {
             case MSG_TYPE_ACA_SCHEDULE:
                 tickerText = _context.getString(R.string.push_noti_received_schedule);
                 break;
-            case MSG_TYPE_REPORT_CARD:
+            case MSG_TYPE_REPORT:
                 tickerText = _context.getString(R.string.push_noti_received_report_card);
                 break;
             case MSG_TYPE_TUITION:

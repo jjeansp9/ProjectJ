@@ -33,6 +33,8 @@ import java.net.URISyntaxException;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.MyWebChromeClient;
 import kr.jeet.edu.student.utils.MyWebViewClient;
@@ -46,6 +48,7 @@ public class WebViewActivity extends BaseActivity {
     private WebView wv;
     private String url;
     private String accountNo = "";
+    private PushMessage _pushData = null;
 
     private AppCompatActivity mActivity;
 
@@ -72,6 +75,14 @@ public class WebViewActivity extends BaseActivity {
                 if (intent.hasExtra(IntentParams.PARAM_ACCOUNT_NO)){
                     accountNo = intent.getStringExtra(IntentParams.PARAM_ACCOUNT_NO);
                 }
+                if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)){ // 시스템알림 -> 성적표 -> 성적표 상세보기
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                    }else{
+                        _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                    }
+                }
             }
 
         }catch (Exception e){
@@ -83,6 +94,9 @@ public class WebViewActivity extends BaseActivity {
     @Override
     void initView() {
         initData();
+
+        findViewById(R.id.btn_confirm).setOnClickListener(this);
+
         wv = findViewById(R.id.webview);
 
         wv.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -111,6 +125,16 @@ public class WebViewActivity extends BaseActivity {
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onClick(View view) {
+        super.onClick(view);
+        switch (view.getId()) {
+            case R.id.btn_confirm:
+                onBackPressed();
+                break;
+        }
     }
 
     @Override

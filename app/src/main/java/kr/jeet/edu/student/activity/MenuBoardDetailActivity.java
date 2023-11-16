@@ -84,6 +84,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_board_detail);
+        LogMgr.e(TAG, "Event board detail");
         _downloadReceiver = new DownloadReceiver(new DownloadReceiver.DownloadListener() {
             @Override
             public void onDownloadComplete(int position, FileData fileData, Uri downloadFileUri) {
@@ -120,7 +121,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
             String extraKey = null;
 
             // 공지사항 목록 -> 공지사항 상세
-            if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
+            if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
                 LogMgr.w(TAG,"param is recived");
                 extraKey = IntentParams.PARAM_ANNOUNCEMENT_INFO;
                 title = getString(R.string.title_detail);
@@ -128,7 +129,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 LogMgr.e(TAG,"Event heres3");
 
             // 푸쉬
-            } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)) {
+            } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                 extraKey = IntentParams.PARAM_PUSH_MESSAGE;
                 title = getString(R.string.title_detail);
                 dataType = TYPE_PUSH;
@@ -245,27 +246,21 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     requestSystemDetail();
                     Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
                     break;
-
-                case FCMManager.MSG_TYPE_REPORT_CARD:  // 성적표 push
-                    // TODO : 푸쉬 -> 성적표 데이터 갱신
-                    Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
-                    break;
             }
+
+            LogMgr.e("Event2-2", dataType +", " + TYPE_PUSH);
 
         }else if (dataType == TYPE_SYSTEM){ // 목록 item 클릭해서 온 경우, dataType = 시스템알림
             LogMgr.e("Event3");
             requestSystemDetail();
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_SYSTEM);
 
-        }else if (dataType == TYPE_REPORT_CARD){ // 성적표
-            LogMgr.e("Event3-1");
-            // TODO : 목록 -> 성적표 데이터 갱신
-            Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_REPORT_CARD);
-
         } else if (dataType == TYPE_ANNOUNCEMENT_FROM_MAIN){ // 메인에서 공지사항
             LogMgr.e("Event4");
             requestNoticeDetail(_currentSeq);
             Utils.changeMessageState2Read(getApplicationContext(), FCMManager.MSG_TYPE_NOTICE);
+        }else {
+            LogMgr.e("Event4-1", dataType + "");
         }
     }
 

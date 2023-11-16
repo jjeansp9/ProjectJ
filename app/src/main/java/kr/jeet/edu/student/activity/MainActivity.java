@@ -4,7 +4,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
-import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT_CARD;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
@@ -79,6 +79,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
+
+    /**
+     2023-11-16 16:44:10.227 20045-21088 firebase                kr.jeet.edu.student                  E  Push From : 1097787349857
+     2023-11-16 16:44:10.228 20045-21088 firebase                kr.jeet.edu.student                  I  [FCM] size : 10
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  I  [FCM] payload : {acaCode=000-005, pushId=LOf5Tbtjvb, stCode=72043, body=선시우원생 악어수학 입학고사 채점 결과 안내입니다., date=2023-11-16 16:44:09, title=[지트에듀케이션학원] 성적표알림, userGubun=3, connSeq=6, memberSeq=3, pushType=REPORT}
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = acaCode : value = 000-005
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = pushId : value = LOf5Tbtjvb
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = stCode : value = 72043
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = body : value = 선시우원생 악어수학 입학고사 채점 결과 안내입니다.
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = date : value = 2023-11-16 16:44:09
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = title : value = [지트에듀케이션학원] 성적표알림
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = userGubun : value = 3
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = connSeq : value = 6
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = memberSeq : value = 3
+     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = pushType : value = REPORT
+     **/
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -471,7 +487,7 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
 
-                case MSG_TYPE_REPORT_CARD: // 성적표
+                case MSG_TYPE_REPORT: // 성적표
                 {
                     if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
                 }

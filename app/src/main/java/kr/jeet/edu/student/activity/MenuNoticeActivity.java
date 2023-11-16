@@ -89,7 +89,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             switch (msg.what) {
                 case CMD_GET_LIST:
                     if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) getListData(attendanceType);
-                    else if (getType.equals(FCMManager.MSG_TYPE_REPORT_CARD)) getListData(reportCardType);
+                    else if (getType.equals(FCMManager.MSG_TYPE_REPORT)) getListData(reportCardType);
                     else if (getType.equals(FCMManager.MSG_TYPE_TUITION)) getListData(tuitionType);
                     else getListData(systemType);
                     break;
@@ -141,13 +141,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 Map<String, String> type = new HashMap<>();
                 type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
                 type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
-                type.put(reportCardType, FCMManager.MSG_TYPE_REPORT_CARD);
+                type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
                 type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
 
                 String mappedType = type.get(selType);
                 if (mappedType!=null) {
                     if (msg.pushType.equals(mappedType)){
                         if (_stCode == msg.stCode) newMessage.add(msg);
+                        newMessage.add(msg);
                     }
                 }
                 LogMgr.w(TAG,
@@ -244,7 +245,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             case FCMManager.MSG_TYPE_ATTEND:
                 _spinnerType.selectItemByIndex(1);
                 break;
-            case FCMManager.MSG_TYPE_REPORT_CARD:
+            case FCMManager.MSG_TYPE_REPORT:
                 _spinnerType.selectItemByIndex(2);
                 break;
             case FCMManager.MSG_TYPE_TUITION:
@@ -276,8 +277,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                     startBoardDetailActivity(item, TYPE_SYSTEM);
                     break;
 
-                case FCMManager.MSG_TYPE_REPORT_CARD:  // 성적표
-                    startBoardDetailActivity(item, TYPE_REPORT_CARD);
+                case FCMManager.MSG_TYPE_REPORT:  // 성적표
+                    Intent webIntent = new Intent(mContext, WebViewActivity.class);
+                    webIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
+                    webIntent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/web/api/member/signIn");
+                    webIntent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, item);
+                    startActivity(webIntent);
                     break;
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
