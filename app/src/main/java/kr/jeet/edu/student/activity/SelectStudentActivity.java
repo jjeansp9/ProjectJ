@@ -61,7 +61,7 @@ public class SelectStudentActivity extends BaseActivity {
 
     private int _childCnt = 0;
     boolean fromMain = false;
-    private final int TWO_OR_MORE_PEOPLE = 2;
+    private final int TWO_PEOPLE = 2;
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w(TAG, "result = " + result);
@@ -152,7 +152,7 @@ public class SelectStudentActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE){
+                    if (_childCnt >= TWO_PEOPLE){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
@@ -166,36 +166,36 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_NOTICE: // 공지사항
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuBriefingDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBriefingDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(MenuScheduleDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuScheduleDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_REPORT: // 성적표
                 {
                     LogMgr.e(TAG, "Event sel stu");
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(WebViewActivity.class);
+                    //if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(WebViewActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
                 {
-                    if (_childCnt >= TWO_OR_MORE_PEOPLE) {
-                        startActivity(new Intent(mContext, TuitionActivity.class));
-                        _pushMessage = null;
-                    }
+//                    if (_childCnt >= TWO_OR_MORE_PEOPLE) {
+//                        startActivity(new Intent(mContext, TuitionActivity.class));
+//                        _pushMessage = null;
+//                    }
                 }
                 break;
 
@@ -212,10 +212,10 @@ public class SelectStudentActivity extends BaseActivity {
         Intent intent = new Intent(mContext, targetActivity);
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
-                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
-                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
-            }
+//            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
+//                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
+//                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
+//            }
         }
 
         startActivity(intent);
@@ -303,13 +303,7 @@ public class SelectStudentActivity extends BaseActivity {
                     hideProgressDialog();
 
                     if (fromMain) {
-                        if (mList.size() == 1) goMain(0);
-                    }
-
-                    for (int i = 0; i < mList.size(); i++) {
-                        if (_pushMessage != null && mList.size() > TWO_OR_MORE_PEOPLE) {
-                            if (_pushMessage.stCode == mList.get(i).stCode) goMain(i);
-                        }
+                        if (mList.size() <= TWO_PEOPLE) goMain(0);
                     }
                 }
 

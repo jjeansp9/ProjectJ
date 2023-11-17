@@ -255,7 +255,8 @@
                 android:background="@drawable/bg_menu_student_info_layout"
                 android:layout_marginHorizontal="@dimen/layout_margin"
                 android:animateLayoutChanges="true"
-                android:alpha="0">
+                android:alpha="0"
+                android:visibility="gone">
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guide_h50dp"
                     android:layout_width="match_parent"

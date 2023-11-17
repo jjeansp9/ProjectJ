@@ -80,22 +80,6 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
-    /**
-     2023-11-16 16:44:10.227 20045-21088 firebase                kr.jeet.edu.student                  E  Push From : 1097787349857
-     2023-11-16 16:44:10.228 20045-21088 firebase                kr.jeet.edu.student                  I  [FCM] size : 10
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  I  [FCM] payload : {acaCode=000-005, pushId=LOf5Tbtjvb, stCode=72043, body=선시우원생 악어수학 입학고사 채점 결과 안내입니다., date=2023-11-16 16:44:09, title=[지트에듀케이션학원] 성적표알림, userGubun=3, connSeq=6, memberSeq=3, pushType=REPORT}
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = acaCode : value = 000-005
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = pushId : value = LOf5Tbtjvb
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = stCode : value = 72043
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = body : value = 선시우원생 악어수학 입학고사 채점 결과 안내입니다.
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = date : value = 2023-11-16 16:44:09
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = title : value = [지트에듀케이션학원] 성적표알림
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = userGubun : value = 3
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = connSeq : value = 6
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = memberSeq : value = 3
-     2023-11-16 16:44:10.229 20045-21088 firebase                kr.jeet.edu.student                  E  key = pushType : value = REPORT
-     **/
-
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;
@@ -142,7 +126,7 @@ public class MainActivity extends BaseActivity {
     private final String MR_PARENT = "학부모님";
     private final String STR_NON_MEMBER = " (비회원)";
 
-    private final int TWO_PERSON_OR_LESS = 2;
+    private final int TWO_PEOPLE = 2;
 
     private BroadcastReceiver pushNotificationReceiver = new BroadcastReceiver() {
         @Override
@@ -255,7 +239,6 @@ public class MainActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
-        LogMgr.e(TAG, "stCode: " + _stCode);
     }
 
     @Override
@@ -451,7 +434,7 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_ATTEND: // 출결알림
                 {
-                    if (_childCnt < TWO_PERSON_OR_LESS){
+                    if (_childCnt < TWO_PEOPLE){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
@@ -489,13 +472,13 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_REPORT: // 성적표
                 {
-                    if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
+                    //if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
                 }
                 break;
 
                 case MSG_TYPE_TUITION: // 미납
                 {
-                    if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
+                    //if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
                 }
                 break;
 
@@ -555,7 +538,7 @@ public class MainActivity extends BaseActivity {
         super.onClick(view);
         switch (view.getId()) {
             case R.id.btn_attendance_state:
-                startActivityBottomMenu(MenuNoticeActivity.class);
+                startActivityBottomMenu(TuitionActivity.class);
                 break;
 
             case R.id.btn_teacher:
@@ -568,13 +551,14 @@ public class MainActivity extends BaseActivity {
     private void startActivityBottomMenu(Class<?> cls){
         Intent targetIntent = new Intent(mContext, cls);
 
-        if (cls == MenuNoticeActivity.class){
-            targetIntent.putExtra(IntentParams.PARAM_TYPE_NOTICE, MSG_TYPE_ATTEND);
-            startActivity(targetIntent);
-
-        }else if (cls == TeacherInfoActivity.class){
-            startActivity(targetIntent);
-        }
+//        if (cls == MenuNoticeActivity.class){
+//            targetIntent.putExtra(IntentParams.PARAM_TYPE_NOTICE, MSG_TYPE_ATTEND);
+//            startActivity(targetIntent);
+//
+//        }else if (cls == TeacherInfoActivity.class){
+//            startActivity(targetIntent);
+//        }
+        startActivity(targetIntent);
     }
 
     private void initMenusMember() {
@@ -588,7 +572,7 @@ public class MainActivity extends BaseActivity {
             //캠퍼스일정
             mList.add(new MainMenuItemData(R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule,MenuScheduleActivity.class));
             //알림장
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_notice, R.string.main_menu_notice, MenuNoticeActivity.class));
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_notify, R.string.main_menu_notice, MenuNoticeActivity.class));
             //테스트예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //차량정보
@@ -608,7 +592,6 @@ public class MainActivity extends BaseActivity {
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
         }
-
     }
 
     // 캠퍼스 목록 조회

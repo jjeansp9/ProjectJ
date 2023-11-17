@@ -1114,7 +1114,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         int n = -1;
 
         if (TextUtils.isEmpty(mEtName.getText().toString())) {
-            s = "test" + new RandomStringCreator(getString(R.string.id_pattern)).generateRandomString(4, 4);
+            s = "test" + new RandomStringCreator("qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM").generateRandomString(4, 4);
             mEtName.setText(s); // 학생이름
             mEtName.setEnabled(false);
         }

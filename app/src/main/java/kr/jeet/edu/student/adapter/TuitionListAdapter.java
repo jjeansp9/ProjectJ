@@ -97,6 +97,8 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 if (position == mList.size() - 1) {
                     // 마지막 아이템인 경우, contentHolder.line을 invisible로 설정
                     //contentHolder.lineContentBottom.setVisibility(View.INVISIBLE);
+
+                    // 마지막 아이템 하단에 있는 line의 margin을 없애기
                     ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentHolder.lineContentBottom.getLayoutParams();
                     int marginInDp = (int) TypedValue.applyDimension(
                             TypedValue.COMPLEX_UNIT_DIP,

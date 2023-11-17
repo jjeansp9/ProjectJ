@@ -136,33 +136,33 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
             List<PushMessage> newMessage = new ArrayList<>();
 
-            for (PushMessage msg : item){
+            Map<String, String> type = new HashMap<>();
+            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
+            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
+            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
+            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
 
-                Map<String, String> type = new HashMap<>();
-                type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
-                type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
-                type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
-                type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
+            String mappedType = type.get(selType);
 
-                String mappedType = type.get(selType);
-                if (mappedType!=null) {
-                    if (msg.pushType.equals(mappedType)){
-                        if (_stCode == msg.stCode) newMessage.add(msg);
-                        newMessage.add(msg);
-                    }
+            if (item != null) {
+                for (PushMessage msg : item){
+
+                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_stCode == msg.stCode) newMessage.add(msg);
+
+                    LogMgr.w(TAG,
+                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
+                                    "acaCode : " + msg.acaCode + "\n" +
+                                    "date : " + msg.date + "\n" +
+                                    "body : " + msg.body + "\n" +
+                                    "id : " + msg.id + "\n" +
+                                    "pushId : " + msg.pushId + "\n" +
+                                    "title : " + msg.title + "\n" +
+                                    "memberSeq : " + msg.memberSeq + "\n" +
+                                    "connSeq : " + msg.connSeq + "\n" +
+                                    "isRead : " + msg.isRead + "\n" +
+                                    "stCode : " + msg.stCode
+                    );
                 }
-                LogMgr.w(TAG,
-                        "RoomDB LIST \npushType : " + msg.pushType + "\n" +
-                                "acaCode : " + msg.acaCode + "\n" +
-                                "date : " + msg.date + "\n" +
-                                "body : " + msg.body + "\n" +
-                                "id : " + msg.id + "\n" +
-                                "pushId : " + msg.pushId + "\n" +
-                                "title : " + msg.title + "\n" +
-                                "memberSeq : " + msg.memberSeq + "\n" +
-                                "connSeq : " + msg.connSeq + "\n" +
-                                "isRead : " + msg.isRead + "\n"
-                );
             }
 
             runOnUiThread(() -> {

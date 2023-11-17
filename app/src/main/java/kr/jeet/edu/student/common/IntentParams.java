@@ -53,10 +53,9 @@ public class IntentParams {
     public final static String PARAM_BRIEFING_RESERVE_ADDED = "briefingPtSeq";  // 설명회 예약 등록
 
     public final static String PARAM_NOTICE_INFO = "noticeinfo"; // 알림장 목록에서 클릭한 data
+    public final static String PARAM_TYPE_NOTICE = "typeNotice"; // 알림으로 진입할 때 처음으로 보여지게 할 타입
 
     public final static String PARAM_SCHEDULE_INFO = "scheduleInfo"; // 선택한 캠퍼스일정 정보
-
-    public final static String PARAM_TYPE_NOTICE = "typeNotice"; // 알림에서 처음으로 보여지게 할 타입
 
     public final static String PARAM_ATTENDANCE_INFO = "attendanceInfo"; // Main에서 출석현황 클릭 시 전달
     public final static String PARAM_TEACHER_INFO = "teacherInfo";  // Main에서 지도강사 클릭 시 전달

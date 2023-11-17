@@ -170,7 +170,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 case CMD_GET_CLASS_INFO:
                     requestCls();
                 case CMD_GET_ATTENDANCE_INFO:
-                    requestGetAttendanceList();
+                    //requestGetAttendanceList();
                     break;
 
 //                case CMD_GET_TUITION_INFO:
@@ -312,24 +312,24 @@ public class MenuStudentInfoActivity extends BaseActivity {
         mImgStuProfile = findViewById(R.id.img_stu_info_profile);
         //progressBar = findViewById(R.id.progress_bar);
 
-        mSpinnerCls = findViewById(R.id.spinner_cls);
-        mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
-            @Override
-            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
-                mSpinnerCls.dismiss();
-            }
-        });
-
-        mSpinnerCls.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            Optional optional = mListCls.stream().filter(t->String.valueOf(newItem).equals(t.clsName)).findFirst();
-            if(optional.isPresent()) {
-                _selectedClass = (TeacherClsData) optional.get();
-                _clsCode = _selectedClass.clsCode;
-                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
-            }
-        });
-        mSpinnerCls.setLifecycleOwner(this);
-        mSpinnerCls.setIsFocusable(true);
+//        mSpinnerCls = findViewById(R.id.spinner_cls);
+//        mSpinnerCls.setSpinnerOutsideTouchListener(new OnSpinnerOutsideTouchListener() {
+//            @Override
+//            public void onSpinnerOutsideTouch(@NonNull View view, @NonNull MotionEvent motionEvent) {
+//                mSpinnerCls.dismiss();
+//            }
+//        });
+//
+//        mSpinnerCls.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+//            Optional optional = mListCls.stream().filter(t->String.valueOf(newItem).equals(t.clsName)).findFirst();
+//            if(optional.isPresent()) {
+//                _selectedClass = (TeacherClsData) optional.get();
+//                _clsCode = _selectedClass.clsCode;
+//                _handler.sendEmptyMessage(CMD_GET_ATTENDANCE_INFO);
+//            }
+//        });
+//        mSpinnerCls.setLifecycleOwner(this);
+//        mSpinnerCls.setIsFocusable(true);
 
         strYear = currentYear + getString(R.string.year);
         strMonth = currentMonth + getString(R.string.month);
@@ -347,7 +347,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
         setCalendar();
         initChipGroup();
-        setSpinnerTeacher();
+        //setSpinnerTeacher();
 
         if (mListCls.size() == 0) {
             _calendarView.setVisibility(View.VISIBLE);
@@ -357,7 +357,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
             mBtnConsultation.setBackgroundResource(R.drawable.bt_menu_stu_info_consultation_request_disabled);
         }else{
             _calendarView.setVisibility(View.VISIBLE);
-            mSpinnerCls.setVisibility(View.VISIBLE);
+            //mSpinnerCls.setVisibility(View.VISIBLE);
             chipGroupLegend.setVisibility(View.VISIBLE);
 //            mTvAttendanceEmpty.setVisibility(View.GONE);
             mBtnConsultation.setBackgroundResource(R.drawable.selector_bt_stu_info_consultation_request);
@@ -564,7 +564,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
                         if (response.isSuccessful() && response.body() != null){
                             if(mListCls != null) mListCls.clear();
                             mListCls.addAll(response.body().data);
-                            setSpinnerTeacher();
+                            //setSpinnerTeacher();
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestCls() errBody : " + response.errorBody().string());
@@ -729,116 +729,114 @@ public class MenuStudentInfoActivity extends BaseActivity {
         }
     }
 
-    View view;
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void setSpinnerTeacher(){
-        LogMgr.e(TAG, "setSpinnerClass()");
-        try {
-            if(mListCls != null && mListCls.size() > 0) {
-                if(mSpinnerCls.getVisibility() != View.VISIBLE) {
-                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
-                    mSpinnerCls.setVisibility(View.VISIBLE);
-                }
-            }else{
-                mSpinnerCls.setVisibility(View.GONE);
-                mSpinnerCls.clearSelectedItem();
-                if(_selectedClass != null) {
-                    Toast.makeText(mContext, R.string.msg_empty_class, Toast.LENGTH_SHORT).show();
-                    _selectedClass = null;
-                    _clsCode = 0;
-                }
-                if(_attendanceList != null) {
-                    _attendanceList.clear();
-                    _attendanceListAdapter.notifyDataSetChanged();
-                }
-
-//                if(!isContainClassInfo) {   //클래스정보가 없는 경우 출석을 표시할 수 없으므로 gone 처리함
-//                    layoutAttendanceArea.setVisibility(View.GONE);
+//    @SuppressLint("ClickableViewAccessibility")
+//    private void setSpinnerTeacher(){
+//        LogMgr.e(TAG, "setSpinnerClass()");
+//        try {
+//            if(mListCls != null && mListCls.size() > 0) {
+//                if(mSpinnerCls.getVisibility() != View.VISIBLE) {
+//                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+//                    mSpinnerCls.setVisibility(View.VISIBLE);
 //                }
-                return;
-            }
-//            List<String> sfNames = new ArrayList<>();
-
-//            for (TeacherClsData data : _classList) sfNames.add(data.clsName);
-
-            Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
-
-            if(_selectedClass != null){
-                Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
-                if (optional.isPresent()) {
-                    _selectedClass = (TeacherClsData) optional.get();
-                    try {
-                        int index = mListCls.indexOf(_selectedClass);
-                        mSpinnerCls.selectItemByIndex(index);
-                    }catch(Exception ex) {
-                        Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
-                        mSpinnerCls.selectItemByIndex(0);
-                    }
-                } else {
-                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
-                    mSpinnerCls.selectItemByIndex(0);
-                }
-            }else{
-                mSpinnerCls.selectItemByIndex(0);
-            }
-
-        }catch (Exception e){}
-    }
+//            }else{
+//                mSpinnerCls.setVisibility(View.GONE);
+//                mSpinnerCls.clearSelectedItem();
+//                if(_selectedClass != null) {
+//                    Toast.makeText(mContext, R.string.msg_empty_class, Toast.LENGTH_SHORT).show();
+//                    _selectedClass = null;
+//                    _clsCode = 0;
+//                }
+//                if(_attendanceList != null) {
+//                    _attendanceList.clear();
+//                    _attendanceListAdapter.notifyDataSetChanged();
+//                }
+//
+////                if(!isContainClassInfo) {   //클래스정보가 없는 경우 출석을 표시할 수 없으므로 gone 처리함
+////                    layoutAttendanceArea.setVisibility(View.GONE);
+////                }
+//                return;
+//            }
+////            List<String> sfNames = new ArrayList<>();
+//
+////            for (TeacherClsData data : _classList) sfNames.add(data.clsName);
+//
+//            Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
+//
+//            if(_selectedClass != null){
+//                Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
+//                if (optional.isPresent()) {
+//                    _selectedClass = (TeacherClsData) optional.get();
+//                    try {
+//                        int index = mListCls.indexOf(_selectedClass);
+//                        mSpinnerCls.selectItemByIndex(index);
+//                    }catch(Exception ex) {
+//                        Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+//                        mSpinnerCls.selectItemByIndex(0);
+//                    }
+//                } else {
+//                    Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
+//                    mSpinnerCls.selectItemByIndex(0);
+//                }
+//            }else{
+//                mSpinnerCls.selectItemByIndex(0);
+//            }
+//
+//        }catch (Exception e){}
+//    }
 
 
     // 출결조회 (월별)
-    private void requestGetAttendanceList(){
-        SimpleDateFormat mFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYYMM);
-        String date = mFormat.format(_selectedDate);
-
-        if (RetrofitClient.getInstance() != null){
-            LogMgr.e(TAG, "clsCode: " + _clsCode);
-
-            RetrofitClient.getApiInterface().getMonthlyAttendanceInfo(date, _clsCode, _stCode).enqueue(new Callback<GetAttendanceInfoResponse>() {
-                @Override
-                public void onResponse(Call<GetAttendanceInfoResponse> call, Response<GetAttendanceInfoResponse> response) {
-                    try {
-                        if(_attendanceList != null && _attendanceList.size() > 0) {
-                            _attendanceList.clear();
-                        }
-                        if (response.isSuccessful()){
-                            List<AttendanceData> getData = null;
-                            if (response.body() != null) {
-
-                                getData = response.body().data;
-                                _attendanceList.addAll(getData);
-                            }
-                        }else{
-                            //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                        }
-                    }catch (Exception e){
-                        LogMgr.e(TAG + "requestGetAttendanceList() Exception : ", e.getMessage());
-                    }finally{
-//                        hideProgressDialog();
-                        _attendanceListAdapter.notifyDataSetChanged();
-                        updateCalView();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<GetAttendanceInfoResponse> call, Throwable t) {
-                    try {
-                        if(_attendanceList != null && _attendanceList.size() > 0) {
-                            _attendanceList.clear();
-                        }
-                        //Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                        LogMgr.e(TAG, "requestGetAttendanceList() onFailure >> " + t.getMessage());
-                    }catch (Exception e){
-                    }finally{
-//                        hideProgressDialog();
-                        _attendanceListAdapter.notifyDataSetChanged();
-                        updateCalView();
-                    }
-                }
-            });
-        }
-    }
+//    private void requestGetAttendanceList(){
+//        SimpleDateFormat mFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYYMM);
+//        String date = mFormat.format(_selectedDate);
+//
+//        if (RetrofitClient.getInstance() != null){
+//            LogMgr.e(TAG, "clsCode: " + _clsCode);
+//
+//            RetrofitClient.getApiInterface().getMonthlyAttendanceInfo(date, _clsCode, _stCode).enqueue(new Callback<GetAttendanceInfoResponse>() {
+//                @Override
+//                public void onResponse(Call<GetAttendanceInfoResponse> call, Response<GetAttendanceInfoResponse> response) {
+//                    try {
+//                        if(_attendanceList != null && _attendanceList.size() > 0) {
+//                            _attendanceList.clear();
+//                        }
+//                        if (response.isSuccessful()){
+//                            List<AttendanceData> getData = null;
+//                            if (response.body() != null) {
+//
+//                                getData = response.body().data;
+//                                _attendanceList.addAll(getData);
+//                            }
+//                        }else{
+//                            //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+//                        }
+//                    }catch (Exception e){
+//                        LogMgr.e(TAG + "requestGetAttendanceList() Exception : ", e.getMessage());
+//                    }finally{
+////                        hideProgressDialog();
+//                        _attendanceListAdapter.notifyDataSetChanged();
+//                        updateCalView();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<GetAttendanceInfoResponse> call, Throwable t) {
+//                    try {
+//                        if(_attendanceList != null && _attendanceList.size() > 0) {
+//                            _attendanceList.clear();
+//                        }
+//                        //Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+//                        LogMgr.e(TAG, "requestGetAttendanceList() onFailure >> " + t.getMessage());
+//                    }catch (Exception e){
+//                    }finally{
+////                        hideProgressDialog();
+//                        _attendanceListAdapter.notifyDataSetChanged();
+//                        updateCalView();
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     private void updateCalView(){
         LogMgr.e(TAG, "updateCalView");

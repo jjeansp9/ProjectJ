@@ -146,12 +146,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 LogMgr.e(TAG,"Event heres1");
 
             }
-//            else if (intent.hasExtra(IntentParams.PARAM_BOARD_SEQ) && intent.hasExtra(IntentParams.PARAM_APPBAR_TITLE)){
-//                title = intent.getStringExtra(IntentParams.PARAM_APPBAR_TITLE);
-//                _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
-//                dataType = TYPE_ANNOUNCEMENT_FROM_MAIN;
-//                LogMgr.e(TAG, "Event here2");
-//            }
 
             if (extraKey != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
