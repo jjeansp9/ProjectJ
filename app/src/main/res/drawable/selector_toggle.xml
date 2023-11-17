@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:drawable="@drawable/icon_toggle_on"/>
+    <item android:state_checked="false" android:drawable="@drawable/icon_toggle_off"/>
+    <!-- 기본 배경 (안드로이드 버전에 따라 다를 수 있음) -->
+    <item android:drawable="?android:attr/listChoiceBackgroundIndicator" />
+</selector>

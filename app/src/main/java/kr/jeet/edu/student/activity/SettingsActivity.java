@@ -14,8 +14,12 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
@@ -41,7 +45,7 @@ public class SettingsActivity extends BaseActivity {
     private String TAG = SettingsActivity.class.getSimpleName();
 
     private TextView mTvUserGubun, mTvName, mTvPhoneNum, mTvAppVersion, mTvAppVersionBadge, mTvPrivacy, mTvService;
-    private SwitchMaterial mSwAnnouncement, mSwInformationSession, mSwAttendance, mSwSystem;
+    private SwitchMaterial mSwAnnouncement, mSwInformationSession, mSwAttendance, mSwSystem, mSwAll;
     private AppCompatButton btnSetAccount;
     private RetrofitApi mRetrofitApi;
     private ConstraintLayout layoutFirst, layoutSecond, layoutThird;
@@ -134,11 +138,13 @@ public class SettingsActivity extends BaseActivity {
         mSwInformationSession = (SwitchMaterial) findViewById(R.id.sw_set_information_session_state);
         mSwAttendance = (SwitchMaterial) findViewById(R.id.sw_set_attendance_state);
         mSwSystem = (SwitchMaterial) findViewById(R.id.sw_set_system_state);
+        mSwAll = (SwitchMaterial) findViewById(R.id.sw_set_all_state);
 
         mSwAnnouncement.setOnClickListener(this);
         mSwInformationSession.setOnClickListener(this);
         mSwAttendance.setOnClickListener(this);
         mSwSystem.setOnClickListener(this);
+        mSwAll.setOnClickListener(this);
 
         findViewById(R.id.layout_set_operation_policy).setOnClickListener(this);
         findViewById(R.id.layout_set_PI_use_consent).setOnClickListener(this);
@@ -173,6 +179,22 @@ public class SettingsActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_set_account:
                 startActivity();
+                break;
+
+            case R.id.sw_set_all_state:
+                if (mSwAll.isChecked()) {
+                    pushAnnouncement = CHECKED_OK;
+                    pushInformationSession = CHECKED_OK;
+                    pushAttendance = CHECKED_OK;
+                    pushSystem = CHECKED_OK;
+                }
+                else {
+                    pushAnnouncement = CHECKED_CANCEL;
+                    pushInformationSession = CHECKED_CANCEL;
+                    pushAttendance = CHECKED_CANCEL;
+                    pushSystem = CHECKED_CANCEL;
+                }
+                requestUpdatePush(true);
                 break;
 
             case R.id.sw_set_announcement_state:

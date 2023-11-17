@@ -80,6 +80,10 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
+    /**
+    * 설정에서 스위치 drawable 변경하기 [ @drawable/selector_toggle ]
+    * */
+
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;

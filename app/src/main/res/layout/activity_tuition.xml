@@ -37,7 +37,6 @@
         android:text="@string/menu_stu_info_tuition_empty"
         android:textColor="@color/font_color_999"
         android:textSize="@dimen/font_size_xlarge"
-        android:textStyle="bold"
         android:padding="30dp"
         android:visibility="invisible"/>
 

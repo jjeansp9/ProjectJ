@@ -150,13 +150,19 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="@id/line_notice_state"
+                    app:layout_constraintTop_toTopOf="@id/sw_set_all_state"
+                    app:layout_constraintBottom_toBottomOf="@id/sw_set_all_state"
                     android:text="@string/settings_notice_reception_state"
                     android:textColor="@color/black"
                     android:textStyle="bold"
                     android:textSize="@dimen/font_size_large"/>
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/sw_set_all_state"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
 
                 <View
                     android:id="@+id/line_notice_state"
@@ -185,7 +191,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@id/line_notice_state"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:track="@drawable/selector_toggle" />
+
+<!--                <ImageButton-->
+<!--                    android:id="@+id/sw_set_announcement_state"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintTop_toBottomOf="@id/line_notice_state"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:background="@drawable/selector_toggle"-->
+<!--                    android:layout_marginTop=""/>-->
 
                 <TextView
                     android:id="@+id/tv_set_briefing_state"
