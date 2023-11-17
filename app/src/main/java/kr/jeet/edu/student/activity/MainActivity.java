@@ -91,8 +91,7 @@ public class MainActivity extends BaseActivity {
             mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty, mTvNameSub;
     private ImageView imgStudentAttendance;
     //private ImageView ivAttendanceNew;
-    private LinearLayoutCompat mLayoutBottom;
-    private ConstraintLayout layoutAttend, layoutNotify;
+    private ConstraintLayout btnTeacher, btnTuition, newAnnouncement;
 
     private RetrofitApi mRetrofitApi;
     boolean doubleBackToExitPressedOnce = false;
@@ -292,7 +291,9 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
         //ivAttendanceNew = findViewById(R.id.img_attendance_new);
-        layoutAttend = findViewById(R.id.btn_attendance_state);
+        btnTeacher = findViewById(R.id.btn_teacher);
+        btnTuition = findViewById(R.id.btn_attendance_state);
+        newAnnouncement = findViewById(R.id.layout_announcement);
 
         mTvStudentName = findViewById(R.id.tv_student_name);
         mTvStudentCampus = findViewById(R.id.tv_student_campus);
@@ -305,8 +306,6 @@ public class MainActivity extends BaseActivity {
         mTvTeacherName = findViewById(R.id.tv_teacher_name);
         mTvListEmpty = findViewById(R.id.tv_main_empty_list);
         mTvNameSub = findViewById(R.id.tv_name_sub);
-
-        mLayoutBottom = findViewById(R.id.layout_bottom);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_menu);
         announceRecycler = (RecyclerView) findViewById(R.id.recycler_announcement);
@@ -410,7 +409,9 @@ public class MainActivity extends BaseActivity {
                     mTvAttendanceDate.setVisibility(View.GONE); // 출석날짜
                     mTvNonMember.setVisibility(View.GONE); // 비회원 배지
 
-                    mLayoutBottom.setVisibility(View.GONE); // 화면 하단 레이아웃 gone
+                    btnTeacher.setVisibility(View.GONE); // 화면 하단 지도강사 버튼 gone
+                    btnTuition.setVisibility(View.GONE); // 화면 하단 수강료납부 버튼 gone
+                    newAnnouncement.setVisibility(View.GONE); // 최근 공지사항 레이아웃 gone
 
                     if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR_STUDENT +STR_NON_MEMBER; // 원생
                     else str = MR_PARENT+STR_NON_MEMBER; // 부모

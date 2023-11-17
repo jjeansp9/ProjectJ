@@ -221,11 +221,10 @@ public class MenuAttendanceActivity extends BaseActivity {
                 if(mSpinnerCls.getVisibility() != View.VISIBLE) {
                     Toast.makeText(mContext, R.string.msg_changed_class, Toast.LENGTH_SHORT).show();
                     mSpinnerCls.setVisibility(View.VISIBLE);
-                    mTvListEmpty.setVisibility(View.GONE);
+                    mSpinnerCls.setEnabled(true);
                 }
             }else{
-                mTvListEmpty.setVisibility(View.VISIBLE);
-                mSpinnerCls.setVisibility(View.GONE);
+                mSpinnerCls.setEnabled(false);
                 mSpinnerCls.clearSelectedItem();
                 if(_selectedClass != null) {
                     Toast.makeText(mContext, R.string.msg_empty_class, Toast.LENGTH_SHORT).show();
@@ -241,6 +240,7 @@ public class MenuAttendanceActivity extends BaseActivity {
 
             Utils.updateSpinnerList(mSpinnerCls, mListCls.stream().map(t->t.clsName).collect(Collectors.toList()));
             if(_selectedClass != null){
+                mSpinnerCls.setEnabled(true);
                 Optional optional = mListCls.stream().filter(t -> t.clsName.equals(_selectedClass.clsName)).findFirst();
                 if (optional.isPresent()) {
                     _selectedClass = (TeacherClsData) optional.get();
@@ -256,6 +256,7 @@ public class MenuAttendanceActivity extends BaseActivity {
                     mSpinnerCls.selectItemByIndex(0);
                 }
             }else{
+                mSpinnerCls.setEnabled(true);
                 mSpinnerCls.selectItemByIndex(0);
             }
 
@@ -433,6 +434,7 @@ public class MenuAttendanceActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestGetAttendanceList() Exception : ", e.getMessage());
                     }finally{
 //                        hideProgressDialog();
+                        mTvListEmpty.setVisibility(_attendanceList.isEmpty() ? View.VISIBLE : View.GONE);
                         _attendanceListAdapter.notifyDataSetChanged();
                         updateCalView();
                     }
@@ -449,6 +451,7 @@ public class MenuAttendanceActivity extends BaseActivity {
                     }catch (Exception e){
                     }finally{
 //                        hideProgressDialog();
+                        mTvListEmpty.setVisibility(_attendanceList.isEmpty() ? View.VISIBLE : View.GONE);
                         _attendanceListAdapter.notifyDataSetChanged();
                         updateCalView();
                     }

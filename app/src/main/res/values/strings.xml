@@ -230,8 +230,8 @@
     <string name="menu_stu_info_book_pay">교재비</string>
     <string name="menu_stu_info_unpaid_amount">미납 금액</string>
     <string name="menu_stu_info_empty">정보 없음</string>
-    <string name="menu_stu_info_tuition_empty">미납 내역이 없습니다</string>
-    <string name="menu_stu_info_attendance_empty">출석 정보가 없습니다</string>
+    <string name="menu_stu_info_tuition_empty">미납된 수강료가 없습니다.</string>
+    <string name="menu_stu_info_attendance_empty">출석 정보가 없습니다.\n\n반 정보가 없는 경우,\n일자변경을 해주세요.</string>
     <string name="menu_stu_info_impossible_sel_previous">1999년 이전의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_impossible_sel_next">2099년 이후의 날짜는 선택이 불가능합니다</string>
     <string name="menu_stu_info_attendance">출석부</string>

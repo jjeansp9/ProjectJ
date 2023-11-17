@@ -118,7 +118,6 @@
         android:text="@string/announcement_list_empty"
         android:textColor="@color/font_color_999"
         android:textSize="@dimen/font_size_xlarge"
-        android:textStyle="bold"
         android:visibility="gone"/>
 
 

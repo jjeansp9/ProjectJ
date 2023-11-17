@@ -119,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="예약한 테스트가 없습니다."
+            android:text="테스트 예약내역이 없습니다."
             android:textSize="@dimen/font_size_xlarge"
             android:visibility="gone"
             android:textColor="@color/font_color_999"

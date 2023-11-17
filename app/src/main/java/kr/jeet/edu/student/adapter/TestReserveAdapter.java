@@ -71,9 +71,9 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder.getItemViewType() == VIEW_TYPE_HEADER){
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
             headerViewHolder.tvHeader.setText(mContext.getString(R.string.menu_test_reserve_header));
-
-            if (mList.size() <= 1) headerViewHolder.lineHeader.setVisibility(View.GONE);
-            else headerViewHolder.lineHeader.setVisibility(View.VISIBLE);
+            headerViewHolder.lineHeader.setVisibility(View.VISIBLE);
+//            if (mList.size() <= 1) headerViewHolder.lineHeader.setVisibility(View.GONE);
+//            else headerViewHolder.lineHeader.setVisibility(View.VISIBLE);
 
         }else {
             TestReserveData item = mList.get(position);
