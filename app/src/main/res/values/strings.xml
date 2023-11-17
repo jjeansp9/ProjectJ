@@ -207,7 +207,8 @@
     <string name="menu_item_edit">수정</string>
     <string name="menu_item_reserve">예약</string>
     <string name="announcement_spinner_default_text">전체</string>
-    <string name="announcement_list_empty">공지사항 목록에 글이 없습니다</string>
+    <string name="announcement_list_empty">공지사항이 없습니다.</string>
+    <string name="new_announcement_list_empty">최신글이 없습니다.</string>
 
     <string name="main_tv_attendance_state">출석현황</string>
     <string name="main_tv_attendance_confirm">확인하기 ></string>
