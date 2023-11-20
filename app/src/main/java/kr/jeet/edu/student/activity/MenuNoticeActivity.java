@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -36,10 +37,19 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.SystemNoticeData;
+import kr.jeet.edu.student.model.data.SystemNoticeListData;
+import kr.jeet.edu.student.model.data.TestReserveData;
+import kr.jeet.edu.student.model.response.SystemNoticeListResponse;
+import kr.jeet.edu.student.model.response.TestReserveListResponse;
+import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialog.OnDateSetListener {
 
@@ -51,7 +61,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private NoticeListAdapter mAdapter;
     private TextView txtEmpty, mTvCalendar;
 
-    private final ArrayList<PushMessage> mList = new ArrayList<>();
+    private final ArrayList<SystemNoticeListData> mList = new ArrayList<>();
 
     Date _selectedDate = new Date();
     SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
@@ -73,9 +83,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private int _stCode = 0;
     private String _stuName = "";
     private int _userGubun = 0;
+    private String _acaCode = "";
 
     //private boolean fromBottomMenu = false;
     private String getType = "";
+    private String selType = "";
 
     private final int TYPE_SYSTEM = 3;
     private final int TYPE_REPORT_CARD = 4;
@@ -88,10 +100,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         public void handleMessage(@NonNull Message msg) {
             switch (msg.what) {
                 case CMD_GET_LIST:
-                    if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) getListData(attendanceType);
-                    else if (getType.equals(FCMManager.MSG_TYPE_REPORT)) getListData(reportCardType);
-                    else if (getType.equals(FCMManager.MSG_TYPE_TUITION)) getListData(tuitionType);
-                    else getListData(systemType);
+                    getListData();
                     break;
             }
         }
@@ -127,52 +136,109 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         }).start();
     }
 
-    private void getListData(String selType){
+    private void getListData(int... lastSeq){
 
-        new Thread(() -> {
+//        new Thread(() -> {
+//
+//            LogMgr.i("year", selYear);
+//            LogMgr.i("month", selMonth);
+//            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
+//            List<PushMessage> newMessage = new ArrayList<>();
+//
+//            Map<String, String> type = new HashMap<>();
+//            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
+//            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
+//            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
+//            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
+//
+//            String mappedType = type.get(selType);
+//
+//            if (item != null) {
+//                for (PushMessage msg : item){
+//
+//                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_memberSeq == msg.memberSeq) if (_stCode == msg.stCode) newMessage.add(msg);
+//
+//                    LogMgr.w(TAG,
+//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
+//                                    "acaCode : " + msg.acaCode + "\n" +
+//                                    "date : " + msg.date + "\n" +
+//                                    "body : " + msg.body + "\n" +
+//                                    "id : " + msg.id + "\n" +
+//                                    "pushId : " + msg.pushId + "\n" +
+//                                    "title : " + msg.title + "\n" +
+//                                    "memberSeq : " + msg.memberSeq + "\n" +
+//                                    "connSeq : " + msg.connSeq + "\n" +
+//                                    "isRead : " + msg.isRead + "\n" +
+//                                    "stCode : " + msg.stCode
+//                    );
+//                }
+//            }
+//
+//            runOnUiThread(() -> {
+//                if (mList.size() > 0) mList.clear();
+//                mList.addAll(newMessage);
+//                mAdapter.notifyDataSetChanged();
+//                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
+//                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+//            });
+//        }).start();
 
-            LogMgr.i("year", selYear);
-            LogMgr.i("month", selMonth);
-            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
-            List<PushMessage> newMessage = new ArrayList<>();
+        String putType = "";
+        String date = selYear + selMonth;
 
-            Map<String, String> type = new HashMap<>();
-            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
-            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
-            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
-            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
+        if (selType.equals(systemType)) putType = FCMManager.MSG_TYPE_SYSTEM;
+        else if (selType.equals(attendanceType)) putType = FCMManager.MSG_TYPE_ATTEND;
+        else if (selType.equals(reportCardType)) putType = FCMManager.MSG_TYPE_REPORT;
+        else if (selType.equals(tuitionType)) putType = FCMManager.MSG_TYPE_TUITION;
 
-            String mappedType = type.get(selType);
+        int lastNoticeSeq = 0;
+        if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
 
-            if (item != null) {
-                for (PushMessage msg : item){
+        if (RetrofitClient.getInstance() != null) {
+            int finalLastNoticeSeq = lastNoticeSeq;
+            RetrofitClient.getApiInterface().getSystemNoticeList(
+                    putType,
+                    date,
+                    0,
+                    _stCode,
+                    _memberSeq,
+                    _userGubun,
+                    lastNoticeSeq,
+                    _acaCode,
+                    ""
+            ).enqueue(new Callback<SystemNoticeListResponse>() {
+                @Override
+                public void onResponse(Call<SystemNoticeListResponse> call, Response<SystemNoticeListResponse> response) {
+                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                List<SystemNoticeListData> list = response.body().data;
+                                if (list != null && !list.isEmpty()) mList.addAll(list);
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "getListData() Exception : ", e.getMessage());
+                    }
 
-                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_stCode == msg.stCode) newMessage.add(msg);
-
-                    LogMgr.w(TAG,
-                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
-                                    "acaCode : " + msg.acaCode + "\n" +
-                                    "date : " + msg.date + "\n" +
-                                    "body : " + msg.body + "\n" +
-                                    "id : " + msg.id + "\n" +
-                                    "pushId : " + msg.pushId + "\n" +
-                                    "title : " + msg.title + "\n" +
-                                    "memberSeq : " + msg.memberSeq + "\n" +
-                                    "connSeq : " + msg.connSeq + "\n" +
-                                    "isRead : " + msg.isRead + "\n" +
-                                    "stCode : " + msg.stCode
-                    );
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+                    mSwipeRefresh.setRefreshing(false);
                 }
-            }
 
-            runOnUiThread(() -> {
-                if (mList.size() > 0) mList.clear();
-                mList.addAll(newMessage);
-                mAdapter.notifyDataSetChanged();
-                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
-                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+                @Override
+                public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
+                    mList.clear();
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+
+                    mSwipeRefresh.setRefreshing(false);
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                }
             });
-        }).start();
+        }
     }
 
     @Override
@@ -192,6 +258,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _stuName = PreferenceUtil.getStName(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
+        _acaCode = PreferenceUtil.getAcaCode(mContext);
 
         noticeType = getResources().getStringArray(R.array.notice_type);
         //allType = noticeType[0];
@@ -203,6 +270,13 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_NOTICE)){
             getType = intent.getStringExtra(IntentParams.PARAM_TYPE_NOTICE);
+
+            if (getType != null) {
+                if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) selType = attendanceType;
+                else if (getType.equals(FCMManager.MSG_TYPE_REPORT)) selType = reportCardType;
+                else if (getType.equals(FCMManager.MSG_TYPE_TUITION)) selType = tuitionType;
+                else selType = systemType;
+            }
         }
     }
 
@@ -225,7 +299,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         setSpinner();
         setRecycler();
-        mSwipeRefresh.setOnRefreshListener(() -> getListData(_spinnerType.getText().toString()));
+        mSwipeRefresh.setOnRefreshListener(this::getListData);
 
         mHandler.sendEmptyMessage(CMD_GET_LIST);
     }
@@ -234,7 +308,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
-            getListData(_spinnerType.getText().toString());
+            selType = newItem.toString();
+            getListData();
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
@@ -265,14 +340,28 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         dividerItemDecoration.setDrawable(dividerColor);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(((!mRecyclerView.canScrollVertically(1)) && mRecyclerView.canScrollVertically(-1))
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                        && (mList != null && !mList.isEmpty()))
+                {
+                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    getListData(lastNoticeSeq);
+                }
+            }
+        });
     }
 
-    private void startActivity(PushMessage item){
+    private void startActivity(SystemNoticeListData item){
         if (item != null){
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
-            intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
+            //intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
 
-            switch (item.pushType) {
+            switch (item.searchType) {
                 case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
                     startBoardDetailActivity(item, TYPE_SYSTEM);
                     break;
@@ -281,7 +370,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                     Intent webIntent = new Intent(mContext, WebViewActivity.class);
                     webIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
                     webIntent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/web/api/member/signIn");
-                    webIntent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, item);
+                    //webIntent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, item);
                     startActivity(webIntent);
                     break;
 
@@ -334,14 +423,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         selMonth = _monthFormat.format(_selectedDate);
 
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
-        getListData(_spinnerType.getText().toString());
+        getListData();
     }
 
-    private void startBoardDetailActivity(PushMessage item, int type) {
+    private void startBoardDetailActivity(SystemNoticeListData item, int type) {
         Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
         intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
         intent.putExtra(IntentParams.PARAM_DATA_TYPE, type);
-        intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
+        intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.seq);
         startActivity(intent);
     }
 }

@@ -23,16 +23,17 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.SystemNoticeListData;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
-    public interface ItemClickListener{ public void onItemClick(PushMessage item); }
+    public interface ItemClickListener{ public void onItemClick(SystemNoticeListData item); }
 
     private Context mContext;
-    private ArrayList<PushMessage> mList;
+    private ArrayList<SystemNoticeListData> mList;
     private ItemClickListener _listener;
 
-    public NoticeListAdapter(Context mContext, ArrayList<PushMessage> mList, ItemClickListener _listener) {
+    public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
         this._listener = _listener;
@@ -48,9 +49,9 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (position != NO_POSITION){
 
-            PushMessage item = mList.get(position);
+            SystemNoticeListData item = mList.get(position);
 
-            String noticeType = TextUtils.isEmpty(item.pushType) ? "" : item.pushType;
+            String noticeType = TextUtils.isEmpty(item.searchType) ? "" : item.searchType;
             String strType = "";
 
             if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
@@ -70,12 +71,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 setClickDisabled(strType, holder);
             }
             else {
-                holder.tvType.setText(TextUtils.isEmpty(item.pushType) ? "정보없음" : item.pushType);
+                holder.tvType.setText(TextUtils.isEmpty(item.searchType) ? "정보없음" : item.searchType);
                 holder.btnNext.setVisibility(View.GONE);
             }
 
-            holder.tvDate.setText(TextUtils.isEmpty(item.date.toString()) ? "" : item.date.toString().replace("T", " "));
-            holder.tvTitle.setText(TextUtils.isEmpty(item.body) ? "" : item.body);
+            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
 
             Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
             holder.imgSenderAndReceiver.setVisibility(View.GONE);

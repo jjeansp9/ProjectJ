@@ -39,6 +39,7 @@ import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.SearchChildStudentsResponse;
 import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
+import kr.jeet.edu.student.model.response.SystemNoticeListResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestInflowResponse;
@@ -59,8 +60,8 @@ public interface RetrofitApi {
 
     //public final static String SERVER_BASE_URL = "http://192.168.2.51:7777/";   //kyt local
     //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
-    public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
+    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
     public final static String PREFIX = "mobile/api/";
     public final static String FILE_SUFFIX_URL = SERVER_BASE_URL + "attachFile/";
@@ -234,6 +235,20 @@ public interface RetrofitApi {
     // 설명회 예약자 목록 조회
     @GET("pt/reservation/{ptSeq}/member/{memberSeq}")
     Call<BriefingReservedListResponse> getBrfReservedList(@Path("ptSeq") int ptSeq, @Path("memberSeq") int memberSeq);
+
+    // 알림장 목록 조회
+    @GET("systemNotices")
+    Call<SystemNoticeListResponse> getSystemNoticeList(
+            @Query("searchType") String searchType,
+            @Query("searchDate") String searchDate,
+            @Query("sfCode") int sfCode,
+            @Query("stCode") int stCode,
+            @Query("memberSeq") int memberSeq,
+            @Query("userGubun") int userGubun,
+            @Query("seq") int seq,
+            @Query("acaCode") String acaCode,
+            @Query("acaGubunCode") String acaGubunCode
+    );
 
     // 알림장 상세 조회
     @GET("systemNotice/{seq}")
