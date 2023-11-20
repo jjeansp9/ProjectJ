@@ -187,15 +187,15 @@ public class SelectStudentActivity extends BaseActivity {
                 case MSG_TYPE_REPORT: // 성적표
                 {
                     LogMgr.e(TAG, "Event sel stu");
-                    //if (_childCnt >= TWO_OR_MORE_PEOPLE) startPushActivity(WebViewActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(WebViewActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
                 {
-//                    if (_childCnt >= TWO_OR_MORE_PEOPLE) {
-//                        startActivity(new Intent(mContext, TuitionActivity.class));
-//                        _pushMessage = null;
-//                    }
+                    if (_childCnt >= TWO_PEOPLE) {
+                        startActivity(new Intent(mContext, TuitionActivity.class));
+                        _pushMessage = null;
+                    }
                 }
                 break;
 
@@ -212,10 +212,10 @@ public class SelectStudentActivity extends BaseActivity {
         Intent intent = new Intent(mContext, targetActivity);
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-//            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
-//                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
-//                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
-//            }
+            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
+                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
+                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
+            }
         }
 
         startActivity(intent);

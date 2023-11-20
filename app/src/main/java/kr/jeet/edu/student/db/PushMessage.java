@@ -66,6 +66,9 @@ public class PushMessage implements Parcelable {
         this.pushId = pushId;
         this.isRead = isRead;
     }
+
+    public PushMessage() {}
+
     public static final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd HH:mm:ss")
             .optionalStart()

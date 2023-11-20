@@ -80,10 +80,6 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
-    /**
-    * 설정에서 스위치 drawable 변경하기 [ @drawable/selector_toggle ]
-    * */
-
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;
@@ -477,13 +473,22 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_REPORT: // 성적표
                 {
-                    //if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_report_card));
+                    if (_pushMessage.stCode == _stCode) {
+                        if (intent != null) {
+                            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+                            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
+                                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
+                                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
+                            }
+                            startActivity(intent);
+                        }
+                    }
                 }
                 break;
 
                 case MSG_TYPE_TUITION: // 미납
                 {
-                    //if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
+                    if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
                 }
                 break;
 

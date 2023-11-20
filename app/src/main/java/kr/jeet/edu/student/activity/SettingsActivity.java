@@ -1,8 +1,6 @@
 package kr.jeet.edu.student.activity;
 
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.animation.Animator;
@@ -16,15 +14,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.switchmaterial.SwitchMaterial;
-
-import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
@@ -184,22 +176,10 @@ public class SettingsActivity extends BaseActivity {
             else checkAll(false);
         });
 
-        mSwAnnouncement.setOnCheckedChangeListener((view, isChecked) -> {
-            LogMgr.w(TAG, "announcement~~~" + isChecked);
-            checkConfirm();
-        });
-        mSwInformationSession.setOnCheckedChangeListener((view, isChecked) -> {
-            LogMgr.w(TAG, "mSwInformationSession~~~" + isChecked);
-            checkConfirm();
-        });
-        mSwAttendance.setOnCheckedChangeListener((view, isChecked) -> {
-            LogMgr.w(TAG, "mSwAttendance~~~" + isChecked);
-            checkConfirm();
-        });
-        mSwSystem.setOnCheckedChangeListener((view, isChecked) -> {
-            LogMgr.w(TAG, "mSwSystem~~~" + isChecked);
-            checkConfirm();
-        });
+        mSwAnnouncement.setOnCheckedChangeListener((view, isChecked) -> checkConfirm());
+        mSwInformationSession.setOnCheckedChangeListener((view, isChecked) -> checkConfirm());
+        mSwAttendance.setOnCheckedChangeListener((view, isChecked) -> checkConfirm());
+        mSwSystem.setOnCheckedChangeListener((view, isChecked) -> checkConfirm());
     }
 
     @Override

@@ -136,111 +136,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         }).start();
     }
 
-    private void getListData(int... lastSeq){
-
-//        new Thread(() -> {
-//
-//            LogMgr.i("year", selYear);
-//            LogMgr.i("month", selMonth);
-//            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
-//            List<PushMessage> newMessage = new ArrayList<>();
-//
-//            Map<String, String> type = new HashMap<>();
-//            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
-//            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
-//            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
-//            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
-//
-//            String mappedType = type.get(selType);
-//
-//            if (item != null) {
-//                for (PushMessage msg : item){
-//
-//                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_memberSeq == msg.memberSeq) if (_stCode == msg.stCode) newMessage.add(msg);
-//
-//                    LogMgr.w(TAG,
-//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
-//                                    "acaCode : " + msg.acaCode + "\n" +
-//                                    "date : " + msg.date + "\n" +
-//                                    "body : " + msg.body + "\n" +
-//                                    "id : " + msg.id + "\n" +
-//                                    "pushId : " + msg.pushId + "\n" +
-//                                    "title : " + msg.title + "\n" +
-//                                    "memberSeq : " + msg.memberSeq + "\n" +
-//                                    "connSeq : " + msg.connSeq + "\n" +
-//                                    "isRead : " + msg.isRead + "\n" +
-//                                    "stCode : " + msg.stCode
-//                    );
-//                }
-//            }
-//
-//            runOnUiThread(() -> {
-//                if (mList.size() > 0) mList.clear();
-//                mList.addAll(newMessage);
-//                mAdapter.notifyDataSetChanged();
-//                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
-//                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-//            });
-//        }).start();
-
-        String putType = "";
-        String date = selYear + selMonth;
-
-        if (selType.equals(systemType)) putType = FCMManager.MSG_TYPE_SYSTEM;
-        else if (selType.equals(attendanceType)) putType = FCMManager.MSG_TYPE_ATTEND;
-        else if (selType.equals(reportCardType)) putType = FCMManager.MSG_TYPE_REPORT;
-        else if (selType.equals(tuitionType)) putType = FCMManager.MSG_TYPE_TUITION;
-
-        int lastNoticeSeq = 0;
-        if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
-
-        if (RetrofitClient.getInstance() != null) {
-            int finalLastNoticeSeq = lastNoticeSeq;
-            RetrofitClient.getApiInterface().getSystemNoticeList(
-                    putType,
-                    date,
-                    0,
-                    _stCode,
-                    _memberSeq,
-                    _userGubun,
-                    lastNoticeSeq,
-                    _acaCode,
-                    ""
-            ).enqueue(new Callback<SystemNoticeListResponse>() {
-                @Override
-                public void onResponse(Call<SystemNoticeListResponse> call, Response<SystemNoticeListResponse> response) {
-                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
-                    try {
-                        if (response.isSuccessful()) {
-                            if (response.body() != null) {
-                                List<SystemNoticeListData> list = response.body().data;
-                                if (list != null && !list.isEmpty()) mList.addAll(list);
-                            }
-                        } else {
-                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (Exception e) {
-                        LogMgr.e(TAG + "getListData() Exception : ", e.getMessage());
-                    }
-
-                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
-                    mSwipeRefresh.setRefreshing(false);
-                }
-
-                @Override
-                public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
-                    mList.clear();
-                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
-
-                    mSwipeRefresh.setRefreshing(false);
-                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
@@ -345,6 +240,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+//                if(_selectedNotice.equals(Constants.NoticeType.LEVEL_TEST)) return; //레벨테스트는 페이징 없음
                 if(((!mRecyclerView.canScrollVertically(1)) && mRecyclerView.canScrollVertically(-1))
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
@@ -380,6 +276,112 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             }
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("item is null ");
+    }
+
+    private void getListData(int... lastSeq){
+
+//        new Thread(() -> {
+//
+//            LogMgr.i("year", selYear);
+//            LogMgr.i("month", selMonth);
+//            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
+//            List<PushMessage> newMessage = new ArrayList<>();
+//
+//            Map<String, String> type = new HashMap<>();
+//            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
+//            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
+//            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
+//            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
+//
+//            String mappedType = type.get(selType);
+//
+//            if (item != null) {
+//                for (PushMessage msg : item){
+//
+//                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_memberSeq == msg.memberSeq) if (_stCode == msg.stCode) newMessage.add(msg);
+//
+//                    LogMgr.w(TAG,
+//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
+//                                    "acaCode : " + msg.acaCode + "\n" +
+//                                    "date : " + msg.date + "\n" +
+//                                    "body : " + msg.body + "\n" +
+//                                    "id : " + msg.id + "\n" +
+//                                    "pushId : " + msg.pushId + "\n" +
+//                                    "title : " + msg.title + "\n" +
+//                                    "memberSeq : " + msg.memberSeq + "\n" +
+//                                    "connSeq : " + msg.connSeq + "\n" +
+//                                    "isRead : " + msg.isRead + "\n" +
+//                                    "stCode : " + msg.stCode
+//                    );
+//                }
+//            }
+//
+//            runOnUiThread(() -> {
+//                if (mList.size() > 0) mList.clear();
+//                mList.addAll(newMessage);
+//                mAdapter.notifyDataSetChanged();
+//                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
+//                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
+//            });
+//        }).start();
+
+        String putType = "";
+        String date = selYear + selMonth;
+
+        if (selType.equals(systemType)) putType = FCMManager.MSG_TYPE_SYSTEM;
+        else if (selType.equals(attendanceType)) putType = FCMManager.MSG_TYPE_ATTEND;
+        else if (selType.equals(reportCardType)) putType = FCMManager.MSG_TYPE_REPORT;
+        else if (selType.equals(tuitionType)) putType = FCMManager.MSG_TYPE_TUITION;
+
+        int lastNoticeSeq = 0;
+        if (lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
+
+        if (RetrofitClient.getInstance() != null) {
+            final int finalLastNoticeSeq = lastNoticeSeq;
+            RetrofitClient.getApiInterface().getSystemNoticeList(
+                    putType,
+                    date,
+                    0,
+                    _stCode,
+                    _memberSeq,
+                    _userGubun,
+                    lastNoticeSeq,
+                    _acaCode,
+                    ""
+            ).enqueue(new Callback<SystemNoticeListResponse>() {
+                @Override
+                public void onResponse(Call<SystemNoticeListResponse> call, Response<SystemNoticeListResponse> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            if (response.body() != null) {
+                                List<SystemNoticeListData> list = response.body().data;
+                                if (list != null) {
+                                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                                    mList.addAll(list);
+                                }
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "getListData() Exception : ", e.getMessage());
+                    }
+
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+                    mSwipeRefresh.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+
+                    mSwipeRefresh.setRefreshing(false);
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override

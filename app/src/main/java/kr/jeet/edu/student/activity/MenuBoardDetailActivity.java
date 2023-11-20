@@ -33,6 +33,7 @@ import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
+import kr.jeet.edu.student.model.data.SystemNoticeListData;
 import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
@@ -64,6 +65,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private DownloadReceiver _downloadReceiver = null;
     AnnouncementData _currentData = null;
     PushMessage _pushData = null;
+    SystemNoticeListData _systemNoticeListData = null;
     SystemNoticeData _systemNoticeData = null;
     private int _currentSeq = -1;
     private String title = "";
@@ -139,12 +141,22 @@ public class MenuBoardDetailActivity extends BaseActivity {
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_DATA_TYPE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
                 title = getString(R.string.title_detail);
-                _pushData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
+                _systemNoticeListData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
                 _currentSeq = intent.getIntExtra(IntentParams.PARAM_BOARD_SEQ, _currentSeq);
                 dataType = intent.getIntExtra(IntentParams.PARAM_DATA_TYPE, dataType);
-                if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-                LogMgr.e(TAG,"Event heres1");
 
+                if (_systemNoticeListData != null) {
+
+                    if (_pushData == null) _pushData = new PushMessage();
+
+                    _pushData.pushId = _systemNoticeListData.pushId;
+                    _pushData.pushType = _systemNoticeListData.searchType;
+                    _pushData.connSeq = _systemNoticeListData.seq;
+                    _pushData.stCode = _stCode;
+
+                    new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+                }
+                LogMgr.e(TAG,"Event heres1");
             }
 
             if (extraKey != null) {
