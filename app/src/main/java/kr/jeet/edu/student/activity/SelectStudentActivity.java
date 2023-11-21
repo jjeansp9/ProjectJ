@@ -187,7 +187,7 @@ public class SelectStudentActivity extends BaseActivity {
                 case MSG_TYPE_REPORT: // 성적표
                 {
                     LogMgr.e(TAG, "Event sel stu");
-                    if (_childCnt >= TWO_PEOPLE) startPushActivity(WebViewActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(ReportDetailActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
@@ -212,9 +212,8 @@ public class SelectStudentActivity extends BaseActivity {
         Intent intent = new Intent(mContext, targetActivity);
         if(_pushMessage != null) {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
-                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
-                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
+            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) { // 성적표
+                // TODO : 추후 전달할 데이터가 있다면 추가하기
             }
         }
 

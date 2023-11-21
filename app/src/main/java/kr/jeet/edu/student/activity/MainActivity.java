@@ -473,14 +473,10 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_REPORT: // 성적표
                 {
-                    if (_pushMessage.stCode == _stCode) {
-                        if (intent != null) {
-                            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) {
-                                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
-                                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/jeet");
-                            }
-                            startActivity(intent);
+                    if (_pushMessage.memberSeq == _memberSeq) {
+                        if (_pushMessage.stCode == _stCode) {
+                            // TODO : 추후 전달할 데이터 추가하기
+                            startActivity(new Intent(mContext, ReportDetailActivity.class));
                         }
                     }
                 }

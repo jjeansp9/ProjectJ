@@ -220,6 +220,8 @@ public class MenuTestReserveActivity extends BaseActivity {
 
                 @Override
                 public void onFailure(Call<TestReserveListResponse> call, Throwable t) {
+                    mList.clear();
+                    mList.add(0, new TestReserveData());
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
 

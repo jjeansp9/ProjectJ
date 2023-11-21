@@ -120,6 +120,12 @@
         tools:replace="android:allowBackup"
         >
         <activity
+            android:name=".activity.ReportDetailActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            />
+        <activity
             android:name=".activity.TuitionActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"

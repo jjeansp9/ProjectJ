@@ -116,6 +116,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) changeMessageState2Read();
         setAnimMove(Constants.MOVE_DOWN);
+
+        startActivity(new Intent(mContext, ReportDetailActivity.class)); // 성적표 임시
     }
 
     void changeMessageState2Read() {
@@ -240,7 +242,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-//                if(_selectedNotice.equals(Constants.NoticeType.LEVEL_TEST)) return; //레벨테스트는 페이징 없음
                 if(((!mRecyclerView.canScrollVertically(1)) && mRecyclerView.canScrollVertically(-1))
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
@@ -254,24 +255,22 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private void startActivity(SystemNoticeListData item){
         if (item != null){
-            Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
-            //intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
-
+            Intent intent;
             switch (item.searchType) {
                 case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
                     startBoardDetailActivity(item, TYPE_SYSTEM);
                     break;
 
                 case FCMManager.MSG_TYPE_REPORT:  // 성적표
-                    Intent webIntent = new Intent(mContext, WebViewActivity.class);
-                    webIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, "성적표");
-                    webIntent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, "http://192.168.2.77:7777/web/api/member/signIn");
-                    //webIntent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, item);
-                    startActivity(webIntent);
+                    // TODO: 성적표 리스트로 이동해야함
+//                    intent = new Intent(mContext, ReportDetailActivity.class);
+//                    intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
+//                    startActivity(intent);
                     break;
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
-                    startActivity(new Intent(mContext, TuitionActivity.class));
+                    intent = new Intent(mContext, TuitionActivity.class);
+                    startActivity(intent);
                     break;
             }
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
@@ -353,12 +352,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 public void onResponse(Call<SystemNoticeListResponse> call, Response<SystemNoticeListResponse> response) {
                     try {
                         if (response.isSuccessful()) {
+                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                             if (response.body() != null) {
                                 List<SystemNoticeListData> list = response.body().data;
-                                if (list != null) {
-                                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
-                                    mList.addAll(list);
-                                }
+                                if (list != null) mList.addAll(list);
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
@@ -374,6 +371,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                 @Override
                 public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
+                    if (mList.size() > 0) mList.clear();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
 

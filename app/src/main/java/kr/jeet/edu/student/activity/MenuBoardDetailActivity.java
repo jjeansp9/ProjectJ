@@ -273,7 +273,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private void setView(){
         LogMgr.w(TAG,"memberResponseVO = " + _currentData.memberResponseVO);
         mTvTitle.setText(_currentData.title); // 제목
-        //mTvName.setVisibility(View.GONE);
         mTvName.setText(_currentData.memberResponseVO.name); // 작성자 이름
         mTvDate.setText(_currentData.insertDate); // 작성날짜
         mTvContent.setText(_currentData.content); // 내용
