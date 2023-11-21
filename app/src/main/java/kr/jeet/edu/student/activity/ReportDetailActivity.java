@@ -20,6 +20,7 @@ public class ReportDetailActivity extends BaseActivity {
     private ReportDetailAdapter mAdapter;
 
     private ArrayList<ReportDetailData> mList = new ArrayList<>();
+    private ArrayList<ReportDetailData> getTestList = new ArrayList<>();
 
     private int _memberSeq = 0;
     private int _stuSeq = 0;
@@ -27,6 +28,8 @@ public class ReportDetailActivity extends BaseActivity {
     private String _stuName = "";
     private int _userGubun = 0;
     private String _acaCode = "";
+
+    private int etTitleGubun = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +47,7 @@ public class ReportDetailActivity extends BaseActivity {
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
 
-
-    }
-
-    @Override
-    void initView() {
-        initData();
-
-        mRecycler = (RecyclerView) findViewById(R.id.report_detail_recycler);
-        mAdapter = new ReportDetailAdapter(mContext, mList);
-        mRecycler.setAdapter(mAdapter);
+        etTitleGubun = 3; // 임시
     }
 
     @Override
@@ -66,4 +60,34 @@ public class ReportDetailActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+    @Override
+    void initView() {
+        initData();
+        testData(); // TODO : 개발 진행중
+        mRecycler = (RecyclerView) findViewById(R.id.report_detail_recycler);
+        mAdapter = new ReportDetailAdapter(mContext, mList, etTitleGubun);
+        mRecycler.setAdapter(mAdapter);
+    }
+
+    private void testData() {
+        ReportDetailData testData = new ReportDetailData();
+        testData.esScore = "10";
+
+        for (int i = 0; i < 70; i++) mList.add(testData);
+
+        ReportDetailData sub = new ReportDetailData();
+        sub.esSub = "event";
+        for (int i = 0; i < mList.size(); i++) if (i % 6 == 0) mList.add(i, sub);
+
+        int currentSize = mList.size();
+        int targetSize = (currentSize + 5) / 6 * 6;
+
+        ReportDetailData dummy = new ReportDetailData();
+        dummy.esScore = "";
+        while (mList.size() < targetSize) {
+            mList.add(dummy);
+        }
+    }
+
 }

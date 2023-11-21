@@ -29,6 +29,9 @@ public class SystemNoticeListData implements Parcelable {
         pushId = in.readString();
     }
 
+    public SystemNoticeListData() {
+    }
+
     // Parcelable.Creator 구현
     public static final Creator<SystemNoticeListData> CREATOR = new Parcelable.Creator<SystemNoticeListData>() {
         @Override

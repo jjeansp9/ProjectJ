@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,10 +38,13 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.ReportCardData;
+import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.response.SystemNoticeListResponse;
+import kr.jeet.edu.student.model.response.SystemReportListResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -60,8 +64,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private SwipeRefreshLayout mSwipeRefresh;
     private NoticeListAdapter mAdapter;
     private TextView txtEmpty, mTvCalendar;
+    private AppCompatImageButton btnPrevious, btnNext;
 
     private final ArrayList<SystemNoticeListData> mList = new ArrayList<>();
+    private final ArrayList<ReportCardSummaryData> mReportList = new ArrayList<>();
 
     Date _selectedDate = new Date();
     SimpleDateFormat _dateFormat = new SimpleDateFormat(Constants.DATE_FORMATTER_YYYY_MM_KOR, Locale.KOREA);
@@ -180,16 +186,18 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     @Override
     void initView() {
         initData();
-        findViewById(R.id.btn_notice_previous).setOnClickListener(this);
-        findViewById(R.id.btn_notice_next).setOnClickListener(this);
 
         mTvCalendar = findViewById(R.id.tv_notice_calendar);
+        btnNext = findViewById(R.id.btn_notice_next);
+        btnPrevious = findViewById(R.id.btn_notice_previous);
         txtEmpty = (TextView) findViewById(R.id.tv_empty_list);
         mSwipeRefresh = findViewById(R.id.refresh_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_notice);
         _spinnerType = findViewById(R.id.spinner_notice_type);
 
         mTvCalendar.setOnClickListener(this);
+        btnNext.setOnClickListener(this);
+        btnPrevious.setOnClickListener(this);
         mTvCalendar.setText(_dateFormat.format(_selectedDate));
         selYear= _yearFormat.format(_selectedDate);
         selMonth= _monthFormat.format(_selectedDate);
@@ -201,12 +209,26 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         mHandler.sendEmptyMessage(CMD_GET_LIST);
     }
 
+    private void calendarSetVisible(int visible) {
+        mTvCalendar.setVisibility(visible);
+        btnNext.setVisibility(visible);
+        btnPrevious.setVisibility(visible);
+    }
+
     private void setSpinner(){
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             selType = newItem.toString();
-            getListData();
+
+            if (selType.equals(reportCardType)) {
+                calendarSetVisible(View.GONE);
+                getReportListData();
+            }
+            else {
+                calendarSetVisible(View.VISIBLE);
+                getListData();
+            }
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
@@ -230,7 +252,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void setRecycler(){
-        mAdapter = new NoticeListAdapter(mContext, mList, this::startActivity);
+        mAdapter = new NoticeListAdapter(mContext, mList, mReportList, this::startActivity);
         mRecyclerView.setAdapter(mAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext,LinearLayoutManager.VERTICAL);
         Drawable dividerColor = new ColorDrawable(ContextCompat.getColor(this, R.color.line_2));
@@ -247,7 +269,9 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                         && (mList != null && !mList.isEmpty()))
                 {
                     int lastNoticeSeq = mList.get(mList.size() - 1).seq;
-                    getListData(lastNoticeSeq);
+
+                    if (selType.equals(reportCardType)) getReportListData(lastNoticeSeq);
+                    else getListData(lastNoticeSeq);
                 }
             }
         });
@@ -279,57 +303,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private void getListData(int... lastSeq){
 
-//        new Thread(() -> {
-//
-//            LogMgr.i("year", selYear);
-//            LogMgr.i("month", selMonth);
-//            List<PushMessage> item = JeetDatabase.getInstance(mContext).pushMessageDao().getMessagesByYearAndMonth(selYear, selMonth);
-//            List<PushMessage> newMessage = new ArrayList<>();
-//
-//            Map<String, String> type = new HashMap<>();
-//            type.put(systemType, FCMManager.MSG_TYPE_SYSTEM);
-//            type.put(attendanceType, FCMManager.MSG_TYPE_ATTEND);
-//            type.put(reportCardType, FCMManager.MSG_TYPE_REPORT);
-//            type.put(tuitionType, FCMManager.MSG_TYPE_TUITION);
-//
-//            String mappedType = type.get(selType);
-//
-//            if (item != null) {
-//                for (PushMessage msg : item){
-//
-//                    if (mappedType!=null) if (msg.pushType.equals(mappedType)) if (_memberSeq == msg.memberSeq) if (_stCode == msg.stCode) newMessage.add(msg);
-//
-//                    LogMgr.w(TAG,
-//                            "RoomDB LIST \npushType : " + msg.pushType + "\n" +
-//                                    "acaCode : " + msg.acaCode + "\n" +
-//                                    "date : " + msg.date + "\n" +
-//                                    "body : " + msg.body + "\n" +
-//                                    "id : " + msg.id + "\n" +
-//                                    "pushId : " + msg.pushId + "\n" +
-//                                    "title : " + msg.title + "\n" +
-//                                    "memberSeq : " + msg.memberSeq + "\n" +
-//                                    "connSeq : " + msg.connSeq + "\n" +
-//                                    "isRead : " + msg.isRead + "\n" +
-//                                    "stCode : " + msg.stCode
-//                    );
-//                }
-//            }
-//
-//            runOnUiThread(() -> {
-//                if (mList.size() > 0) mList.clear();
-//                mList.addAll(newMessage);
-//                mAdapter.notifyDataSetChanged();
-//                if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
-//                if (txtEmpty != null) txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-//            });
-//        }).start();
-
         String putType = "";
         String date = selYear + selMonth;
 
         if (selType.equals(systemType)) putType = FCMManager.MSG_TYPE_SYSTEM;
         else if (selType.equals(attendanceType)) putType = FCMManager.MSG_TYPE_ATTEND;
-        else if (selType.equals(reportCardType)) putType = FCMManager.MSG_TYPE_REPORT;
+        //else if (selType.equals(reportCardType)) putType = FCMManager.MSG_TYPE_REPORT;
         else if (selType.equals(tuitionType)) putType = FCMManager.MSG_TYPE_TUITION;
 
         int lastNoticeSeq = 0;
@@ -352,7 +331,10 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 public void onResponse(Call<SystemNoticeListResponse> call, Response<SystemNoticeListResponse> response) {
                     try {
                         if (response.isSuccessful()) {
-                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
+                            if(finalLastNoticeSeq == 0) {
+                                if (mList.size() > 0) mList.clear();
+                                if (mReportList.size() > 0) mReportList.clear();
+                            }
                             if (response.body() != null) {
                                 List<SystemNoticeListData> list = response.body().data;
                                 if (list != null) mList.addAll(list);
@@ -364,7 +346,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                         LogMgr.e(TAG + "getListData() Exception : ", e.getMessage());
                     }
 
-                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    if(mAdapter != null) {
+                        mAdapter = null;
+                        mAdapter = new NoticeListAdapter(mContext, mList, mReportList, MenuNoticeActivity.this::startActivity);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                 }
@@ -372,8 +359,66 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 @Override
                 public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
                     if (mList.size() > 0) mList.clear();
+                    if (mReportList.size() > 0) mReportList.clear();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+
+                    mSwipeRefresh.setRefreshing(false);
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void getReportListData(int... lastSeq) {
+        int lastNoticeSeq = 0;
+        if (lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
+
+        if (RetrofitClient.getInstance() != null) {
+            final int finalLastNoticeSeq = lastNoticeSeq;
+            RetrofitClient.getApiInterface().getReportList(
+                    lastNoticeSeq,
+                    _memberSeq,
+                    _userGubun,
+                    _stCode,
+                    "",
+                    _acaCode
+            ).enqueue(new Callback<SystemReportListResponse>() {
+                @Override
+                public void onResponse(Call<SystemReportListResponse> call, Response<SystemReportListResponse> response) {
+                    try {
+                        if (response.isSuccessful()) {
+                            if(finalLastNoticeSeq == 0) {
+                                if (mList.size() > 0) mList.clear();
+                                if (mReportList.size() > 0) mReportList.clear();
+                            }
+                            if (response.body() != null) {
+                                List<ReportCardSummaryData> list = response.body().data;
+                                if (list != null) mReportList.addAll(list);
+                            }
+                        } else {
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        LogMgr.e(TAG + "getListData() Exception : ", e.getMessage());
+                    }
+
+                    if(mAdapter != null) {
+                        mAdapter = null;
+                        mAdapter = new NoticeListAdapter(mContext, mList, mReportList, MenuNoticeActivity.this::startActivity);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    txtEmpty.setVisibility(mReportList.size() <= 1 ? View.VISIBLE : View.GONE);
+                    mSwipeRefresh.setRefreshing(false);
+                }
+
+                @Override
+                public void onFailure(Call<SystemReportListResponse> call, Throwable t) {
+                    if (mList.size() > 0) mList.clear();
+                    if (mReportList.size() > 0) mReportList.clear();
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    txtEmpty.setVisibility(mReportList.size() <= 1 ? View.VISIBLE : View.GONE);
 
                     mSwipeRefresh.setRefreshing(false);
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

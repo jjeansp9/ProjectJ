@@ -242,4 +242,8 @@ public class Constants {
     public static final String SMS_RECEIVER_CODE = "-1"; // 수신자코드(stCode)
 
     public static final int SHOW_KEBOARD_DELAY = 200;
+
+    public static final int ET_TITLE_GUBUN_ELEMENTARY = 0;
+    public static final int ET_TITLE_GUBUN_MIDDLE = 1;
+    public static final int ET_TITLE_GUBUN_MATH = 3;
 }

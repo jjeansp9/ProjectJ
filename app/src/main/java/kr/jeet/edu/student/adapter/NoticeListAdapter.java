@@ -21,16 +21,19 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
-    public interface ItemClickListener{ public void onItemClick(SystemNoticeListData item); }
+    public interface ItemClickListener{
+        public void onItemClick(SystemNoticeListData item);
+    }
 
     private Context mContext;
     private ArrayList<SystemNoticeListData> mList;
+    private ArrayList<ReportCardSummaryData> mReportList;
     private ItemClickListener _listener;
 
     public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ItemClickListener _listener) {
@@ -38,6 +41,14 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         this.mList = mList;
         this._listener = _listener;
     }
+
+    public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ArrayList<ReportCardSummaryData> mReportList, ItemClickListener _listener) {
+        this.mContext = mContext;
+        this.mList = mList;
+        this.mReportList = mReportList;
+        this._listener = _listener;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -49,61 +60,81 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         if (position != NO_POSITION){
 
-            SystemNoticeListData item = mList.get(position);
+            if (mList.size() > 0) {
+                SystemNoticeListData item = mList.get(position);
 
-            String noticeType = TextUtils.isEmpty(item.searchType) ? "" : item.searchType;
-            String strType = "";
+                String noticeType = TextUtils.isEmpty(item.searchType) ? "" : item.searchType;
+                String strType = "";
+                if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
+                    strType = "시스템알림";
+                    setClickEnabled(strType, holder, position, item);
+                }
+                else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
+                    strType = "출결현황";
+                    setClickDisabled(strType, holder, item);
+                }
+                else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
+                    strType = "성적표";
+                    setClickEnabled(strType, holder, position, item);
+                }
+                else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
+                    strType = "미납";
+                    setClickDisabled(strType, holder, item);
+                } else {
+                    holder.tvTitle.setText("(정보없음)");
+                    holder.btnNext.setVisibility(View.GONE);
+                }
 
-            if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
-                strType = "시스템알림";
-                setClickEnabled(strType, holder, position);
-            }
-            else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
-                strType = "출결현황";
-                setClickDisabled(strType, holder);
-            }
-            else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
-                strType = "성적표";
-                setClickEnabled(strType, holder, position);
-            }
-            else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
-                strType = "미납";
-                setClickDisabled(strType, holder);
-            }
-            else {
-                holder.tvType.setText(TextUtils.isEmpty(item.searchType) ? "정보없음" : item.searchType);
-                holder.btnNext.setVisibility(View.GONE);
-            }
+            } else if (mReportList.size() > 0) {
+                ReportCardSummaryData reportItem = mReportList.get(position);
 
-            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
-            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+                if (reportItem != null) {
+                    holder.tvDate.setText(TextUtils.isEmpty(reportItem.insertDate.toString()) ? "" : reportItem.insertDate.toString().replace("T", " "));
+                    if (reportItem.reportList != null) {
+                        holder.tvTitle.setText(TextUtils.isEmpty(reportItem.reportList.get(0).etName) ? "" : reportItem.reportList.get(0).etName);
+                    } else {
+                        holder.tvTitle.setText("(정보없음)");
+                    }
+
+                } else {
+                    holder.tvTitle.setText("(정보없음)");
+                    holder.btnNext.setVisibility(View.GONE);
+                }
+            }
 
             Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
             holder.imgSenderAndReceiver.setVisibility(View.GONE);
         }
     }
 
-    private void setClickDisabled(String str, ViewHolder holder) {
-        holder.tvType.setText(str);
+    private void setClickDisabled(String str, ViewHolder holder, SystemNoticeListData item) {
+        //holder.tvType.setText(str);
         holder.btnNext.setVisibility(View.GONE);
         holder.root.setOnClickListener(null);
         holder.root.setBackgroundResource(R.color.transparent);
+
+        holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+        holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
     }
 
-    private void setClickEnabled(String str, ViewHolder holder, int position) {
-        holder.tvType.setText(str);
+    private void setClickEnabled(String str, ViewHolder holder, int position, SystemNoticeListData item) {
+        //holder.tvType.setText(str);
         holder.btnNext.setVisibility(View.VISIBLE);
         TypedValue typedValue = new TypedValue();
         mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
         holder.root.setBackgroundResource(typedValue.resourceId);
 
         holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+
+        holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+        holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
     }
 
     @Override
     public int getItemCount() {
-        if(mList == null) return 0;
-        return mList.size();
+        if (mList != null) if (mList.size() > 0) return mList.size();
+        if (mReportList != null) if (mReportList.size() > 0) return mReportList.size();
+        return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{

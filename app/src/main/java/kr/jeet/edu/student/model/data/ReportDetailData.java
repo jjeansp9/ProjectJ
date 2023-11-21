@@ -1,15 +1,16 @@
 package kr.jeet.edu.student.model.data;
 
 public class ReportDetailData {
-    private String esTitle;
-    private String esName;
-    private int esGubun;
-    private int esNum;
-    private String esScore;
-    private String etName;
-    private String etGubun;
-    private String stName;
-    private String scName;
-    private String stGrade;
-    private String etsDate;
+    public String esTitle;
+    public String esName;
+    public int esGubun;
+    public int esNum;
+    public String esSub;
+    public String esScore;
+    public String etName;
+    public String etGubun;
+    public String stName;
+    public String scName;
+    public String stGrade;
+    public String etsDate;
 }

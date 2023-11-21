@@ -41,6 +41,7 @@ import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeListResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
+import kr.jeet.edu.student.model.response.SystemReportListResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.model.response.TestInflowResponse;
 import kr.jeet.edu.student.model.response.TestReserveListResponse;
@@ -273,4 +274,14 @@ public interface RetrofitApi {
     // 버스 노선 조회
     @GET("bus/route")
     Call<BusRouteResponse> getBusRoute(@Query("busAcaName") String busAcaName, @Query("busCode") int busCode);
+    // 성적표 목록 조회
+    @GET("reportCards")
+    Call<SystemReportListResponse> getReportList(
+            @Query("reportSeq") int reportSeq,
+            @Query("memberSeq") int memberSeq,
+            @Query("userGubun") int userGubun,
+            @Query("stCode") int stCode,
+            @Query("searchKeyword") String searchKeyword,
+            @Query("acaCode") String acaCode
+    );
 }
