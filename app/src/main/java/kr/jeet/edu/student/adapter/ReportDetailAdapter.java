@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.common.Constants;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.ReportDetailData;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
@@ -44,7 +42,7 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         RecyclerView.ViewHolder holder;
 
         if (viewType == VIEW_TYPE_GRADE) holder = new GradeViewHolder(inflater.inflate(R.layout.layout_report_detail_grade_item, parent, false));
-        else holder = new MathViewHolder(inflater.inflate(R.layout.layout_report_detail_math_item, parent, false));
+        else holder = new MathViewHolder(inflater.inflate(R.layout.layout_report_show_math_item, parent, false));
         return holder;
     }
 
@@ -82,9 +80,10 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemViewType(int position) {
-        if (etTitleGubun == Constants.ET_TITLE_GUBUN_ELEMENTARY) return VIEW_TYPE_GRADE;
-        else if (etTitleGubun == Constants.ET_TITLE_GUBUN_MIDDLE) return VIEW_TYPE_GRADE;
-        else return VIEW_TYPE_MATH;
+//        if (etTitleGubun == Constants.ET_TITLE_GUBUN_ELEMENTARY) return VIEW_TYPE_GRADE;
+//        else if (etTitleGubun == Constants.ET_TITLE_GUBUN_MIDDLE) return VIEW_TYPE_GRADE;
+//        else return VIEW_TYPE_MATH;
+        return VIEW_TYPE_MATH;
     }
 
     public class GradeViewHolder extends RecyclerView.ViewHolder {

@@ -139,16 +139,9 @@ public class SelectStudentActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-//            if(_pushMessage != null) {
-//                if (mList != null && mList.size() > TWO_OR_MORE_PEOPLE) {
-//                    for (int i = 0; i < mList.size(); i++) {
-//                        if (_pushMessage.stCode == mList.get(i).stCode) {
-//                            goMain(i);
-//                            return;
-//                        }
-//                    }
-//                }
-//            }
+            // TODO : seq , stCode에 따라 다른계정의 push는 보여주지 않게 하기
+            //if (_pushMessage.memberSeq != _parentSeq) return;
+
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
                 {
@@ -187,15 +180,12 @@ public class SelectStudentActivity extends BaseActivity {
                 case MSG_TYPE_REPORT: // 성적표
                 {
                     LogMgr.e(TAG, "Event sel stu");
-                    if (_childCnt >= TWO_PEOPLE) startPushActivity(ReportDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(ReportCardDetailActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
                 {
-                    if (_childCnt >= TWO_PEOPLE) {
-                        startActivity(new Intent(mContext, TuitionActivity.class));
-                        _pushMessage = null;
-                    }
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(TuitionActivity.class);
                 }
                 break;
 

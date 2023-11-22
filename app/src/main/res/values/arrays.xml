@@ -128,7 +128,7 @@
     <string-array name="notice_type">
         <item>시스템알림</item>
         <item>출결현황</item>
-        <item>성적표</item>
+<!--        <item>성적표</item>-->
         <item>미납</item>
     </string-array>
 </resources>

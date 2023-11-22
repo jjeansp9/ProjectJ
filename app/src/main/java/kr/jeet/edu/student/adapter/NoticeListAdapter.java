@@ -33,19 +33,12 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     private Context mContext;
     private ArrayList<SystemNoticeListData> mList;
-    private ArrayList<ReportCardSummaryData> mReportList;
+    //private ArrayList<ReportCardSummaryData> mReportList;
     private ItemClickListener _listener;
 
     public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
-        this._listener = _listener;
-    }
-
-    public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ArrayList<ReportCardSummaryData> mReportList, ItemClickListener _listener) {
-        this.mContext = mContext;
-        this.mList = mList;
-        this.mReportList = mReportList;
         this._listener = _listener;
     }
 
@@ -85,25 +78,23 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                     holder.btnNext.setVisibility(View.GONE);
                 }
 
-            } else if (mReportList.size() > 0) {
-
-
-
-                ReportCardSummaryData reportItem = mReportList.get(position);
-
-                if (reportItem != null) {
-                    holder.tvDate.setText(TextUtils.isEmpty(reportItem.insertDate.toString()) ? "" : reportItem.insertDate.toString().replace("T", " "));
-                    if (reportItem.reportList != null) {
-                        holder.tvTitle.setText(TextUtils.isEmpty(reportItem.reportList.get(0).etName) ? "" : reportItem.reportList.get(0).etName);
-                    } else {
-                        holder.tvTitle.setText("(정보없음)");
-                    }
-
-                } else {
-                    holder.tvTitle.setText("(정보없음)");
-                    holder.btnNext.setVisibility(View.GONE);
-                }
             }
+//            else if (mReportList.size() > 0) {
+//                ReportCardSummaryData reportItem = mReportList.get(position);
+//
+//                if (reportItem != null) {
+//                    holder.tvDate.setText(TextUtils.isEmpty(reportItem.insertDate.toString()) ? "" : reportItem.insertDate.toString().replace("T", " "));
+//                    if (reportItem.reportList != null) {
+//                        holder.tvTitle.setText(TextUtils.isEmpty(reportItem.reportList.get(0).etName) ? "" : reportItem.reportList.get(0).etName);
+//                    } else {
+//                        holder.tvTitle.setText("(정보없음)");
+//                    }
+//
+//                } else {
+//                    holder.tvTitle.setText("(정보없음)");
+//                    holder.btnNext.setVisibility(View.GONE);
+//                }
+//            }
 
             Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
             holder.imgSenderAndReceiver.setVisibility(View.GONE);
@@ -136,7 +127,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     @Override
     public int getItemCount() {
         if (mList != null) if (mList.size() > 0) return mList.size();
-        if (mReportList != null) if (mReportList.size() > 0) return mReportList.size();
+        //if (mReportList != null) if (mReportList.size() > 0) return mReportList.size();
         return 0;
     }
 

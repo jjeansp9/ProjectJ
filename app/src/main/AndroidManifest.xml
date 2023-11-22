@@ -120,10 +120,24 @@
         tools:replace="android:allowBackup"
         >
         <activity
-            android:name=".activity.ReportDetailActivity"
+            android:name=".activity.ReportCardDetailActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
-            />
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.ReportCardShowActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.MenuReportCardActivity"
+            android:configChanges="smallestScreenSize|screenSize|screenLayout"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TuitionActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
@@ -152,19 +166,23 @@
             android:name=".activity.MenuBusActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value=""
+                />
         </activity>
         <activity
             android:name=".activity.BusRouteActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            >
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value=""
+                />
         </activity>
         <activity
             android:name=".activity.MenuNoticeActivity"
@@ -402,15 +420,18 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="kr.jeet.edu.student.provider"
             android:exported="false"
             android:grantUriPermissions="true"
-            tools:replace="android:authorities">
+            tools:replace="android:authorities"
+            >
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths"
+                />
         </provider>
     </application>
 

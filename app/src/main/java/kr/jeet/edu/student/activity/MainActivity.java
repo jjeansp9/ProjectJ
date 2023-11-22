@@ -426,6 +426,8 @@ public class MainActivity extends BaseActivity {
 
             LogMgr.e("EVENT", _pushMessage.pushType);
 
+            // TODO : seq , stCode에 따라 다른계정의 push는 보여주지 않게 하기
+
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
@@ -476,7 +478,7 @@ public class MainActivity extends BaseActivity {
                     if (_pushMessage.memberSeq == _memberSeq) {
                         if (_pushMessage.stCode == _stCode) {
                             // TODO : 추후 전달할 데이터 추가하기
-                            startActivity(new Intent(mContext, ReportDetailActivity.class));
+                            startActivity(new Intent(mContext, ReportCardShowActivity.class));
                         }
                     }
                 }
@@ -587,6 +589,8 @@ public class MainActivity extends BaseActivity {
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
             //출석부
             mList.add(new MainMenuItemData(R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
+            //성적표
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
 
         }else{ // 비회원
             //공지사항

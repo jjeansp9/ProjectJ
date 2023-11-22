@@ -121,6 +121,7 @@
     <string name="student_info">원생정보</string>
     <string name="loading">로딩중</string>
     <string name="requesting">요청중</string>
+    <string name="hint_no_information">정보 없음</string>
     <string name="write_empty">필수 입력 항목이 누락되었는지 확인해주세요</string>
     <string name="write_before_study_empty">테스트 전까지 학습한 방법 항목을 입력해주세요</string>
     <string name="write_process_empty">진도/심화학습 여부를 입력해주세요</string>
@@ -152,6 +153,7 @@
     <string name="title_bus_route_info">운행정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
     <string name="main_menu_attendance">출석부</string>
+    <string name="main_menu_report_card">성적표</string>
     <string name="main_menu_tuition">수강료 납부</string>
 
     <string name="settings_title">설정</string>
@@ -193,6 +195,7 @@
     <string name="push_type_pt">설명회예약 알림</string>
     <string name="push_type_system">시스템 알림</string>
     <string name="push_type_report_card">성적표</string>
+    <string name="hint_reportcard_content_short">전달사항</string>
 
     <string name="main_tv_first_notify">공지안내</string>
     <string name="main_tv_second_notify">공지내용 없음</string>
@@ -711,5 +714,14 @@
     <string name="msg_empty_open_with">파일을 실행할 앱이 확인되지 않습니다. 실행할 앱을 다운로드해 주세요.</string>
     <string name="board_item_confirm_download">Download 폴더에 동일한 이름의 파일이 이미 있습니다.\n다운로드하시겠습니까?</string>
     <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
+
+    <string name="empty_menu_list_report_card">성적표 내역이 없습니다.</string>
+    <string name="empty_list_report_card">성적표 정보가 없습니다.</string>
+    <string name="reportcard_binding_error">잘못된 성적표 정보입니다.</string>
+    <string name="reportcard_not_found">성적표 정보를 찾을 수 없습니다.</string>
+    <string name="title_reportcard_exam_process">응시과정</string>
+    <string name="title_reportcard_exam_date">응시일</string>
+    <string name="title_reportcard_exam_subject">제목</string>
+    <string name="title_reportcard_exam_school">학교/학년</string>
 </resources>
 

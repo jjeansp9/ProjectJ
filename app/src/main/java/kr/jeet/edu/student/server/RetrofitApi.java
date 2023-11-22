@@ -33,6 +33,8 @@ import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
+import kr.jeet.edu.student.model.response.ReportCardShowResponse;
+import kr.jeet.edu.student.model.response.ReportCardSummaryResponse;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
 import kr.jeet.edu.student.model.response.ScheduleListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
@@ -60,8 +62,8 @@ import retrofit2.http.Query;
 public interface RetrofitApi {
 
     //public final static String SERVER_BASE_URL = "http://192.168.2.51:7777/";   //kyt local
-    public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
-    //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
+    public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 신규 cloud local
 
     public final static String PREFIX = "mobile/api/";
@@ -284,4 +286,10 @@ public interface RetrofitApi {
             @Query("searchKeyword") String searchKeyword,
             @Query("acaCode") String acaCode
     );
+    //성적표 상세조회
+    @GET("reportCard/{reportSeq}")
+    Call<ReportCardSummaryResponse> getReportCardDetailList(@Path("reportSeq") int reportSeq);
+    //성적표별 데이터 상세조회
+    @GET("reportCard/{reportSeq}/list/{reportListSeq}")
+    Call<ReportCardShowResponse> getReportCardShowList(@Path("reportSeq") int reportSeq, @Path("reportListSeq") int reportListSeq);
 }

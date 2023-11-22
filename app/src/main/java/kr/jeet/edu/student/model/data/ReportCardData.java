@@ -4,23 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ReportCardData implements Parcelable {
+    public int seq;         // 성적표 리스트 seq
     public String etGubun;  //eg. "6-2 B형"
     public String etName;   //eg. "KJ 입학고사"
     public int etCode;
     public int etTitleGubun;
     public String etTitleGubunName;
     public String regDate;
-    public String msgYn;
     public boolean isSelected = false;
 
     protected ReportCardData(Parcel in) {
+        seq = in.readInt();
         etGubun = in.readString();
         etName = in.readString();
         etCode = in.readInt();
         etTitleGubun = in.readInt();
         etTitleGubunName = in.readString();
         regDate = in.readString();
-        msgYn = in.readString();
         isSelected = in.readByte() != 0;
     }
 
@@ -29,13 +29,13 @@ public class ReportCardData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(seq);
         dest.writeString(etGubun);
         dest.writeString(etName);
         dest.writeInt(etCode);
         dest.writeInt(etTitleGubun);
         dest.writeString(etTitleGubunName);
         dest.writeString(regDate);
-        dest.writeString(msgYn);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }
 

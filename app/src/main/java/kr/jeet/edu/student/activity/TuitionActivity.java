@@ -8,6 +8,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -37,8 +38,11 @@ import kr.jeet.edu.student.adapter.TuitionListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AttendanceData;
 import kr.jeet.edu.student.model.data.AttendanceSummaryData;
+import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.HolidayData;
 import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TuitionData;
@@ -79,6 +83,7 @@ public class TuitionActivity extends BaseActivity {
     private int _clsCode = 0;
 //    private String _clsName = "";
     private String currentDate = "";
+    private PushMessage _pushData = null;
 
     private static final String WEB_VIEW_URL = "https://www.shinhandamoa.com/common/login#payer";
 
@@ -116,12 +121,26 @@ public class TuitionActivity extends BaseActivity {
     private void initData(){
         currentDate = Utils.currentDate(Constants.DATE_FORMATTER_YYYYMM);
 
-        _stCode = PreferenceUtil.getUserSTCode(mContext);
         _userType = PreferenceUtil.getUserType(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);
-        _stCode = PreferenceUtil.getUserSTCode(mContext);
+
+        Intent intent = getIntent();
+        if(intent != null) {
+            if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                }else{
+                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                }
+                if (_pushData != null) _stCode = _pushData.stCode;
+                else _stCode = PreferenceUtil.getUserSTCode(mContext);
+
+            } else {
+                _stCode = PreferenceUtil.getUserSTCode(mContext);
+            }
+        }
     }
 
     @Override

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="main_menu_icon_size">80dp</dimen>
+    <dimen name="main_menu_icon_size">72dp</dimen>
     <dimen name="layout_margin_28">28dp</dimen>
     <dimen name="layout_margin_24">24dp</dimen>
     <dimen name="layout_margin">20dp</dimen>
@@ -86,4 +86,5 @@
     <dimen name="bottom_sheet_top_padding">16dp</dimen>
 
     <dimen name="anim_move">20dp</dimen>
+    <dimen name="empty_textview_multiplier">1.2</dimen>
 </resources>

@@ -94,6 +94,7 @@ public class Constants {
     public static final int BIRTH_LENGTH = 8; // 생년월일 length
 
     //dateFormatter String
+    public static final String DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
     public static final String DATE_FORMATTER_YYYY_MM_DD = "yyyy-MM-dd";
     public static final String DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMATTER_YYYY_MM_DD_HH_mm = "yyyy-MM-dd HH:mm";
@@ -243,7 +244,59 @@ public class Constants {
 
     public static final int SHOW_KEBOARD_DELAY = 200;
 
-    public static final int ET_TITLE_GUBUN_ELEMENTARY = 0;
-    public static final int ET_TITLE_GUBUN_MIDDLE = 1;
-    public static final int ET_TITLE_GUBUN_MATH = 3;
+    public enum ReportCardType{
+        E_ELEMENTARY(0, "악어초등", R.color.blue_sub),
+        E_MIDDLE(1, "악어중등", R.color.color_makeup_class),
+        MIDDLE(2, "중등", R.color.darkgray),
+        KJ_E_MATH(3, "KJ악어수학", R.color.red_sub)
+        ;
+
+        private int code;
+        private String nameKor;
+        private int colorRes;
+        private ReportCardType(int code, String name, int colorRes) {
+            this.code = code;
+            this.nameKor = name;
+            this.colorRes = colorRes;
+        }
+        public int getCode() {
+            return code;
+        }
+        public String getNameKor() {
+            return nameKor;
+        }
+        public int getColorRes(){ return colorRes; }
+        public static ReportCardType getByCode(int code) {
+            for (ReportCardType type : ReportCardType.values()) {
+                if (type.getCode() == code) {
+                    return type;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static ReportCardType getByName(String name) {
+            for (ReportCardType type : ReportCardType.values()) {
+                if (type.getNameKor().equals(name)) {
+                    return type;
+                }
+            }
+            return null; // 해당하는 코드 값이 없을 경우 null 반환 또는 다른 처리
+        }
+        public static List<String> getNameList() {
+            List<String> nameList = new ArrayList<>();
+            for (ReportCardType type : ReportCardType.values()) {
+                nameList.add(type.getNameKor());
+            }
+            return nameList;
+        }
+        public static List<SpannableString> getColoredNameList(Context context) {
+            List<SpannableString> coloredNameList = new ArrayList<>();
+            for(ReportCardType type : ReportCardType.values()) {
+                SpannableString span = new SpannableString(type.getNameKor());
+                span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(context, type.colorRes)), 0, span.length(), 0);
+                coloredNameList.add(span);
+            }
+            return coloredNameList;
+        }
+    }
 }

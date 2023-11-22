@@ -20,6 +20,7 @@ public class IntentParams {
     public final static String PARAM_STU_CLSTNAME = "clstName";  // 학년 이름
     public final static String PARAM_BCNAME = "bcName";  // 캠퍼스 이름
     public final static String PARAM_BOARD_SEQ = "boardSeq";  // 게시글 seq
+    public final static String PARAM_REPORT_SEQ = "reportSeq";  // 성적표 seq
     public final static String PARAM_WRITER_SEQ = "writerSeq";  // 작성자 seq
 
     public final static String PARAM_CHILD_STUDENT_INFO = "childStudentInfo";  // 자녀원생 정보
@@ -62,4 +63,6 @@ public class IntentParams {
 
     public final static String PARAM_RD_CNT_ADD = "rdCntAdd";  // 게시글 조회수
     public final static String PARAM_ACCOUNT_NO = "accountNo"; // 수강료 계좌
+    public final static String PARAM_REPORT_LIST = "reportList"; // 성적표 목록
+
 }
