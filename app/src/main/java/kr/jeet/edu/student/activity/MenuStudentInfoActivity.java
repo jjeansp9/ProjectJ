@@ -211,7 +211,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);
-        _stCode = PreferenceUtil.getUserSTCode(mContext);
 
         mListCls.addAll(DataManager.getInstance().getClsListMap().values());
     }

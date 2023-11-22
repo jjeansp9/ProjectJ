@@ -26,6 +26,9 @@ public class ReportCardSummaryData implements Parcelable {
         reportList = in.createTypedArrayList(ReportCardData.CREATOR);
     }
 
+    public ReportCardSummaryData() {
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(seq);

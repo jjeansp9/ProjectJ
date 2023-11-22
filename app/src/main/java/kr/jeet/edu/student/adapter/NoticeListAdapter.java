@@ -86,6 +86,9 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 }
 
             } else if (mReportList.size() > 0) {
+
+
+
                 ReportCardSummaryData reportItem = mReportList.get(position);
 
                 if (reportItem != null) {

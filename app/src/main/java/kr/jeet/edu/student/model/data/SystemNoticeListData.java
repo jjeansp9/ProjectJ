@@ -29,6 +29,8 @@ public class SystemNoticeListData implements Parcelable {
         pushId = in.readString();
     }
 
+
+
     public SystemNoticeListData() {
     }
 

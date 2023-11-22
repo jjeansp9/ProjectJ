@@ -179,12 +179,12 @@ public class MainActivity extends BaseActivity {
                 case CMD_GET_ACALIST:
                     requestACAList();
                     break;
-                case CMD_GET_LOCAL_ACALIST :
+                case CMD_GET_LOCAL_ACALIST:
                     requestLocalACAList();
                     break;
                 case CMD_GET_MEMBER_INFO:
-                    requestMemberInfo(_stuSeq, _stCode);
-                    if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent);
+                    requestMemberInfo(_stuSeq, _stCode, true);
+                    if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent, false);
                     break;
                 case CMD_GET_NOTIFY_INFO:
                     requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
@@ -734,7 +734,7 @@ public class MainActivity extends BaseActivity {
     }
 
     // 원생 정보 조회
-    private void requestMemberInfo(int stuSeq, int stCode){
+    private void requestMemberInfo(int stuSeq, int stCode, boolean setAca){
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -752,14 +752,17 @@ public class MainActivity extends BaseActivity {
                                     PreferenceUtil.setStuGender(mContext, getData.gender);
                                     PreferenceUtil.setStuBirth(mContext, getData.birth);
 
-                                    if (getData.acaName != null) { // 캠퍼스명
-                                        PreferenceUtil.setAcaName(mContext, getData.acaName);
-                                        mTvStudentCampus.setText(getData.acaName);
+                                    if (setAca) {
+                                        if (getData.acaName != null) { // 캠퍼스명
+                                            PreferenceUtil.setAcaName(mContext, getData.acaName);
+                                            mTvStudentCampus.setText(getData.acaName);
+                                        }
+                                        if (getData.acaCode != null) {
+                                            acaCode = getData.acaCode;
+                                            PreferenceUtil.setAcaCode(mContext, getData.acaCode);
+                                        }
                                     }
-                                    if (getData.acaCode != null) {
-                                        acaCode = getData.acaCode;
-                                        PreferenceUtil.setAcaCode(mContext, getData.acaCode);
-                                    }
+
     //                            if(!TextUtils.isEmpty(res.appAcaCode)) {
                                         PreferenceUtil.setAppAcaCode(mContext, getData.appAcaCode);
     //                            }
@@ -777,7 +780,7 @@ public class MainActivity extends BaseActivity {
                                     else mTvSchoolAndGradeName.setText(getData.scName + " " + getData.stGrade); // 학교, 학년
                                 }
 
-                                if (_userType.equals(Constants.MEMBER)){
+                                if (_userType.equals(Constants.MEMBER)){ // 회원
 
                                     if (_userGubun == Constants.USER_TYPE_PARENTS){
                                         if (stCode == 0) {
@@ -799,7 +802,7 @@ public class MainActivity extends BaseActivity {
 
                                         mTvStudentName.setText(getData.name); // 원생 오리지널 이름
                                     }
-                                }else{
+                                }else{ // 비회원
                                     if (_userGubun == Constants.USER_TYPE_PARENTS){
                                         if (stCode == 0) {
                                             PreferenceUtil.setParentName(mContext, getData.name);

@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
@@ -47,6 +48,7 @@ import kr.jeet.edu.student.model.response.StudentInfoResponse;
 import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -107,7 +109,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         if (_userGubun == Constants.USER_TYPE_PARENTS) {
             _phoneNumber = PreferenceUtil.getParentPhoneNum(mContext);
             _memberName = PreferenceUtil.getStName(mContext);
-            requestMemberInfo(_memberSeq, _stCodeParent);
+            _writerName = PreferenceUtil.getParentName(mContext);
         }
         else {
             _phoneNumber = PreferenceUtil.getStuPhoneNum(mContext);
@@ -252,6 +254,12 @@ public class ConsultationRequestActivity extends BaseActivity {
         if (request.counselDate.equals("") ||
                 request.memo.equals("")){
             Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
+
+        } else if(TextUtils.isEmpty(request.acaCode) ||
+                TextUtils.isEmpty(request.acaName)) {
+            requestMemberInfo(_memberSeq, _stCode);
+            Toast.makeText(mContext, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
+
         }else{
             showProgressDialog();
             if(RetrofitClient.getInstance() != null) {
@@ -271,6 +279,13 @@ public class ConsultationRequestActivity extends BaseActivity {
                                     finish();
                                 }
                             } else {
+                                int code = response.code();
+                                // TODO : 응답 코드에 따른 Toast 처리
+                                if (code == RetrofitApi.RESPONSE_CODE_BINDING_ERROR) {
+
+                                } else if (code == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+
+                                }
                                 Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                                 LogMgr.e(TAG, "putConsultRequest() errBody : " + response.errorBody().string());
                             }
@@ -290,10 +305,11 @@ public class ConsultationRequestActivity extends BaseActivity {
         }
     }
 
-    private void requestMemberInfo(int stuSeq, int stCode){
+    private void requestMemberInfo(int memberSeq, int stCode){
+        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
+            mRetrofitApi.studentInfo(memberSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
                 @Override
                 public void onResponse(Call<StudentInfoResponse> call, Response<StudentInfoResponse> response) {
                     try {
@@ -301,8 +317,10 @@ public class ConsultationRequestActivity extends BaseActivity {
                             StudentInfo getData = new StudentInfo();
                             getData = response.body().data;
 
-                            //_memberName = getData.name;
-                            _writerName = getData.name;
+                            if (getData != null) {
+                                _acaCode = getData.acaCode;
+                                _acaName = getData.acaName;
+                            }
 
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
@@ -311,13 +329,14 @@ public class ConsultationRequestActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
+                    hideProgressDialog();
                 }
 
                 @Override
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-
+                    hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                 }
             });

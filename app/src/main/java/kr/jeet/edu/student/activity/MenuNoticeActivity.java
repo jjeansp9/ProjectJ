@@ -303,6 +303,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private void getListData(int... lastSeq){
 
+        if (mReportList.size() > 0) mReportList.clear();
+
         String putType = "";
         String date = selYear + selMonth;
 
@@ -333,7 +335,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                         if (response.isSuccessful()) {
                             if(finalLastNoticeSeq == 0) {
                                 if (mList.size() > 0) mList.clear();
-                                if (mReportList.size() > 0) mReportList.clear();
                             }
                             if (response.body() != null) {
                                 List<SystemNoticeListData> list = response.body().data;
@@ -359,7 +360,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 @Override
                 public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
                     if (mList.size() > 0) mList.clear();
-                    if (mReportList.size() > 0) mReportList.clear();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
 
@@ -371,6 +371,9 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void getReportListData(int... lastSeq) {
+
+        if (mList.size() > 0) mList.clear();
+
         int lastNoticeSeq = 0;
         if (lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
 
@@ -389,7 +392,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                     try {
                         if (response.isSuccessful()) {
                             if(finalLastNoticeSeq == 0) {
-                                if (mList.size() > 0) mList.clear();
                                 if (mReportList.size() > 0) mReportList.clear();
                             }
                             if (response.body() != null) {
@@ -415,7 +417,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                 @Override
                 public void onFailure(Call<SystemReportListResponse> call, Throwable t) {
-                    if (mList.size() > 0) mList.clear();
                     if (mReportList.size() > 0) mReportList.clear();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     txtEmpty.setVisibility(mReportList.size() <= 1 ? View.VISIBLE : View.GONE);
