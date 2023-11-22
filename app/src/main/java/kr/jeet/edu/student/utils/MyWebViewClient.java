@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.WebResourceError;
@@ -36,6 +37,8 @@ public class MyWebViewClient extends WebViewClient {
     private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com";
     private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
     private final String SHIN_HAN_JS_CODE = "javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');";
+
+    private boolean btnLoginEvent = false;
 
     private final String BUS_ROUTE_URL = "http://m.jeet.kr/intro/table/index.jsp";
     private final String ADJUST_SCREEN_SIZE_JS_CODE = "javascript:var meta = document.createElement('meta'); meta.name = 'viewport'; meta.content = 'width=device-width, user-scalable = yes'; var header = document.getElementsByTagName('head')[0]; header.appendChild(meta)";
@@ -133,6 +136,7 @@ public class MyWebViewClient extends WebViewClient {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
         if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
+        //else if (url.contains(SHIN_HAN_LOGIN_URL_2)) view.loadUrl(SHIN_HAN_JS_CODE);
         view.loadUrl(ADJUST_SCREEN_SIZE_JS_CODE);
     }
 
@@ -155,6 +159,18 @@ public class MyWebViewClient extends WebViewClient {
         LogMgr.e(TAG, "onPageFinished() : " + url);
         hideProgressDialog();
         wv.setVisibility(View.VISIBLE);
+
+        view.loadUrl("javascript: window.scrollTo(0, 0);");
+        if (!TextUtils.isEmpty(accountNo)) {
+            if (!btnLoginEvent) {
+                view.loadUrl("javascript:" +
+                        "   var btnId = document.getElementById('payer');" +
+                        "   const btnLogin = btnId.querySelector('.btn-sub-login');" +
+                        "   btnLogin.click();"
+                );
+                btnLoginEvent = true;
+            }
+        }
     }
 
     @Override
@@ -194,15 +210,15 @@ public class MyWebViewClient extends WebViewClient {
 
     private String shinhanJSCode(){
         if (activity != null && !activity.isFinishing()) {
-            String inputValue = "";
-
-            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
-            Utils.setClipData(activity, "");
-
-            LogMgr.e(TAG, "clipboard: " + clipboard + ", accountNo: " + accountNo);
-
-            if (clipboard.equals("")) inputValue = accountNo;
-            else inputValue = clipboard;
+//            String inputValue = "";
+//
+//            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
+//            Utils.setClipData(activity, "");
+//
+//            LogMgr.e(TAG, "clipboard: " + clipboard + ", accountNo: " + accountNo);
+//
+//            if (clipboard.equals("")) inputValue = accountNo;
+//            else inputValue = clipboard;
 
             return "javascript:(function() {" +
                     "   var element = document.getElementById('btn-sitemap');" +
@@ -220,13 +236,12 @@ public class MyWebViewClient extends WebViewClient {
                     "   }" +
                     "   var bankNum = document.getElementById('bankNum');" +
                     "   if (bankNum) {" +
-                    "       bankNum.value = '" + inputValue + "';" +
+                    "       bankNum.value = '" + accountNo + "';" +
                     "   }" +
-                    "   window.scrollTo(0, 0);" +
                     "})()";
-
         } else {
             return "";
         }
+
     }
 }

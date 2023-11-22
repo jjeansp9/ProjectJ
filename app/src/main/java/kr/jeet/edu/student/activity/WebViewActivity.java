@@ -48,7 +48,6 @@ public class WebViewActivity extends BaseActivity {
     private WebView wv;
     private String url;
     private String accountNo = "";
-    private PushMessage _pushData = null;
 
     private AppCompatActivity mActivity;
 
@@ -74,14 +73,6 @@ public class WebViewActivity extends BaseActivity {
                 }
                 if (intent.hasExtra(IntentParams.PARAM_ACCOUNT_NO)){
                     accountNo = intent.getStringExtra(IntentParams.PARAM_ACCOUNT_NO);
-                }
-                if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)){ // 시스템알림 -> 성적표 -> 성적표 상세보기
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                    }else{
-                        _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                    }
                 }
             }
 

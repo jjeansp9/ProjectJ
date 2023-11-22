@@ -159,20 +159,28 @@ public class TuitionActivity extends BaseActivity {
     private void startWebView(Constants.PayListItem item) {
         if (!((TuitionHeaderData)item).accountNO.isEmpty()){
 
-            String str = Utils.setClipData(mContext, ((TuitionHeaderData)item).accountNO);
+//            String str = Utils.setClipData(mContext, ((TuitionHeaderData)item).accountNO);
+//
+//            if (str.equals(((TuitionHeaderData)item).accountNO)){
+//                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+//
+//                Intent intent = new Intent(mContext, WebViewActivity.class);
+//                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
+//                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+//                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
+//                resultLauncher.launch(intent);
+//
+//            } else {
+//                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_error, Toast.LENGTH_SHORT).show();
+//            }
 
-            if (str.equals(((TuitionHeaderData)item).accountNO)){
-                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(mContext, WebViewActivity.class);
-                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
-                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
-                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
-                resultLauncher.launch(intent);
-
-            } else {
-                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_error, Toast.LENGTH_SHORT).show();
-            }
+            Intent intent = new Intent(mContext, WebViewActivity.class);
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
+            intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+            intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
+            resultLauncher.launch(intent);
         }else{
             Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
         }
