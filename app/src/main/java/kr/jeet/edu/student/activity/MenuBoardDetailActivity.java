@@ -169,7 +169,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)){
                         _pushData = intent.getParcelableExtra(extraKey, PushMessage.class);
 
-                        if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+                        if (_pushData != null) if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                         LogMgr.e(TAG,"Event here2");
                     } else{
                         LogMgr.e(TAG,"Event here3");
@@ -182,10 +182,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
 
                     } else if (extraKey.equals(IntentParams.PARAM_PUSH_MESSAGE)) {
                         _pushData = intent.getParcelableExtra(extraKey);
-                        _currentSeq = _pushData.connSeq;
-
-                        if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-                        LogMgr.e("Event here4", _pushData.connSeq+"");
+                        if (_pushData != null) {
+                            _currentSeq = _pushData.connSeq;
+                            if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+                            LogMgr.e("Event here4", _pushData.connSeq+"");
+                        }
 
                     } else {
                         LogMgr.e("Event here5");

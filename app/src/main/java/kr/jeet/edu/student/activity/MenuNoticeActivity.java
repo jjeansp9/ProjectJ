@@ -271,7 +271,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private void startActivity(SystemNoticeListData item){
         if (item != null){
-            Intent intent;
             switch (item.searchType) {
                 case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
                     startBoardDetailActivity(item, TYPE_SYSTEM);
@@ -285,8 +284,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                     break;
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
-                    intent = new Intent(mContext, TuitionActivity.class);
-                    startActivity(intent);
+//                    showMessageDialog(
+//                            "타이틀 미정",
+//                            "메세지 미정", ok -> {}, cancel -> {}, false);
+//                    Intent intent = new Intent(mContext, TuitionActivity.class);
+//                    startActivity(intent);
                     break;
             }
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);

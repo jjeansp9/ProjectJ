@@ -73,7 +73,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 }
                 else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
                     strType = "미납";
-                    setClickDisabled(strType, holder, item);
+                    setClickEnabled(strType, holder, position, item);
                 } else {
                     holder.tvTitle.setText("(정보없음)");
                     holder.btnNext.setVisibility(View.GONE);
