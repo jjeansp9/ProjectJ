@@ -37,7 +37,10 @@ public class MyWebViewClient extends WebViewClient {
     private static final String SHIN_HAN_LOGIN_URL = "https://www.shinhandamoa.com";
     private final String SHIN_HAN_LOGOUT_URL = "https://www.shinhandamoa.com/loggedOut#payer";
     private final String SHIN_HAN_JS_CODE = "javascript:window.location.replace('https://www.shinhandamoa.com/common/login#payer');";
-
+    private final String SHIN_HAN_BTN_LOGIN_CLICK = "javascript:" +
+            "   var btnId = document.getElementById('payer');" +
+            "   const btnLogin = btnId.querySelector('.btn-sub-login');" +
+            "   btnLogin.click();";
     private boolean btnLoginEvent = false;
 
     private final String BUS_ROUTE_URL = "http://m.jeet.kr/intro/table/index.jsp";
@@ -136,7 +139,6 @@ public class MyWebViewClient extends WebViewClient {
         super.onLoadResource(view, url);
         LogMgr.e(TAG, "onLoadResource() : " + url);
         if (url.equals(SHIN_HAN_LOGOUT_URL)) view.loadUrl(SHIN_HAN_JS_CODE);
-        //else if (url.contains(SHIN_HAN_LOGIN_URL_2)) view.loadUrl(SHIN_HAN_JS_CODE);
         view.loadUrl(ADJUST_SCREEN_SIZE_JS_CODE);
     }
 
@@ -161,16 +163,12 @@ public class MyWebViewClient extends WebViewClient {
         wv.setVisibility(View.VISIBLE);
 
         view.loadUrl("javascript: window.scrollTo(0, 0);");
-        if (!TextUtils.isEmpty(accountNo)) {
-            if (!btnLoginEvent) {
-                view.loadUrl("javascript:" +
-                        "   var btnId = document.getElementById('payer');" +
-                        "   const btnLogin = btnId.querySelector('.btn-sub-login');" +
-                        "   btnLogin.click();"
-                );
-                btnLoginEvent = true;
-            }
-        }
+//        if (!TextUtils.isEmpty(accountNo)) { // 로그인 버튼 클릭 javascript 코드
+//            if (!btnLoginEvent) {
+//                view.loadUrl(SHIN_HAN_BTN_LOGIN_CLICK);
+//                btnLoginEvent = true;
+//            }
+//        }
     }
 
     @Override

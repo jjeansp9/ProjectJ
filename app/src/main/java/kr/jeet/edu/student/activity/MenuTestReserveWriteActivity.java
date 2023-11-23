@@ -384,7 +384,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         _subjectName = Utils.getStr(mInfo.subjectName);
         _selectedSchoolData.scName = Utils.getStr(tvSchool.toString());
         _selectedSchoolData.scCode = _scCode;
-
         String[] dateTimeParts = mInfo.reservationDate.split(" ");
 
         String date = "";
@@ -716,7 +715,6 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
-        request.userGubun = _userGubun;
         request.name = mEtName.getText().toString(); // 학생이름 [필수]
         request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]
         request.sex = gender; // 성별 (1 남자, 2 여자) [필수]

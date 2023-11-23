@@ -113,6 +113,7 @@
     <string name="singup_success">회원가입 되었습니다.</string>
     <string name="server_data_empty">알 수 없는 에러가 발생하였습니다.</string>
     <string name="server_error">서버 요청 중 에러가 발생하였습니다.</string>
+    <string name="server_error_2">잘못된 접근입니다.</string>
     <string name="server_fail">서버 요청에 실패하였습니다.</string>
     <string name="server_not_found_board">해당 글이 존재하지 않습니다.</string>
     <string name="auth_number_msg">[지트에듀케이션] 인증번호는 [%d] 입니다.</string>
@@ -716,6 +717,7 @@
     <string name="board_item_confirm_download">Download 폴더에 동일한 이름의 파일이 이미 있습니다.\n다운로드하시겠습니까?</string>
     <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
 
+    <string name="title_report_card">성적표</string>
     <string name="empty_menu_list_report_card">성적표 내역이 없습니다.</string>
     <string name="empty_list_report_card">성적표 정보가 없습니다.</string>
     <string name="reportcard_binding_error">잘못된 성적표 정보입니다.</string>
@@ -723,6 +725,13 @@
     <string name="title_reportcard_exam_process">응시과정</string>
     <string name="title_reportcard_exam_date">응시일</string>
     <string name="title_reportcard_exam_subject">제목</string>
-    <string name="title_reportcard_exam_school">학교/학년</string>
+    <string name="title_reportcard_exam_school">학교 / 학년</string>
+    <string name="title_exam_sub_index">순번</string>
+    <string name="title_exam_sub_subject">단원명</string>
+    <string name="title_exam_sub_score">득점</string>
+    <string name="title_exam_sub_total_score">%s 총득점</string>
+    <string name="title_exam_sub_total_rate">정답률</string>
+    <string name="title_exam_math_correct_count">맞은개수</string>
+    <string name="title_exam_math_total_score">총 득점</string>
 </resources>
 

@@ -410,6 +410,26 @@ public class Utils {
         }
     }
 
+    /**
+     * 날짜 포맷
+     * */
+    public static String formatDate(String inputDate, String inputFoarmatStr, String outputFormatStr) {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(inputFoarmatStr, Locale.KOREA);
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputFormatStr, Locale.KOREA);
+
+        try {
+            Date date = inputDateFormat.parse(inputDate);
+            String formattedDate = "";
+            if (date != null) formattedDate = outputFormat.format(date);
+
+            return formattedDate;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     public static String reformFormatDate(String inputDate, String beforeForm, String afterForm){
 
         String newDate = "";
@@ -597,7 +617,7 @@ public class Utils {
     /**
     * dp값 가져오기
     * */
-    public static int fromDpToPx(float dp) { return (int) (dp * Resources.getSystem().getDisplayMetrics().density); }
+    public static int fromPxToDp(float px) { return (int) (px * Resources.getSystem().getDisplayMetrics().density); }
 
     /**
     * Normal Message Dialog Show

@@ -230,11 +230,11 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
             case FCMManager.MSG_TYPE_ATTEND:
                 _spinnerType.selectItemByIndex(1);
                 break;
-            case FCMManager.MSG_TYPE_REPORT:
-                _spinnerType.selectItemByIndex(2);
-                break;
+//            case FCMManager.MSG_TYPE_REPORT:
+//                _spinnerType.selectItemByIndex(2);
+//                break;
             case FCMManager.MSG_TYPE_TUITION:
-                _spinnerType.selectItemByIndex(3);
+                _spinnerType.selectItemByIndex(2);
                 break;
             default:
                 _spinnerType.selectItemByIndex(0);

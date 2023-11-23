@@ -1,24 +1,33 @@
 package kr.jeet.edu.student.activity;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.adapter.AbstractReportCardShowAdapter;
+import kr.jeet.edu.student.adapter.ReportCardShowType0Adapter;
 import kr.jeet.edu.student.adapter.ReportCardShowType3Adapter;
-import kr.jeet.edu.student.common.CustomGridLayoutManager;
+import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.CustomGridLayoutMgr;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ReportCardData;
+import kr.jeet.edu.student.model.data.ReportCardExamData;
+import kr.jeet.edu.student.model.data.ReportCardExamFooterData;
+import kr.jeet.edu.student.model.data.ReportCardExamHeaderData;
 import kr.jeet.edu.student.model.data.ReportCardShowData;
-import kr.jeet.edu.student.model.data.ReportCardSummaryData;
-import kr.jeet.edu.student.model.data.ReportNameData;
-import kr.jeet.edu.student.model.data.ReportScoreData;
+import kr.jeet.edu.student.model.data.ReportCardShowListItemData;
 import kr.jeet.edu.student.model.response.ReportCardShowResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -34,16 +43,16 @@ public class ReportCardShowActivity extends BaseActivity {
 
     private static final String TAG = "ReportCardShowActivity";
     public interface ExamListTypeItem extends Comparable<ExamListTypeItem> {
+        int getEsGubun();
         int getType();
     }
 
-    private TextView tvProcess, tvDate, tvSubject, tvName, tvSchool;
+    private TextView tvProcess, tvDate, tvSubject, tvName, tvSchool, tvEmptyList;
 
     private RecyclerView mRecycler;
-    private ReportCardShowType3Adapter mAdapter;
+    private AbstractReportCardShowAdapter mAdapter;
 
     private ArrayList<ReportCardShowActivity.ExamListTypeItem> mList = new ArrayList<>();
-    private ArrayList<ReportNameData> getTestList = new ArrayList<>();
 
     ReportCardData _currentData = null;
     ReportCardShowData _showData = null;
@@ -57,7 +66,7 @@ public class ReportCardShowActivity extends BaseActivity {
     private int _userGubun = 0;
     private String _acaCode = "";
 
-    private int spanCount = 6;
+    private int spanCount = Constants.REPORT_MATH_SPAN_COUNT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +108,7 @@ public class ReportCardShowActivity extends BaseActivity {
     @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle("성적표상세(임시)");
+        customAppbar.setTitle(getString(R.string.title_report_card));
         customAppbar.setLogoVisible(true);
         customAppbar.setLogoClickable(true);
         setSupportActionBar(customAppbar.getToolbar());
@@ -118,41 +127,26 @@ public class ReportCardShowActivity extends BaseActivity {
         tvSubject = findViewById(R.id.tv_subject);
         tvName = findViewById(R.id.tv_name);
         tvSchool = findViewById(R.id.tv_school);
+        tvEmptyList = findViewById(R.id.tv_empty_list);
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_exam);
 
         if(_currentData.etTitleGubun == 0 || _currentData.etTitleGubun == 1) {
-            //mAdapter = new ReportCardShowType0Adapter(mContext, mList);
+            LinearLayoutManager layoutMgr = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            mRecycler.setLayoutManager(layoutMgr);
+            mAdapter = new ReportCardShowType0Adapter(mContext, mList);
+
         }else if(_currentData.etTitleGubun == 3) {
             // 악어수학용 Adapter
-            CustomGridLayoutManager layoutMgr = new CustomGridLayoutManager(mContext, spanCount);
+            CustomGridLayoutMgr layoutMgr = new CustomGridLayoutMgr(mContext, spanCount);
             mRecycler.setLayoutManager(layoutMgr);
+            int padding = Utils.fromPxToDp(1);
+            mRecycler.setPadding(padding, padding, padding, padding);
             mAdapter = new ReportCardShowType3Adapter(mContext, mList);
         }
-
         mRecycler.setAdapter(mAdapter);
 
         requestReportShow();
-    }
-
-    private void testData() {
-//        ReportNameData testData = new ReportNameData();
-//        testData.esScore = "10";
-//
-//        for (int i = 0; i < 14; i++) mList.add(testData);
-//
-//        ReportNameData sub = new ReportNameData();
-//        sub.esSub = "event";
-//        //for (int i = 0; i < mList.size(); i++) if (i % 6 == 0) mList.add(i, sub);
-//
-//        int currentSize = mList.size();
-//        int targetSize = (currentSize + 5) / 6 * 6 + 2;
-//
-//        ReportNameData dummy = new ReportNameData();
-//        dummy.esScore = "";
-//        while (mList.size() < targetSize) {
-//            mList.add(dummy);
-//        }
     }
 
     // 성적표 데이터별 상세정보 조회
@@ -170,12 +164,7 @@ public class ReportCardShowActivity extends BaseActivity {
                                 mList.clear();
                                 ReportCardShowData getData = response.body().data;
 
-                                tvProcess.setText(Utils.getStr(getData.etGubun));
-                                tvDate.setText(Utils.getStr(getData.regDate));
-                                tvSubject.setText(Utils.getStr(getData.etName));
-                                tvName.setText(Utils.getStr(getData.stName));
-                                tvSchool.setText(Utils.getStr(getData.scName));
-
+                                initUI(getData);
                                 parsingData(getData);
                             }
                         }else{
@@ -187,15 +176,20 @@ public class ReportCardShowActivity extends BaseActivity {
                                 Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             }
                         }
-                        if(mAdapter != null) mAdapter.notifyDataSetChanged();
+
                     }catch (Exception e){
                         LogMgr.e(TAG + "requestReportShow() Exception : ", e.getMessage());
                     }
+                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    tvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     hideProgressDialog();
                 }
 
                 @Override
                 public void onFailure(Call<ReportCardShowResponse> call, Throwable t) {
+                    mList.clear();
+                    if (mAdapter != null) mAdapter.notifyDataSetChanged();
+                    tvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     try {
                         LogMgr.e(TAG, "requestReportShow() onFailure >> " + t.getMessage());
                     }catch (Exception e){
@@ -206,6 +200,64 @@ public class ReportCardShowActivity extends BaseActivity {
             });
         }
     }
+    void initUI(ReportCardShowData data) {
+        tvProcess.setText(data.etGubun);
+        tvDate.setText(data.regDate);
+        tvSubject.setText(data.etName);
+        tvName.setText(data.stName);
+        String schoolName = TextUtils.isEmpty(data.scName)? "-" : data.scName;
+        String gradeName = TextUtils.isEmpty(data.stGrade)? "-" : data.stGrade;
+        tvSchool.setText(String.format("%s / %s", schoolName, gradeName));
+    }
+
     void parsingData(ReportCardShowData data) {
+        List<ReportCardShowListItemData> listItem = data.list;
+        for(int i = 0; i < listItem.size(); i++) {
+            ReportCardShowListItemData listItemData = listItem.get(i);
+            List<ReportCardExamData> examListData = listItemData.dataList;
+            for(int j = 0; j < examListData.size(); j++) {
+                ReportCardExamData examItem = examListData.get(j);
+                if(_currentData.etTitleGubun == Constants.ReportCardType.KJ_E_MATH.getCode()) { // 악어수학
+                    if(j == examListData.size() - 1) { //dataList 마지막에 Footer 추가
+                        mList.add(new ReportCardExamFooterData(listItemData.esGubun, listItemData.totalScore, listItemData.totalCount, listItemData.correctCount, listItemData.correctRate, examItem.esTitle, examItem.esNum));
+                    }
+                } else { // 악어초등, 중등
+                    if(j ==0) { //dataList 첫번째에서 Header, Footer 추가
+                        mList.add(new ReportCardExamHeaderData(examItem.esGubun, examItem.esTitle));
+                        mList.add(new ReportCardExamFooterData(listItemData.esGubun, listItemData.totalScore, listItemData.totalCount, listItemData.correctCount, listItemData.correctRate, examItem.esTitle));
+                    }
+                }
+                mList.add(new ReportCardExamData(examItem.esGubun, examItem.esNum, examItem.esName, examItem.esScore));
+            }
+        }
+
+        if(_currentData.etTitleGubun == Constants.ReportCardType.KJ_E_MATH.getCode()) { // 악어수학인 경우 spanCount에 맞게 ui 채우기
+            int currentSize = mList.size() - 1;
+            int targetSize = 0;
+
+            if (currentSize % spanCount != 0) {
+                targetSize = (currentSize + spanCount) / spanCount * spanCount + 1;
+                ReportCardExamData dummy = new ReportCardExamData();
+                dummy.esNum = 0;
+                while (mList.size() < targetSize) mList.add(dummy);
+            }
+        }
+        Collections.sort(mList);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

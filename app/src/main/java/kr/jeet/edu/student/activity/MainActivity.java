@@ -80,6 +80,19 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
+    // 미납 push
+//    key = pushId : value = qToOmZIWc8
+//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = stCode : value = 73808
+//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = body : value = 테스트관리자원생 미납 안내입니다.
+//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = date : value = 2023-11-23 13:41:08
+//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = title : value = 미납알림
+//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = userGubun : value = 3
+//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = memberSeq : value = 3
+//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = pushType : value = TUITION_NO_PAY
+//2023-11-23 13:41:08.926  4160-4166  statsd                  pid-4160                             E  Predicate -7037417284711607308 dropping data for dimension key (10)0x2010101->10807[I] (10)0x30000->wake:com.google.firebase
+
+    // TODO : 알림 목록 미납에서 목록 아이템 클릭시 다이얼로그 확인, 납부 버튼 추가. 납부버튼 누르면 수강료 목록화면으로
+
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;

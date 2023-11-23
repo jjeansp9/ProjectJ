@@ -9,6 +9,6 @@ public class ReportCardShowData {
     public String scName;              // 학교명
     public String stGrade;             // 학년
     public String regDate;             // 응시일
-    public List<ReportScoreData> list; // 원생 성적표 리스트
+    public List<ReportCardShowListItemData> list; // 원생 성적표 리스트
 }
 

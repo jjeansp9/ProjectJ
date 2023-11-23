@@ -130,13 +130,6 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 dataType = TYPE_ANNOUNCEMENT;
                 LogMgr.e(TAG,"Event heres3");
 
-            // 푸쉬
-            } else if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                extraKey = IntentParams.PARAM_PUSH_MESSAGE;
-                title = getString(R.string.title_detail);
-                dataType = TYPE_PUSH;
-                LogMgr.e(TAG,"Event heres2");
-
             // 시스템알림 목록 -> 시스템알림 상세
             } else if (intent.hasExtra(IntentParams.PARAM_NOTICE_INFO) && intent.hasExtra(IntentParams.PARAM_DATA_TYPE) && intent.hasExtra(IntentParams.PARAM_BOARD_SEQ)) {
                 extraKey = IntentParams.PARAM_NOTICE_INFO;
@@ -157,6 +150,14 @@ public class MenuBoardDetailActivity extends BaseActivity {
                     new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                 }
                 LogMgr.e(TAG,"Event heres1");
+            }
+
+            // 푸쉬
+            if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
+                extraKey = IntentParams.PARAM_PUSH_MESSAGE;
+                title = getString(R.string.title_detail);
+                dataType = TYPE_PUSH;
+                LogMgr.e(TAG,"Event heres2");
             }
 
             if (extraKey != null) {

@@ -48,7 +48,7 @@ public class ReportCardDetailActivity extends BaseActivity {
     int _seq = 0;
     int _stCode = 0;
 
-    int reportSeq = 0;
+    int reportSeq = -15;
 
     private Handler _handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -101,9 +101,10 @@ public class ReportCardDetailActivity extends BaseActivity {
             }
 
         }
-//        if(_reportData == null) {
-//            finish();
-//        }
+        if(reportSeq == -15) {
+            finish();
+            Toast.makeText(mContext, R.string.server_error_2, Toast.LENGTH_SHORT).show();
+        }
     }
     @Override
     void initView() {

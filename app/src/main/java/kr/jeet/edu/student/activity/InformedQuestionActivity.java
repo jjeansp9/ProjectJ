@@ -576,6 +576,7 @@ public class InformedQuestionActivity extends BaseActivity {
             }
 
             request.memberSeq = _memberSeq;
+            request.userGubun = _userGubun;
 
             if (rbSelDay1.isChecked()) selDay = "0";
             else if (rbSelDay2.isChecked()) selDay = "1";
@@ -667,6 +668,7 @@ public class InformedQuestionActivity extends BaseActivity {
                 LogMgr.i(TAG+ "putData", "\nmemberSeq : " + request.memberSeq
                         + "\nseq : " + request.seq
                         + "\nstCode : " + request.stCode
+                        + "\n유저구분 : " + request.userGubun
                         + "\n학생이름 : " + request.name
                         + "\n생년월일 : " + request.birth
                         + "\n성별 : " + request.sex

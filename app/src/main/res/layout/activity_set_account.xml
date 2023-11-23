@@ -252,7 +252,7 @@
                 app:layout_constraintTop_toBottomOf="@id/layout_account_second"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginTop="@dimen/layout_margin_8"
-                android:layout_marginBottom="@dimen/layout_margin_8"
+                android:layout_marginBottom="@dimen/layout_margin_12"
                 android:background="@drawable/bg_setting_layout">
 
                 <androidx.constraintlayout.widget.ConstraintLayout

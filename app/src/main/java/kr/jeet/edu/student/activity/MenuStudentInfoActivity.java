@@ -654,7 +654,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
     // 원생 정보 조회
     private void requestMemberInfo(int stuSeq, int stCode){
-        showProgressDialog();
         if(RetrofitClient.getInstance() != null) {
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.studentInfo(stuSeq, stCode).enqueue(new Callback<StudentInfoResponse>() {
@@ -711,7 +710,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
 
-                    hideProgressDialog();
                     animateLayout(layoutFirst);
                     Utils.animateLayoutMoveLeft(layoutFirst, mContext);
                 }
@@ -720,7 +718,6 @@ public class MenuStudentInfoActivity extends BaseActivity {
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
-                    hideProgressDialog();
                     animateLayout(layoutFirst);
                     Utils.animateLayoutMoveLeft(layoutFirst, mContext);
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();

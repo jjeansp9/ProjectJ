@@ -141,8 +141,6 @@ public class SettingsActivity extends BaseActivity {
         mSwSystem.setOnClickListener(this);
         mSwAll.setOnClickListener(this);
 
-        setSwitch();
-
         findViewById(R.id.layout_set_operation_policy).setOnClickListener(this);
         findViewById(R.id.layout_set_PI_use_consent).setOnClickListener(this);
         findViewById(R.id.layout_set_app_info).setOnClickListener(this);
@@ -295,7 +293,6 @@ public class SettingsActivity extends BaseActivity {
                                 pushInformationSession = getData.pushStatus.pushInformationSession;
                                 pushAttendance = getData.pushStatus.pushAttendance;
                                 pushSystem = getData.pushStatus.pushSystem;
-
                             }
 
                         }else{
@@ -306,6 +303,7 @@ public class SettingsActivity extends BaseActivity {
                     }catch (Exception e){ LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
                     checkConfirm();
                     hideProgressDialog();
+                    setSwitch();
                 }
 
                 @Override
@@ -315,6 +313,7 @@ public class SettingsActivity extends BaseActivity {
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                     checkConfirm();
+                    setSwitch();
                     hideProgressDialog();
                 }
             });

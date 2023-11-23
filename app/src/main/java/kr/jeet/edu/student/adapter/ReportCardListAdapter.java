@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
+import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.Utils;
 
 public class ReportCardListAdapter extends RecyclerView.Adapter<ReportCardListAdapter.ViewHolder>{
 
@@ -50,19 +52,33 @@ public class ReportCardListAdapter extends RecyclerView.Adapter<ReportCardListAd
             if (mList.size() > 0) {
                 ReportCardSummaryData item = mList.get(position);
 
+                String str = "";
+
                 if (item != null) {
                     holder.btnNext.setVisibility(View.GONE);
 
                     holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+                    holder.imgSenderAndReceiver.setVisibility(View.GONE);
                     try {
                         if (item.reportList != null && item.reportList.size() > 0) {
-                            holder.tvTitle.setText(TextUtils.isEmpty(item.reportList.get(0).etName) ? "" : item.reportList.get(0).etName);
+
+                            String date = item.reportList.get(0).regDate;
+
+                            str = Utils.formatDate(date, "yyyy-MM-dd HH:mm:ss.SSS", "yyMMdd");
+                            str += TextUtils.isEmpty(item.reportList.get(0).etName) ? "" : " " + item.reportList.get(0).etName;
+
+                            if (item.reportList.size() > 1) {
+                                int count = item.reportList.size() - 1;
+                                holder.tvTitle.setText(str + "외 " + count + "건");
+                            }
+                            else holder.tvTitle.setText(str);
+
                         } else {
                             holder.tvTitle.setText("(정보없음)");
                         }
                     }catch (Exception e) {}
 
-                    holder.imgSenderAndReceiver.setVisibility(View.GONE);
+
                 }
             }
         }

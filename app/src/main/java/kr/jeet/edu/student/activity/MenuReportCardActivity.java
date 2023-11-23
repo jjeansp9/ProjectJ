@@ -18,14 +18,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.adapter.ReportCardListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
+import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.SystemReportListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -122,7 +130,7 @@ public class MenuReportCardActivity extends BaseActivity {
                 super.onScrollStateChanged(recyclerView, newState);
                 if(((!mRecyclerView.canScrollVertically(1)) && mRecyclerView.canScrollVertically(-1))
                         && newState == RecyclerView.SCROLL_STATE_IDLE
-                        && (mList != null && !mList.isEmpty()))
+                        && (mAdapter != null && !mList.isEmpty()))
                 {
                     int lastNoticeSeq = mList.get(mList.size() - 1).seq;
                     getReportListData(lastNoticeSeq);
@@ -144,12 +152,11 @@ public class MenuReportCardActivity extends BaseActivity {
 
     private void getReportListData(int... lastSeq) {
 
-        if (mList.size() > 0) mList.clear();
-
-        int lastNoticeSeq = 0;
-        if (lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
+        showProgressDialog();
 
         if (RetrofitClient.getInstance() != null) {
+            int lastNoticeSeq = 0;
+            if (lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
             final int finalLastNoticeSeq = lastNoticeSeq;
             RetrofitClient.getApiInterface().getReportList(
                     lastNoticeSeq,
@@ -169,6 +176,22 @@ public class MenuReportCardActivity extends BaseActivity {
                             if (response.body() != null) {
                                 List<ReportCardSummaryData> list = response.body().data;
                                 if (list != null) mList.addAll(list);
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+
+//                                mList.sort(new Comparator<ReportCardSummaryData>() {
+//                                    @Override
+//                                    public int compare(ReportCardSummaryData t1, ReportCardSummaryData t2) {
+//                                        try {
+//                                            Date date1 = sdf.parse(t1.insertDate);
+//                                            Date date2 = sdf.parse(t2.insertDate);
+//
+//                                            return date2.compareTo(date1);
+//                                        } catch (ParseException e) {
+//                                            throw new IllegalArgumentException(e);
+//                                        }
+//                                    }
+//                                });
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
@@ -181,6 +204,7 @@ public class MenuReportCardActivity extends BaseActivity {
 
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
+                    hideProgressDialog();
                 }
 
                 @Override
@@ -191,6 +215,7 @@ public class MenuReportCardActivity extends BaseActivity {
 
                     mSwipeRefresh.setRefreshing(false);
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             });
         }

@@ -140,7 +140,7 @@ public class SelectStudentActivity extends BaseActivity {
         if(_pushMessage != null) {
 
             // TODO : seq , stCode에 따라 다른계정의 push는 보여주지 않게 하기
-            //if (_pushMessage.memberSeq != _parentSeq) return;
+            if (_pushMessage.memberSeq != _parentSeq) return;
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
@@ -200,12 +200,7 @@ public class SelectStudentActivity extends BaseActivity {
 
     private void startPushActivity(Class<?> targetActivity){
         Intent intent = new Intent(mContext, targetActivity);
-        if(_pushMessage != null) {
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            if (_pushMessage.pushType.equals(MSG_TYPE_REPORT)) { // 성적표
-                // TODO : 추후 전달할 데이터가 있다면 추가하기
-            }
-        }
+        if(_pushMessage != null) intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
 
         startActivity(intent);
         _pushMessage = null;

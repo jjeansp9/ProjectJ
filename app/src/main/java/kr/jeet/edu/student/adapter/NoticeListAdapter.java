@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -77,7 +78,6 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                     holder.tvTitle.setText("(정보없음)");
                     holder.btnNext.setVisibility(View.GONE);
                 }
-
             }
 //            else if (mReportList.size() > 0) {
 //                ReportCardSummaryData reportItem = mReportList.get(position);
@@ -95,6 +95,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 //                    holder.btnNext.setVisibility(View.GONE);
 //                }
 //            }
+            ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.linearLayout.getLayoutParams();
+            layoutParams.endToStart = R.id.btn_notice_next;
 
             Glide.with(mContext).load(R.drawable.img_receive).into(holder.imgSenderAndReceiver);
             holder.imgSenderAndReceiver.setVisibility(View.GONE);
@@ -134,6 +136,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder{
 
         private ConstraintLayout root;
+        private LinearLayoutCompat linearLayout;
         private TextView tvType, tvDate, tvReceiver, tvTitle;
         private ImageView imgSenderAndReceiver;
         private ImageButton btnNext;
@@ -142,6 +145,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
             super(itemView);
 
             root = itemView.findViewById(R.id.notice_root);
+            linearLayout = itemView.findViewById(R.id.layout_notice_state);
             btnNext = itemView.findViewById(R.id.btn_notice_next);
             tvType = itemView.findViewById(R.id.tv_notice_type);
             tvDate = itemView.findViewById(R.id.tv_notice_date);
