@@ -137,10 +137,17 @@ public class SelectStudentActivity extends BaseActivity {
             LogMgr.e(TAG + " Exception: ", e.getMessage());
         }
 
+        HttpUtils.requestSchoolList();
+        HttpUtils.requestLTCList();
+        HttpUtils.requestLTCSubjectList();
+
         if(_pushMessage != null) {
 
-            // TODO : seq , stCode에 따라 다른계정의 push는 보여주지 않게 하기
-            if (_pushMessage.memberSeq != _parentSeq) return;
+            // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
+            if (_pushMessage.memberSeq != _parentSeq) {
+                _pushMessage = null;
+                return;
+            }
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
@@ -193,9 +200,6 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
             }
         }
-        HttpUtils.requestSchoolList();
-        HttpUtils.requestLTCList();
-        HttpUtils.requestLTCSubjectList();
     }
 
     private void startPushActivity(Class<?> targetActivity){

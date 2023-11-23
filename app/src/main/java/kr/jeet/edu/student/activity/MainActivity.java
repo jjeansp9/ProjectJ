@@ -435,11 +435,18 @@ public class MainActivity extends BaseActivity {
             }
 
         }catch (Exception e){ LogMgr.e(TAG + "initData() Exception : ", e.getMessage()); }
+
+        mHandler.sendEmptyMessage(CMD_GET_ACALIST);
+
         if(_pushMessage != null) {
 
             LogMgr.e("EVENT", _pushMessage.pushType);
 
-            // TODO : seq , stCode에 따라 다른계정의 push는 보여주지 않게 하기
+            // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
+            if (_pushMessage.memberSeq != _memberSeq) {
+                _pushMessage = null;
+                return;
+            }
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
@@ -507,8 +514,6 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         }
-
-        mHandler.sendEmptyMessage(CMD_GET_ACALIST);
     }
 
     private void startBoardDetail(Intent intent, String title) {
