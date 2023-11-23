@@ -10,6 +10,7 @@ public class ReportCardSummaryData implements Parcelable {
     public String content;  //content
     public String stName;   //원생명
     public String writerName;   //작성자명
+    public int writerSeq;   //작성자 seq
     public String acaName;   //캠퍼스명
     public String insertDate;
     public List<ReportCardData> reportList;
@@ -19,6 +20,7 @@ public class ReportCardSummaryData implements Parcelable {
         content = in.readString();
         stName = in.readString();
         writerName = in.readString();
+        writerSeq = in.readInt();
         acaName = in.readString();
         insertDate = in.readString();
         reportList = in.createTypedArrayList(ReportCardData.CREATOR);
@@ -33,6 +35,7 @@ public class ReportCardSummaryData implements Parcelable {
         dest.writeString(content);
         dest.writeString(stName);
         dest.writeString(writerName);
+        dest.writeInt(writerSeq);
         dest.writeString(acaName);
         dest.writeString(insertDate);
         dest.writeTypedList(reportList);

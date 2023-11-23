@@ -177,7 +177,7 @@ public class MenuReportCardActivity extends BaseActivity {
                                 List<ReportCardSummaryData> list = response.body().data;
                                 if (list != null) mList.addAll(list);
 
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
+                                //SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.KOREA);
 
 //                                mList.sort(new Comparator<ReportCardSummaryData>() {
 //                                    @Override
