@@ -834,7 +834,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (mTvReserveDate.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.reservation_date_empty, Toast.LENGTH_SHORT).show();
-            showDatePicker(mTvReserveDate, true, birthMinYear, birthMaxYear, false);
+            showDatePicker(mTvReserveDate, true, testDateMinYear, testDateMaxYear, false);
 
         }else if (mSpinnerTestTime.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.reservation_time_empty, Toast.LENGTH_SHORT).show();

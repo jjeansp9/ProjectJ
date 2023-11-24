@@ -1,13 +1,19 @@
 package kr.jeet.edu.student.activity;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +54,7 @@ public class ReportCardShowActivity extends BaseActivity {
     }
 
     private TextView tvProcess, tvDate, tvSubject, tvName, tvSchool, tvEmptyList;
-
+    ConstraintLayout layoutInfo;
     private RecyclerView mRecycler;
     private AbstractReportCardShowAdapter mAdapter;
 
@@ -75,6 +81,7 @@ public class ReportCardShowActivity extends BaseActivity {
         mContext = this;
         initView();
         initAppbar();
+        setAnimMove(Constants.MOVE_DETAIL_RIGHT);
     }
 
     private void initIntentData() {
@@ -121,7 +128,7 @@ public class ReportCardShowActivity extends BaseActivity {
         initIntentData();
         initData();
         //testData(); // TODO : 개발 진행중
-
+        layoutInfo = findViewById(R.id.layout_exam_info);
         tvProcess = findViewById(R.id.tv_process);
         tvDate = findViewById(R.id.tv_date);
         tvSubject = findViewById(R.id.tv_subject);
@@ -131,12 +138,12 @@ public class ReportCardShowActivity extends BaseActivity {
 
         mRecycler = (RecyclerView) findViewById(R.id.recycler_exam);
 
-        if(_currentData.etTitleGubun == 0 || _currentData.etTitleGubun == 1) {
+        if(_currentData.etTitleGubun == Constants.ReportCardType.E_ELEMENTARY.getCode() || _currentData.etTitleGubun == Constants.ReportCardType.E_MIDDLE.getCode()) {
             LinearLayoutManager layoutMgr = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
             mRecycler.setLayoutManager(layoutMgr);
             mAdapter = new ReportCardShowType0Adapter(mContext, mList);
 
-        }else if(_currentData.etTitleGubun == 3) {
+        }else if(_currentData.etTitleGubun == Constants.ReportCardType.KJ_E_MATH.getCode()) {
             // 악어수학용 Adapter
             CustomGridLayoutMgr layoutMgr = new CustomGridLayoutMgr(mContext, spanCount);
             mRecycler.setLayoutManager(layoutMgr);
@@ -147,13 +154,16 @@ public class ReportCardShowActivity extends BaseActivity {
         mRecycler.setAdapter(mAdapter);
 
         requestReportShow();
+        long delayed = getResources().getInteger(R.integer.screen_in_time);
+        new Handler().postDelayed(() -> {
+            animateLayout(layoutInfo);
+            Utils.animateLayoutMoveLeft(layoutInfo, mContext);
+        }, delayed);
     }
 
     // 성적표 데이터별 상세정보 조회
     private void requestReportShow(){
         if (RetrofitClient.getInstance() != null){
-
-            showProgressDialog();
 
             RetrofitClient.getApiInterface().getReportCardShowList(reportSeq, reportListSeq).enqueue(new Callback<ReportCardShowResponse>() {
                 @Override
@@ -170,8 +180,19 @@ public class ReportCardShowActivity extends BaseActivity {
                         }else{
                             int code = response.code();
                             if (code == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
-                                Toast.makeText(mContext, R.string.reportcard_not_found, Toast.LENGTH_SHORT).show();
-
+                                showMessageDialog(getString(R.string.dialog_title_error)
+                                        , getString(R.string.item_not_found)
+                                        , new View.OnClickListener() {  //OKClickListener
+                                            @Override
+                                            public void onClick(View view) {
+                                                finish();
+                                                overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);
+                                                hideMessageDialog();
+                                            }
+                                        },
+                                        null,
+                                        false,
+                                        false);
                             } else {
                                 Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             }
@@ -194,7 +215,6 @@ public class ReportCardShowActivity extends BaseActivity {
                         LogMgr.e(TAG, "requestReportShow() onFailure >> " + t.getMessage());
                     }catch (Exception e){
                     }
-                    hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -244,20 +264,28 @@ public class ReportCardShowActivity extends BaseActivity {
         }
         Collections.sort(mList);
     }
+    private void animateLayout(final View view) {
+        ValueAnimator animator = ValueAnimator.ofFloat(0f, 1f);
+        animator.setDuration(Constants.LAYOUT_ANIM_DURATION);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        animator.addUpdateListener(animation -> {
+            float progress = (float) animation.getAnimatedValue();
+            view.setAlpha(progress); // 애니메이션 중간값을 알파값으로 설정하여 서서히 보이도록 함
+        });
+
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 애니메이션 종료 후 다음 레이아웃으로 전환
+                if (view == layoutInfo) {
+                    animateLayout(mRecycler);
+                    Utils.animateLayoutMoveLeft(mRecycler, mContext);
+
+                }
+
+            }
+        });
+        animator.start();
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

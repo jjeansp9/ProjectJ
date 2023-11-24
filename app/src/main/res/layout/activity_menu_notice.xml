@@ -51,8 +51,7 @@
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
                 android:focusable="true"
-                android:background="@drawable/bg_campus_spinner"
-                app:spinner_item_array="@array/notice_type"/>
+                android:background="@drawable/bg_campus_spinner"/>
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/btn_notice_previous"

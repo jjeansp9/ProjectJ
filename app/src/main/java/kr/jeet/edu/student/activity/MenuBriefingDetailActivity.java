@@ -100,6 +100,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     boolean added = false;
     boolean canceled = false;
 
+    PushMessage _pushData = null;
+
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
         if(result.getResultCode() != RESULT_CANCELED) {
@@ -173,15 +175,15 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 }
 
             }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                PushMessage message = null;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
                 }else{
-                    message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
                 }
-                _currentSeq = message.connSeq;
-
-                if (message.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
+                if (_pushData != null) {
+                    _currentSeq = _pushData.connSeq;
+                    if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+                }
             }
         }
 
@@ -194,7 +196,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.title_detail);
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+        customAppbar.setLogoClickable(_pushData == null);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

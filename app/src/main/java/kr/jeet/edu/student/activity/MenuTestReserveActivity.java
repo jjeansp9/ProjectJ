@@ -275,35 +275,6 @@ public class MenuTestReserveActivity extends BaseActivity {
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.menu_reserve, menu);
-//        int positionOfMenuItem = 0;
-//        try {
-//            MenuItem item = menu.getItem(positionOfMenuItem);
-//            SpannableString span = new SpannableString(item.getTitle());
-//            span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.red)), 0, span.length(), 0);
-//            span.setSpan(new StyleSpan(Typeface.BOLD), 0, span.length(), 0);
-//
-//            int sizeInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, mContext.getResources().getDisplayMetrics());
-//            span.setSpan(new AbsoluteSizeSpan(sizeInPx), 0, span.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-//
-//            item.setTitle(span);
-//        }catch(Exception ex){}
-//        return (super.onCreateOptionsMenu(menu));
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch(item.getItemId()) {
-//            case R.id.action_test_reserve:
-//                Intent intent = new Intent(mContext, InformedConsentActivity.class);
-//                resultLauncher.launch(intent);
-//                return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){

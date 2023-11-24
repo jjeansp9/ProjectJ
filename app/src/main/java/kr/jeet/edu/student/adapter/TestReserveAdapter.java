@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,7 +86,24 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 Optional<LTCData> acaData = DataManager.getInstance().getLTCList().stream().filter(
                         ltcData -> ltcData.ltcCode.equals(Utils.getStr(item.bigo))
                 ).findFirst();
-                acaData.ifPresent(ltcData -> bodyHolder.tvCampus.setText(ltcData.ltcName));
+                acaData.ifPresent(ltcData -> {
+
+                    StringBuilder sb = new StringBuilder();
+                    if(TextUtils.isEmpty(ltcData.ltcName)){
+                        if(!TextUtils.isEmpty(item.grade)){
+                            sb.append(item.grade);
+                        }
+                    }else{
+                        sb.append(ltcData.ltcName);
+                        if(!TextUtils.isEmpty(item.grade)){
+                            sb.append(" / ");
+                            sb.append(item.grade);
+                        }
+                    }
+                    bodyHolder.tvCampus.setText(sb.toString());
+
+                    //bodyHolder.tvCampus.setText(ltcData.ltcName);
+                });
 
                 try {
                     Date insertDate = _dateSecondFormat.parse(item.insertDate);
@@ -96,6 +114,8 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+
+
 
 //                bodyHolder.tvReserveDate.setText(item.reservationDate);
             }

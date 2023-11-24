@@ -31,6 +31,7 @@
     <string name="find_id_pw">계정 찾기</string>
     <string name="cancel">취소</string>
     <string name="ok">확인</string>
+    <string name="pay">납부하기</string>
     <string name="new_member">신규원생</string>
 
     <string name="id_pattern">0123456789qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-</string>
@@ -731,7 +732,9 @@
     <string name="title_exam_sub_score">득점</string>
     <string name="title_exam_sub_total_score">%s 총득점</string>
     <string name="title_exam_sub_total_rate">정답률</string>
-    <string name="title_exam_math_correct_count">맞은개수</string>
+    <string name="title_exam_math_correct_count">맞은 개수</string>
     <string name="title_exam_math_total_score">총 득점</string>
+    <string name="err_msg_middle_not_displayed">[ 중등 ] 유형의 성적표는 표시할 수 없습니다.</string>
+    <string name="item_not_found">등록된 정보가 없습니다.</string>
 </resources>
 

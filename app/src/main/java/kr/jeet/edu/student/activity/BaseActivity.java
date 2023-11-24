@@ -116,6 +116,39 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
         popupDialog.show();
     }
+    protected void showMessageDialog(String title, String msg, View.OnClickListener okListener, View.OnClickListener cancelListener, boolean setEditText, boolean cancelable) {
+        if(popupDialog != null && popupDialog.isShowing()) {
+            popupDialog.dismiss();
+        }
+        popupDialog = new PopupDialog(mContext);
+        popupDialog.setTitle(title);
+        popupDialog.setContent(msg);
+        popupDialog.setCanceledOnTouchOutside(cancelable);
+        popupDialog.setEdit(setEditText);
+        popupDialog.setOnOkButtonClickListener(okListener);
+        if(cancelListener != null) {
+            popupDialog.setOnCancelButtonClickListener(cancelListener);
+        }
+
+        popupDialog.show();
+    }
+    protected void showMessageDialog(String title, String msg, View.OnClickListener okListener, View.OnClickListener cancelListener, boolean setEditText, String setOkText, String setCancelText) {
+        if(popupDialog != null && popupDialog.isShowing()) {
+            popupDialog.dismiss();
+        }
+        popupDialog = new PopupDialog(mContext);
+        popupDialog.setTitle(title);
+        popupDialog.setContent(msg);
+        popupDialog.setEdit(setEditText);
+        popupDialog.setOkText(setOkText);
+        popupDialog.setCancelText(setCancelText);
+        popupDialog.setOnOkButtonClickListener(okListener);
+        if(cancelListener != null) {
+            popupDialog.setOnCancelButtonClickListener(cancelListener);
+        }
+
+        popupDialog.show();
+    }
     protected void hideMessageDialog() {
         if(popupDialog != null && popupDialog.isShowing()) {
             popupDialog.dismiss();

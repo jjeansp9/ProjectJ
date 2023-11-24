@@ -109,8 +109,10 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         holder.root.setOnClickListener(null);
         holder.root.setBackgroundResource(R.color.transparent);
 
-        holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
-        holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        try {
+            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        }catch (Exception e) {}
     }
 
     private void setClickEnabled(String str, ViewHolder holder, int position, SystemNoticeListData item) {
@@ -122,8 +124,11 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
         holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
 
-        holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
-        holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        try {
+            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+            holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
+        }catch (Exception e) {}
+
     }
 
     @Override

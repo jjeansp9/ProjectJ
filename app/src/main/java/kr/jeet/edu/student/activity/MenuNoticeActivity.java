@@ -24,7 +24,9 @@ import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -153,11 +155,9 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
 
-        noticeType = getResources().getStringArray(R.array.notice_type);
-        //allType = noticeType[0];
+        noticeType = getResources().getStringArray(R.array.notice_type_parent);
         systemType = noticeType[0];
         attendanceType = noticeType[1];
-        //reportCardType = noticeType[2];
         tuitionType = noticeType[2];
 
         Intent intent = getIntent();
@@ -206,19 +206,19 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     }
 
     private void setSpinner(){
+
+        String[] array;
+        List<String> typeList = new ArrayList<>();
+
+        if (_userGubun == Constants.USER_TYPE_PARENTS) array = getResources().getStringArray(R.array.notice_type_parent);
+        else array = getResources().getStringArray(R.array.notice_type_student);
+
+        typeList = Arrays.asList(array);
+        _spinnerType.setItems(typeList);
         _spinnerType.setIsFocusable(true);
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             selType = newItem.toString();
-
-//            if (selType.equals(reportCardType)) {
-//                calendarSetVisible(View.GONE);
-//                getReportListData();
-//            }
-//            else {
-//                calendarSetVisible(View.VISIBLE);
-//                getListData();
-//            }
             getListData();
         });
 
@@ -269,6 +269,17 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         });
     }
 
+    /**
+     *   미납 push data
+     *   seq : 페이징할때 필요한 seq
+     *   connSeq : 게시물 조회할때 필요한 seq (따로없을 시 위 seq를 똑같이 입력해준다.)
+     *   acaCode (혹시 필요하면)
+     *   searchType
+     *   title : 리스트에 나올 내용
+     *   content : dialog에 나올내용
+     *   userGubun (혹시필요하면)
+     *  insertDate 작성일
+     */
     private void startActivity(SystemNoticeListData item){
         if (item != null){
             switch (item.searchType) {
@@ -276,23 +287,43 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                     startBoardDetailActivity(item, TYPE_SYSTEM);
                     break;
 
-                case FCMManager.MSG_TYPE_REPORT:  // 성적표
-                    // TODO: 성적표 리스트로 이동해야함
+//                case FCMManager.MSG_TYPE_REPORT:  // 성적표
+//                    // TODO: 성적표 리스트로 이동해야함
 //                    intent = new Intent(mContext, ReportDetailActivity.class);
 //                    intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
 //                    startActivity(intent);
-                    break;
+//                    break;
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
-//                    showMessageDialog(
-//                            "타이틀 미정",
-//                            "메세지 미정", ok -> {}, cancel -> {}, false);
-//                    Intent intent = new Intent(mContext, TuitionActivity.class);
-//                    startActivity(intent);
+
+                    String title = item.title;
+                    String content = item.content;
+                    String confirmBtn = getString(R.string.ok);
+                    String payBtn = getString(R.string.pay);
+
+                    showMessageDialog(
+                            title,
+                            content,
+                            ok -> startTuitionActivity(true, item.stCode),
+                            cancel -> startTuitionActivity(false, item.stCode),
+                            false,
+                            payBtn,
+                            confirmBtn
+                    );
+
                     break;
             }
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("item is null ");
+    }
+
+    private void startTuitionActivity(boolean isStart, int stCode) {
+        if (isStart) {
+            Intent intent = new Intent(mContext, TuitionActivity.class);
+            intent.putExtra(IntentParams.PARAM_STU_STCODE, stCode);
+            startActivity(intent);
+        }
+        hideMessageDialog();
     }
 
     private void getListData(int... lastSeq){

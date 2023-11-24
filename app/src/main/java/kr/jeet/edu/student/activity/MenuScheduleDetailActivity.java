@@ -42,6 +42,8 @@ public class MenuScheduleDetailActivity extends BaseActivity {
 
     private int _stCode = 0;
 
+    PushMessage _pushData = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,17 +68,25 @@ public class MenuScheduleDetailActivity extends BaseActivity {
             setView();
 
         }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-            PushMessage message = null;
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
             }else{
-                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
             }
-            _currentSeq = message.connSeq;
+            if (_pushData != null) {
+                _currentSeq = _pushData.connSeq;
+                if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+            }
 
-            if (_currentSeq != -1) requestScheduleDetail(_currentSeq);
 
-            if (message.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
+            if (_currentSeq != -1) {
+                requestScheduleDetail(_currentSeq);
+            }
+            else {
+                Toast.makeText(mContext, R.string.server_error_2, Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
@@ -85,7 +95,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(getString(R.string.title_detail));
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+        customAppbar.setLogoClickable(_pushData == null);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

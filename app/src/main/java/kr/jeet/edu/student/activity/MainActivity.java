@@ -444,6 +444,7 @@ public class MainActivity extends BaseActivity {
 
             // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
             if (_pushMessage.memberSeq != _memberSeq) {
+
                 _pushMessage = null;
                 return;
             }
@@ -495,12 +496,7 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_REPORT: // 성적표
                 {
-                    if (_pushMessage.memberSeq == _memberSeq) {
-                        if (_pushMessage.stCode == _stCode) {
-                            // TODO : 추후 전달할 데이터 추가하기
-                            startActivity(new Intent(mContext, ReportCardShowActivity.class));
-                        }
-                    }
+                    if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, ReportCardDetailActivity.class));
                 }
                 break;
 
@@ -592,7 +588,7 @@ public class MainActivity extends BaseActivity {
 
         if (_userType.equals(Constants.MEMBER)) { // 회원
             //원생정보
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_student, R.string.main_menu_student_info, MenuStudentInfoActivity.class));
+            //mList.add(new MainMenuItemData(R.drawable.icon_menu_student, R.string.main_menu_student_info, MenuStudentInfoActivity.class));
             //공지사항
             mList.add(new MainMenuItemData(R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
             //캠퍼스일정

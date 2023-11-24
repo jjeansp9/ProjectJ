@@ -28,7 +28,7 @@ import kr.jeet.edu.student.utils.Utils;
 public class PopupDialog extends Dialog {
 
     private Context context;
-    private TextView titleTv, contentTv, noteTv, notMatchTv;
+    private TextView titleTv, contentTv, noteTv, notMatchTv, okTv, cancelTv;
     private EditText editText;
     //private Button cancelBtn, okBtn;
     private RelativeLayout cancelBtn, okBtn;
@@ -68,6 +68,8 @@ public class PopupDialog extends Dialog {
         editText = (EditText) findViewById(R.id.edit);
         noteTv = (TextView) findViewById(R.id.note);
         notMatchTv = (TextView) findViewById(R.id.not_match);
+        okTv = (TextView) findViewById(R.id.tv_ok);
+        cancelTv = (TextView) findViewById(R.id.tv_cancel);
 //        cancelBtn = (Button) findViewById(R.id.cancelBtn);
 //        okBtn = (Button) findViewById(R.id.okBtn);
         cancelBtn = (RelativeLayout) findViewById(R.id.cancelBtn);
@@ -86,6 +88,9 @@ public class PopupDialog extends Dialog {
             titleLayout.setVisibility(View.GONE);
         }
     }
+
+    public void setOkText(String str) { if(!TextUtils.isEmpty(str)) okTv.setText(str); }
+    public void setCancelText(String str) { if(!TextUtils.isEmpty(str)) cancelTv.setText(str); }
 
     public void setNotMatchTv(boolean notMatch) {
         if(notMatch) {

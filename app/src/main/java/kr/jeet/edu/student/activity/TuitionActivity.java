@@ -112,7 +112,7 @@ public class TuitionActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.main_menu_tuition);
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+        customAppbar.setLogoClickable(_pushData == null);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -136,9 +136,12 @@ public class TuitionActivity extends BaseActivity {
                 }
                 if (_pushData != null) _stCode = _pushData.stCode;
                 else _stCode = PreferenceUtil.getUserSTCode(mContext);
-
             } else {
-                _stCode = PreferenceUtil.getUserSTCode(mContext);
+                if (intent.hasExtra(IntentParams.PARAM_STU_STCODE)) {
+                    _stCode = intent.getIntExtra(IntentParams.PARAM_STU_STCODE, _stCode);
+                }else {
+                    _stCode = PreferenceUtil.getUserSTCode(mContext);
+                }
             }
         }
     }

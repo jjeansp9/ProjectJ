@@ -117,11 +117,15 @@ public class ReportCardDetailActivity extends BaseActivity {
         _listAdapter = new ReportCardDetailListAdapter(mContext, _reportCardList, new ReportCardDetailListAdapter.ItemClickListener() {
             @Override
             public void onItemClick(int position, ReportCardData item) {
-                Intent intent = new Intent(mContext, ReportCardShowActivity.class);
-                intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
-                intent.putExtra(IntentParams.PARAM_REPORT_SEQ, reportSeq);
-                intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.seq);
-                startActivity(intent);
+                if(item.etTitleGubun == Constants.ReportCardType.MIDDLE.getCode()) {
+                    Toast.makeText(mContext, R.string.err_msg_middle_not_displayed, Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent = new Intent(mContext, ReportCardShowActivity.class);
+                    intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
+                    intent.putExtra(IntentParams.PARAM_REPORT_SEQ, reportSeq);
+                    intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.seq);
+                    startActivity(intent);
+                }
             }
 
         });
@@ -138,7 +142,7 @@ public class ReportCardDetailActivity extends BaseActivity {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.title_detail);
         customAppbar.setLogoVisible(true);
-        customAppbar.setLogoClickable(true);
+        customAppbar.setLogoClickable(_pushData == null);
         setSupportActionBar(customAppbar.getToolbar());
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

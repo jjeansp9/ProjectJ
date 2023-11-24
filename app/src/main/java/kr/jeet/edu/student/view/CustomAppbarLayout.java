@@ -28,6 +28,7 @@ public class CustomAppbarLayout extends AppBarLayout {
     private ImageView _ivLogo, _btnBack;
     private TextView _tvBack;
     Animation animSpin;
+    private boolean clickEvent = false;
     public CustomAppbarLayout(@NonNull Context context) {
         super(context);
         _context = context;
@@ -83,9 +84,12 @@ public class CustomAppbarLayout extends AppBarLayout {
                 _ivLogo.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(_ivLogo != null && animSpin != null)
-                            _ivLogo.startAnimation(animSpin);
-
+                        if (!clickEvent) {
+                            if(_ivLogo != null && animSpin != null) {
+                                _ivLogo.startAnimation(animSpin);
+                                clickEvent = true;
+                            }
+                        }
                     }
                 });
             }
