@@ -255,7 +255,7 @@ public class IntroActivity extends BaseActivity {
     private void startIntro() {
         LogMgr.e(TAG, PreferenceUtil.getUserGubun(this) + " / " + PreferenceUtil.getUserSTCode(this));
         //푸쉬전송을 눌러서 들어온 경우에 로그인이 되어 있을 때
-        if(_pushMessage != null && PreferenceUtil.getUserGubun(this) >= USER_TYPE_STUDENT && PreferenceUtil.getUserSeq(this) != 0) {  //isFromPush
+        if(_pushMessage != null && PreferenceUtil.getUserGubun(this) >= USER_TYPE_STUDENT && PreferenceUtil.getUserSeq(this) > 0) {  //isFromPush
             if (PreferenceUtil.getUserGubun(this) == Constants.USER_TYPE_PARENTS){
                 requestChildStudentInfo(PreferenceUtil.getUserSeq(this));
 

@@ -296,7 +296,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
 
-                    String title = item.title;
+                    //String title = item.title;
+                    String title = getString(R.string.dialog_title_alarm_tuition);
                     String content = item.content;
                     String confirmBtn = getString(R.string.ok);
                     String payBtn = getString(R.string.pay);
