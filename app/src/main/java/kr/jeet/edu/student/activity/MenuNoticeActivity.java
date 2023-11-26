@@ -373,7 +373,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
 
-                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+                    txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                 }
 
@@ -381,7 +381,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                 public void onFailure(Call<SystemNoticeListResponse> call, Throwable t) {
                     if (mList.size() > 0) mList.clear();
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
-                    txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
+                    txtEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
 
                     mSwipeRefresh.setRefreshing(false);
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
