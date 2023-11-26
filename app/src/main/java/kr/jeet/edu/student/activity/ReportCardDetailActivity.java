@@ -125,6 +125,7 @@ public class ReportCardDetailActivity extends BaseActivity {
                     intent.putExtra(IntentParams.PARAM_REPORT_SEQ, reportSeq);
                     intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.seq);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
                 }
             }
 
