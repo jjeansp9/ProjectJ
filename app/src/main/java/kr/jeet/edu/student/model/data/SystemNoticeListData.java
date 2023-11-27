@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 public class SystemNoticeListData implements Parcelable {
     public int seq;             // 게시물 SEQ
+    public int connSeq;        // 게시물 SEQ
     public String title;        // 알림장 타이틀
     public String content;      // 알림장 내용 [미납에서 사용]
     public int receiverCnt;     // 수신자 수
@@ -20,6 +21,7 @@ public class SystemNoticeListData implements Parcelable {
     // Parcelable 생성자
     protected SystemNoticeListData(Parcel in) {
         seq = in.readInt();
+        connSeq = in.readInt();
         title = in.readString();
         content = in.readString();
         receiverCnt = in.readInt();
@@ -58,6 +60,7 @@ public class SystemNoticeListData implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(seq);
+        dest.writeInt(connSeq);
         dest.writeString(title);
         dest.writeString(content);
         dest.writeInt(receiverCnt);

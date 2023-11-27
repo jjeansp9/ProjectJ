@@ -394,7 +394,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
         if (RetrofitClient.getInstance() != null){
 
             showProgressDialog();
-
+            LogMgr.e(TAG, "Event Request seq: " + _currentSeq);
             mRetrofitApi = RetrofitClient.getApiInterface();
             mRetrofitApi.getSystemNoticeDetail(_currentSeq).enqueue(new Callback<SystemNoticeResponse>() {
                 @Override

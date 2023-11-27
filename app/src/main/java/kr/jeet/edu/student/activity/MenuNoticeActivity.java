@@ -496,7 +496,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
         intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
         intent.putExtra(IntentParams.PARAM_DATA_TYPE, type);
-        intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.seq);
+        intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
         startActivity(intent);
     }
 }
