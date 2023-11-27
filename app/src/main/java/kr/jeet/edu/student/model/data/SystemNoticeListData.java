@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class SystemNoticeListData implements Parcelable {
-    public int seq;             // 게시물 SEQ
-    public int connSeq;        // 게시물 SEQ
+    public int seq;             // Push SEQ (for paging)
+    public int connSeq;         // 게시물 SEQ (for viewing)
     public String title;        // 알림장 타이틀
     public String content;      // 알림장 내용 [미납에서 사용]
     public int receiverCnt;     // 수신자 수
@@ -16,6 +16,7 @@ public class SystemNoticeListData implements Parcelable {
     public String acaGubunName; // 캠퍼스 구분 이름
     public String insertDate;   // 게시물 등록일
     public String searchType;   // 게시물 유형
+    public String writerName;   // 상담 - 작성자(학생)명
     public String pushId;       // (부모앱) PushId
 
     // Parcelable 생성자
@@ -32,6 +33,7 @@ public class SystemNoticeListData implements Parcelable {
         acaGubunName = in.readString();
         insertDate = in.readString();
         searchType = in.readString();
+        writerName = in.readString();
         pushId = in.readString();
     }
 
@@ -71,6 +73,7 @@ public class SystemNoticeListData implements Parcelable {
         dest.writeString(acaGubunName);
         dest.writeString(insertDate);
         dest.writeString(searchType);
+        dest.writeString(writerName);
         dest.writeString(pushId);
     }
 }

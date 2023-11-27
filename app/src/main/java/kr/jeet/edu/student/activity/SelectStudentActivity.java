@@ -143,7 +143,7 @@ public class SelectStudentActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-            // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
+            // TODO : seq 에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
             if (_pushMessage.memberSeq != _parentSeq) {
                 _pushMessage = null;
                 return;
