@@ -10,6 +10,19 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementActivity;
+import kr.jeet.edu.student.activity.menu.attendance.MenuAttendanceActivity;
+import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
+import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingActivity;
+import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
+import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
+import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
+import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
+import kr.jeet.edu.student.activity.menu.reportcard.MenuReportCardActivity;
+import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
+import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleActivity;
+import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleDetailActivity;
+import kr.jeet.edu.student.activity.setting.SettingsActivity;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
@@ -63,7 +76,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -79,19 +91,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
-
-    // 미납 push
-//    key = pushId : value = qToOmZIWc8
-//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = stCode : value = 73808
-//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = body : value = 테스트관리자원생 미납 안내입니다.
-//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = date : value = 2023-11-23 13:41:08
-//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = title : value = 미납알림
-//2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = userGubun : value = 3
-//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = memberSeq : value = 3
-//            2023-11-23 13:41:08.846 16845-19471 firebase                kr.jeet.edu.student                  E  key = pushType : value = TUITION_NO_PAY
-//2023-11-23 13:41:08.926  4160-4166  statsd                  pid-4160                             E  Predicate -7037417284711607308 dropping data for dimension key (10)0x2010101->10807[I] (10)0x30000->wake:com.google.firebase
-
-    // TODO : 알림 목록 미납에서 목록 아이템 클릭시 다이얼로그 확인, 납부 버튼 추가. 납부버튼 누르면 수강료 목록화면으로
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -284,7 +283,6 @@ public class MainActivity extends BaseActivity {
         }, 2000);
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle("");
@@ -299,7 +297,6 @@ public class MainActivity extends BaseActivity {
 //        }
 
     }
-    @Override
     void initView() {
         findViewById(R.id.btn_teacher).setOnClickListener(this);
         findViewById(R.id.btn_attendance_state).setOnClickListener(this);
@@ -444,7 +441,6 @@ public class MainActivity extends BaseActivity {
 
             // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
             if (_pushMessage.memberSeq != _memberSeq) {
-
                 _pushMessage = null;
                 return;
             }
@@ -592,7 +588,7 @@ public class MainActivity extends BaseActivity {
             //공지사항
             mList.add(new MainMenuItemData(R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
             //캠퍼스일정
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule,MenuScheduleActivity.class));
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
             //알림장
             mList.add(new MainMenuItemData(R.drawable.icon_menu_notify, R.string.main_menu_notice, MenuNoticeActivity.class));
             //테스트예약

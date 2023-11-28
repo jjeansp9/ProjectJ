@@ -46,7 +46,6 @@ public class TeacherInfoActivity extends BaseActivity {
         setAnimMove(Constants.MOVE_DOWN);
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.main_tv_my_teacher);
@@ -57,7 +56,6 @@ public class TeacherInfoActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override
     void initView() {
 
         mRecyclerView = findViewById(R.id.recycler_teacher);

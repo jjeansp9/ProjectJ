@@ -5,6 +5,7 @@ import static kr.jeet.edu.student.common.Constants.USER_TYPE_STUDENT;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.login.LoginActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
@@ -187,11 +188,9 @@ public class IntroActivity extends BaseActivity {
             LogMgr.e(TAG, "intent is null");
         }
     }
-    @Override
     void initAppbar() {
         //do nothing
     }
-    @Override
     void initView() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenHeight = displayMetrics.heightPixels;

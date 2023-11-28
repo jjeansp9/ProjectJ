@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
@@ -24,9 +22,7 @@ import java.util.Optional;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.LTCData;
-import kr.jeet.edu.student.model.data.TeacherClsData;
 import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.utils.Utils;
 
@@ -104,7 +100,7 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                     //bodyHolder.tvCampus.setText(ltcData.ltcName);
                 });
-
+                bodyHolder.tvSubject.setText(Utils.getStr(item.subjectName));
                 try {
                     Date insertDate = _dateSecondFormat.parse(item.insertDate);
 
@@ -114,9 +110,6 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-
-
-
 //                bodyHolder.tvReserveDate.setText(item.reservationDate);
             }
         }
@@ -145,7 +138,7 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public class BodyViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvName, tvCampus, tvRegisterDate;
+        private TextView tvName, tvCampus, tvRegisterDate, tvSubject;
 
         public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -153,6 +146,7 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvName = itemView.findViewById(R.id.tv_test_reserve_name);
             tvCampus = itemView.findViewById(R.id.tv_test_reserve_campus);
             tvRegisterDate = itemView.findViewById(R.id.tv_test_register_date);
+            tvSubject = itemView.findViewById(R.id.tv_test_reserve_subject);
 //            tvReserveDate = itemView.findViewById(R.id.tv_test_reserve_date);
 
             itemView.setOnClickListener(v -> {

@@ -2,7 +2,7 @@ package kr.jeet.edu.student.model.data;
 
 import static kr.jeet.edu.student.adapter.ReportCardShowType0Adapter.LAYOUT_CONTENT;
 
-import kr.jeet.edu.student.activity.ReportCardShowActivity;
+import kr.jeet.edu.student.activity.menu.reportcard.ReportCardShowActivity;
 
 public class ReportCardExamData implements ReportCardShowActivity.ExamListTypeItem {
     public String esTitle;

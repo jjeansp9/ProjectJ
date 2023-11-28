@@ -1,6 +1,5 @@
 package kr.jeet.edu.student.model.data;
 
-import kr.jeet.edu.student.activity.MenuStudentInfoActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.utils.LogMgr;
 

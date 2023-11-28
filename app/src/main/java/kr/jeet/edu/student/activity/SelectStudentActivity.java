@@ -25,6 +25,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
+import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
+import kr.jeet.edu.student.activity.menu.leveltest.InformedConsentActivity;
+import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
+import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleDetailActivity;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
@@ -236,7 +241,6 @@ public class SelectStudentActivity extends BaseActivity {
         }
     }
     CustomAppbarLayout customAppbar;
-    @Override
     void initAppbar(){
         customAppbar = findViewById(R.id.customAppbar);
         if (customAppbar != null) {
@@ -245,7 +249,6 @@ public class SelectStudentActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         }
     }
-    @Override
     void initView() {
         initData();
         tvEmpty = findViewById(R.id.tv_sel_stu_empty);

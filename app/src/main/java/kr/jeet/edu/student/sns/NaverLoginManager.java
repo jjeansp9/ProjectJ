@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Message;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -15,9 +14,8 @@ import com.navercorp.nid.profile.NidProfileCallback;
 import com.navercorp.nid.profile.data.NidProfileResponse;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.activity.BaseActivity;
-import kr.jeet.edu.student.activity.JoinActivity;
-import kr.jeet.edu.student.activity.LoginActivity;
+import kr.jeet.edu.student.activity.login.JoinActivity;
+import kr.jeet.edu.student.activity.login.LoginActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.utils.LogMgr;

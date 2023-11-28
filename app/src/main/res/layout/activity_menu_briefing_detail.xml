@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MenuBriefingDetailActivity"
+    tools:context=".activity.menu.briefing.MenuBriefingDetailActivity"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.Guideline

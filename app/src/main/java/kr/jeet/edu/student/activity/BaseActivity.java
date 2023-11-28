@@ -22,7 +22,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.dialog.PopupDialog;
 import kr.jeet.edu.student.utils.LogMgr;
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     public Context mContext;
     private AlertDialog mProgressDialog = null;
@@ -30,15 +30,32 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
     TextView txt;
     private boolean setBar = false;
     private int move = -1;
+    protected long scrollToTopDelay = 0;
+
+    /**
+     *      1. 테스트예약 목록[부모앱,관리자앱] : 과목 추가 (관리자,사용자) - 현재 사용자앱은 추가 완료
+     *      1-1. 테스트예약 목록[부모앱,관리자앱] : 날짜형식 ios에 맞게 수정
+     *      2. 상담요청 상세[관리자앱] : ios랑 ui 맞추기
+     *      3. 시스템알림 출결현황: 목록 item 클릭시 dialog 보여주기
+     *      4. 시스템알림 미납: 월 변경시 목록 갱신 이슈 [api 이슈]
+     *      5. 시스템알림 목록, 상세: 시간 단위 분까지
+     *      6. 출석부: 캘린더, 범례 양 옆 마진주기
+     *      7. 목록 갱신시 리스트 최상단으로 스크롤
+     *      8. dialog 내용 길어지면 scroll
+    * */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = this;
+        initData();
         setStatusAndNavigatinBar(setBar);
     }
-    abstract void initView();
-    abstract void initAppbar();
+    private void initData() {
+        scrollToTopDelay = getResources().getInteger(R.integer.scroll_to_top_delay);
+    }
+//    protected void initView();
+//    protected void initAppbar();
 
     @Override
     public void onClick(View view) {

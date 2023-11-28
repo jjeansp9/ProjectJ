@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.Utils;
@@ -64,7 +65,7 @@ public class ReportCardListAdapter extends RecyclerView.Adapter<ReportCardListAd
 
                             String date = item.reportList.get(0).regDate;
 
-                            str = Utils.formatDate(date, "yyyy-MM-dd HH:mm:ss.SSS", "yyMMdd");
+                            str = Utils.formatDate(date, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss_SSS, Constants.DATE_FORMATTER_YYYYMMDD);
                             str += TextUtils.isEmpty(item.reportList.get(0).etName) ? "" : " " + item.reportList.get(0).etName;
 
                             if (item.reportList.size() > 1) {

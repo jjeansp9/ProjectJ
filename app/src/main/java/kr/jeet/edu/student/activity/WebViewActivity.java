@@ -82,7 +82,6 @@ public class WebViewActivity extends BaseActivity {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    @Override
     void initView() {
         initData();
 
@@ -109,7 +108,6 @@ public class WebViewActivity extends BaseActivity {
         if (url != null) wv.loadUrl(url);
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(title);

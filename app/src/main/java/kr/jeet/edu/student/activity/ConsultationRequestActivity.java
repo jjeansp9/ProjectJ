@@ -137,7 +137,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         if(mInfo == null) finish();
     }
 
-    @Override
     void initView() {
 
         initData();
@@ -153,7 +152,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         //setSpinnerTeacher();
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.menu_stu_info_consultation_request_header);

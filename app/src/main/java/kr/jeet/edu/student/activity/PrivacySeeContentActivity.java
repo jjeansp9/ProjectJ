@@ -54,7 +54,6 @@ public class PrivacySeeContentActivity extends BaseActivity {
         }
     }
 
-    @Override
     void initView() {
         mScrollView = findViewById(R.id.scroll_privacy_content);
         mTvContent = findViewById(R.id.tv_privacy_content);
@@ -107,7 +106,6 @@ public class PrivacySeeContentActivity extends BaseActivity {
         }
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(title);

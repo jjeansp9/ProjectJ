@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".activity.AgreeTermsActivity">
+    tools:context=".activity.login.AgreeTermsActivity">
 
     <kr.jeet.edu.student.view.CustomAppbarLayout
         android:id="@+id/customAppbar"

@@ -107,7 +107,6 @@ public class TuitionActivity extends BaseActivity {
         setAnimMove(Constants.MOVE_DOWN);
     }
 
-    @Override
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         customAppbar.setTitle(R.string.main_menu_tuition);
@@ -146,7 +145,7 @@ public class TuitionActivity extends BaseActivity {
         }
     }
 
-    @Override
+
     void initView() {
         initData();
 

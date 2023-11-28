@@ -3,7 +3,7 @@ package kr.jeet.edu.student.model.data;
 import java.text.ParseException;
 import java.util.Objects;
 
-import kr.jeet.edu.student.activity.MenuStudentInfoActivity;
+import kr.jeet.edu.student.activity.menu.student.MenuStudentInfoActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.utils.LogMgr;
 

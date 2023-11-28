@@ -6,29 +6,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.IOException;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.activity.AgreeTermsActivity;
-import kr.jeet.edu.student.activity.LoginActivity;
-import kr.jeet.edu.student.activity.MainActivity;
+import kr.jeet.edu.student.activity.login.LoginActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
-import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.LTCSubjectData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
-import kr.jeet.edu.student.model.request.SigninRequest;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
-import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
-import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import retrofit2.Call;
 import retrofit2.Callback;

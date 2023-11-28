@@ -92,7 +92,6 @@ public class PhotoViewActivity extends BaseActivity {
 
     }
 
-    @Override
     void initView() {
         tvPage = findViewById(R.id.tv_photoview_page);
         layoutHeader = findViewById(R.id.layout_header);
@@ -247,7 +246,6 @@ public class PhotoViewActivity extends BaseActivity {
 
     }
 
-    @Override
     void initAppbar() {}
 
     @Override

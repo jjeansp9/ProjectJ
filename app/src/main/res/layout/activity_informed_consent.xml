@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.InformedConsentActivity"
+    tools:context=".activity.menu.leveltest.InformedConsentActivity"
     android:background="@color/bg_grey">
 
     <kr.jeet.edu.student.view.CustomAppbarLayout
