@@ -101,15 +101,9 @@ public class TestReserveAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     //bodyHolder.tvCampus.setText(ltcData.ltcName);
                 });
                 bodyHolder.tvSubject.setText(Utils.getStr(item.subjectName));
-                try {
-                    Date insertDate = _dateSecondFormat.parse(item.insertDate);
+                String date = Utils.formatDate(item.insertDate, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD);
+                bodyHolder.tvRegisterDate.setText(date);
 
-                    bodyHolder.tvRegisterDate.setText(_dateMinuteFormat.format(insertDate));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
 //                bodyHolder.tvReserveDate.setText(item.reservationDate);
             }
         }

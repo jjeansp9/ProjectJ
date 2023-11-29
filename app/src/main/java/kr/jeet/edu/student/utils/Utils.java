@@ -474,7 +474,7 @@ public class Utils {
     * */
     public static String currentDate(String pattern){
         Date currentDate = new Date(); // 현재 날짜 가져오기
-        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.getDefault()); // 날짜 형식 지정
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern, Locale.KOREA); // 날짜 형식 지정
         String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
 
         return formattedDate;
@@ -615,9 +615,10 @@ public class Utils {
         animator.start();
     }
     /**
-    * dp값 가져오기
+    * dp값 or px값 가져오기
     * */
-    public static int fromPxToDp(float px) { return (int) (px * Resources.getSystem().getDisplayMetrics().density); }
+    public static int fromPxToDp(float px) { return (int) (px / Resources.getSystem().getDisplayMetrics().density); }
+    public static int fromDpToPx(float dp) { return (int) (dp * Resources.getSystem().getDisplayMetrics().density); }
 
     /**
     * Normal Message Dialog Show

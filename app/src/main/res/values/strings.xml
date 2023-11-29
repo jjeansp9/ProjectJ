@@ -41,6 +41,7 @@
 
     <string name="dialog_title_alarm">알림</string>
     <string name="dialog_title_alarm_tuition">미납 알림</string>
+    <string name="dialog_title_alarm_attend">출결 알림</string>
     <string name="dialog_title_notice">공지</string>
     <string name="dialog_title_error">오류</string>
     <string name="dialog_title_pw_confirm">사용자 확인</string>

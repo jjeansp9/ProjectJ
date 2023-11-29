@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/dialog_ly"
@@ -42,59 +42,80 @@
 
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="80dp"
-                android:orientation="vertical"
-                android:padding="@dimen/layout_margin_16"
-                android:gravity="center_vertical"
-                >
+                android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/content"
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/scroll_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="content"
-                    android:textColor="@color/black"
-                    android:lineSpacingMultiplier="1.2"
-                    android:textSize="@dimen/font_size"
-                    />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constrainedHeight="true"
+                    app:layout_constraintHeight_min="80dp"
+                    app:layout_constraintHeight_max="400dp"
+                    >
 
-                <TextView
-                    android:id="@+id/note"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="note"
-                    android:textColor="@color/font_color_default"
-                    android:textSize="@dimen/font_size"
-                    android:layout_marginTop="12dp"
-                    />
+                    <LinearLayout
+                        android:id="@+id/layout_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/layout_margin_16"
+                        android:gravity="center_vertical"
+                        >
 
-                <EditText
-                    android:id="@+id/edit"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_edittext"
-                    android:textSize="@dimen/font_size_large"
-                    android:textColor="@color/font_color_default"
-                    android:inputType="textPassword"
-                    android:layout_marginTop="12dp"
-                    android:padding="@dimen/editbox_padding"
-                    android:maxLines="1"
-                    android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="content"
+                            android:textColor="@color/black"
+                            android:lineSpacingMultiplier="1.2"
+                            android:textSize="@dimen/font_size"
+                            />
 
-                <TextView
-                    android:id="@+id/not_match"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="not match"
-                    android:textColor="@color/red_sub"
-                    android:textSize="@dimen/font_size_small"
-                    android:layout_marginTop="4dp"
-                    android:visibility="gone"/>
+                        <TextView
+                            android:id="@+id/note"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="note"
+                            android:textColor="@color/font_color_default"
+                            android:textSize="@dimen/font_size"
+                            android:layout_marginTop="12dp"
+                            />
 
-            </LinearLayout>
+                        <EditText
+                            android:id="@+id/edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_edittext"
+                            android:textSize="@dimen/font_size_large"
+                            android:textColor="@color/font_color_default"
+                            android:inputType="textPassword"
+                            android:layout_marginTop="12dp"
+                            android:padding="@dimen/editbox_padding"
+                            android:maxLines="1"
+                            android:visibility="gone"/>
+
+                        <TextView
+                            android:id="@+id/not_match"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="not match"
+                            android:textColor="@color/red_sub"
+                            android:textSize="@dimen/font_size_small"
+                            android:layout_marginTop="4dp"
+                            android:visibility="gone"/>
+
+                    </LinearLayout>
+
+                </androidx.core.widget.NestedScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 

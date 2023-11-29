@@ -237,6 +237,9 @@ public class BusRouteActivity extends BaseActivity {
                     if (mList != null) mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     setProgressWithAnimation();
                     _handler.sendEmptyMessageDelayed(CMD_REFRESH, REFRESH_SEC * 1000);
+                    if(mList.size() > 0 && mRecyclerRoute != null) {
+                        _handler.postDelayed(() -> mRecyclerRoute.smoothScrollToPosition(0), scrollToTopDelay);
+                    }
                 }
 
                 @Override

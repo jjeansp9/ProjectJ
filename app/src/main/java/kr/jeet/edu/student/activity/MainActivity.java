@@ -61,6 +61,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -225,10 +226,26 @@ public class MainActivity extends BaseActivity {
         if (intent != null && result.getResultCode() != RESULT_CANCELED) {
             if(intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
                 isMain = true;
-                announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
-                announceRecycler.setAdapter(announceAdapter);
+//                announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
+//                announceRecycler.setAdapter(announceAdapter);
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(added) requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
+                if(added) {
+                    AnnouncementData changedItem = null;
+                    if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
+                        } else {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+                        }
+                    }
+                    LogMgr.w("showed =" + changedItem);
+                    int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+                    LogMgr.w("position =" + position);
+                    if(position >= 0 && changedItem != null) {
+                        announceList.set(position, changedItem);
+                        announceAdapter.notifyItemChanged(position);
+                    }
+                }
 
             } else if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
                 intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
@@ -343,11 +360,12 @@ public class MainActivity extends BaseActivity {
         announceRecycler.addItemDecoration(dividerItemDecoration);
     }
 
-    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title){
+    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
             Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+            targetIntent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             resultLauncher.launch(targetIntent);
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
 

@@ -146,7 +146,7 @@ public class ReportCardShowActivity extends BaseActivity {
             // 악어수학용 Adapter
             CustomGridLayoutMgr layoutMgr = new CustomGridLayoutMgr(mContext, spanCount);
             mRecycler.setLayoutManager(layoutMgr);
-            int padding = Utils.fromPxToDp(1);
+            int padding = Utils.fromDpToPx(1);
             mRecycler.setPadding(padding, padding, padding, padding);
             mAdapter = new ReportCardShowType3Adapter(mContext, mList);
         }

@@ -39,7 +39,7 @@
                 android:background="@drawable/bg_setting_layout"
                 android:layout_marginHorizontal="@dimen/layout_margin"
                 android:layout_marginTop="12dp"
-                android:paddingHorizontal="@dimen/layout_margin"
+                android:paddingHorizontal="@dimen/layout_margin_16"
                 android:paddingVertical="16dp"
                 android:alpha="0">
 
@@ -48,7 +48,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.25"/>
+                    app:layout_constraintGuide_percent="0.30"/>
 
                 <TextView
                     android:id="@+id/tv_title_process"
@@ -61,7 +61,7 @@
                     android:gravity="end"
                     android:textStyle="bold"
                     android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"
+                    android:textSize="@dimen/font_size"
                     />
 
                 <TextView
@@ -71,8 +71,8 @@
                     app:layout_constraintTop_toTopOf="@id/tv_title_process"
                     app:layout_constraintStart_toStartOf="@id/guideline_left"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="@dimen/layout_margin"
-                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginStart="@dimen/layout_margin_16"
+                    android:textSize="@dimen/font_size"
                     android:gravity="left"
                     android:hint="@string/hint_no_information"
                     android:textColor="@color/font_color_default"
@@ -84,12 +84,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_process"
                     app:layout_constraintEnd_toStartOf="@id/guideline_left"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/layout_margin_4"
+                    android:layout_marginTop="@dimen/report_card_show_info"
                     android:text="@string/title_reportcard_exam_date"
                     android:gravity="end"
                     android:textStyle="bold"
                     android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"/>
+                    android:textSize="@dimen/font_size"/>
 
                 <TextView
                     android:id="@+id/tv_date"
@@ -98,9 +98,8 @@
                     app:layout_constraintTop_toTopOf="@id/tv_title_date"
                     app:layout_constraintStart_toStartOf="@id/guideline_left"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="@dimen/layout_margin"
-                    android:layout_marginEnd="4dp"
-                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginStart="@dimen/layout_margin_16"
+                    android:textSize="@dimen/font_size"
                     android:gravity="left"
                     android:hint="@string/hint_no_information"
                     android:textColor="@color/font_color_default" />
@@ -111,12 +110,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_date"
                     app:layout_constraintEnd_toStartOf="@id/guideline_left"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/layout_margin_4"
+                    android:layout_marginTop="@dimen/report_card_show_info"
                     android:text="@string/title_reportcard_exam_subject"
                     android:gravity="end"
                     android:textStyle="bold"
                     android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"/>
+                    android:textSize="@dimen/font_size"/>
 
                 <TextView
                     android:id="@+id/tv_subject"
@@ -125,9 +124,8 @@
                     app:layout_constraintTop_toTopOf="@id/tv_title_subject"
                     app:layout_constraintStart_toStartOf="@id/guideline_left"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="@dimen/layout_margin"
-                    android:layout_marginEnd="4dp"
-                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginStart="@dimen/layout_margin_16"
+                    android:textSize="@dimen/font_size"
                     android:gravity="left"
                     android:hint="@string/hint_no_information"
                     android:textColor="@color/font_color_default" />
@@ -138,12 +136,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_subject"
                     app:layout_constraintEnd_toStartOf="@id/guideline_left"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/layout_margin_4"
+                    android:layout_marginTop="@dimen/report_card_show_info"
                     android:text="@string/name"
                     android:gravity="end"
                     android:textStyle="bold"
                     android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"/>
+                    android:textSize="@dimen/font_size"/>
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -152,9 +150,8 @@
                     app:layout_constraintTop_toTopOf="@id/tv_title_name"
                     app:layout_constraintStart_toStartOf="@id/guideline_left"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="@dimen/layout_margin"
-                    android:layout_marginEnd="4dp"
-                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginStart="@dimen/layout_margin_16"
+                    android:textSize="@dimen/font_size"
                     android:gravity="left"
                     android:hint="@string/hint_no_information"
                     android:textColor="@color/font_color_default" />
@@ -165,12 +162,12 @@
                     app:layout_constraintTop_toBottomOf="@+id/tv_name"
                     app:layout_constraintEnd_toStartOf="@id/guideline_left"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/layout_margin_4"
+                    android:layout_marginTop="@dimen/report_card_show_info"
                     android:text="@string/title_reportcard_exam_school"
                     android:gravity="end"
                     android:textStyle="bold"
                     android:textColor="@color/font_color_bc"
-                    android:textSize="@dimen/font_size_large"/>
+                    android:textSize="@dimen/font_size"/>
 
                 <TextView
                     android:id="@+id/tv_school"
@@ -179,9 +176,8 @@
                     app:layout_constraintTop_toTopOf="@id/tv_title_school"
                     app:layout_constraintStart_toStartOf="@id/guideline_left"
                     app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="@dimen/layout_margin"
-                    android:layout_marginEnd="4dp"
-                    android:textSize="@dimen/font_size_large"
+                    android:layout_marginStart="@dimen/layout_margin_16"
+                    android:textSize="@dimen/font_size"
                     android:gravity="left"
                     android:hint="@string/hint_no_information"
                     android:textColor="@color/font_color_default" />

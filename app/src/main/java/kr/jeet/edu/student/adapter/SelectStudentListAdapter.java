@@ -65,18 +65,18 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             }
 
             if (item != null) {
-                if (Utils.getStr(item.stGrade).equals(Utils.getStr(item.clstName))) {
-                    deptName = Utils.getStr(item.deptName);
-                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
-                    itemClass = deptName + clstName;
-                }
-                else {
-                    deptName = Utils.getStr(item.deptName);
-                    stGrade = Utils.getStr(item.stGrade);
-                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
-
-                    itemClass = deptName + stGrade + clstName;
-                }
+//                if (Utils.getStr(item.stGrade).equals(Utils.getStr(item.clstName))) {
+//                    deptName = Utils.getStr(item.deptName);
+//                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+//                    itemClass = deptName + clstName;
+//                }
+//                else {
+//                    deptName = Utils.getStr(item.deptName);
+//                    stGrade = Utils.getStr(item.stGrade);
+//                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
+//
+//                    itemClass = deptName + stGrade + clstName;
+//                }
 
                 SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
                 SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
@@ -89,8 +89,18 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                     e.printStackTrace();
                 }
 
-                if (TextUtils.isEmpty(item.acaName)) holder.tvAcaName.setVisibility(View.GONE);
-                else holder.tvAcaName.setText(item.acaName);
+                if (!TextUtils.isEmpty(item.stGrade)) {
+                    if (item.stGrade.length() <= 2) {
+                        if (item.stGrade.contains("초")) itemClass = "초등학생 " + item.stGrade.replace("초", "") + "학년";
+                        if (item.stGrade.contains("중")) itemClass = "중학생 " + item.stGrade.replace("중", "") + "학년";
+                        if (item.stGrade.contains("고")) itemClass = "고등학생 " + item.stGrade.replace("고", "") + "학년";
+                    } else {
+                        itemClass = Utils.getStr(item.stGrade);
+                    }
+                }
+
+                if (TextUtils.isEmpty(item.scName)) holder.tvScName.setVisibility(View.GONE);
+                else holder.tvScName.setText(item.scName);
 
                 holder.tvName.setText(Utils.getStr(item.stName));
                 holder.tvBirth.setText(Utils.getStr(item.birth));
@@ -118,7 +128,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView imgProfile, imgGender, imgLineGender;
-        private TextView tvName, tvBirth, tvDeptName, tvStGrade, tvClstName, tvAcaName, tvClass;
+        private TextView tvName, tvBirth, tvDeptName, tvStGrade, tvClstName, tvScName, tvClass;
         private ConstraintLayout rootSelStu, rootNewStu;
 
         public ViewHolder(@NonNull View itemView) {
@@ -128,7 +138,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             imgGender = itemView.findViewById(R.id.imgGender);
             imgLineGender = itemView.findViewById(R.id.img_line_gender);
             tvName = itemView.findViewById(R.id.name);
-            tvAcaName = itemView.findViewById(R.id.tv_aca_name);
+            tvScName = itemView.findViewById(R.id.tv_sc_name);
             tvBirth = itemView.findViewById(R.id.tv_birth);
             tvClass = itemView.findViewById(R.id.tv_class);
             rootSelStu = itemView.findViewById(R.id.root_sel_stu);

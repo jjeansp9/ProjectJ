@@ -70,7 +70,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_test_reserve_subject"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="2dp"
         android:hint="(날짜 정보없음)"
         android:textSize="@dimen/font_size_small"
         android:textColor="@color/font_color_999"

@@ -940,7 +940,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private String currentDate(){
         Date currentDate = new Date(); // 현재 날짜 가져오기
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
         String formattedDate = dateFormat.format(currentDate); // 형식에 맞춰 날짜 문자열로 변환
 
         return formattedDate;

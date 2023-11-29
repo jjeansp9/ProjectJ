@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -100,7 +101,23 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             }
             else if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
                 boolean rdCntAdd = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(rdCntAdd) requestBriefingList();
+                if(rdCntAdd) {
+                    BriefingData changedItem = null;
+                    if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, BriefingData.class);
+                        } else {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+                        }
+                    }
+                    LogMgr.w("edited =" + changedItem);
+                    int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+                    LogMgr.w("position =" + position);
+                    if(position >= 0 && changedItem != null) {
+                        mList.set(position, changedItem);
+                        mAdapter.notifyItemChanged(position);
+                    }
+                }
             }
         }
     });
@@ -296,6 +313,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
             Intent intent = new Intent(mContext, MenuBriefingDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_BRIEFING_INFO, item);
+            intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             resultLauncher.launch(intent);
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
         }else LogMgr.e("clickItem is null ");
@@ -435,6 +453,9 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                     mTvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                     mAdapter.notifyDataSetChanged();
+                    if(mList.size() > 0 && mRecyclerBrf!= null) {
+                        _handler.postDelayed(() -> mRecyclerBrf.smoothScrollToPosition(0), scrollToTopDelay);
+                    }
                 }
 
                 @Override

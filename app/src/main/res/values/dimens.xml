@@ -92,4 +92,6 @@
     <dimen name="setting_border_radius">12dp</dimen>
     <dimen name="setting_border_radius_sub">11dp</dimen>
     <dimen name="reportcard_index_column_width">60dp</dimen>
+
+    <dimen name="report_card_show_info">6dp</dimen>
 </resources>

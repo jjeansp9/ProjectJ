@@ -120,7 +120,7 @@ public class MenuScheduleDetailActivity extends BaseActivity {
         calendar.set(mInfo.year, mInfo.month - 1, mInfo.day);
 
         // 원하는 날짜 형식으로 포맷합니다.
-        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMATTER_YYYY_M_D_E, Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(TIME_FORMATTER_YYYY_M_D_E, Locale.KOREA);
         Date date = calendar.getTime();
 
         tvDate.setText(sdf.format(date));

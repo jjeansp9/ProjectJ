@@ -603,8 +603,8 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
                 if (gradeIndex.contains(newIndex)) originalTime = testTimeList.get(newIndex + 1).toString();
                 else originalTime = testTimeList.get(newIndex).toString();
 
-                SimpleDateFormat originalFormat = new SimpleDateFormat("a hh:mm", Locale.getDefault());
-                SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+                SimpleDateFormat originalFormat = new SimpleDateFormat("a hh:mm", Locale.KOREA);
+                SimpleDateFormat targetFormat = new SimpleDateFormat("HH:mm", Locale.KOREA);
 
                 try {
                     Date date = originalFormat.parse(originalTime);

@@ -22,9 +22,11 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
+import kr.jeet.edu.student.utils.Utils;
 
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
@@ -65,7 +67,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 }
                 else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
                     strType = "출결현황";
-                    setClickDisabled(strType, holder, item);
+                    setClickEnabled(strType, holder, position, item);
                 }
                 else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
                     strType = "성적표";
@@ -125,7 +127,8 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
 
         try {
-            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+            String date = Utils.formatDate(item.insertDate, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+            holder.tvDate.setText(date);
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
         }catch (Exception e) {}
 

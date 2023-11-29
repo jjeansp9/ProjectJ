@@ -194,6 +194,10 @@ public class MenuReportCardActivity extends BaseActivity {
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
 
+                    if(finalLastNoticeSeq == 0 && mList.size() > 0 && mRecyclerView != null) {
+                        _handler.postDelayed(() -> mRecyclerView.smoothScrollToPosition(0), scrollToTopDelay);
+                    }
+
                     txtEmpty.setVisibility(mList.size() <= 1 ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                     hideProgressDialog();

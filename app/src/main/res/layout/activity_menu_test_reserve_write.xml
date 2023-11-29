@@ -52,14 +52,14 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.03"/>
+                app:layout_constraintGuide_percent="0.02"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_test_reserve_second"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.33" />
+                app:layout_constraintGuide_percent="0.35" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_test_reserve_third"
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.97"/>
+                app:layout_constraintGuide_percent="0.98"/>
 
             <LinearLayout
                 android:id="@+id/layout_side_left"

@@ -1,11 +1,7 @@
 package kr.jeet.edu.student.activity.menu.briefing;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,11 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -32,10 +24,6 @@ import android.widget.Toast;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -47,19 +35,15 @@ import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
-import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.BriefingReservedListData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.response.BaseResponse;
-import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
-import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -157,6 +141,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
             intent.putExtra(IntentParams.PARAM_BRIEFING_RESERVE_ADDED, added);
         }else{
             intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
+            intent.putExtra(IntentParams.PARAM_BOARD_ITEM, mInfo);
         }
         setResult(RESULT_OK, intent);
         finish();
@@ -371,7 +356,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         if (clickImg != null) {
             Intent intent = new Intent(mContext, PhotoViewActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_DETAIL_IMG, mImageList);
-            intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_DETAIL_IMG_POSITION, position);
+            intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             startActivity(intent);
         } else LogMgr.e("item is null");
     }

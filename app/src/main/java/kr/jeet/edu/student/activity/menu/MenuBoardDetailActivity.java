@@ -4,7 +4,6 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
@@ -21,22 +20,20 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
-import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
-import kr.jeet.edu.student.model.request.PushConfirmRequest;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
@@ -82,6 +79,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
     private final int TYPE_ANNOUNCEMENT_FROM_MAIN = 2;
     private final int TYPE_SYSTEM = 3;
     private final int TYPE_REPORT_CARD = 4;
+
+    private int _currentDataPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,6 +204,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
                 if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
                 LogMgr.e("Event here4", _pushData.connSeq+"");
             }
+            _currentDataPosition = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
         }
     }
 
@@ -310,7 +310,7 @@ public class MenuBoardDetailActivity extends BaseActivity {
         if (clickImg != null) {
             Intent intent = new Intent(mContext, PhotoViewActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_DETAIL_IMG, mImageList);
-            intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_DETAIL_IMG_POSITION, position);
+            intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             startActivity(intent);
         } else LogMgr.e("item is null");
     }
@@ -413,7 +413,11 @@ public class MenuBoardDetailActivity extends BaseActivity {
                                         mTvTitle.setText(TextUtils.isEmpty(_systemNoticeData.title) ? "" : _systemNoticeData.title); // 제목
                                         mTvName.setVisibility(View.VISIBLE);
                                         mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
-                                        mTvDate.setText(TextUtils.isEmpty(_systemNoticeData.insertDate) ? "" : _systemNoticeData.insertDate); // 작성날짜
+                                        mTvDate.setText(Utils.formatDate(
+                                                _systemNoticeData.insertDate,
+                                                Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss,
+                                                Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm
+                                        )); // 작성날짜
                                         mTvContent.setText(TextUtils.isEmpty(_systemNoticeData.content) ? "" : _systemNoticeData.content); // 내용
 
                                         if(_systemNoticeData.fileList != null && _systemNoticeData.fileList.size() > 0) {
@@ -490,6 +494,8 @@ public class MenuBoardDetailActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = getIntent();
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
+        intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _currentData);
+        intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
         setResult(RESULT_OK, intent);
         finish();
         overridePendingTransition(R.anim.horizontal_in, R.anim.horizontal_exit);

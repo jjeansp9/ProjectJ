@@ -85,10 +85,23 @@ public class MenuAnnouncementActivity extends BaseActivity {
         if(result.getResultCode() != RESULT_CANCELED) {
             if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(_selectedLocalACA != null)
-                    LogMgr.e("acaCode = " + _selectedLocalACA.acaCode);
-                requestBoardList();
-
+                if (added) {
+                    AnnouncementData changedItem = null;
+                    if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
+                        } else {
+                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+                        }
+                    }
+                    LogMgr.w("showed =" + changedItem);
+                    int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+                    LogMgr.w("position =" + position);
+                    if(position >= 0 && changedItem != null) {
+                        mList.set(position, changedItem);
+                        mAdapter.notifyItemChanged(position);
+                    }
+                }
             }
         }
     });
@@ -222,11 +235,12 @@ public class MenuAnnouncementActivity extends BaseActivity {
         });
     }
 
-    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title){
+    private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
             Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
+            intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             resultLauncher.launch(intent);
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
 
@@ -344,6 +358,9 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mSwipeRefresh.setRefreshing(false);
                     mAdapter.notifyDataSetChanged();
+                    if(finalLastNoticeSeq == 0 && mList.size() > 0 && mRecyclerView != null) {
+                        _handler.postDelayed(() -> mRecyclerView.smoothScrollToPosition(0), scrollToTopDelay);
+                    }
                 }
 
                 @Override

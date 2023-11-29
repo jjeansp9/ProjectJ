@@ -282,25 +282,35 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
      */
     private void startActivity(SystemNoticeListData item){
         if (item != null){
+
+            String title = "";
+            String content = "";
+            String confirmBtn = "";
+            String payBtn = "";
+
             switch (item.searchType) {
                 case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
                     startBoardDetailActivity(item, TYPE_SYSTEM);
                     break;
 
-//                case FCMManager.MSG_TYPE_REPORT:  // 성적표
-//                    // TODO: 성적표 리스트로 이동해야함
-//                    intent = new Intent(mContext, ReportDetailActivity.class);
-//                    intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
-//                    startActivity(intent);
-//                    break;
+                case FCMManager.MSG_TYPE_ATTEND:  // 출결현황
+                    title = getString(R.string.dialog_title_alarm_attend);
+                    content = item.title;
+
+                    showMessageDialog(
+                            title,
+                            content,
+                            ok -> hideMessageDialog(),
+                            null,
+                            false
+                    );
+                    break;
 
                 case FCMManager.MSG_TYPE_TUITION:  // 미납
-
-                    //String title = item.title;
-                    String title = getString(R.string.dialog_title_alarm_tuition);
-                    String content = item.content;
-                    String confirmBtn = getString(R.string.ok);
-                    String payBtn = getString(R.string.pay);
+                    title = getString(R.string.dialog_title_alarm_tuition);
+                    content = item.content;
+                    confirmBtn = getString(R.string.ok);
+                    payBtn = getString(R.string.pay);
 
                     showMessageDialog(
                             title,
@@ -311,7 +321,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                             payBtn,
                             confirmBtn
                     );
-
                     break;
             }
             overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);

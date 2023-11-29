@@ -32,7 +32,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
     private String TAG = "AnnounceListAdapter";
 
-    public interface ItemClickListener{ public void onItemClick(AnnouncementData item, TextView title); }
+    public interface ItemClickListener{ public void onItemClick(AnnouncementData item, TextView title, int position); }
 
     private Context mContext;
     private List<AnnouncementData> mList;
@@ -184,7 +184,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();
-                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position), tvTitle);
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position), tvTitle, position);
             });
         }
     }

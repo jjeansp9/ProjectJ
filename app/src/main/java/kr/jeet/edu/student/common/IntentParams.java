@@ -30,7 +30,7 @@ public class IntentParams {
     public final static String PARAM_WRITE_MODE = "writeMode";  // 작성모드
 
     public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG = "announcementDetailImg";  // 공지사항 상세화면 이미지 item
-    public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG_POSITION = "announcementDetailImgPosition";  // 공지사항 상세화면 이미지 item position
+    public final static String PARAM_BOARD_POSITION = "board_position";  // 선택한 아이템 position
 
     public final static String PARAM_WEB_VIEW_URL = "webViewUrl";  // 웹뷰에서 로드할 url
     public final static String PARAM_PUSH_MESSAGE = "pushMessage";  // pushMessage
