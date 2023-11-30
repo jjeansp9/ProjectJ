@@ -18,6 +18,7 @@ import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
+import kr.jeet.edu.student.activity.menu.qna.MenuQNAActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.MenuReportCardActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleActivity;
@@ -404,7 +405,7 @@ public class MainActivity extends BaseActivity {
         }
 
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
-        _userType = PreferenceUtil.getUserType(mContext);
+        _userType = PreferenceUtil.getUserIsOriginal(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);
@@ -612,13 +613,15 @@ public class MainActivity extends BaseActivity {
             //테스트예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //차량정보
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_vehicle_info, MenuBusActivity.class));
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_bus_info, MenuBusActivity.class));
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
             //출석부
             mList.add(new MainMenuItemData(R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
             //성적표
             mList.add(new MainMenuItemData(R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
+            //질문
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
 
         }else{ // 비회원
             //공지사항
@@ -629,6 +632,8 @@ public class MainActivity extends BaseActivity {
             mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //설명회예약
             mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            //질문
+            mList.add(new MainMenuItemData(R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
         }
     }
 

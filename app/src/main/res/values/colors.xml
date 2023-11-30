@@ -35,7 +35,7 @@
     <color name="blackgray_sub">#444444</color>
     <color name="blackgray">#666666</color>
     <color name="darkgray">#999999</color>
-    <color name="bg_grey">#eee</color>
+    <color name="bg_gray">#eee</color>
     <color name="bg_lightgray">#f0f0f0</color>
     <color name="bg_lightgray_2">#f8f8f8</color>
     <color name="bg_gray_transparent">#66666666</color>
@@ -95,4 +95,11 @@
 
     <drawable name="color_enable">#e51b23</drawable>
     <drawable name="color_disable">#cccccc</drawable>
+
+    <color name="color_notice">#006B26</color> <!-- 공지 -->
+    <color name="color_subscription">#FFA800</color> <!-- 신청 -->
+    <color name="color_receiption">#FF0000</color> <!-- 접수 -->
+    <color name="color_complete">#2E75B6</color> <!-- 완료 -->
+    <color name="color_me">#73C87D</color> <!-- 본인 -->
+    <color name="color_private">#474747</color> <!-- 비공개 -->
 </resources>

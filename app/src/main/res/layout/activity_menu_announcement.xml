@@ -17,9 +17,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/customAppbar"
-        android:background="@color/bg_grey">
+        android:background="@color/bg_gray">
 
         <com.skydoves.powerspinner.PowerSpinnerView
             android:id="@+id/spinner_campus"

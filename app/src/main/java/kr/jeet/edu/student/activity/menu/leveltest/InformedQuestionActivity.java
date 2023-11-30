@@ -180,7 +180,7 @@ public class InformedQuestionActivity extends BaseActivity {
 
             _memberSeq = PreferenceUtil.getUserSeq(mContext);
             _userGubun = PreferenceUtil.getUserGubun(mContext);
-            _userType = PreferenceUtil.getUserType(mContext);
+            _userType = PreferenceUtil.getUserIsOriginal(mContext);
             _loginType = PreferenceUtil.getLoginType(mContext);
             _childCnt = PreferenceUtil.getNumberOfChild(mContext);
             _stCode = PreferenceUtil.getUserSTCode(mContext);

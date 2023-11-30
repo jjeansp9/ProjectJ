@@ -310,12 +310,10 @@ public class LoginActivity extends BaseActivity {
                                             }else if (res.data.userGubun == Constants.USER_TYPE_STUDENT){
                                                 startMain(res.data.seq, res.data.stCode);
                                             }
-                                            PreferenceUtil.setUserType(mContext, Constants.MEMBER);
 
                                         }else{
                                             LogMgr.e(TAG, "일반 비회원 로그인");
                                             startMain(res.data.seq, res.data.stCode);
-                                            PreferenceUtil.setUserType(mContext, Constants.NON_MEMBER);
                                         }
                                     }
                                 }
@@ -451,12 +449,10 @@ public class LoginActivity extends BaseActivity {
                                                 startSNSMain(res.data.seq, res.data.stCode);
 
                                             }
-                                            PreferenceUtil.setUserType(mContext, Constants.MEMBER);
 
                                         }else{
                                             LogMgr.e(TAG, "sns 비회원 로그인");
                                             startSNSMain(res.data.seq, res.data.stCode);
-                                            PreferenceUtil.setUserType(mContext, Constants.NON_MEMBER);
                                         }
                                     }
                                 }

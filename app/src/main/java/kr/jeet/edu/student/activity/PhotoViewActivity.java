@@ -113,14 +113,7 @@ public class PhotoViewActivity extends BaseActivity {
 //        layoutHeader.setLayoutParams(params);
 
         setStatusBarTransparent();
-        hideStatBarAndNavBar();
         //setFullScreen(mActivity, true);
-    }
-
-    private void hideStatBarAndNavBar() {
-        int deviceStatus = mContext.getResources().getConfiguration().orientation;
-        if (deviceStatus == Configuration.ORIENTATION_LANDSCAPE) {
-        }
     }
 
     private void setStatusBarTransparent() {

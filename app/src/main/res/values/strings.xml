@@ -40,7 +40,7 @@
     <string name="title_memo">메모</string>
 
     <string name="dialog_title_alarm">알림</string>
-    <string name="dialog_title_alarm_tuition">미납 알림</string>
+    <string name="dialog_title_alarm_tuition">교습비 알림</string>
     <string name="dialog_title_alarm_attend">출결 알림</string>
     <string name="dialog_title_notice">공지</string>
     <string name="dialog_title_error">오류</string>
@@ -153,11 +153,12 @@
     <string name="main_menu_campus_schedule">캠퍼스일정</string>
     <string name="main_menu_notice">알림</string>
     <string name="main_menu_test_reserve">테스트예약</string>
-    <string name="main_menu_vehicle_info">차량정보</string>
+    <string name="main_menu_bus_info">차량정보</string>
     <string name="title_bus_route_info">운행정보</string>
     <string name="main_menu_briefing_reserve">설명회예약</string>
     <string name="main_menu_attendance">출석부</string>
     <string name="main_menu_report_card">성적표</string>
+    <string name="main_menu_qna">Q&amp;A</string>
     <string name="main_menu_tuition">수강료 납부</string>
 
     <string name="settings_title">설정</string>
@@ -265,7 +266,8 @@
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>
-    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>
+    <!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
+    <string name="menu_test_reserve_header">※ 학생명 수정 또는 테스트 취소는 데스크로 연락 바랍니다.</string>
     <string name="menu_test_reserve_test_time_empty">테스트예약 시간정보가 없습니다.지트학원에 문의바랍니다.</string>
     <string name="menu_test_reserve_test_time_fail">서버 통신이 불안정합니다. 잠시 후 다시 시도해주세요.</string>
     <string name="menu_test_reserve_test_server_fail">테스트예약 정보를 불러오는데 실패했습니다.</string>
@@ -470,6 +472,7 @@
     <string name="test_reserve_detail_high_school">희망고등학교</string>
     <string name="test_reserve_detail_registerDate">접수일</string>
     <string name="test_reserve_detail_funnel">유입경로</string>
+    <string name="test_reserve_detail_cash_receipts">현금영수증</string>
 
     <string name="informed_question_title">사전질문</string>
     <string name="informed_question_update_title">사전질문 수정</string>
@@ -721,10 +724,10 @@
     <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
 
     <string name="title_report_card">성적표</string>
-    <string name="empty_menu_list_report_card">성적표 내역이 없습니다.</string>
+    <string name="empty_menu_list_report_card">성적표 발송내역이 없습니다.</string>
     <string name="empty_list_report_card">성적표 정보가 없습니다.</string>
+    <string name="reportcard_not_found">등록된 성적표 정보를 찾을 수 없습니다.</string>
     <string name="reportcard_binding_error">잘못된 성적표 정보입니다.</string>
-    <string name="reportcard_not_found">성적표 정보를 찾을 수 없습니다.</string>
     <string name="title_reportcard_exam_process">응시과정</string>
     <string name="title_reportcard_exam_date">응시일</string>
     <string name="title_reportcard_exam_subject">제목</string>
@@ -738,5 +741,7 @@
     <string name="title_exam_math_total_score">총 득점</string>
     <string name="err_msg_middle_not_displayed">[ 중등 ] 유형의 성적표는 표시할 수 없습니다.</string>
     <string name="item_not_found">등록된 정보가 없습니다.</string>
+
+    <string name="empty_menu_list_qna">질문 및 공지 내역이 없습니다.</string>
 </resources>
 

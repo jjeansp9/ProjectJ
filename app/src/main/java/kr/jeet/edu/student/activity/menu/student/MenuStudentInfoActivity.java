@@ -210,7 +210,7 @@ public class MenuStudentInfoActivity extends BaseActivity {
         currentDate = yearFormat.format(calendar.getTime()) + monthFormat.format(calendar.getTime());
 
         _stCode = PreferenceUtil.getUserSTCode(mContext);
-        _userType = PreferenceUtil.getUserType(mContext);
+        _userType = PreferenceUtil.getUserIsOriginal(mContext);
         _userGubun = PreferenceUtil.getUserGubun(mContext);
         _stuSeq = PreferenceUtil.getStuSeq(mContext);
         _stName = PreferenceUtil.getStName(mContext);

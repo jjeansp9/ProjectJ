@@ -28,7 +28,7 @@
             android:paddingHorizontal="@dimen/layout_margin_16"
             android:paddingVertical="@dimen/layout_margin_12"
             android:paddingBottom="@dimen/layout_margin_4"
-            android:background="@color/bg_grey"
+            android:background="@color/bg_gray"
             android:animateLayoutChanges="true">
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_v80"

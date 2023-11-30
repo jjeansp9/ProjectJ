@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/bg_grey"
+        android:background="@color/bg_gray"
         android:fillViewport="true"
         android:scrollbars="none">
 
@@ -355,7 +355,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/test_reserve_detail_item_title_margin"
-                        android:text="@string/test_reserve_write_cash_receipts"
+                        android:text="@string/test_reserve_detail_cash_receipts"
                         android:textColor="@color/font_color_default"
                         android:textSize="@dimen/font_size"
                         android:textStyle="bold"

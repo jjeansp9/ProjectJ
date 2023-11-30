@@ -29,6 +29,11 @@ public class IntentParams {
 
     public final static String PARAM_WRITE_MODE = "writeMode";  // 작성모드
 
+    //board resultLauncher
+    public final static String PARAM_BOARD_ADDED = "board_added";
+    public final static String PARAM_BOARD_EDITED = "board_edited";
+    public final static String PARAM_BOARD_DELETED = "board_deleted";
+
     public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG = "announcementDetailImg";  // 공지사항 상세화면 이미지 item
     public final static String PARAM_BOARD_POSITION = "board_position";  // 선택한 아이템 position
 

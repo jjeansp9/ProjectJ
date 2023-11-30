@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.menu.student.MenuStudentInfoActivity"
-    android:background="@color/bg_grey">
+    android:background="@color/bg_gray">
 
     <kr.jeet.edu.student.view.CustomAppbarLayout
         android:id="@+id/customAppbar"

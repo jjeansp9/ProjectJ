@@ -353,12 +353,10 @@ public class IntroActivity extends BaseActivity {
                                             }else if (res.data.userGubun == USER_TYPE_STUDENT){
                                                 startMain(res.data.seq, res.data.stCode);
                                             }
-                                            PreferenceUtil.setUserType(mContext, Constants.MEMBER);
 
                                         }else{
                                             LogMgr.e(TAG, "비회원 로그인");
                                             startMain(res.data.seq, res.data.stCode);
-                                            PreferenceUtil.setUserType(mContext, Constants.NON_MEMBER);
                                         }
                                     }
                                 }
@@ -473,12 +471,10 @@ public class IntroActivity extends BaseActivity {
                                             }else if (res.data.userGubun == USER_TYPE_STUDENT){
                                                 startSNSMain(res.data.seq, res.data.stCode);
                                             }
-                                            PreferenceUtil.setUserType(mContext, Constants.MEMBER);
 
                                         }else{
                                             LogMgr.e(TAG, "sns 비회원 인트로에서 로그인");
                                             startSNSMain(res.data.seq, res.data.stCode);
-                                            PreferenceUtil.setUserType(mContext, Constants.NON_MEMBER);
                                         }
                                     }
 

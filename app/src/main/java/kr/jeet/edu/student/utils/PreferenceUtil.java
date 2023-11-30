@@ -80,17 +80,6 @@ public class PreferenceUtil {
         return pref.getString(PREF_USER_IS_ORIGINAL, "");
     }
 
-    //User Type
-    public static void setUserType(Context context, String userType) {
-        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        pref.edit().putString(PREF_USER_TYPE, userType).apply();
-    }
-
-    public static String getUserType(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        return pref.getString(PREF_USER_TYPE, Constants.MEMBER);
-    }
-
     //SNS User ID
     public static void setSNSUserId(Context context, String id) {
         if (id != null) {

@@ -194,7 +194,7 @@ public class MenuBusActivity extends BaseActivity {
 //    }
     void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
-        customAppbar.setTitle(R.string.main_menu_vehicle_info);
+        customAppbar.setTitle(R.string.main_menu_bus_info);
         customAppbar.setLogoVisible(true);
         customAppbar.setLogoClickable(true);
         setSupportActionBar(customAppbar.getToolbar());

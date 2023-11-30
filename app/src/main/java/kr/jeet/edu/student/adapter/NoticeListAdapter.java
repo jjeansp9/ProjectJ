@@ -39,6 +39,10 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     //private ArrayList<ReportCardSummaryData> mReportList;
     private ItemClickListener _listener;
 
+    private final String TYPE_SYSTEM = "시스템 알림";
+    private final String TYPE_ATTEND = "출결 알림";
+    private final String TYPE_TUITION = "미납 알림";
+
     public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
@@ -62,19 +66,19 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
                 String noticeType = TextUtils.isEmpty(item.searchType) ? "" : item.searchType;
                 String strType = "";
                 if (noticeType.equals(FCMManager.MSG_TYPE_SYSTEM)) {
-                    strType = "시스템알림";
+                    strType = TYPE_SYSTEM;
                     setClickEnabled(strType, holder, position, item);
                 }
                 else if (noticeType.equals(FCMManager.MSG_TYPE_ATTEND)) {
-                    strType = "출결현황";
+                    strType = TYPE_ATTEND;
                     setClickEnabled(strType, holder, position, item);
                 }
-                else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
-                    strType = "성적표";
-                    setClickEnabled(strType, holder, position, item);
-                }
+//                else if (noticeType.equals(FCMManager.MSG_TYPE_REPORT)) {
+//                    strType = "성적표";
+//                    setClickEnabled(strType, holder, position, item);
+//                }
                 else if (noticeType.equals(FCMManager.MSG_TYPE_TUITION)) {
-                    strType = "미납";
+                    strType = TYPE_TUITION;
                     setClickEnabled(strType, holder, position, item);
                 } else {
                     holder.tvTitle.setText("(정보없음)");
@@ -112,14 +116,17 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         holder.root.setBackgroundResource(R.color.transparent);
 
         try {
-            holder.tvDate.setText(TextUtils.isEmpty(item.insertDate.toString()) ? "" : item.insertDate.toString().replace("T", " "));
+            String date = Utils.formatDate(item.insertDate, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+            holder.tvDate.setText(date);
             holder.tvTitle.setText(TextUtils.isEmpty(item.title) ? "" : item.title);
         }catch (Exception e) {}
     }
 
     private void setClickEnabled(String str, ViewHolder holder, int position, SystemNoticeListData item) {
-        //holder.tvType.setText(str);
-        holder.btnNext.setVisibility(View.VISIBLE);
+
+        if (str.equals(TYPE_SYSTEM)) holder.btnNext.setVisibility(View.VISIBLE);
+        else holder.btnNext.setVisibility(View.GONE);
+
         TypedValue typedValue = new TypedValue();
         mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
         holder.root.setBackgroundResource(typedValue.resourceId);

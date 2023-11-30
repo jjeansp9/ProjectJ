@@ -92,8 +92,10 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 if (!TextUtils.isEmpty(item.stGrade)) {
                     if (item.stGrade.length() <= 2) {
                         if (item.stGrade.contains("초")) itemClass = "초등학생 " + item.stGrade.replace("초", "") + "학년";
-                        if (item.stGrade.contains("중")) itemClass = "중학생 " + item.stGrade.replace("중", "") + "학년";
-                        if (item.stGrade.contains("고")) itemClass = "고등학생 " + item.stGrade.replace("고", "") + "학년";
+                        else if (item.stGrade.contains("중")) itemClass = "중학생 " + item.stGrade.replace("중", "") + "학년";
+                        else if (item.stGrade.contains("고")) itemClass = "고등학생 " + item.stGrade.replace("고", "") + "학년";
+                        else itemClass = Utils.getStr(item.stGrade);
+
                     } else {
                         itemClass = Utils.getStr(item.stGrade);
                     }

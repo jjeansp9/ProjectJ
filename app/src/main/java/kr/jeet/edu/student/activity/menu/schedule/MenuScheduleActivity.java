@@ -151,7 +151,7 @@ public class MenuScheduleActivity extends BaseActivity {
     }
 
     private void initData(){
-        _userType = PreferenceUtil.getUserType(mContext);
+        _userType = PreferenceUtil.getUserIsOriginal(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
         _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);

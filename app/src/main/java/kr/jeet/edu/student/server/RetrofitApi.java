@@ -33,6 +33,7 @@ import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
+import kr.jeet.edu.student.model.response.QnaListResponse;
 import kr.jeet.edu.student.model.response.ReportCardShowResponse;
 import kr.jeet.edu.student.model.response.ReportCardSummaryResponse;
 import kr.jeet.edu.student.model.response.ScheduleDetailResponse;
@@ -286,10 +287,20 @@ public interface RetrofitApi {
             @Query("searchKeyword") String searchKeyword,
             @Query("acaCode") String acaCode
     );
-    //성적표 상세조회
+    //성적표 상세 조회
     @GET("reportCard/{reportSeq}")
     Call<ReportCardSummaryResponse> getReportCardDetailList(@Path("reportSeq") int reportSeq);
-    //성적표별 데이터 상세조회
+    //성적표별 데이터 상세 조회
     @GET("reportCard/{reportSeq}/list/{reportListSeq}")
     Call<ReportCardShowResponse> getReportCardShowList(@Path("reportSeq") int reportSeq, @Path("reportListSeq") int reportListSeq);
+    //QnA 목록 조회
+    @GET("qnas")
+    Call<QnaListResponse> getQnaList(
+            @Query("qnaSeq") int qnaSeq,
+            @Query("memberSeq") int memberSeq,
+            @Query("userGubun") int userGubun,
+            @Query("acaCode") String acaCode,
+            @Query("acaGubunCode") String acaGubunCode,
+            @Query("isOriginalMember") String isOriginalMember
+    );
 }

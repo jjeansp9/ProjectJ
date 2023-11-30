@@ -28,7 +28,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:paddingHorizontal="16dp"
             android:paddingVertical="12dp"
-            android:background="@color/bg_grey">
+            android:background="@color/bg_gray">
 
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinner_notice_type"
