@@ -29,6 +29,7 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.QnaData;
 import kr.jeet.edu.student.model.data.QnaDetailData;
+import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.QnaDetailResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -265,6 +266,49 @@ public class MenuQNADetailActivity extends BaseActivity {
         }
     }
 
+    private void requestDeleteQna() {
+
+        int boardSeq = 0;
+
+        if (_currentData != null) boardSeq = _currentData.seq;
+        else if(_currentSeq != -1) boardSeq = _currentSeq;
+
+        if (RetrofitClient.getInstance() != null){
+
+            showProgressDialog();
+
+            if (RetrofitClient.getApiInterface() != null) {
+                RetrofitClient.getApiInterface().deleteQna(boardSeq).enqueue(new Callback<BaseResponse>() {
+                    @Override
+                    public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
+                        try {
+                            if (response.isSuccessful()){
+
+                                // TODO : QNA Delete
+                            }else{
+                                //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            }
+                        }catch (Exception e){
+                            LogMgr.e(TAG + "requestNoticeDetail() Exception : ", e.getMessage());
+                        }
+
+                        hideProgressDialog();
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponse> call, Throwable t) {
+                        try {
+                            LogMgr.e(TAG, "requestNoticeDetail() onFailure >> " + t.getMessage());
+                        }catch (Exception e){
+                        }
+                        hideProgressDialog();
+                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if(_currentData != null) {
@@ -288,7 +332,7 @@ public class MenuQNADetailActivity extends BaseActivity {
                 showMessageDialog(getString(R.string.dialog_title_alarm)
                         , getString(R.string.board_item_confirm_delete)
                         , v -> {
-                            hideMessageDialog();
+                            requestDeleteQna();
                         },
                         v -> hideMessageDialog(), false);
 

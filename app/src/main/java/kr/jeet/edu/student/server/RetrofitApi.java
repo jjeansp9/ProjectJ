@@ -318,4 +318,7 @@ public interface RetrofitApi {
     // QnA 글 수정 (부모앱)
     @PATCH("qna")
     Call<BaseResponse> updateQna(@Body QnaEditRequest request);
+    // QnA 글 삭제 (부모앱)
+    @DELETE("qna/{qnaSeq}")
+    Call<BaseResponse> deleteQna(@Path("qnaSeq") int qnaSeq);
 }
