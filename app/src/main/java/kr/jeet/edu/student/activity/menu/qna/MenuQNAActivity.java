@@ -171,6 +171,8 @@ public class MenuQNAActivity extends BaseActivity {
         setListRecycler();
         setListSpinner();
         setSelectAcaCode();
+
+        mSwipeRefresh.setOnRefreshListener(this::requestQnaList);
     }
 
     private void setListRecycler() {
@@ -196,7 +198,12 @@ public class MenuQNAActivity extends BaseActivity {
 
     private void startQnaDetailActivity(QnaData clickItem, int position){
         if (clickItem != null){
-
+            Intent intent = new Intent(mContext, MenuQNADetailActivity.class);
+            intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
+            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_qna));
+            intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
+            resultLauncher.launch(intent);
+            overridePendingTransition(R.anim.horizontal_enter, R.anim.horizontal_out);
 
         }else LogMgr.e("clickItem is null ");
     }
@@ -412,10 +419,10 @@ public class MenuQNAActivity extends BaseActivity {
         if (_userType.equals(Constants.MEMBER)) {
             switch(item.getItemId()) {
                 case R.id.action_add:
+                    resultLauncher.launch(new Intent(mContext, EditQNAActivity.class));
                     return true;
             }
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

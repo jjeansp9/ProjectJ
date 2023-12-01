@@ -11,6 +11,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementActivity;
+import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.attendance.MenuAttendanceActivity;
 import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingActivity;
@@ -93,6 +94,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
+
+       // QNA 접수
+//    key = acaCode : value = 1
+//    key = pushId : value = DdkPIx5gfY
+//    key = stCode : value = 73808
+//    key = body : value = 접수처리 되었습니다. (1234)
+//    key = date : value = 2023-12-01 15:25:48
+//    key = title : value = [수지캠퍼스] Q&A 접수알림
+//    key = userGubun : value = 3
+//    key = connSeq : value = 40
+//    key = memberSeq : value = 3
+//    key = pushType : value = QNA_ING
 
     private String TAG = MainActivity.class.getSimpleName();
 
@@ -363,7 +376,7 @@ public class MainActivity extends BaseActivity {
 
     private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
-            Intent targetIntent = new Intent(mContext, MenuBoardDetailActivity.class);
+            Intent targetIntent = new Intent(mContext, MenuAnnouncementDetailActivity.class);
             targetIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             targetIntent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
             targetIntent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
@@ -379,6 +392,7 @@ public class MainActivity extends BaseActivity {
             resultLauncher.launch(targetIntent);
             overridePendingTransition(R.anim.vertical_enter, R.anim.none);
         }else{
+            Toast.makeText(mContext, "개발 중인 기능입니다.", Toast.LENGTH_SHORT).show();
             LogMgr.d("targetIntent is null at " + getString(clickItem.getTitleRes()));
         }
     }
@@ -458,21 +472,20 @@ public class MainActivity extends BaseActivity {
 
             LogMgr.e("EVENT", _pushMessage.pushType);
 
-            // TODO : seq , stCode에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
-            if (_pushMessage.memberSeq != _memberSeq) {
-                _pushMessage = null;
-                return;
-            }
-
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
-                    if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
+                    //if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
+                    if (intent != null) startDetailActivity(intent, MenuAnnouncementDetailActivity.class);
                 }
                 break;
 
                 case MSG_TYPE_ATTEND: // 출결알림
                 {
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_childCnt < TWO_PEOPLE){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
@@ -499,6 +512,10 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_system));
                 }
                 break;
@@ -511,12 +528,20 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_REPORT: // 성적표
                 {
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, ReportCardDetailActivity.class));
                 }
                 break;
 
                 case MSG_TYPE_TUITION: // 미납
                 {
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
                 }
                 break;
@@ -605,38 +630,48 @@ public class MainActivity extends BaseActivity {
             //원생정보
             //mList.add(new MainMenuItemData(R.drawable.icon_menu_student, R.string.main_menu_student_info, MenuStudentInfoActivity.class));
             //공지사항
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
             //캠퍼스일정
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
             //알림장
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_notify, R.string.main_menu_notice, MenuNoticeActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SYSTEM_NOTICE, R.drawable.icon_menu_notify, R.string.main_menu_notice, MenuNoticeActivity.class));
             //테스트예약
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //차량정보
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_bus, R.string.main_menu_bus_info, MenuBusActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_BUS, R.drawable.icon_menu_bus, R.string.main_menu_bus_info, MenuBusActivity.class));
             //설명회예약
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
             //출석부
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_ATTENDANCE, R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
             //성적표
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
-            //질문
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
-
+            mList.add(new MainMenuItemData(DataManager.BOARD_REPORT, R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
+            //QnA
+            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
         }else{ // 비회원
             //공지사항
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
             //캠퍼스일정
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule,MenuScheduleActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
             //테스트예약
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
             //설명회예약
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
-            //질문
-            mList.add(new MainMenuItemData(R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            //QnA
+            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
         }
     }
-
+    private void updateMenus() {
+        if(mList == null) return;
+        mList.stream().forEach(menu -> {
+            BoardAttributeData boardData = DataManager.getInstance().getBoardInfo(menu.getType());
+            if(boardData != null) {
+                if(!boardData.boardNm.equals(mContext.getString(menu.getTitleRes()))) {
+                    menu.setTitle(boardData.boardNm);
+                }
+            }
+        });
+        mAdapter.notifyDataSetChanged();
+    }
     // 캠퍼스 목록 조회
     private void requestACAList(){
 //        showProgressDialog();
@@ -910,6 +945,7 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
                             }
+                            updateMenus();
                         }else{
                             LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());
 

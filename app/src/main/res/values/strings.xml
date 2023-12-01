@@ -89,6 +89,9 @@
     <string name="phonenumber">휴대폰번호</string>
     <string name="contact">연락처</string>
     <string name="email">이메일</string>
+    <string name="title_main_subject">제목</string>
+    <string name="title_main_content">내용</string>
+    <string name="title_main_answer">답변</string>
     <string name="auth_request">인증요청</string>
     <string name="input_auth_number">인증번호 입력</string>
     <string name="auth_complete">인증이 완료되었습니다.</string>
@@ -212,7 +215,12 @@
 
     <string name="menu_item_settings">설정</string>
     <string name="menu_item_complete">완료</string>
+    <string name="menu_item_send">전송</string>
+    <string name="menu_item_add">작성</string>
     <string name="menu_item_edit">수정</string>
+    <string name="menu_item_delete">삭제</string>
+    <string name="menu_item_next">다음</string>
+    <string name="menu_item_save">저장</string>
     <string name="menu_item_reserve">예약</string>
     <string name="announcement_spinner_default_text">전체</string>
     <string name="announcement_list_empty">공지사항이 없습니다.</string>
@@ -223,6 +231,10 @@
 
     <string name="board_detail_sub_name">%s 선생님</string>
 
+    <string name="board_item_confirm_delete">게시물을 삭제하시겠습니까?</string>
+    <string name="general_item_confirm_delete">해당 항목을 삭제하시겠습니까?</string>
+    <string name="board_item_deleted">게시물이 정상적으로 삭제되었습니다.</string>
+    <string name="board_item_deleted_fail">오류가 발생하여 게시물이 삭제되지 않았습니다.</string>
     <string name="error_msg_fail_to_save"> 다운로드된 파일을 저장에 실패하였습니다.</string>
     <string name="error_msg_fail_to_download"> 다운로드에 실패하였습니다.</string>
     <string name="msg_success_to_download"> 파일을 Download 폴더로 다운로드하였습니다.</string>
@@ -266,7 +278,7 @@
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>
-    <!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
+<!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
     <string name="menu_test_reserve_header">※ 학생명 수정 또는 테스트 취소는 데스크로 연락 바랍니다.</string>
     <string name="menu_test_reserve_test_time_empty">테스트예약 시간정보가 없습니다.지트학원에 문의바랍니다.</string>
     <string name="menu_test_reserve_test_time_fail">서버 통신이 불안정합니다. 잠시 후 다시 시도해주세요.</string>
@@ -288,6 +300,18 @@
     <string name="address_empty">주소를 입력해주세요.</string>
     <string name="address_sub_empty">상세주소를 입력해주세요.</string>
     <string name="reason_empty">유입 경로를 선택해주세요.</string>
+
+    <string name="error_message_unselected_campus">캠퍼스를 선택해 주세요.</string>
+    <string name="error_message_empty_subject">제목을 작성해 주세요.</string>
+    <string name="error_message_empty_content">내용을 작성해 주세요.</string>
+    <string name="error_message_empty_location">장소를 입력해 주세요.</string>
+    <string name="error_message_empty_member_count">정원을 입력해 주세요.</string>
+    <string name="error_message_over_reserved_cnt">정원은 예약된 인원 이상으로 설정해야 합니다.\n(예약인원 : %d 명)</string>
+    <string name="error_message_empty_date">날짜를 선택해 주세요.</string>
+    <string name="error_message_empty_date_start">시작일을 선택해 주세요.</string>
+    <string name="error_message_empty_date_end">종료일을 선택해 주세요.</string>
+    <string name="error_message_empty_time">시간을 선택해 주세요.</string>
+    <string name="error_message_empty_recipient">수신인을 등록해 주세요.</string>
 
     <string name="informed_consent_title">사전동의</string>
     <string name="informed_consent_notice">
@@ -724,10 +748,10 @@
     <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
 
     <string name="title_report_card">성적표</string>
-    <string name="empty_menu_list_report_card">성적표 발송내역이 없습니다.</string>
+    <string name="empty_menu_list_report_card">성적표 내역이 없습니다.</string>
     <string name="empty_list_report_card">성적표 정보가 없습니다.</string>
-    <string name="reportcard_not_found">등록된 성적표 정보를 찾을 수 없습니다.</string>
     <string name="reportcard_binding_error">잘못된 성적표 정보입니다.</string>
+    <string name="reportcard_not_found">성적표 정보를 찾을 수 없습니다.</string>
     <string name="title_reportcard_exam_process">응시과정</string>
     <string name="title_reportcard_exam_date">응시일</string>
     <string name="title_reportcard_exam_subject">제목</string>
@@ -742,6 +766,11 @@
     <string name="err_msg_middle_not_displayed">[ 중등 ] 유형의 성적표는 표시할 수 없습니다.</string>
     <string name="item_not_found">등록된 정보가 없습니다.</string>
 
+    <string name="title_qna_private">비공개</string>
     <string name="empty_menu_list_qna">질문 및 공지 내역이 없습니다.</string>
+    <string name="qna_insert_success">Q&amp;A가 작성되었습니다.</string>
+    <string name="qna_update_success">Q&amp;A가 수정되었습니다.</string>
+
+
 </resources>
 

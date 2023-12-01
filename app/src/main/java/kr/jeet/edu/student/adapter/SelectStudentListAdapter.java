@@ -89,6 +89,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                     e.printStackTrace();
                 }
 
+                // TODO : **학교 *학년 으로 문구 변경하기
                 if (!TextUtils.isEmpty(item.stGrade)) {
                     if (item.stGrade.length() <= 2) {
                         if (item.stGrade.contains("초")) itemClass = "초등학생 " + item.stGrade.replace("초", "") + "학년";

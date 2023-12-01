@@ -64,7 +64,7 @@ public class SetPasswordActivity extends BaseActivity {
         mCheckPwTxt = findViewById(R.id.check_txt_pw);
 
         mEditList = new EditText[]{mEtPw, mEtPwConfirm};
-        new Handler().postDelayed(() -> showKeyboard(mContext, mEtPw), Constants.SHOW_KEBOARD_DELAY);
+        new Handler().postDelayed(() -> showKeyboard(mEtPw), Constants.SHOW_KEBOARD_DELAY);
         mEtPw.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}

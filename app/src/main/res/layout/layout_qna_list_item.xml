@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/tv_qna_title"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="2dp"
         android:hint="(정보없음)"
         android:maxLines="1"
         android:ellipsize="end"

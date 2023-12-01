@@ -26,6 +26,7 @@ import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
+import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.InformedConsentActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
@@ -141,18 +142,11 @@ public class SelectStudentActivity extends BaseActivity {
         } catch (Exception e) {
             LogMgr.e(TAG + " Exception: ", e.getMessage());
         }
-
         HttpUtils.requestSchoolList();
         HttpUtils.requestLTCList();
         HttpUtils.requestLTCSubjectList();
 
         if(_pushMessage != null) {
-
-            // TODO : seq 에 따라 다른계정으로 noti를 클릭했을 때에는 상세화면으로 이동 x
-            if (_pushMessage.memberSeq != _parentSeq) {
-                _pushMessage = null;
-                return;
-            }
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
@@ -171,11 +165,15 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_NOTICE: // 공지사항
                 {
-                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuAnnouncementDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
                 }
                     break;
@@ -191,12 +189,20 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_REPORT: // 성적표
                 {
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     LogMgr.e(TAG, "Event sel stu");
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(ReportCardDetailActivity.class);
                 }
                 break;
                 case MSG_TYPE_TUITION: // 미납알림
                 {
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(TuitionActivity.class);
                 }
                 break;

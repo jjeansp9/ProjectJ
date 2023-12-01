@@ -152,7 +152,7 @@ public class FindCredentialsActivity extends BaseActivity {
         // ID 인 경우 id 체크
         if(mFindType == Constants.FIND_TYPE_PW) {
             if (TextUtils.isEmpty(mEditId.getText().toString())) {
-                showKeyboard(mContext, mEditId);
+                showKeyboard(mEditId);
                 Toast.makeText(mContext, R.string.check_id_empty, Toast.LENGTH_SHORT).show();
                 return false;
             }

@@ -720,13 +720,13 @@ public class InformedQuestionActivity extends BaseActivity {
                 return true;
             }else{
                 if (mEtLearningProc1.getText().toString().equals("")){
-                    showKeyboard(mContext, mEtLearningProc1);
+                    showKeyboard(mEtLearningProc1);
 
                 } else if (mEtLearningProc2.getText().toString().equals("")){
-                    showKeyboard(mContext, mEtLearningProc2);
+                    showKeyboard(mEtLearningProc2);
 
                 } else if (mEtLearningProc3.getText().toString().equals("")){
-                    showKeyboard(mContext, mEtLearningProc3);
+                    showKeyboard(mEtLearningProc3);
                 }
                 Toast.makeText(mContext, R.string.write_process_empty, Toast.LENGTH_SHORT).show();
                 return false;
@@ -935,7 +935,7 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private void checkEtStudy(View view){
-        showKeyboard(mContext, view);
+        showKeyboard(view);
     }
 
     private String currentDate(){

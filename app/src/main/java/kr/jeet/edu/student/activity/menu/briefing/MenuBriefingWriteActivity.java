@@ -444,17 +444,17 @@ public class MenuBriefingWriteActivity extends BaseActivity {
 
         if (mEtName.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.briefing_write_empty_stu_name, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtName);
+            showKeyboard(mEtName);
             return false;
 
         } else if (mEtPhoneNum.getText().toString().equals("")) {
             Toast.makeText(mContext, R.string.briefing_write_empty_phone_num, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtPhoneNum);
+            showKeyboard(mEtPhoneNum);
             return false;
 
         } else if (!Utils.checkPhoneNumber(mEtPhoneNum.getText().toString())){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtPhoneNum);
+            showKeyboard(mEtPhoneNum);
             return false;
 
         } else if (!cbPrivacy.isChecked()) {

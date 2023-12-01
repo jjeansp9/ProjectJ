@@ -764,11 +764,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         if (request.name.equals("")) {
             Toast.makeText(mContext, R.string.stu_name_empty, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtName);
+            showKeyboard(mEtName);
 
         } else if (!Utils.nameCheck(request.name)) {
             Toast.makeText(mContext, R.string.check_name_pattern, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtName);
+            showKeyboard(mEtName);
 
         } else if (request.address.equals("")) {
             Toast.makeText(mContext, R.string.address_empty, Toast.LENGTH_SHORT).show();
@@ -776,7 +776,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.addressSub.equals("")) {
             Toast.makeText(mContext, R.string.address_sub_empty, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtAddressDetail);
+            showKeyboard(mEtAddressDetail);
 
         } else if (request.birth.equals("")) {
             Toast.makeText(mContext, R.string.birth_empty, Toast.LENGTH_SHORT).show();
@@ -798,23 +798,23 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
         } else if (request.phoneNumber.equals("")) {
             Toast.makeText(mContext, R.string.phone_empty, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtStuPhone);
+            showKeyboard(mEtStuPhone);
 
         } else if (!Utils.checkPhoneNumber(request.phoneNumber)){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtStuPhone);
+            showKeyboard(mEtStuPhone);
 
         } else if (request.parentName.equals("")) {
             Toast.makeText(mContext, R.string.parent_name_empty, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtParentName);
+            showKeyboard(mEtParentName);
 
         } else if (request.parentPhoneNumber.equals("")) {
             Toast.makeText(mContext, R.string.parent_phone_empty, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtparentPhone);
+            showKeyboard(mEtparentPhone);
 
         } else if (!Utils.checkPhoneNumber(request.parentPhoneNumber)){
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
-            showKeyboard(mContext, mEtparentPhone);
+            showKeyboard(mEtparentPhone);
 
         } else if (request.reason.equals("")) {
             Toast.makeText(mContext, R.string.reason_empty, Toast.LENGTH_SHORT).show();

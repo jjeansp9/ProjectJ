@@ -8,6 +8,8 @@ import kr.jeet.edu.student.model.request.BriefingReserveRequest;
 import kr.jeet.edu.student.model.request.CounselRequest;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
 import kr.jeet.edu.student.model.request.PushConfirmRequest;
+import kr.jeet.edu.student.model.request.QnaAddRequest;
+import kr.jeet.edu.student.model.request.QnaEditRequest;
 import kr.jeet.edu.student.model.request.SignupRequest;
 import kr.jeet.edu.student.model.request.SignupSNSRequest;
 import kr.jeet.edu.student.model.request.SmsRequest;
@@ -287,10 +289,10 @@ public interface RetrofitApi {
             @Query("searchKeyword") String searchKeyword,
             @Query("acaCode") String acaCode
     );
-    //성적표 상세 조회
+    //성적표 상세조회
     @GET("reportCard/{reportSeq}")
     Call<ReportCardSummaryResponse> getReportCardDetailList(@Path("reportSeq") int reportSeq);
-    //성적표별 데이터 상세 조회
+    //성적표별 데이터 상세조회
     @GET("reportCard/{reportSeq}/list/{reportListSeq}")
     Call<ReportCardShowResponse> getReportCardShowList(@Path("reportSeq") int reportSeq, @Path("reportListSeq") int reportListSeq);
     //QnA 목록 조회
@@ -303,4 +305,10 @@ public interface RetrofitApi {
             @Query("acaGubunCode") String acaGubunCode,
             @Query("isOriginalMember") String isOriginalMember
     );
+    // QnA 글 등록 (부모앱)
+    @POST("qna")
+    Call<BaseResponse> insertQna(@Body QnaAddRequest request);
+    // QnA 글 수정 (부모앱)
+    @PATCH("qna")
+    Call<BaseResponse> updateQna(@Body QnaEditRequest request);
 }

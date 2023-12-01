@@ -24,10 +24,18 @@ public class DataManager {
     private static class LazyHolder {
         private static final DataManager INSTANCE = new DataManager();
     }
-    // 공지사항
-    public final String BOARD_NOTICE = "notice";
-    public final String BOARD_PT = "pt";
-    public final String BOARD_MESSAGE_NOTICE = "messageNotice";
+    //서버에서 주는 항목
+    public static final String BOARD_NOTICE = "notice";    //공지사항
+    public static final String BOARD_PT = "pt";    //설명회
+    public static final String BOARD_SYSTEM_NOTICE = "systemNotice";   //알림
+    public static final String BOARD_LEVELTEST = "levelTest";  //테스트예약
+    public static final String BOARD_REPORT = "report";    //성적표
+    public static final String BOARD_QNA = "qna";  //Q&A
+    ////서버에서 주지 않는 항목
+//    public static final String BOARD_STUDENT_INFO = "studentinfo"; //원생정보
+    public static final String BOARD_ATTENDANCE = "attendance"; //출석부
+    public static final String BOARD_BUS = "bus";  //차량정보
+    public static final String BOARD_SCHEDULE = "schedule";
     //Dot size
     public float DOT_SIZE = 10f;
     public boolean isSelectedChild = false;

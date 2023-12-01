@@ -67,34 +67,42 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
         //setChipGroup(holder, item);
 
         holder.layoutStatus.removeAllViews();
-        if (!TextUtils.isEmpty(item.state)) {
-            if (item.state.equals(Constants.QNA_STATE_SUBSCRIPTION)) {
-                addTag(holder.layoutStatus, R.color.color_subscription, "신청");
-
-            } else if(item.state.equals(Constants.QNA_STATE_RECEPTION)) {
-                addTag(holder.layoutStatus, R.color.color_receiption, "접수");
-
-            } else if(item.state.equals(Constants.QNA_STATE_COMPLETE)) {
-                addTag(holder.layoutStatus, R.color.color_complete, "완료");
-            }
-        }
 
         if (!TextUtils.isEmpty(item.isMain)) {
-            if (item.isMain.equals(Constants.QNA_STATE_NOTICE)) {
+            if (item.isMain.equals(Constants.QNA_STATE_NOTICE)) { // 공지 글
                 addTag(holder.layoutStatus, R.color.color_notice, "공지");
-            }
-        }
 
-        if (item.writerSeq == PreferenceUtil.getUserSeq(mContext)) {
-            if (!TextUtils.isEmpty(item.isOpen)) {
-                if (item.isOpen.equals(Constants.QNA_STATE_OPEN)) {
-                    //addTag(holder.layoutStatus, R.color.color_private, "공개");
-                }else {
-                    addTag(holder.layoutStatus, R.color.color_private, "비공개");
+                if (item.userGubun <= Constants.USER_TYPE_TEACHER) { // 강사, 관리자의 경우
+                    if (!item.isOpen.equals(Constants.QNA_STATE_OPEN)) {
+                        addTag(holder.layoutStatus, R.color.color_private, "비공개");
+                    }
+                }
+
+            } else { // 사용자 질문 글
+                if (item.userGubun >= Constants.USER_TYPE_STUDENT) { // 부모, 원생의 경우
+                    if (!TextUtils.isEmpty(item.state)) {
+                        if (item.state.equals(Constants.QNA_STATE_SUBSCRIPTION)) {
+                            addTag(holder.layoutStatus, R.color.color_subscription, "신청");
+
+                        } else if(item.state.equals(Constants.QNA_STATE_RECEPTION)) {
+                            addTag(holder.layoutStatus, R.color.color_receiption, "접수");
+
+                        } else if(item.state.equals(Constants.QNA_STATE_COMPLETE)) {
+                            addTag(holder.layoutStatus, R.color.color_complete, "완료");
+                        }
+                    }
+                }
+
+                if (!TextUtils.isEmpty(item.isOpen)) {
+                    if (!item.isOpen.equals(Constants.QNA_STATE_OPEN)) {
+                        addTag(holder.layoutStatus, R.color.color_private, "비공개");
+                    }
+                }
+
+                if (item.writerSeq == PreferenceUtil.getUserSeq(mContext)) {
+                    addTag(holder.layoutStatus, R.color.color_me, "본인");
                 }
             }
-
-            addTag(holder.layoutStatus, R.color.color_me, "본인");
         }
 
         holder.tvTitle.setText(Utils.getStr(item.title));

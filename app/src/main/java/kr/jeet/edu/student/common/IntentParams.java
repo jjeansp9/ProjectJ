@@ -22,6 +22,7 @@ public class IntentParams {
     public final static String PARAM_BOARD_SEQ = "boardSeq";  // 게시글 seq
     public final static String PARAM_REPORT_SEQ = "reportSeq";  // 성적표 seq
     public final static String PARAM_WRITER_SEQ = "writerSeq";  // 작성자 seq
+    public final static String PARAM_STU_GRADECODE = "gradeCode";  // 구분 코드
 
     public final static String PARAM_CHILD_STUDENT_INFO = "childStudentInfo";  // 자녀원생 정보
     public final static String PARAM_ANNOUNCEMENT_INFO = "announcementInfo";  // 선택한 공지사항 정보
