@@ -768,8 +768,8 @@
 
     <string name="title_qna_private">비공개</string>
     <string name="empty_menu_list_qna">질문 및 공지 내역이 없습니다.</string>
-    <string name="qna_insert_success">Q&amp;A가 작성되었습니다.</string>
-    <string name="qna_update_success">Q&amp;A가 수정되었습니다.</string>
+    <string name="qna_insert_success">문의사항이 신청되었습니다.</string>
+    <string name="qna_update_success">문의사항이 수정되었습니다.</string>
 
 
 </resources>

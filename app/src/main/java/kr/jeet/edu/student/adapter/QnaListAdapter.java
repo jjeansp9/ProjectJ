@@ -76,6 +76,9 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
                     if (!item.isOpen.equals(Constants.QNA_STATE_OPEN)) {
                         addTag(holder.layoutStatus, R.color.color_private, "비공개");
                     }
+                    if (item.writerSeq == PreferenceUtil.getUserSeq(mContext)) {
+                        addTag(holder.layoutStatus, R.color.color_me, "본인");
+                    }
                 }
 
             } else { // 사용자 질문 글

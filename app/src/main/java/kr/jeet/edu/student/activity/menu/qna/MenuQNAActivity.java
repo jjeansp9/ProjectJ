@@ -42,6 +42,7 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.QnaData;
+import kr.jeet.edu.student.model.data.QnaDetailData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.QnaListResponse;
@@ -99,13 +100,32 @@ public class MenuQNAActivity extends BaseActivity {
                     if(_selectedLocalACA != null) LogMgr.e("acaCode = " + _selectedLocalACA.acaCode);
                     requestQnaList();
                 }
-
             } else if(intent.hasExtra(IntentParams.PARAM_BOARD_DELETED)) {
-
-
-            } else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
-
+//                boolean deleted = intent.getBooleanExtra(IntentParams.PARAM_BOARD_DELETED, false);
+//                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+//                if(deleted && position >= 0) {
+//                    mList.remove(position);
+//                    mAdapter.notifyItemRemoved(position);
+//                    checkEmptyRecyclerView();
+//                }
+            }else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
+//                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
+//                QnaData changedItem = null;
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                    changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaData.class);
+//                }else{
+//                    changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+//                }
+//                LogMgr.w("edited =" + changedItem);
+//                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+//                LogMgr.w("position =" + position);
+//                if(edited && position >= 0 && changedItem != null) {
+//                    mList.set(position, changedItem);
+//                    mAdapter.notifyItemChanged(position);
+//                    checkEmptyRecyclerView();
+//                }
             }
+
         }
     });
 
@@ -424,5 +444,17 @@ public class MenuQNAActivity extends BaseActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean checkEmptyRecyclerView() {
+        if (mAdapter.getItemCount() > 0) {
+            mSwipeRefresh.setVisibility(View.VISIBLE);
+            mTvListEmpty.setVisibility(View.INVISIBLE);
+            return false;
+        } else {
+            mSwipeRefresh.setVisibility(View.INVISIBLE);
+            mTvListEmpty.setVisibility(View.VISIBLE);
+            return true;
+        }
     }
 }

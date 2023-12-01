@@ -65,36 +65,13 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
             }
 
             if (item != null) {
-//                if (Utils.getStr(item.stGrade).equals(Utils.getStr(item.clstName))) {
-//                    deptName = Utils.getStr(item.deptName);
-//                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
-//                    itemClass = deptName + clstName;
-//                }
-//                else {
-//                    deptName = Utils.getStr(item.deptName);
-//                    stGrade = Utils.getStr(item.stGrade);
-//                    clstName = TextUtils.isEmpty(item.clstName) ? "" : " / " + item.clstName;
-//
-//                    itemClass = deptName + stGrade + clstName;
-//                }
-
-                SimpleDateFormat originalFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREA);
-                SimpleDateFormat targetFormat = new SimpleDateFormat("yyMMdd", Locale.KOREA);
-
-                try {
-                    Date birthDate = originalFormat.parse(Utils.getStr(item.birth));
-                    if (birthDate != null) item.birth = targetFormat.format(birthDate);
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
 
                 // TODO : **학교 *학년 으로 문구 변경하기
                 if (!TextUtils.isEmpty(item.stGrade)) {
                     if (item.stGrade.length() <= 2) {
-                        if (item.stGrade.contains("초")) itemClass = "초등학생 " + item.stGrade.replace("초", "") + "학년";
-                        else if (item.stGrade.contains("중")) itemClass = "중학생 " + item.stGrade.replace("중", "") + "학년";
-                        else if (item.stGrade.contains("고")) itemClass = "고등학생 " + item.stGrade.replace("고", "") + "학년";
+                        if (item.stGrade.contains("초")) itemClass = item.stGrade.replace("초", "") + "학년";
+                        else if (item.stGrade.contains("중")) itemClass = item.stGrade.replace("중", "") + "학년";
+                        else if (item.stGrade.contains("고")) itemClass = item.stGrade.replace("고", "") + "학년";
                         else itemClass = Utils.getStr(item.stGrade);
 
                     } else {
@@ -106,7 +83,7 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                 else holder.tvScName.setText(item.scName);
 
                 holder.tvName.setText(Utils.getStr(item.stName));
-                holder.tvBirth.setText(Utils.getStr(item.birth));
+                holder.tvBirth.setText(Utils.getStr(Utils.formatDate(item.birth, "yyyy-MM-dd", "yyMMdd")));
                 holder.tvClass.setText(itemClass);
 
                 // gender

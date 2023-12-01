@@ -75,9 +75,6 @@ public class EditQNAActivity extends BaseActivity {
 
     QnaData _currentData = new QnaData();
 
-    private QnaAddRequest qnaInsert = new QnaAddRequest(); // 글 작성 request data
-    private QnaEditRequest qnaUpdate = new QnaEditRequest(); // 글 수정 request data
-
     String _acaCode = "";
     String _gubunCode = "";
     int _userGubun = 1;
@@ -173,7 +170,7 @@ public class EditQNAActivity extends BaseActivity {
         initData();
     }
 
-    void initAppbar() {
+    private void initAppbar() {
         CustomAppbarLayout customAppbar = findViewById(R.id.customAppbar);
         if(boardEditMode == Constants.BoardEditMode.New) {
             customAppbar.setTitle(R.string.menu_item_add);
@@ -186,7 +183,7 @@ public class EditQNAActivity extends BaseActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.selector_icon_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-    void initIntentData() {
+    private void initIntentData() {
         Intent intent = getIntent();
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
@@ -196,6 +193,10 @@ public class EditQNAActivity extends BaseActivity {
                 } else {
                     _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
                 }
+                if (_currentData != null) {
+                    _boardSeq = _currentData.seq;
+                }
+
             } else {
                 boardEditMode = Constants.BoardEditMode.New;
             }
@@ -208,7 +209,7 @@ public class EditQNAActivity extends BaseActivity {
         }
     }
 
-    void initView() {
+    private void initView() {
 
         layoutBottom = findViewById(R.id.layout_bottom);
         layoutPrivate = findViewById(R.id.layout_allow_private);
@@ -319,31 +320,6 @@ public class EditQNAActivity extends BaseActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_done, menu);
-        int positionOfMenuItem = 0;
-        try {
-            MenuItem item = menu.getItem(positionOfMenuItem);
-            SpannableString span = new SpannableString(item.getTitle());
-            span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.red)), 0, span.length(), 0);
-            item.setTitle(span);
-        }catch(Exception ex){}
-        return (super.onCreateOptionsMenu(menu));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_complete:
-                if(checkForUpdate()){
-                    requestQna();
-                }
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onClick(View view) {
         switch(view.getId()) {
             case R.id.layout_allow_private:
@@ -428,13 +404,18 @@ public class EditQNAActivity extends BaseActivity {
                 public void onResponse(@NonNull Call<BaseResponse> call, @NonNull Response<BaseResponse> response) {
                     if(response.isSuccessful()) {
                         if(response.body() != null) {
-                            if(boardEditMode == Constants.BoardEditMode.New) {
-                                Utils.createNotification(mContext, "작성완료", getString(R.string.qna_insert_success));
-                            }else if(boardEditMode == Constants.BoardEditMode.Edit) {
-                                Utils.createNotification(mContext, "수정완료", getString(R.string.qna_update_success));
-                            }
+
                             Intent intent = new Intent();
-                            intent.putExtra(IntentParams.PARAM_BOARD_ADDED, true);
+
+                            if(boardEditMode == Constants.BoardEditMode.New) {
+                                Utils.createNotification(mContext, "[지트에듀케이션]", getString(R.string.qna_insert_success));
+                                intent.putExtra(IntentParams.PARAM_BOARD_ADDED, true);
+
+                            }else if(boardEditMode == Constants.BoardEditMode.Edit) {
+                                Utils.createNotification(mContext, "[지트에듀케이션]", getString(R.string.qna_update_success));
+                                intent.putExtra(IntentParams.PARAM_BOARD_EDITED, true);
+                            }
+
                             setResult(RESULT_OK, intent);
                             finish();
                         }
@@ -462,12 +443,13 @@ public class EditQNAActivity extends BaseActivity {
 
     // Q&A 글 작성
     private Call<BaseResponse> setRequestAddData() {
+
+        QnaAddRequest qnaInsert = new QnaAddRequest();
+
         String isOpen = "";
 
         if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
         else isOpen = IS_OPEN;
-
-        qnaInsert = new QnaAddRequest();
 
         qnaInsert.writerSeq = _memberSeq;
         qnaInsert.writerNm = _stName; // 작성자는 부모여도 원생명으로
@@ -505,12 +487,13 @@ public class EditQNAActivity extends BaseActivity {
 
     // Q&A 글 수정
     private Call<BaseResponse> setRequestEditData() {
+
+        QnaEditRequest qnaUpdate = new QnaEditRequest();
+
         String isOpen = "";
 
         if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
         else isOpen = IS_OPEN;
-
-        QnaEditRequest qnaUpdate = new QnaEditRequest();
 
         qnaUpdate.seq = _boardSeq;
         qnaUpdate.userGubun = _userGubun;
@@ -527,5 +510,30 @@ public class EditQNAActivity extends BaseActivity {
         );
 
         return RetrofitClient.getApiInterface().updateQna(qnaUpdate);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_done, menu);
+        int positionOfMenuItem = 0;
+        try {
+            MenuItem item = menu.getItem(positionOfMenuItem);
+            SpannableString span = new SpannableString(item.getTitle());
+            span.setSpan(new ForegroundColorSpan(ContextCompat.getColor(mContext, R.color.red)), 0, span.length(), 0);
+            item.setTitle(span);
+        }catch(Exception ex){}
+        return (super.onCreateOptionsMenu(menu));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_complete:
+                if(checkForUpdate()){
+                    requestQna();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

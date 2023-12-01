@@ -35,6 +35,7 @@ import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
 import kr.jeet.edu.student.model.response.NoticeListResponse;
+import kr.jeet.edu.student.model.response.QnaDetailResponse;
 import kr.jeet.edu.student.model.response.QnaListResponse;
 import kr.jeet.edu.student.model.response.ReportCardShowResponse;
 import kr.jeet.edu.student.model.response.ReportCardSummaryResponse;
@@ -304,6 +305,12 @@ public interface RetrofitApi {
             @Query("acaCode") String acaCode,
             @Query("acaGubunCode") String acaGubunCode,
             @Query("isOriginalMember") String isOriginalMember
+    );
+    //QnA 상세 조회
+    @GET("qna/detail")
+    Call<QnaDetailResponse> getQnaDetail(
+            @Query("qnaSeq") int qnaSeq,
+            @Query("userGubun") int userGubun
     );
     // QnA 글 등록 (부모앱)
     @POST("qna")

@@ -108,7 +108,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             str = Utils.getStr(item.acaName) + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
             holder.tvCampusAndAcaGubun.setText(str);
 
-            holder.tvRdCnt.setText(Utils.getStr(String.valueOf(item.rdcnt)));
+            holder.tvRdCnt.setText(Utils.getStr(Utils.decimalFormat(item.rdcnt)));
 
             ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) holder.guideline.getLayoutParams();
             layoutParams.guidePercent = 0.77f;
