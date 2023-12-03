@@ -19,6 +19,7 @@ import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
+import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNAActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.MenuReportCardActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
@@ -516,7 +517,8 @@ public class MainActivity extends BaseActivity {
                         _pushMessage = null;
                         return;
                     }
-                    if (_pushMessage.stCode == _stCode) if (intent != null) startBoardDetail(intent, getString(R.string.push_type_system));
+                    if (_pushMessage.stCode == _stCode) if (intent != null) startDetailActivity(intent, MenuNoticeDetailActivity.class);
+
                 }
                 break;
 
@@ -550,12 +552,6 @@ public class MainActivity extends BaseActivity {
                     break;
             }
         }
-    }
-
-    private void startBoardDetail(Intent intent, String title) {
-        intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, title);
-        intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-        startDetailActivity(intent, MenuBoardDetailActivity.class);
     }
 
     @Override

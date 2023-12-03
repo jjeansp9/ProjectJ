@@ -29,6 +29,7 @@ import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.InformedConsentActivity;
+import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleDetailActivity;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
@@ -174,7 +175,7 @@ public class SelectStudentActivity extends BaseActivity {
                         _pushMessage = null;
                         return;
                     }
-                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBoardDetailActivity.class);
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuNoticeDetailActivity.class);
                 }
                     break;
                 case MSG_TYPE_PT: // 설명회예약
