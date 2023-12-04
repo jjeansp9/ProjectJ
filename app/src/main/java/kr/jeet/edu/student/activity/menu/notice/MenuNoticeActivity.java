@@ -33,7 +33,6 @@ import java.util.Locale;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.TuitionActivity;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.adapter.NoticeListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;

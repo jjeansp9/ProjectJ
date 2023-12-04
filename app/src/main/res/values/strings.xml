@@ -195,6 +195,7 @@
     <string name="push_noti_received_schedule">캠퍼스일정 알림 도착</string>
     <string name="push_noti_received_report_card">성적표 알림 도착</string>
     <string name="push_noti_received_tuition">미납 알림 도착</string>
+    <string name="push_noti_received_qna">Q&amp;A 알림 도착</string>
 
     <string name="push_type_announcement">공지사항 알림</string>
     <string name="push_type_attendance">출결 알림</string>
@@ -767,7 +768,7 @@
     <string name="item_not_found">등록된 정보가 없습니다.</string>
 
     <string name="title_qna_private">비공개</string>
-    <string name="empty_menu_list_qna">질문 및 공지 내역이 없습니다.</string>
+    <string name="empty_menu_list_qna">Q&amp;A가 없습니다.</string>
     <string name="qna_insert_success">문의사항이 신청되었습니다.</string>
     <string name="qna_update_success">문의사항이 수정되었습니다.</string>
 

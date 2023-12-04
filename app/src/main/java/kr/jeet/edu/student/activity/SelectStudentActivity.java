@@ -4,6 +4,8 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_COMPLETE;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_ING;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
@@ -25,11 +27,11 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import kr.jeet.edu.student.R;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.InformedConsentActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
+import kr.jeet.edu.student.activity.menu.qna.MenuQNADetailActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleDetailActivity;
 import kr.jeet.edu.student.adapter.SelectStudentListAdapter;
@@ -197,7 +199,7 @@ public class SelectStudentActivity extends BaseActivity {
                     LogMgr.e(TAG, "Event sel stu");
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(ReportCardDetailActivity.class);
                 }
-                break;
+                    break;
                 case MSG_TYPE_TUITION: // 미납알림
                 {
                     if (_pushMessage.memberSeq != _parentSeq) {
@@ -206,7 +208,18 @@ public class SelectStudentActivity extends BaseActivity {
                     }
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(TuitionActivity.class);
                 }
-                break;
+                    break;
+
+                case MSG_TYPE_QNA_ING: // Qna 접수 or 접수완료
+                case MSG_TYPE_QNA_COMPLETE: // Qna 접수 or 접수완료
+                {
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuQNADetailActivity.class);
+                }
+                    break;
 
                 default:
                     break;

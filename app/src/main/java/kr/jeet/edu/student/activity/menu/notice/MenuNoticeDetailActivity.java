@@ -1,6 +1,5 @@
 package kr.jeet.edu.student.activity.menu.notice;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,14 +23,12 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
 import kr.jeet.edu.student.model.data.SystemNoticeData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;

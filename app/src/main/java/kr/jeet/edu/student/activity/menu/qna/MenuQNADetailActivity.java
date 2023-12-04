@@ -27,6 +27,7 @@ import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.QnaData;
 import kr.jeet.edu.student.model.data.QnaDetailData;
 import kr.jeet.edu.student.model.response.BaseResponse;
@@ -55,22 +56,15 @@ public class MenuQNADetailActivity extends BaseActivity {
     private int _userGubun = 1;
     private boolean isEdited = false;
     private int _currentSeq = -1;
+    private int _stCode = -1;
 
-    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if(result.getResultCode() != RESULT_CANCELED) {
-                Intent intent = result.getData();
-                if(intent != null) {
-                    if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
-                        isEdited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
-                        if (isEdited) {
-                            requestQnaDetail(_currentSeq);
-                        }
-
-                    } else if(intent.hasExtra(IntentParams.PARAM_BOARD_DELETED)) {
-
-                    }
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if(result.getResultCode() != RESULT_CANCELED) {
+            Intent intent = result.getData();
+            if(intent != null) {
+                if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
+                    isEdited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
+                    if (isEdited) requestQnaDetail(_currentSeq);
                 }
             }
         }
@@ -88,6 +82,7 @@ public class MenuQNADetailActivity extends BaseActivity {
 
         _userGubun = PreferenceUtil.getUserGubun(this);
         _memberSeq = PreferenceUtil.getUserSeq(this);
+        _stCode = PreferenceUtil.getUserSTCode(this);
 
         Intent intent = getIntent();
         if(intent == null) return;
@@ -95,12 +90,12 @@ public class MenuQNADetailActivity extends BaseActivity {
             _currentDataPosition = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
         }
 
-        if(intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) { // 목록 -> 상세
+        if(intent.hasExtra(IntentParams.PARAM_LIST_ITEM)) { // 목록 -> 상세
             LogMgr.w("param is recived");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, QnaData.class);
+                _currentData = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM, QnaData.class);
             }else{
-                _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
+                _currentData = intent.getParcelableExtra(IntentParams.PARAM_LIST_ITEM);
             }
             if (_currentData != null) _currentSeq = _currentData.seq;
 
@@ -111,10 +106,11 @@ public class MenuQNADetailActivity extends BaseActivity {
             }else{
                 message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
             }
-            if (message != null) _currentSeq = message.connSeq;
+            if (message != null) {
+                _currentSeq = message.connSeq;
+                new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
+            }
         }
-
-        LogMgr.w("currentData = " + _currentData);
     }
 
     private void initAppbar() {
@@ -147,6 +143,9 @@ public class MenuQNADetailActivity extends BaseActivity {
     }
 
     private void setView() {
+
+        mLayoutTag.removeAllViews();
+
         if (!TextUtils.isEmpty(_detailData.isMain)) {
             if (_detailData.isMain.equals(Constants.QNA_STATE_NOTICE)) { // 공지 글
                 addTag(R.color.color_notice, "공지");
@@ -196,23 +195,28 @@ public class MenuQNADetailActivity extends BaseActivity {
     }
 
     private void addTag(int bgColor, String state) {
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        int marginEndInPixels = Utils.fromDpToPx(4);
+        int marginEnd = Utils.fromDpToPx(4);
+        int paddingTop = Utils.fromDpToPx(1);
+        int paddingBottom = Utils.fromDpToPx(2);
+        int paddingHorizontal = Utils.fromDpToPx(12);
 
         TextView tvStatus = new TextView(mContext);
         tvStatus.setText(state);
-        tvStatus.setHint("가나다라");
+        //tvStatus.setHint("비공개");
         tvStatus.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_badge_default));
         ViewCompat.setBackgroundTintList(tvStatus, ColorStateList.valueOf(ContextCompat.getColor(mContext, bgColor)));
-        tvStatus.setTextAppearance(R.style.QnaTagTextAppearance);
+        tvStatus.setTextAppearance(R.style.QnaDetailTagTextAppearance);
+        //tvStatus.setTextSize(R.dimen.font_size);
         tvStatus.setGravity(Gravity.CENTER);
 
-        tvStatus.setPadding(6,2,6,2);
+        tvStatus.setPadding(paddingHorizontal, paddingTop, paddingHorizontal, paddingBottom);
 
-        layoutParams.rightMargin = marginEndInPixels;
+        layoutParams.rightMargin = marginEnd;
         tvStatus.setLayoutParams(layoutParams);
 
         mLayoutTag.addView(tvStatus);
@@ -283,10 +287,14 @@ public class MenuQNADetailActivity extends BaseActivity {
                     public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                         try {
                             if (response.isSuccessful()){
-
-                                // TODO : QNA Delete
+                                Toast.makeText(mContext, R.string.board_item_deleted, Toast.LENGTH_SHORT).show();
+                                Intent deleteIntent = new Intent();
+                                deleteIntent.putExtra(IntentParams.PARAM_BOARD_DELETED, true);
+                                deleteIntent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
+                                setResult(RESULT_OK, deleteIntent);
+                                finish();
                             }else{
-                                //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, R.string.board_item_deleted_fail, Toast.LENGTH_SHORT).show();
                             }
                         }catch (Exception e){
                             LogMgr.e(TAG + "requestNoticeDetail() Exception : ", e.getMessage());
@@ -302,7 +310,7 @@ public class MenuQNADetailActivity extends BaseActivity {
                         }catch (Exception e){
                         }
                         hideProgressDialog();
-                        Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.board_item_deleted_fail, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -332,6 +340,7 @@ public class MenuQNADetailActivity extends BaseActivity {
                 showMessageDialog(getString(R.string.dialog_title_alarm)
                         , getString(R.string.board_item_confirm_delete)
                         , v -> {
+                            hideMessageDialog();
                             requestDeleteQna();
                         },
                         v -> hideMessageDialog(), false);
@@ -345,17 +354,10 @@ public class MenuQNADetailActivity extends BaseActivity {
 
     private void navigate2EditQNAActivity() {
         Intent editIntent = new Intent(mContext, EditQNAActivity.class);
-        editIntent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, _currentData);
+        editIntent.putExtra(IntentParams.PARAM_BOARD_ITEM, _detailData);
         editIntent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
         resultLauncher.launch(editIntent);
 
-    }
-
-    private void setEditData() {
-        // TODO : _currentData = _detailData (수정되었을 때 글 목록 해당 position의 data만 갱신하기 위함)
-        if (isEdited) {
-
-        }
     }
 
     @Override
@@ -364,13 +366,13 @@ public class MenuQNADetailActivity extends BaseActivity {
         if(isEdited) {
             Intent intent = new Intent();
             intent.putExtra(IntentParams.PARAM_BOARD_EDITED, isEdited);
-            intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _currentData);
+            intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _detailData);
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
             setResult(RESULT_OK, intent);
 
         }else {
             Intent intent = new Intent();
-            intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _currentData);
+            intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _detailData);
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
             setResult(RESULT_CANCELED, intent);
         }

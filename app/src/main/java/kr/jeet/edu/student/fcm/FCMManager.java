@@ -46,6 +46,8 @@ public class FCMManager {
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청
     public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
     public static final String MSG_TYPE_ACA_SCHEDULE = "SCHEDULE";    //캠퍼스일정
+    public static final String MSG_TYPE_QNA_ING = "QNA_ING";    // qna 접수
+    public static final String MSG_TYPE_QNA_COMPLETE = "QNA_COMPLETE";    // qna 접수 완료
     //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
 
     public static final int NOTIFICATION_ID_NONE = 20;
@@ -112,6 +114,18 @@ public class FCMManager {
             }
         }
         else if (message.pushType.equals(MSG_TYPE_TUITION)) {
+            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
+                isReject = true;
+                isRequireConfirmReceived = true;
+            }
+        }
+        else if (message.pushType.equals(MSG_TYPE_QNA_ING)) {
+            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
+                isReject = true;
+                isRequireConfirmReceived = true;
+            }
+        }
+        else if (message.pushType.equals(MSG_TYPE_QNA_COMPLETE)) {
             if (PreferenceUtil.getNotificationSchedule(_context) == false) {
                 isReject = true;
                 isRequireConfirmReceived = true;
@@ -249,6 +263,12 @@ public class FCMManager {
                 break;
             case MSG_TYPE_TUITION:
                 tickerText = _context.getString(R.string.push_noti_received_tuition);
+                break;
+            case MSG_TYPE_QNA_ING:
+                tickerText = _context.getString(R.string.push_noti_received_qna);
+                break;
+            case MSG_TYPE_QNA_COMPLETE:
+                tickerText = _context.getString(R.string.push_noti_received_qna);
                 break;
             default :
                 tickerText = "JEET알림";

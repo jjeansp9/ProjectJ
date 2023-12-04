@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
@@ -237,7 +236,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
-            Intent intent = new Intent(mContext, MenuBoardDetailActivity.class);
+            Intent intent = new Intent(mContext, MenuAnnouncementDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);

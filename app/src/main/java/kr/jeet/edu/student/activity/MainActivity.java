@@ -4,6 +4,8 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ACA_SCHEDULE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_ATTEND;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_NOTICE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_PT;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_COMPLETE;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_ING;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
@@ -13,7 +15,6 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementActivity;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.attendance.MenuAttendanceActivity;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
@@ -21,6 +22,7 @@ import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNAActivity;
+import kr.jeet.edu.student.activity.menu.qna.MenuQNADetailActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.MenuReportCardActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleActivity;
@@ -477,7 +479,7 @@ public class MainActivity extends BaseActivity {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
                     //if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
-                    if (intent != null) startDetailActivity(intent, MenuAnnouncementDetailActivity.class);
+                    if (intent != null) startDetailActivity(MenuAnnouncementDetailActivity.class);
                 }
                 break;
 
@@ -507,7 +509,7 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (intent != null) startDetailActivity(intent, MenuBriefingDetailActivity.class);
+                    if (intent != null) startDetailActivity(MenuBriefingDetailActivity.class);
                 }
                 break;
 
@@ -517,14 +519,14 @@ public class MainActivity extends BaseActivity {
                         _pushMessage = null;
                         return;
                     }
-                    if (_pushMessage.stCode == _stCode) if (intent != null) startDetailActivity(intent, MenuNoticeDetailActivity.class);
+                    if (_pushMessage.stCode == _stCode) if (intent != null) startDetailActivity(MenuNoticeDetailActivity.class);
 
                 }
                 break;
 
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    if (intent != null) startDetailActivity(intent, MenuScheduleDetailActivity.class);
+                    if (intent != null) startDetailActivity(MenuScheduleDetailActivity.class);
                 }
                 break;
 
@@ -534,7 +536,7 @@ public class MainActivity extends BaseActivity {
                         _pushMessage = null;
                         return;
                     }
-                    if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, ReportCardDetailActivity.class));
+                    if (_pushMessage.stCode == _stCode) startDetailActivity(ReportCardDetailActivity.class);
                 }
                 break;
 
@@ -545,6 +547,17 @@ public class MainActivity extends BaseActivity {
                         return;
                     }
                     if (_pushMessage.stCode == _stCode) startActivity(new Intent(mContext, TuitionActivity.class));
+                }
+                break;
+
+                case MSG_TYPE_QNA_ING: // Qna 접수 or 접수완료
+                case MSG_TYPE_QNA_COMPLETE: // Qna 접수 or 접수완료
+                {
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
+                    if (_pushMessage.stCode == _stCode) startDetailActivity(MenuQNADetailActivity.class);
                 }
                 break;
 
@@ -574,14 +587,16 @@ public class MainActivity extends BaseActivity {
 //
 //            }
 //        }).start();
+
+        requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
     }
 
-    private void startDetailActivity(Intent intent, Class<?> targetActivity) {
+    private void startDetailActivity(Class<?> targetActivity) {
         if (targetActivity != null) {
+            Intent intent = new Intent(this, targetActivity);
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            Intent noticeIntent = new Intent(this, targetActivity);
-            noticeIntent.putExtras(intent);
-            resultLauncher.launch(noticeIntent);
+            intent.putExtras(intent);
+            resultLauncher.launch(intent);
         }
     }
 

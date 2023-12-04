@@ -22,6 +22,7 @@ import kr.jeet.edu.student.adapter.ReportCardDetailListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ReportCardData;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.model.response.ReportCardSummaryResponse;
@@ -98,7 +99,11 @@ public class ReportCardDetailActivity extends BaseActivity {
                 }else{
                     _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
                 }
-                if (_pushData != null) reportSeq = _pushData.connSeq;
+                if (_pushData != null) {
+                    reportSeq = _pushData.connSeq;
+                    if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+                }
+
             }
 
         }

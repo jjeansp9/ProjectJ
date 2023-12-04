@@ -39,6 +39,7 @@ import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.QnaData;
+import kr.jeet.edu.student.model.data.QnaDetailData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.request.QnaAddRequest;
 import kr.jeet.edu.student.model.request.QnaEditRequest;
@@ -73,7 +74,7 @@ public class EditQNAActivity extends BaseActivity {
     List<StudentGradeData> _GradeList = new ArrayList<>();
     StudentGradeData selectedGrade = null;
 
-    QnaData _currentData = new QnaData();
+    QnaDetailData _currentData = new QnaDetailData();
 
     String _acaCode = "";
     String _gubunCode = "";
@@ -186,12 +187,12 @@ public class EditQNAActivity extends BaseActivity {
     private void initIntentData() {
         Intent intent = getIntent();
         if(intent != null) {
-            if (intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
+            if (intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
                 boardEditMode = Constants.BoardEditMode.Edit;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, QnaData.class);
+                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
                 } else {
-                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
+                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
                 }
                 if (_currentData != null) {
                     _boardSeq = _currentData.seq;

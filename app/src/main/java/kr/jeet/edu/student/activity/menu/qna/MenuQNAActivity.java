@@ -33,18 +33,14 @@ import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
-import kr.jeet.edu.student.activity.menu.MenuBoardDetailActivity;
-import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.adapter.QnaListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.model.data.ACAData;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.QnaData;
 import kr.jeet.edu.student.model.data.QnaDetailData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
-import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.QnaListResponse;
 import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
@@ -72,6 +68,7 @@ public class MenuQNAActivity extends BaseActivity {
     private List<String> _ACANameList = new ArrayList<>();
     private List<StudentGradeData> _GradeList = new ArrayList<>();
     private ArrayList<QnaData> mList = new ArrayList<>();
+    private QnaDetailData _detailData = null;
 
     private String _userType = "";
     private String _stName = "";
@@ -101,33 +98,57 @@ public class MenuQNAActivity extends BaseActivity {
                     requestQnaList();
                 }
             } else if(intent.hasExtra(IntentParams.PARAM_BOARD_DELETED)) {
-//                boolean deleted = intent.getBooleanExtra(IntentParams.PARAM_BOARD_DELETED, false);
-//                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
-//                if(deleted && position >= 0) {
-//                    mList.remove(position);
-//                    mAdapter.notifyItemRemoved(position);
-//                    checkEmptyRecyclerView();
-//                }
+                boolean deleted = intent.getBooleanExtra(IntentParams.PARAM_BOARD_DELETED, false);
+                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+                if(deleted && position >= 0) {
+                    mList.remove(position);
+                    mAdapter.notifyItemRemoved(position);
+                    checkEmptyRecyclerView();
+                }
             }else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
-//                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
-//                QnaData changedItem = null;
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//                    changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaData.class);
-//                }else{
-//                    changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-//                }
-//                LogMgr.w("edited =" + changedItem);
-//                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
-//                LogMgr.w("position =" + position);
-//                if(edited && position >= 0 && changedItem != null) {
-//                    mList.set(position, changedItem);
-//                    mAdapter.notifyItemChanged(position);
-//                    checkEmptyRecyclerView();
-//                }
+                editThisPosition(intent); // 수정된 상세 데이터를 목록 데이터에 update 하기
             }
 
         }
     });
+
+    // 수정된 상세data -> 목록data Update
+    private void editThisPosition(Intent intent) {
+        boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
+        QnaData changedItem = new QnaData();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
+        }else{
+            _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+        }
+        if (_detailData != null) { // 수정된 상세데이터 -> 목록데이터 update
+            changedItem.seq = _detailData.seq;
+            changedItem.writerSeq = _detailData.writerSeq;
+            changedItem.writerNm = _detailData.writerNm;
+            changedItem.userGubun = _detailData.userGubun;
+            changedItem.stCode = _detailData.stCode;
+            changedItem.acaCode = _detailData.acaCode;
+            changedItem.acaName = _detailData.acaName;
+            changedItem.acaGubunCode = _detailData.acaGubunCode;
+            changedItem.acaGubunName = _detailData.acaGubunName;
+            changedItem.title = _detailData.title;
+            changedItem.content = _detailData.content;
+            changedItem.isOpen = _detailData.isOpen;
+            changedItem.isMain = _detailData.isMain;
+            changedItem.state = _detailData.state;
+            changedItem.rdcnt = _detailData.rdcnt;
+            changedItem.insertDate = _detailData.insertDate;
+        }
+
+        LogMgr.w("edited =" + changedItem);
+        int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+        LogMgr.w("position =" + position);
+        if(edited && position >= 0 && changedItem != null) {
+            mList.set(position, changedItem);
+            mAdapter.notifyItemChanged(position);
+            checkEmptyRecyclerView();
+        }
+    }
 
     private Handler _handler = new Handler(Looper.getMainLooper()) {
         @Override
@@ -219,7 +240,7 @@ public class MenuQNAActivity extends BaseActivity {
     private void startQnaDetailActivity(QnaData clickItem, int position){
         if (clickItem != null){
             Intent intent = new Intent(mContext, MenuQNADetailActivity.class);
-            intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
+            intent.putExtra(IntentParams.PARAM_LIST_ITEM, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_qna));
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
             resultLauncher.launch(intent);

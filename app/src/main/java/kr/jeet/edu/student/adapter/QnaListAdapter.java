@@ -128,19 +128,22 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        int marginEndInPixels = Utils.fromDpToPx(4);
+        int marginEnd = Utils.fromDpToPx(4);
+        int paddingTop = Utils.fromDpToPx(1);
+        int paddingBottom = Utils.fromDpToPx(2);
+        int paddingHorizontal = Utils.fromDpToPx(8);
 
         TextView tvStatus = new TextView(mContext);
         tvStatus.setText(state);
-        tvStatus.setHint("가나다라");
+        //tvStatus.setHint("비공개");
         tvStatus.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_badge_default));
         ViewCompat.setBackgroundTintList(tvStatus, ColorStateList.valueOf(ContextCompat.getColor(mContext, bgColor)));
         tvStatus.setTextAppearance(R.style.QnaTagTextAppearance);
         tvStatus.setGravity(Gravity.CENTER);
 
-        tvStatus.setPadding(6,2,6,2);
+        tvStatus.setPadding(paddingHorizontal, paddingTop, paddingHorizontal, paddingBottom);
 
-        layoutParams.rightMargin = marginEndInPixels;
+        layoutParams.rightMargin = marginEnd;
         tvStatus.setLayoutParams(layoutParams);
 
         layout.addView(tvStatus);

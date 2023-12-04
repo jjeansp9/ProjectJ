@@ -61,6 +61,7 @@
                     android:id="@+id/tv_qna_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
                     android:hint="제목"
                     android:textSize="@dimen/font_size_xlarge"
                     android:textColor="@color/black"

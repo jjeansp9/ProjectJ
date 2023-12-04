@@ -312,13 +312,13 @@ public interface RetrofitApi {
             @Query("qnaSeq") int qnaSeq,
             @Query("userGubun") int userGubun
     );
-    // QnA 글 등록 (부모앱)
+    // QnA 글 등록
     @POST("qna")
     Call<BaseResponse> insertQna(@Body QnaAddRequest request);
-    // QnA 글 수정 (부모앱)
+    // QnA 글 수정
     @PATCH("qna")
     Call<BaseResponse> updateQna(@Body QnaEditRequest request);
-    // QnA 글 삭제 (부모앱)
+    // QnA 글 삭제
     @DELETE("qna/{qnaSeq}")
     Call<BaseResponse> deleteQna(@Path("qnaSeq") int qnaSeq);
 }
