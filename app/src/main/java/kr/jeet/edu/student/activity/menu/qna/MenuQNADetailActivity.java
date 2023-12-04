@@ -363,16 +363,16 @@ public class MenuQNADetailActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         LogMgr.d(TAG,"onBackPressed edit? " + isEdited);
+        Intent intent = new Intent();
         if(isEdited) {
-            Intent intent = new Intent();
             intent.putExtra(IntentParams.PARAM_BOARD_EDITED, isEdited);
             intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _detailData);
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
             setResult(RESULT_OK, intent);
 
         }else {
-            Intent intent = new Intent();
             intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _detailData);
+            intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
             intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
             setResult(RESULT_CANCELED, intent);
         }

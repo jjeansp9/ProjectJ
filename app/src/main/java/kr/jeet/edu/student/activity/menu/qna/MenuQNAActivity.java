@@ -87,17 +87,19 @@ public class MenuQNAActivity extends BaseActivity {
 
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         LogMgr.w("result =" + result);
+
+        Intent intent = result.getData();
+
         if(result.getResultCode() != RESULT_CANCELED) {
-            Intent intent = result.getData();
             if(intent == null) return;
-            if(intent.hasExtra(IntentParams.PARAM_BOARD_ADDED)) {
+            if(intent.hasExtra(IntentParams.PARAM_BOARD_ADDED)) { // 작성
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_BOARD_ADDED, false);
 
                 if(added) {
                     if(_selectedLocalACA != null) LogMgr.e("acaCode = " + _selectedLocalACA.acaCode);
                     requestQnaList();
                 }
-            } else if(intent.hasExtra(IntentParams.PARAM_BOARD_DELETED)) {
+            } else if(intent.hasExtra(IntentParams.PARAM_BOARD_DELETED)) { // 삭제
                 boolean deleted = intent.getBooleanExtra(IntentParams.PARAM_BOARD_DELETED, false);
                 int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
                 if(deleted && position >= 0) {
@@ -105,22 +107,35 @@ public class MenuQNAActivity extends BaseActivity {
                     mAdapter.notifyItemRemoved(position);
                     checkEmptyRecyclerView();
                 }
-            }else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) {
-                editThisPosition(intent); // 수정된 상세 데이터를 목록 데이터에 update 하기
-            }
+            }else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) { // 수정
+                boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
+                if (edited) {
+                    editThisPosition(intent); // 수정된 상세 데이터를 목록 데이터에 update 하기
+                }
 
+            }
+        } else { // 상세 -> 뒤로가기 클릭으로 돌아왔을 때
+            if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
+                boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
+                if (added) {
+                    editThisPosition(intent);
+                }
+            }
         }
     });
 
     // 수정된 상세data -> 목록data Update
     private void editThisPosition(Intent intent) {
-        boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
+
         QnaData changedItem = new QnaData();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
         }else{
             _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
         }
+        int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+
         if (_detailData != null) { // 수정된 상세데이터 -> 목록데이터 update
             changedItem.seq = _detailData.seq;
             changedItem.writerSeq = _detailData.writerSeq;
@@ -141,9 +156,9 @@ public class MenuQNAActivity extends BaseActivity {
         }
 
         LogMgr.w("edited =" + changedItem);
-        int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+
         LogMgr.w("position =" + position);
-        if(edited && position >= 0 && changedItem != null) {
+        if(position >= 0 && changedItem != null) {
             mList.set(position, changedItem);
             mAdapter.notifyItemChanged(position);
             checkEmptyRecyclerView();
