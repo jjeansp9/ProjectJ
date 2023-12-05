@@ -43,12 +43,12 @@ public class FCMManager {
     public static final String MSG_TYPE_PT_REZ_CNL = "PT_REZ_CNL";  //설명회 예약 취소
     public static final String MSG_TYPE_SYSTEM = "SYSTEM";  //시스템
     public static final String MSG_TYPE_TEST_APPT = "LEVEL_TEST";    //테스트예약
+    public static final String MSG_TYPE_TEST_CNL = "LEVEL_CNL";    //테스트예약 취소
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청
     public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
     public static final String MSG_TYPE_ACA_SCHEDULE = "SCHEDULE";    //캠퍼스일정
     public static final String MSG_TYPE_QNA_ING = "QNA_ING";    // qna 접수
     public static final String MSG_TYPE_QNA_COMPLETE = "QNA_COMPLETE";    // qna 접수 완료
-    //public static final String MSG_TYPE_TEST_APPT = "TEST_APPT";    //테스트예약
 
     public static final int NOTIFICATION_ID_NONE = 20;
 

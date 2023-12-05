@@ -19,6 +19,7 @@ import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
+import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveDetailActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNAActivity;
@@ -241,30 +242,7 @@ public class MainActivity extends BaseActivity {
     ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         Intent intent = result.getData();
         if (intent != null && result.getResultCode() != RESULT_CANCELED) {
-            if(intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
-                isMain = true;
-//                announceAdapter = new AnnouncementListAdapter(mContext, announceList, isMain, this::startBoardDetailActivity);
-//                announceRecycler.setAdapter(announceAdapter);
-                boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if(added) {
-                    AnnouncementData changedItem = null;
-                    if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
-                        } else {
-                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-                        }
-                    }
-                    LogMgr.w("showed =" + changedItem);
-                    int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
-                    LogMgr.w("position =" + position);
-                    if(position >= 0 && changedItem != null) {
-                        announceList.set(position, changedItem);
-                        announceAdapter.notifyItemChanged(position);
-                    }
-                }
-
-            } else if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
+            if(intent.hasExtra(IntentParams.PARAM_TEST_NEW_CHILD)) { // 신규원생을 추가했을 경우
                 intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                 intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD_FROM_MAIN, true);
                 setResult(RESULT_OK, intent);
@@ -479,7 +457,7 @@ public class MainActivity extends BaseActivity {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
                 {
                     //if (intent != null) startBoardDetail(intent, getString(R.string.main_menu_announcement));
-                    if (intent != null) startDetailActivity(MenuAnnouncementDetailActivity.class);
+                    startDetailActivity(MenuAnnouncementDetailActivity.class);
                 }
                 break;
 
@@ -504,12 +482,22 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_TEST_APPT: // 테스트예약
                 {
-
+                    // 상세 조회 api 없음
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
+                    startDetailActivity(MenuTestReserveActivity.class); // 일단 테스트예약 목록화면으로
                 }
+                break;
 
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (intent != null) startDetailActivity(MenuBriefingDetailActivity.class);
+                    if (_pushMessage.memberSeq != _memberSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
+                    startDetailActivity(MenuBriefingDetailActivity.class);
                 }
                 break;
 
@@ -519,14 +507,14 @@ public class MainActivity extends BaseActivity {
                         _pushMessage = null;
                         return;
                     }
-                    if (_pushMessage.stCode == _stCode) if (intent != null) startDetailActivity(MenuNoticeDetailActivity.class);
+                    if (_pushMessage.stCode == _stCode) startDetailActivity(MenuNoticeDetailActivity.class);
 
                 }
                 break;
 
                 case MSG_TYPE_ACA_SCHEDULE: // 캠퍼스일정
                 {
-                    if (intent != null) startDetailActivity(MenuScheduleDetailActivity.class);
+                    startDetailActivity(MenuScheduleDetailActivity.class);
                 }
                 break;
 
@@ -597,6 +585,7 @@ public class MainActivity extends BaseActivity {
             intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
             intent.putExtras(intent);
             resultLauncher.launch(intent);
+            _pushMessage = null;
         }
     }
 

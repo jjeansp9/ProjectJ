@@ -8,6 +8,7 @@ import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_COMPLETE;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_QNA_ING;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_REPORT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_SYSTEM;
+import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TEST_APPT;
 import static kr.jeet.edu.student.fcm.FCMManager.MSG_TYPE_TUITION;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +31,8 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.menu.announcement.MenuAnnouncementDetailActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.InformedConsentActivity;
+import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
+import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveDetailActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNADetailActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
@@ -150,7 +153,7 @@ public class SelectStudentActivity extends BaseActivity {
         HttpUtils.requestLTCSubjectList();
 
         if(_pushMessage != null) {
-
+            LogMgr.e(TAG, "push msg type: " + _pushMessage.pushType);
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
                 {
@@ -159,6 +162,7 @@ public class SelectStudentActivity extends BaseActivity {
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
                             if(!TextUtils.isEmpty(_pushMessage.pushId)) {
                                 pushPopupDialog.getFCMManager().requestPushConfirmToServer(_pushMessage, _pushMessage.stCode);
+                                _pushMessage = null;
                             }
                             pushPopupDialog.dismiss();
                         });
@@ -182,6 +186,19 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_PT: // 설명회예약
                 {
+//                    key = pushId : value = hEMLaYZ7WX
+//                       E  key = body : value = 설명회 일정 알림 (2023-12-6 14:50)
+//                       E  key = date : value = 2023-12-05 14:26:59
+//                       E  key = title : value = [수지캠퍼스] 설명회
+//                       E  key = userGubun : value = 3
+//                       E  key = connSeq : value = 79
+//                       E  key = memberSeq : value = 3
+//                       E  key = pushType : value = PT
+                    LogMgr.e(TAG, "pushConnSeq: " + _pushMessage.connSeq);
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBriefingDetailActivity.class);
                 }
                     break;
@@ -221,9 +238,30 @@ public class SelectStudentActivity extends BaseActivity {
                 }
                     break;
 
+                case MSG_TYPE_TEST_APPT: // 레벨테스트
+                {
+//                    key = pushId : value = mbWOdBFuWm
+//                       E  key = body : value = 김영태 테스트예약 등록되었습니다.
+//                       E  key = date : value = 2023-12-05 14:33:59
+//                       E  key = title : value = 테스트예약
+//                       E  key = userGubun : value = 3
+//                       E  key = connSeq : value = 14
+//                       E  key = memberSeq : value = 3
+//                       E  key = pushType : value = LEVEL_TEST
+                    // 상세 조회 api 없음
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
+                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuTestReserveActivity.class); // 일단 테스트예약 목록화면으로
+                }
+                break;
+
                 default:
                     break;
             }
+        } else {
+            LogMgr.e(TAG, "push is null");
         }
     }
 

@@ -17,6 +17,7 @@ import org.threeten.bp.temporal.ChronoField;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.fcm.FCMManager;
@@ -154,7 +155,8 @@ public class PushMessage implements Parcelable {
         acaCode = in.readString();
         stCode = in.readInt();
         userGubun = in.readInt();
-        date = LocalDateTime.parse(in.readString(), dateTimeFormatter);
+        date = LocalDateTime.parse(Objects.requireNonNull(in.readString()), dateTimeFormatter);
+        //date = LocalDateTime.parse(in.readString(), dateTimeFormatter);
         pushType = in.readString();
         memberSeq = in.readInt();
         connSeq = in.readInt();

@@ -25,6 +25,7 @@ import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -64,6 +65,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import kr.jeet.edu.student.R;
+import kr.jeet.edu.student.activity.IntroActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
@@ -500,11 +502,11 @@ public class Utils {
 
     public static void createNotification(Context _context, String title, String content){
         PendingIntent pendingIntent;
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-//            pendingIntent = PendingIntent.getActivity(_context, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-//        }else{
-//            pendingIntent = PendingIntent.getActivity(_context, 0, intent, PendingIntent.FLAG_ONE_SHOT);
-//        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        }else{
+            pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT);
+        }
         String channelId = _context.getString(R.string.consult_notification_headup_channel_id);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(_context, channelId)
 //                .setTicker(tickerText)
@@ -513,8 +515,8 @@ public class Utils {
                 .setContentText(content)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM);
-                //.setContentIntent(pendingIntent);
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setContentIntent(pendingIntent);
 //                .setFullScreenIntent(pendingIntent, true);
         AudioManager audioManager = (AudioManager) _context.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
