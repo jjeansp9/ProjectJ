@@ -181,7 +181,7 @@ public class IntroActivity extends BaseActivity {
         initView();
         checkPermissions();
 
-        updateTest();
+        if (LogMgr.DEBUG) updateTest();
     }
 
     private void updateTest() {
