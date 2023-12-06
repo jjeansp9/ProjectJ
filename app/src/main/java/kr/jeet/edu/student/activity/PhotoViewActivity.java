@@ -129,7 +129,7 @@ public class PhotoViewActivity extends BaseActivity {
         window.setStatusBarColor(Color.TRANSPARENT);
         window.setNavigationBarColor(Color.TRANSPARENT);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) { // api level 30 이상
             WindowCompat.setDecorFitsSystemWindows(window, false); // false로 설정하면 바, 상태표시줄 확장
             final WindowInsetsController controller = getWindow().getInsetsController();
             if (controller != null) {

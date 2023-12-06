@@ -424,7 +424,7 @@ public class MenuAttendanceActivity extends BaseActivity {
                             if (response.body() != null) {
 
                                 getData = response.body().data;
-                                if (getData != null && _attendanceList != null) _attendanceList.addAll(getData);
+                                _attendanceList.addAll(getData.stream().filter(t->t.attendGubun!= Constants.AttendanceStatus.UNSET.getCode()).collect(Collectors.toList()));
                             }
                         }else{
                             //Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

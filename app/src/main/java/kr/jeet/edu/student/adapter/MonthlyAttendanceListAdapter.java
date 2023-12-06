@@ -54,10 +54,17 @@ public class MonthlyAttendanceListAdapter extends RecyclerView.Adapter<MonthlyAt
             }
         }
         Constants.AttendanceStatus status = Constants.AttendanceStatus.getByCode(item.attendGubun);
-        String state = status.getName();
-        holder.tvState.setText(state);
         Drawable drawable = holder.layoutRoot.getBackground();
-        drawable.setTint(_context.getColor(status.getColorRes()));
+        String state = "";
+
+        try {
+            if (status != null) {
+                state = status.getName();
+                drawable.setTint(_context.getColor(status.getColorRes()));
+            }
+
+            holder.tvState.setText(state);
+        }catch (Exception e) {}
     }
 
     @Override
