@@ -49,6 +49,7 @@ public class MenuTestReserveActivity extends BaseActivity {
 
     private final ArrayList<TestReserveData> mList = new ArrayList<>();
     private int _memberSeq = 0;
+    private int _stCode = 0;
     private final int LTC_CODE = 0; // 원생, 학부모인 경우는 0으로 고정
 
     boolean isNew = false;
@@ -105,6 +106,7 @@ public class MenuTestReserveActivity extends BaseActivity {
 
     private void initData(){
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _stCode = PreferenceUtil.getUserSTCode(mContext);
     }
 
     void initAppbar() {
@@ -130,6 +132,11 @@ public class MenuTestReserveActivity extends BaseActivity {
 
         requestTestReserveList();
         requestTestTime();
+
+        if (_stCode <= 0) {
+            btnReserve.setOnClickListener(null);
+            btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+        }
     }
 
     private void setRecycler(){

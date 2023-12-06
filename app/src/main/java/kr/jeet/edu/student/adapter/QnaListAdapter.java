@@ -80,6 +80,7 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
                         addTag(holder.layoutStatus, R.color.color_me, "본인");
                     }
                 }
+                holder.qnaRoot.setBackgroundColor(mContext.getColor(R.color.color_qna_main_background));
 
             } else { // 사용자 질문 글
                 if (item.userGubun >= Constants.USER_TYPE_STUDENT) { // 부모, 원생의 경우
@@ -105,6 +106,7 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
                 if (item.writerSeq == PreferenceUtil.getUserSeq(mContext)) {
                     addTag(holder.layoutStatus, R.color.color_me, "본인");
                 }
+                holder.qnaRoot.setBackgroundColor(mContext.getColor(R.color.white));
             }
         }
 
@@ -180,46 +182,3 @@ public class QnaListAdapter extends RecyclerView.Adapter<QnaListAdapter.ViewHold
         }
     }
 }
-
-//let userGubun = UserGubun.getType(info.userGubun ?? -1)
-//        switch userGubun {
-//        case .parents, .student:
-//        txtProcess.isHidden = false
-//        switch info.state {
-//        case "1":
-//        txtProcess.text = "신청"
-//        txtProcess.backgroundColor = UIColor(hexCode: "#FFA800")
-//        case "2":
-//        txtProcess.text = "접수"
-//        txtProcess.backgroundColor = UIColor(hexCode: "#FF0000")
-//        case "3":
-//        txtProcess.text = "완료"
-//        txtProcess.backgroundColor = UIColor(hexCode: "#2E75B6")
-//default: txtProcess.isHidden = true
-//        }
-//
-//        txtWriter.isHidden = false
-//        if let name = info.writerNm, !name.isEmpty {
-//        txtWriter.text = name
-//        txtWriter.textColor = UIColor(named: "textColor_3")
-//        }else {
-//        txtWriter.text = "(정보없음)"
-//        txtWriter.textColor = UIColor.placeholderText
-//        }
-//        case .manager, .master, .teacher:
-//        txtProcess.isHidden = !info.isMain
-//        txtProcess.text = "공지"
-//        txtProcess.backgroundColor = UIColor(hexCode: "#006B26")
-//        txtWriter.isHidden = true
-//default:
-//        txtProcess.isHidden = true
-//        txtWriter.isHidden = true
-//        }
-//        txtIsOpen.isHidden = info.isOpen
-//
-//        if UserGubun.getUserGubun == .parents || UserGubun.getUserGubun == .student {
-//        txtWriter.isHidden = true
-//        txtIsMyOwn.isHidden = info.writerSeq != UserDefaults.standard.integer(forKey: UDManager.USER_SEQ)
-//        }else {
-//        txtIsMyOwn.isHidden = true
-//        }

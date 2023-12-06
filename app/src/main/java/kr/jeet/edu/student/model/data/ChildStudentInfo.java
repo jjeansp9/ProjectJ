@@ -28,11 +28,10 @@ public class ChildStudentInfo implements Parcelable {
     public String clstName; // 학년 이름
     @SerializedName("birth")
     public String birth; // 생일
-    @SerializedName("scName")
-    public String scName; // 학교 이름
     @SerializedName("stGrade")
     public String stGrade; // 학년 이름
-
+    @SerializedName("scName")
+    public String scName; // 학교 이름
 
     public ChildStudentInfo() {}
 
@@ -49,8 +48,8 @@ public class ChildStudentInfo implements Parcelable {
         deptName = in.readString();
         clstName = in.readString();
         birth = in.readString();
-        scName = in.readString();
         stGrade = in.readString();
+        scName = in.readString();
     }
 
     public static final Creator<ChildStudentInfo> CREATOR = new Creator<ChildStudentInfo>() {
@@ -83,7 +82,7 @@ public class ChildStudentInfo implements Parcelable {
         dest.writeString(deptName);
         dest.writeString(clstName);
         dest.writeString(birth);
-        dest.writeString(scName);
         dest.writeString(stGrade);
+        dest.writeString(scName);
     }
 }
