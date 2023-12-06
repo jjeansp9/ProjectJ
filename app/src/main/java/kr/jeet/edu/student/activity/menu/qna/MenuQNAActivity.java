@@ -127,41 +127,49 @@ public class MenuQNAActivity extends BaseActivity {
     // 수정된 상세data -> 목록data Update
     private void editThisPosition(Intent intent) {
 
-        QnaData changedItem = new QnaData();
+        if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+            QnaData changedItem = new QnaData();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaData.class);
+                //changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
+            }else{
+                changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+                //changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
+            }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
-        }else{
-            _detailData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-        }
-        int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+//        if (_detailData != null) { // 수정된 상세데이터 -> 목록데이터 update
+//            changedItem.seq = _detailData.seq;
+//            changedItem.writerSeq = _detailData.writerSeq;
+//            changedItem.writerNm = _detailData.writerNm;
+//            changedItem.userGubun = _detailData.userGubun;
+//            changedItem.stCode = _detailData.stCode;
+//            changedItem.acaCode = _detailData.acaCode;
+//            changedItem.acaName = _detailData.acaName;
+//            changedItem.acaGubunCode = _detailData.acaGubunCode;
+//            changedItem.acaGubunName = _detailData.acaGubunName;
+//            changedItem.title = _detailData.title;
+//            changedItem.content = _detailData.content;
+//            changedItem.isOpen = _detailData.isOpen;
+//            changedItem.isMain = _detailData.isMain;
+//            changedItem.state = _detailData.state;
+//            changedItem.rdcnt = _detailData.rdcnt;
+//            changedItem.insertDate = _detailData.insertDate;
+//            //changedItem = _detailData;
+//        }
 
-        if (_detailData != null) { // 수정된 상세데이터 -> 목록데이터 update
-            changedItem.seq = _detailData.seq;
-            changedItem.writerSeq = _detailData.writerSeq;
-            changedItem.writerNm = _detailData.writerNm;
-            changedItem.userGubun = _detailData.userGubun;
-            changedItem.stCode = _detailData.stCode;
-            changedItem.acaCode = _detailData.acaCode;
-            changedItem.acaName = _detailData.acaName;
-            changedItem.acaGubunCode = _detailData.acaGubunCode;
-            changedItem.acaGubunName = _detailData.acaGubunName;
-            changedItem.title = _detailData.title;
-            changedItem.content = _detailData.content;
-            changedItem.isOpen = _detailData.isOpen;
-            changedItem.isMain = _detailData.isMain;
-            changedItem.state = _detailData.state;
-            changedItem.rdcnt = _detailData.rdcnt;
-            changedItem.insertDate = _detailData.insertDate;
-        }
+            if(intent.hasExtra(IntentParams.PARAM_BOARD_POSITION)){
+                int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
 
-        LogMgr.w("edited =" + changedItem);
-
-        LogMgr.w("position =" + position);
-        if(position >= 0 && changedItem != null) {
-            mList.set(position, changedItem);
-            mAdapter.notifyItemChanged(position);
-            checkEmptyRecyclerView();
+                LogMgr.w("position =" + position);
+                if(position >= 0 && changedItem != null) {
+                    LogMgr.w("edited =" + changedItem.title);
+                    mList.set(position, changedItem);
+                    mAdapter.notifyItemChanged(position);
+                    checkEmptyRecyclerView();
+                }else {
+                    LogMgr.w("edited is null");
+                }
+            }
         }
     }
 

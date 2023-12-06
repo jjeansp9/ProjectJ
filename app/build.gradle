@@ -103,4 +103,8 @@ dependencies {
     implementation 'com.jakewharton.threetenabp:threetenabp:1.3.1'
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-process:2.4.0"
+
+    //구글의 외부라이브러리에서 참고하는 하의 라이브러리 중 버전이 다른 라이브러리가 존재하면 생기는 이슈관련
+    implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
+    implementation 'com.google.android.play:core:1.10.3'
 }
