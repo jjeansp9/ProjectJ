@@ -186,14 +186,6 @@ public class SelectStudentActivity extends BaseActivity {
                     break;
                 case MSG_TYPE_PT: // 설명회예약
                 {
-//                    key = pushId : value = hEMLaYZ7WX
-//                       E  key = body : value = 설명회 일정 알림 (2023-12-6 14:50)
-//                       E  key = date : value = 2023-12-05 14:26:59
-//                       E  key = title : value = [수지캠퍼스] 설명회
-//                       E  key = userGubun : value = 3
-//                       E  key = connSeq : value = 79
-//                       E  key = memberSeq : value = 3
-//                       E  key = pushType : value = PT
                     LogMgr.e(TAG, "pushConnSeq: " + _pushMessage.connSeq);
                     if (_pushMessage.memberSeq != _parentSeq) {
                         _pushMessage = null;
@@ -248,12 +240,6 @@ public class SelectStudentActivity extends BaseActivity {
 //                       E  key = connSeq : value = 14
 //                       E  key = memberSeq : value = 3
 //                       E  key = pushType : value = LEVEL_TEST
-                    // 상세 조회 api 없음
-                    if (_pushMessage.memberSeq != _parentSeq) {
-                        _pushMessage = null;
-                        return;
-                    }
-                    if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuTestReserveActivity.class); // 일단 테스트예약 목록화면으로
                 }
                 break;
 

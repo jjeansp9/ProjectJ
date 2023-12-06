@@ -99,18 +99,6 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
-       // QNA 접수
-//    key = acaCode : value = 1
-//    key = pushId : value = DdkPIx5gfY
-//    key = stCode : value = 73808
-//    key = body : value = 접수처리 되었습니다. (1234)
-//    key = date : value = 2023-12-01 15:25:48
-//    key = title : value = [수지캠퍼스] Q&A 접수알림
-//    key = userGubun : value = 3
-//    key = connSeq : value = 40
-//    key = memberSeq : value = 3
-//    key = pushType : value = QNA_ING
-
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;
@@ -482,12 +470,7 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_TEST_APPT: // 테스트예약
                 {
-                    // 상세 조회 api 없음
-                    if (_pushMessage.memberSeq != _memberSeq) {
-                        _pushMessage = null;
-                        return;
-                    }
-                    startDetailActivity(MenuTestReserveActivity.class); // 일단 테스트예약 목록화면으로
+
                 }
                 break;
 

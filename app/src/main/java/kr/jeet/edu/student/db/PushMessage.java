@@ -39,8 +39,6 @@ public class PushMessage implements Parcelable {
     public int stCode;
     @ColumnInfo(name="userGubun")
     public int userGubun;
-    @ColumnInfo(name="date")
-    public LocalDateTime date;
     @ColumnInfo(name="pushType")
     public String pushType;
     @ColumnInfo(name="memberSeq")
@@ -51,7 +49,8 @@ public class PushMessage implements Parcelable {
     public String pushId;
     @ColumnInfo(name="isRead", defaultValue = "false")
     public boolean isRead = false;
-
+    @ColumnInfo(name="date")
+    public LocalDateTime date;
 
     public PushMessage(long id, String title, String body, String acaCode, int stCode, int userGubun, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
         this.id = id;
@@ -60,12 +59,13 @@ public class PushMessage implements Parcelable {
         this.acaCode = acaCode;
         this.stCode = stCode;
         this.userGubun = userGubun;
-        this.date = date;
         this.pushType = pushType;
         this.memberSeq = memberSeq;
         this.connSeq = connSeq;
         this.pushId = pushId;
         this.isRead = isRead;
+        try{ this.date = date; }
+        catch (Exception e){ LogMgr.e("PushMessage()", e.getMessage()); }
     }
 
     public PushMessage() {}
@@ -109,7 +109,6 @@ public class PushMessage implements Parcelable {
         String userGubunStr = map.containsKey("userGubun")? map.get("userGubun") : "";
         int connSeq = -1;
         String connSeqStr = map.containsKey("connSeq")? map.get("connSeq") : "";
-        
         try {
             stCode = Integer.parseInt(stCodeStr);
         }catch (Exception e){}
@@ -121,8 +120,6 @@ public class PushMessage implements Parcelable {
         try{
             connSeq = Integer.parseInt(connSeqStr);
         }catch(Exception ex){}
-
-        LocalDateTime date = initDate;
 
         int memberSeq = 0;
 //        if (userGubun == Constants.USER_TYPE_PARENTS){
@@ -141,6 +138,9 @@ public class PushMessage implements Parcelable {
         }catch(Exception ex){}
         String pushType = map.containsKey("pushType")? map.get("pushType") : "";
         String pushId = map.containsKey("pushId")? map.get("pushId") : "";
+
+        LocalDateTime date = initDate;
+
         return new PushMessage(id, title, content, acaCode, stCode, userGubun, date, pushType, memberSeq, connSeq, pushId, false);
     }
 
@@ -155,13 +155,16 @@ public class PushMessage implements Parcelable {
         acaCode = in.readString();
         stCode = in.readInt();
         userGubun = in.readInt();
-        date = LocalDateTime.parse(Objects.requireNonNull(in.readString()), dateTimeFormatter);
-        //date = LocalDateTime.parse(in.readString(), dateTimeFormatter);
         pushType = in.readString();
         memberSeq = in.readInt();
         connSeq = in.readInt();
         pushId = in.readString();
         isRead = in.readByte() != 0;
+        try{
+            date = LocalDateTime.parse(Objects.requireNonNull(in.readString()), dateTimeFormatter);
+        }catch (Exception e) { LogMgr.e("PushMessage readFromParcel()", e.getMessage()); }
+
+        //date = LocalDateTime.parse(in.readString(), dateTimeFormatter);
     }
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
@@ -171,11 +174,14 @@ public class PushMessage implements Parcelable {
         parcel.writeString(acaCode);
         parcel.writeInt(stCode);
         parcel.writeInt(userGubun);
-        parcel.writeString(date.format(dateTimeFormatter));
         parcel.writeString(pushType);
         parcel.writeInt(memberSeq);
         parcel.writeInt(connSeq);
         parcel.writeString(pushId);
         parcel.writeByte((byte) (isRead ? 1 : 0));
+        try{
+            parcel.writeString(date.format(dateTimeFormatter));
+        }catch (Exception e) { LogMgr.e("PushMessage writeToParcel()", e.getMessage()); }
+
     }
 }

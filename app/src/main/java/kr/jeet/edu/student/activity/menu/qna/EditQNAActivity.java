@@ -412,8 +412,9 @@ public class EditQNAActivity extends BaseActivity {
                                 Utils.createNotification(mContext, "[지트에듀케이션]", getString(R.string.qna_insert_success));
                                 intent.putExtra(IntentParams.PARAM_BOARD_ADDED, true);
 
-                            }else if(boardEditMode == Constants.BoardEditMode.Edit) {
-                                Utils.createNotification(mContext, "[지트에듀케이션]", getString(R.string.qna_update_success));
+                            }
+                            else if(boardEditMode == Constants.BoardEditMode.Edit) {
+                                //Utils.createNotification(mContext, "[지트에듀케이션]", getString(R.string.qna_update_success));
                                 intent.putExtra(IntentParams.PARAM_BOARD_EDITED, true);
                             }
 
@@ -435,11 +436,6 @@ public class EditQNAActivity extends BaseActivity {
                 }
             });
         }
-
-        // TODO 작성시 문구 : Q&A가 작성되었습니다.
-        // TODO 작성시 문구 : Q&A가 수정되었습니다.
-        // TODO 작성시 문구 : 문의사항이 신청되었습니다.
-        // TODO 작성시 문구 : 문의사항이 수정되었습니다.
     }
 
     // Q&A 글 작성
