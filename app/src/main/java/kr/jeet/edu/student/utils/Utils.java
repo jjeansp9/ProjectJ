@@ -665,7 +665,7 @@ public class Utils {
         return TextUtils.isEmpty(trimStr);
     }
 
-    // ios 회원가입 체크 패턴
+    // ios 회원가입 패턴
 //    static func checkUserName(_ text: String) -> Bool {
 //        let reg = ("^[가-힣A-Za-z\\s]{2,}$")
 //        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)

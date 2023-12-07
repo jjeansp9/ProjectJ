@@ -164,16 +164,29 @@
                 
             </RadioGroup>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btn_address_search"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/rg_test_reserve_gender"
+                app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
+                android:layout_marginTop="@dimen/tv_test_reserve_margin_top"
+                android:background="@drawable/selector_address_search"
+                android:text="주소찾기"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/white"
+                android:stateListAnimator="@xml/animate_button_push"/>
+
             <TextView
                 android:id="@+id/tv_reserve_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_reserve_gender"
+                app:layout_constraintTop_toBottomOf="@id/btn_address_search"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_first"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_second"
                 android:paddingVertical="@dimen/tv_test_reserve_write"
                 android:layout_marginEnd="@dimen/tv_test_reserve_margin_end"
-                android:layout_marginTop="@dimen/tv_test_reserve_margin_top"
+                android:layout_marginTop="4dp"
                 android:text="@string/test_reserve_write_address"
                 android:textSize="@dimen/font_size_small"
                 android:textColor="@color/font_color_default"
@@ -209,57 +222,29 @@
                 android:textColor="@color/font_color_default"
                 android:paddingHorizontal="@dimen/editbox_padding"
                 android:paddingVertical="@dimen/editbox_padding_vertical"/>
-            
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layout_reserve_address"
+
+            <EditText
+                android:id="@+id/et_reserve_address_detail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 app:layout_constraintTop_toBottomOf="@+id/tv_reserve_address_result"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_third"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
-                android:layout_marginTop="8dp">
-
-                <EditText
-                    android:id="@+id/et_reserve_address_detail"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/btn_address_search"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_edittext"
-                    android:hint="@string/test_reserve_write_address_detail"
-                    android:textSize="@dimen/font_size"
-                    android:maxLines="1"
-                    android:inputType="text"
-                    android:textColor="@color/font_color_default"
-                    android:paddingHorizontal="@dimen/editbox_padding"
-                    android:paddingVertical="@dimen/editbox_padding_vertical"/>
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_address_search"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    app:layout_constraintTop_toTopOf="@id/et_reserve_address_detail"
-                    app:layout_constraintBottom_toBottomOf="@id/et_reserve_address_detail"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/selector_address_search"
-                    android:text="주소찾기"
-                    android:textSize="@dimen/font_size"
-                    android:textColor="@color/white"
-                    android:stateListAnimator="@xml/animate_button_push"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_edittext"
+                android:hint="@string/test_reserve_write_address_detail"
+                android:textSize="@dimen/font_size"
+                android:maxLines="1"
+                android:inputType="text"
+                android:textColor="@color/font_color_default"
+                android:paddingHorizontal="@dimen/editbox_padding"
+                android:paddingVertical="@dimen/editbox_padding_vertical"/>
 
             <TextView
                 android:id="@+id/tv_reserve_birth"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/layout_reserve_address"
+                app:layout_constraintTop_toBottomOf="@id/et_reserve_address_detail"
                 app:layout_constraintStart_toStartOf="@id/guideline_test_reserve_first"
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_second"
                 android:paddingVertical="@dimen/tv_test_reserve_write"

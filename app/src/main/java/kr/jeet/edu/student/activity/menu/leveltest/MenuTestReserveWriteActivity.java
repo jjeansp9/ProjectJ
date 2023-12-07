@@ -714,7 +714,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
-        request.name = mEtName.getText().toString().trim().replaceAll("\\s+", " "); // 학생이름 [필수] - 앞뒤 공백제거, 연속된 공백은 단일공백으로 변경
+        request.name = mEtName.getText().toString().trim(); // 학생이름 [필수] - 앞뒤 공백제거
         request.birth = mTvBirthDate.getText().toString().trim(); // 생년월일 [필수]
         request.sex = gender; // 성별 (1 남자, 2 여자) [필수]
         request.address = mTvAddress.getText().toString(); // 주소 (도로명주소) [선택]

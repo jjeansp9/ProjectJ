@@ -35,7 +35,7 @@
         app:layout_constraintStart_toEndOf="@id/tv_date"
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingVertical="@dimen/layout_margin_12"
-        android:hint="정보없음"
+        android:hint="(정보없음)"
         android:textColor="@color/white"
         android:textSize="@dimen/font_size_large"
         android:layout_marginStart="@dimen/layout_margin_12"

@@ -109,17 +109,13 @@ public class MenuQNAActivity extends BaseActivity {
                 }
             }else if(intent.hasExtra(IntentParams.PARAM_BOARD_EDITED)) { // 수정
                 boolean edited = intent.getBooleanExtra(IntentParams.PARAM_BOARD_EDITED, false);
-                if (edited) {
-                    editThisPosition(intent); // 수정된 상세 데이터를 목록 데이터에 update 하기
-                }
-
+                if (edited) editThisPosition(intent); // 수정된 상세 데이터를 목록 데이터에 update 하기
             }
+
         } else { // 상세 -> 뒤로가기 클릭으로 돌아왔을 때
             if(intent != null && intent.hasExtra(IntentParams.PARAM_RD_CNT_ADD)) {
                 boolean added = intent.getBooleanExtra(IntentParams.PARAM_RD_CNT_ADD, false);
-                if (added) {
-                    editThisPosition(intent);
-                }
+                if (added) editThisPosition(intent);
             }
         }
     });
@@ -131,31 +127,9 @@ public class MenuQNAActivity extends BaseActivity {
             QnaData changedItem = new QnaData();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaData.class);
-                //changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
             }else{
                 changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-                //changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
             }
-
-//        if (_detailData != null) { // 수정된 상세데이터 -> 목록데이터 update
-//            changedItem.seq = _detailData.seq;
-//            changedItem.writerSeq = _detailData.writerSeq;
-//            changedItem.writerNm = _detailData.writerNm;
-//            changedItem.userGubun = _detailData.userGubun;
-//            changedItem.stCode = _detailData.stCode;
-//            changedItem.acaCode = _detailData.acaCode;
-//            changedItem.acaName = _detailData.acaName;
-//            changedItem.acaGubunCode = _detailData.acaGubunCode;
-//            changedItem.acaGubunName = _detailData.acaGubunName;
-//            changedItem.title = _detailData.title;
-//            changedItem.content = _detailData.content;
-//            changedItem.isOpen = _detailData.isOpen;
-//            changedItem.isMain = _detailData.isMain;
-//            changedItem.state = _detailData.state;
-//            changedItem.rdcnt = _detailData.rdcnt;
-//            changedItem.insertDate = _detailData.insertDate;
-//            //changedItem = _detailData;
-//        }
 
             if(intent.hasExtra(IntentParams.PARAM_BOARD_POSITION)){
                 int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);

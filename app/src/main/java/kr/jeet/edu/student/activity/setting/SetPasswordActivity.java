@@ -129,7 +129,7 @@ public class SetPasswordActivity extends BaseActivity {
 
     private boolean checkPassword(String pwd) {
         // 정규식 (숫자, 영문 포함 최소 8글자)
-        Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$");
         Matcher matcher = pattern.matcher(pwd);
 
         if(!matcher.find()) {

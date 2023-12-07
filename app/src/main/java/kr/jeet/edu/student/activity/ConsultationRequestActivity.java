@@ -227,7 +227,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.managerPhoneNumber = mInfo.phoneNumber;
 
         str = mEtConsultContent.getText().toString();
-        //str = mEtConsultContent.getText().toString().replaceAll("\\s+$", ""); // 오른쪽 공백만 제거
 
         if (Utils.isEmptyContainSpace(str)) request.memo = str.trim();
         else request.memo = str;
@@ -338,7 +337,7 @@ public class ConsultationRequestActivity extends BaseActivity {
                             } else if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
 
                             }
-
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());
                         }
 

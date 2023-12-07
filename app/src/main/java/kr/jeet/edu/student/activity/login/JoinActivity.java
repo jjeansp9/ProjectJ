@@ -266,8 +266,7 @@ public class JoinActivity extends BaseActivity {
         // https://pingfanzhilu.tistory.com/entry/Java-%EC%9E%90%EB%B0%94-%EB%B9%84%EB%B0%80%EB%B2%88%ED%98%B8-%EC%A0%95%EA%B7%9C%EC%8B%9D-%ED%8C%A8%ED%84%B4Pattern-%EB%A9%94%EC%86%8C%EB%93%9C
 
         // 정규식 (숫자, 영문 포함 최소 8글자)
-        Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
-        //Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$");
+        Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$");
         Matcher matcher = pattern.matcher(pwd);
 
         if(!matcher.find()) {
@@ -294,8 +293,8 @@ public class JoinActivity extends BaseActivity {
     private void userJoin() {
         // 회원가입 요청
         SignupRequest request = new SignupRequest();
-        request.name = mEditName.getText().toString().trim().replaceAll("\\s+", " ");
-        //request.phoneNumber = mEditPhone1.getText().toString();
+        request.name = mEditName.getText().toString().trim();
+        //request.name = mEditName.getText().toString().trim().replaceAll("\\s+", " "); // 연속된 공백을 단일 공백으로 변경
         request.phoneNumber = _authPhoneNoView.getAuthPhoneNo();
 
         if(mUserTypeRadioGroup.getCheckedRadioButtonId() == R.id.radioBtn1) {

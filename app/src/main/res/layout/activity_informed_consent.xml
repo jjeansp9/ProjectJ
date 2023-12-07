@@ -125,11 +125,10 @@
 
             <LinearLayout
                 android:id="@+id/layout_privacy_collection"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_view_collection"
                 app:layout_constraintTop_toBottomOf="@id/layout_check_all"
                 android:layout_marginTop="16dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -172,7 +171,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_view_collection"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_collection"
                 app:layout_constraintStart_toEndOf="@id/layout_privacy_collection"
@@ -198,11 +197,10 @@
 
             <LinearLayout
                 android:id="@+id/layout_privacy_third_party"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_view_third_party"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_collection"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -234,6 +232,7 @@
                     android:text="@string/informed_consent_required"
                     android:textColor="@color/red_sub"
                     android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
                     style="@style/AutoSizeMaxFont_14"
                     android:maxLines="1"/>
 
@@ -243,7 +242,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_view_third_party"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_third_party"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_third_party"
@@ -269,11 +268,10 @@
 
             <LinearLayout
                 android:id="@+id/layout_privacy_consignment"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_view_consignment"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_third_party"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -305,6 +303,7 @@
                     app:layout_constraintTop_toTopOf="@id/cb_check_privacy_consignment"
                     app:layout_constraintBottom_toBottomOf="@id/cb_check_privacy_consignment"
                     android:layout_marginStart="2dp"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/informed_consent_required"
                     android:textColor="@color/red_sub"
                     android:textStyle="bold"
@@ -317,7 +316,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_view_consignment"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_consignment"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_consignment"
@@ -332,10 +331,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
                     android:textColor="@color/font_color_999"
-                    app:autoSizeMaxTextSize="@dimen/font_size_small"
-                    app:autoSizeMinTextSize="6dp"
-                    app:autoSizeStepGranularity="1dp"
-                    app:autoSizeTextType="uniform"
                     android:layout_gravity="center_vertical"
                     android:maxLines="1"
                     style="@style/AutoSizeMaxFont_14"/>
@@ -347,11 +342,10 @@
 
             <LinearLayout
                 android:id="@+id/layout_privacy_marketing"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/layout_view_marketing"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_consignment"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -380,6 +374,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/informed_consent_optional"
                     android:textColor="@color/font_color_999"
                     android:textStyle="bold"
@@ -391,7 +386,7 @@
 
             <LinearLayout
                 android:id="@+id/layout_view_marketing"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_marketing"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_marketing"
@@ -406,10 +401,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
                     android:textColor="@color/font_color_999"
-                    app:autoSizeMaxTextSize="@dimen/font_size_small"
-                    app:autoSizeMinTextSize="6dp"
-                    app:autoSizeStepGranularity="1dp"
-                    app:autoSizeTextType="uniform"
                     android:layout_gravity="center_vertical"
                     android:maxLines="1"
                     style="@style/AutoSizeMaxFont_14"/>
