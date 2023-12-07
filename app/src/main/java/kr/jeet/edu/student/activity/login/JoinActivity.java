@@ -216,7 +216,7 @@ public class JoinActivity extends BaseActivity {
 
         String name = mEditName.getText().toString();
 
-        if(TextUtils.isEmpty(name)) {
+        if(Utils.isEmptyContainSpace(name)) {
             Toast.makeText(mContext, R.string.empty_name, Toast.LENGTH_SHORT).show();
             showKeyboard(mEditName);
             return false;
@@ -267,6 +267,7 @@ public class JoinActivity extends BaseActivity {
 
         // 정규식 (숫자, 영문 포함 최소 8글자)
         Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$");
+        //Pattern pattern = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$");
         Matcher matcher = pattern.matcher(pwd);
 
         if(!matcher.find()) {
@@ -293,7 +294,7 @@ public class JoinActivity extends BaseActivity {
     private void userJoin() {
         // 회원가입 요청
         SignupRequest request = new SignupRequest();
-        request.name = mEditName.getText().toString();
+        request.name = mEditName.getText().toString().trim().replaceAll("\\s+", " ");
         //request.phoneNumber = mEditPhone1.getText().toString();
         request.phoneNumber = _authPhoneNoView.getAuthPhoneNo();
 

@@ -227,8 +227,10 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.managerPhoneNumber = mInfo.phoneNumber;
 
         str = mEtConsultContent.getText().toString();
+        //str = mEtConsultContent.getText().toString().replaceAll("\\s+$", ""); // 오른쪽 공백만 제거
 
-        request.memo = str;
+        if (Utils.isEmptyContainSpace(str)) request.memo = str.trim();
+        else request.memo = str;
         request.phoneNumber = _phoneNumber.replace("-", "");
         request.smsSender = _acaTel.replace("-", "");
 
@@ -249,15 +251,22 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nsmsSender: " + request.smsSender
         );
 
-        if (request.counselDate.equals("") ||
-                request.memo.equals("")){
+        if (request.counselDate.equals("")) {
+            Toast.makeText(mContext, R.string.please_date, Toast.LENGTH_SHORT).show();
+
+        } else if (request.memo.equals("")) {
             Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
+            showKeyboard(mEtConsultContent);
 
-        } else if(TextUtils.isEmpty(request.acaCode) ||
-                TextUtils.isEmpty(request.acaName)) {
+        } else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) {
             requestMemberInfo(_memberSeq, _stCode);
-            Toast.makeText(mContext, "다시 시도해주세요", Toast.LENGTH_SHORT).show();
-
+            showMessageDialog(
+                    getString(R.string.dialog_title_alarm),
+                    getString(R.string.loading_aca_info),
+                    v-> hideMessageDialog(),
+                    null,
+                    false
+            );
         }else{
             showProgressDialog();
             if(RetrofitClient.getInstance() != null) {
@@ -318,10 +327,18 @@ public class ConsultationRequestActivity extends BaseActivity {
                             if (getData != null) {
                                 _acaCode = getData.acaCode;
                                 _acaName = getData.acaName;
+                                PreferenceUtil.setAcaCode(mContext, getData.acaCode);
+                                PreferenceUtil.setAcaName(mContext, getData.acaName);
                             }
 
                         }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            // TODO : 응답 코드에 따른 Toast 처리
+                            if (response.code() == RetrofitApi.RESPONSE_CODE_BINDING_ERROR) {
+
+                            } else if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+
+                            }
+
                             LogMgr.e(TAG, "requestMemberInfo() errBody : " + response.errorBody().string());
                         }
 
@@ -335,7 +352,7 @@ public class ConsultationRequestActivity extends BaseActivity {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
                     hideProgressDialog();
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }

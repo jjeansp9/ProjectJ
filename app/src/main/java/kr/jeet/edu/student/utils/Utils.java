@@ -654,7 +654,41 @@ public class Utils {
     /**
     * 한글(자음,모음 비허용), 영어, 공백만 허용, 이외의 문자를 입력했는지 체크
     * */
-    public static boolean nameCheck(String str){ return Pattern.compile("^[a-zA-Z가-힣\\s]+$").matcher(str).find(); }
+    //public static boolean nameCheck(String str){ return Pattern.compile("^[a-zA-Z가-힣\\s]+$").matcher(str).find(); }
+    public static boolean nameCheck(String str){ return Pattern.compile("^[가-힣A-Za-z\\s]{2,}$").matcher(str).find(); }
+    /**
+    * 공백 체크
+    * */
+    public static boolean isEmptyContainSpace(CharSequence str) {
+        if(str == null) return true;
+        String trimStr = str.toString().trim();
+        return TextUtils.isEmpty(trimStr);
+    }
+
+    // ios 회원가입 체크 패턴
+//    static func checkUserName(_ text: String) -> Bool {
+//        let reg = ("^[가-힣A-Za-z\\s]{2,}$")
+//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
+//        return predicate.evaluate(with: text)
+//    }
+//
+//    static func checkPassword(_ text: String) -> Bool {
+//        let reg = ("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$")
+//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
+//        return predicate.evaluate(with: text)
+//    }
+//
+//    static func checkId(_ text: String) -> Bool {
+//        let reg = ("^[A-Za-z\\d_-]{4,100}$")
+//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
+//        return predicate.evaluate(with: text)
+//    }
+//
+//    static func checkMobileNumber(_ text: String) -> Bool {
+//        let reg = ("^01[0-1, 7][0-9]{7,8}$")
+//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
+//        return predicate.evaluate(with: text)
+//    }
 }
 
 

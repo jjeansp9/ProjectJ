@@ -96,7 +96,9 @@
     <string name="input_auth_number">인증번호 입력</string>
     <string name="auth_complete">인증이 완료되었습니다.</string>
     <string name="timeout">시간초과</string>
+    <string name="please_date">상담 희망일을 선택해주세요.</string>
     <string name="please_content">내용을 입력해주세요.</string>
+    <string name="loading_aca_info">캠퍼스 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.</string>
     <string name="check_duplicate">중복체크</string>
     <string name="duplicate_id">중복된 아이디입니다.</string>
     <string name="duplicate_phone_no">이미 사용 중인 휴대폰 번호입니다.</string>
@@ -325,9 +327,7 @@
          2) 수업 무단결석 할 경우에는 보강수업 없으며 수강료차감 불가합니다.\n
          3) 무단결석 기준: 수업이 있는 전날까지 접수되는 결석까지만 일반결석으로 하고, 수업 당일부터 접수되는 결석부터는 무단결석으로 간주합니다.
     </string>
-    <string name="informed_consent_notice_bottom">
-        <font color="@color/red">※ 위 내용 미동의시 테스트 응시가 불가 하오니 반드시 내용 확인 후 응시 바랍니다.</font>
-    </string>
+    <string name="informed_consent_notice_bottom">※ 위 내용 미동의시 테스트 응시가 불가 하오니 반드시 내용 확인 후 응시 바랍니다.</string>
     <string name="informed_consent_check_all">약관 전체동의</string>
     <string name="informed_consent_privacy_collection">개인정보 수집 및 이용</string>
     <string name="informed_consent_privacy_third_party">개인정보 제3자 정보 제공</string>

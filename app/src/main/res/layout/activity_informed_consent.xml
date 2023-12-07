@@ -129,6 +129,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_view_collection"
                 app:layout_constraintTop_toBottomOf="@id/layout_check_all"
                 android:layout_marginTop="16dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -142,6 +143,7 @@
                     android:background="@drawable/selector_bt_test_check"
                     android:checked="true"
                     android:button="@null"
+                    android:layout_gravity="center_vertical"
                     android:clickable="false"/>
 
                 <TextView
@@ -151,37 +153,42 @@
                     android:paddingVertical="@dimen/informed_consent_check_padding"
                     android:paddingStart="@dimen/informed_consent_check_padding_start"
                     android:text="@string/informed_consent_privacy_collection"
-                    android:textSize="@dimen/font_size_small"
-                    android:textColor="@color/font_color_default"/>
+                    android:textColor="@color/font_color_default"
+                    android:layout_gravity="center_vertical"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:text="@string/informed_consent_required"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/red_sub"
-                    android:textStyle="bold"/>
-
+                    android:textStyle="bold"
+                    android:layout_gravity="center_vertical"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/layout_view_collection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_collection"
+                app:layout_constraintStart_toEndOf="@id/layout_privacy_collection"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_collection"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:stateListAnimator="@xml/animate_button_push"
                 android:orientation="horizontal"
+                android:gravity="end"
                 android:paddingVertical="4dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/font_color_999"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"
                     android:layout_gravity="center_vertical"/>
                 <ImageView
                     android:layout_width="20dp"
@@ -195,6 +202,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_view_third_party"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_collection"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -215,17 +223,19 @@
                     android:paddingVertical="@dimen/informed_consent_check_padding"
                     android:paddingStart="@dimen/informed_consent_check_padding_start"
                     android:text="@string/informed_consent_privacy_third_party"
-                    android:textSize="@dimen/font_size_small"
-                    android:textColor="@color/font_color_default"/>
+                    android:textColor="@color/font_color_default"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:text="@string/informed_consent_required"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/red_sub"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
             </LinearLayout>
 
@@ -238,15 +248,18 @@
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_third_party"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_third_party"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/layout_privacy_third_party"
                 android:stateListAnimator="@xml/animate_button_push"
                 android:orientation="horizontal"
+                android:gravity="end"
                 android:paddingVertical="4dp">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/font_color_999"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"
                     android:layout_gravity="center_vertical"/>
                 <ImageView
                     android:layout_width="20dp"
@@ -260,6 +273,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_view_consignment"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_third_party"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -280,8 +294,9 @@
                     android:paddingVertical="@dimen/informed_consent_check_padding"
                     android:paddingStart="@dimen/informed_consent_check_padding_start"
                     android:text="@string/informed_consent_privacy_consignment"
-                    android:textSize="@dimen/font_size_small"
-                    android:textColor="@color/font_color_default"/>
+                    android:textColor="@color/font_color_default"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -291,9 +306,10 @@
                     app:layout_constraintBottom_toBottomOf="@id/cb_check_privacy_consignment"
                     android:layout_marginStart="2dp"
                     android:text="@string/informed_consent_required"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/red_sub"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
             </LinearLayout>
 
@@ -306,16 +322,23 @@
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_consignment"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_consignment"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/layout_privacy_consignment"
                 android:stateListAnimator="@xml/animate_button_push"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="4dp"
+                android:gravity="end">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/font_color_999"
-                    android:layout_gravity="center_vertical"/>
+                    app:autoSizeMaxTextSize="@dimen/font_size_small"
+                    app:autoSizeMinTextSize="6dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
+                    android:layout_gravity="center_vertical"
+                    android:maxLines="1"
+                    style="@style/AutoSizeMaxFont_14"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -328,6 +351,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/layout_view_marketing"
                 app:layout_constraintTop_toBottomOf="@id/layout_privacy_consignment"
                 android:layout_marginTop="8dp"
                 android:stateListAnimator="@xml/animate_button_push">
@@ -348,17 +372,19 @@
                     android:paddingVertical="@dimen/informed_consent_check_padding"
                     android:paddingStart="@dimen/informed_consent_check_padding_start"
                     android:text="@string/informed_consent_privacy_marketing"
-                    android:textSize="@dimen/font_size_small"
-                    android:textColor="@color/font_color_default"/>
+                    android:textColor="@color/font_color_default"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:text="@string/informed_consent_optional"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/font_color_999"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    style="@style/AutoSizeMaxFont_14"
+                    android:maxLines="1"/>
 
             </LinearLayout>
 
@@ -370,16 +396,23 @@
                 app:layout_constraintTop_toTopOf="@id/layout_privacy_marketing"
                 app:layout_constraintBottom_toBottomOf="@id/layout_privacy_marketing"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/layout_privacy_marketing"
                 android:stateListAnimator="@xml/animate_button_push"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="4dp"
+                android:gravity="end">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/informed_consent_view_content"
-                    android:textSize="@dimen/font_size_small"
                     android:textColor="@color/font_color_999"
-                    android:layout_gravity="center_vertical"/>
+                    app:autoSizeMaxTextSize="@dimen/font_size_small"
+                    app:autoSizeMinTextSize="6dp"
+                    app:autoSizeStepGranularity="1dp"
+                    app:autoSizeTextType="uniform"
+                    android:layout_gravity="center_vertical"
+                    android:maxLines="1"
+                    style="@style/AutoSizeMaxFont_14"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
@@ -390,14 +423,14 @@
                 android:id="@+id/tv_informed_consent_content_bottom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/layout_view_marketing"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginVertical="16dp"
                 android:text="@string/informed_consent_notice_bottom"
-                android:textColor="@color/font_color_default"
-                android:textSize="@dimen/font_size" />
+                android:textColor="@color/blue"
+                android:textSize="@dimen/font_size"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_view_marketing" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

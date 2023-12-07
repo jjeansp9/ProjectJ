@@ -337,12 +337,12 @@ public class EditQNAActivity extends BaseActivity {
             Toast.makeText(mContext, R.string.msg_empty_school_grade, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(TextUtils.isEmpty(etSubject.getText())) {   //제목
+        if(Utils.isEmptyContainSpace(etSubject.getText())) {   //제목
             showKeyboard(etSubject);
             Toast.makeText(mContext, R.string.error_message_empty_subject, Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(TextUtils.isEmpty(etContent.getText())) {   //내용
+        if(Utils.isEmptyContainSpace(etContent.getText())) {   //내용
             showKeyboard(etContent);
             Toast.makeText(mContext, R.string.error_message_empty_content, Toast.LENGTH_SHORT).show();
             return false;
@@ -444,6 +444,7 @@ public class EditQNAActivity extends BaseActivity {
         QnaAddRequest qnaInsert = new QnaAddRequest();
 
         String isOpen = "";
+        String str = "";
 
         if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
         else isOpen = IS_OPEN;
@@ -461,8 +462,16 @@ public class EditQNAActivity extends BaseActivity {
         qnaInsert.acaGubunCode = selectedGrade.gubunCode;
         qnaInsert.acaGubunName = selectedGrade.gubunName;
 
-        qnaInsert.title = etSubject.getText().toString(); // 제목
-        qnaInsert.content = etContent.getText().toString(); // 내용
+        // 제목
+        str = etSubject.getText().toString();
+        if (Utils.isEmptyContainSpace(str)) qnaInsert.title = str.trim();
+        else qnaInsert.title = str;
+
+        // 내용
+        str = etContent.getText().toString();
+        if (Utils.isEmptyContainSpace(str)) qnaInsert.content = str.trim();
+        else  qnaInsert.content = str;
+
         qnaInsert.isOpen = isOpen; // 공개여부 [Y/N]
 
         LogMgr.e(TAG, "== requestQna ADD Data ==" +
@@ -488,14 +497,22 @@ public class EditQNAActivity extends BaseActivity {
         QnaEditRequest qnaUpdate = new QnaEditRequest();
 
         String isOpen = "";
+        String str = "";
 
         if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
         else isOpen = IS_OPEN;
 
         qnaUpdate.seq = _boardSeq;
         qnaUpdate.userGubun = _userGubun;
-        qnaUpdate.title = etSubject.getText().toString();
-        qnaUpdate.content = etContent.getText().toString();
+        // 제목
+        str = etSubject.getText().toString();
+        if (Utils.isEmptyContainSpace(str)) qnaUpdate.title = str.trim();
+        else qnaUpdate.title = str;
+
+        // 내용
+        str = etContent.getText().toString();
+        if (Utils.isEmptyContainSpace(str)) qnaUpdate.content = str.trim();
+        else  qnaUpdate.content = str;
         qnaUpdate.isOpen = isOpen;
 
         LogMgr.e(TAG, "== requestQna Edit Data  ==" +

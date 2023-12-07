@@ -714,16 +714,16 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
         else gender =2;
 
         if (writeMode.equals(Constants.WRITE_EDIT)) request = new LevelTestRequest();
-        request.name = mEtName.getText().toString(); // 학생이름 [필수]
-        request.birth = mTvBirthDate.getText().toString(); // 생년월일 [필수]
+        request.name = mEtName.getText().toString().trim().replaceAll("\\s+", " "); // 학생이름 [필수] - 앞뒤 공백제거, 연속된 공백은 단일공백으로 변경
+        request.birth = mTvBirthDate.getText().toString().trim(); // 생년월일 [필수]
         request.sex = gender; // 성별 (1 남자, 2 여자) [필수]
         request.address = mTvAddress.getText().toString(); // 주소 (도로명주소) [선택]
         request.addressSub = mEtAddressDetail.getText().toString(); // 상세주소 [선택]
         request.scCode = _selectedSchoolData.scCode; // 학교코드 [필수]
         request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), ""); // 학년 [필수]
-        request.phoneNumber = mEtStuPhone.getText().toString(); // 학생 전화번호 [선택]
-        request.parentPhoneNumber = mEtparentPhone.getText().toString(); // 학부모 연락처 [필수]
-        request.parentName = mEtParentName.getText().toString(); // 학부모 성함 [필수]
+        request.phoneNumber = mEtStuPhone.getText().toString().trim(); // 학생 전화번호 [선택]
+        request.parentPhoneNumber = mEtparentPhone.getText().toString().trim(); // 학부모 연락처 [필수]
+        request.parentName = mEtParentName.getText().toString().trim(); // 학부모 성함 [필수]
         request.reason = _stReason; // 유입경로 [선택]
         str = mTvReserveDate.getText().toString() + " " + mSpinnerTestTime.getText().toString();
         request.reservationDate = str; // 테스트예약일 [필수]
@@ -762,7 +762,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 //        3. 사업자등록번호 : 12* ** *1234
 //        4. 휴대전화번호 : 010 **** 1234
 
-        if (request.name.equals("")) {
+        if (Utils.isEmptyContainSpace(request.name)) {
             Toast.makeText(mContext, R.string.stu_name_empty, Toast.LENGTH_SHORT).show();
             showKeyboard(mEtName);
 
@@ -796,7 +796,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             _schoolListBottomSheetDialog = new SchoolListBottomSheetDialog(_schoolListAdapter);
             _schoolListBottomSheetDialog.show(getSupportFragmentManager(), TAG);
 
-        } else if (request.phoneNumber.equals("")) {
+        } else if (Utils.isEmptyContainSpace(request.phoneNumber)) {
             Toast.makeText(mContext, R.string.phone_empty, Toast.LENGTH_SHORT).show();
             showKeyboard(mEtStuPhone);
 
@@ -804,11 +804,11 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
             Toast.makeText(mContext, R.string.write_phone_impossible, Toast.LENGTH_SHORT).show();
             showKeyboard(mEtStuPhone);
 
-        } else if (request.parentName.equals("")) {
+        } else if (Utils.isEmptyContainSpace(request.parentName)) {
             Toast.makeText(mContext, R.string.parent_name_empty, Toast.LENGTH_SHORT).show();
             showKeyboard(mEtParentName);
 
-        } else if (request.parentPhoneNumber.equals("")) {
+        } else if (Utils.isEmptyContainSpace(request.parentPhoneNumber)) {
             Toast.makeText(mContext, R.string.parent_phone_empty, Toast.LENGTH_SHORT).show();
             showKeyboard(mEtparentPhone);
 

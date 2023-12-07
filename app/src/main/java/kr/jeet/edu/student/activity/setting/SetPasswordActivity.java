@@ -21,6 +21,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,15 +64,23 @@ public class SetPasswordActivity extends BaseActivity {
         mEtPwConfirm = findViewById(R.id.et_set_pw_confirm);
         mCheckPwTxt = findViewById(R.id.check_txt_pw);
 
-        mEditList = new EditText[]{mEtPw, mEtPwConfirm};
         new Handler().postDelayed(() -> showKeyboard(mEtPw), Constants.SHOW_KEBOARD_DELAY);
-        mEtPw.addTextChangedListener(new TextWatcher() {
+        mEditList = new EditText[]{mEtPw, mEtPwConfirm};
+
+        setTextWatcher(mEtPw);
+        setTextWatcher(mEtPwConfirm);
+    }
+
+    private void setTextWatcher(EditText et){
+        et.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
             @Override
             public void afterTextChanged(Editable editable) {
+                Utils.removeSpace(et);
                 if(checkPassword(editable.toString())) {
                     mCheckPwTxt.setVisibility(View.INVISIBLE);
                 }

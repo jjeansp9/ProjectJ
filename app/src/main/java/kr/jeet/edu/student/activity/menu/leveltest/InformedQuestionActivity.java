@@ -708,24 +708,26 @@ public class InformedQuestionActivity extends BaseActivity {
     }
 
     private boolean checked(){
-        if (!mEtStName1.getText().toString().equals("") && !mEtStTime1.getText().toString().equals("") && !mEtStDate1.getText().toString().equals("") ||
-                !mEtStTime2.getText().toString().equals("") && !mEtStDate2.getText().toString().equals("") ||
-                !mEtStTime3.getText().toString().equals("") && !mEtStDate3.getText().toString().equals("") ||
-                !mEtStTime4.getText().toString().equals("") && !mEtStDate4.getText().toString().equals("")
+        if (
+                !Utils.isEmptyContainSpace(mEtStName1.getText()) && !Utils.isEmptyContainSpace(mEtStTime1.getText()) && !Utils.isEmptyContainSpace(mEtStDate1.getText()) ||
+                !Utils.isEmptyContainSpace(mEtStTime2.getText()) && !Utils.isEmptyContainSpace(mEtStDate2.getText()) ||
+                !Utils.isEmptyContainSpace(mEtStTime3.getText()) && !Utils.isEmptyContainSpace(mEtStDate3.getText()) ||
+                !Utils.isEmptyContainSpace(mEtStTime4.getText()) && !Utils.isEmptyContainSpace(mEtStDate4.getText())
         ){
-            if (!mEtLearningProc1.getText().toString().equals("") ||
-                    !mEtLearningProc2.getText().toString().equals("") ||
-                    !mEtLearningProc3.getText().toString().equals("")
+            if (
+                    !Utils.isEmptyContainSpace(mEtLearningProc1.getText()) ||
+                    !Utils.isEmptyContainSpace(mEtLearningProc2.getText()) ||
+                    !Utils.isEmptyContainSpace(mEtLearningProc3.getText())
             ){
                 return true;
             }else{
-                if (mEtLearningProc1.getText().toString().equals("")){
+                if (Utils.isEmptyContainSpace(mEtLearningProc1.getText())){
                     showKeyboard(mEtLearningProc1);
 
-                } else if (mEtLearningProc2.getText().toString().equals("")){
+                } else if (Utils.isEmptyContainSpace(mEtLearningProc1.getText())){
                     showKeyboard(mEtLearningProc2);
 
-                } else if (mEtLearningProc3.getText().toString().equals("")){
+                } else if (Utils.isEmptyContainSpace(mEtLearningProc1.getText())){
                     showKeyboard(mEtLearningProc3);
                 }
                 Toast.makeText(mContext, R.string.write_process_empty, Toast.LENGTH_SHORT).show();
@@ -733,31 +735,31 @@ public class InformedQuestionActivity extends BaseActivity {
             }
 
         }else{
-            if (mEtStName1.getText().toString().equals("")) {
+            if (Utils.isEmptyContainSpace(mEtStName1.getText())) {
                 checkEtStudy(mEtStName1);
 
-            } else if (mEtStTime1.getText().toString().equals("")) {
+            } else if (Utils.isEmptyContainSpace(mEtStTime1.getText())) {
                 checkEtStudy(mEtStTime1);
 
-            } else if (mEtStDate1.getText().toString().equals("")){
+            } else if (Utils.isEmptyContainSpace(mEtStDate1.getText())){
                 checkEtStudy(mEtStDate1);
 
-            } else if (mEtStTime2.getText().toString().equals("")) {
+            } else if (Utils.isEmptyContainSpace(mEtStTime2.getText())) {
                 checkEtStudy(mEtStTime2);
 
-            } else if (mEtStDate2.getText().toString().equals("")){
+            } else if (Utils.isEmptyContainSpace(mEtStDate2.getText())){
                 checkEtStudy(mEtStDate2);
 
-            } else if (mEtStTime3.getText().toString().equals("")) {
+            } else if (Utils.isEmptyContainSpace(mEtStTime3.getText())) {
                 checkEtStudy(mEtStTime3);
 
-            }else if(mEtStDate3.getText().toString().equals("")){
+            }else if(Utils.isEmptyContainSpace(mEtStDate3.getText())){
                 checkEtStudy(mEtStDate3);
 
-            } else if (mEtStTime4.getText().toString().equals("")) {
+            } else if (Utils.isEmptyContainSpace(mEtStTime4.getText())) {
                 checkEtStudy(mEtStTime4);
 
-            }else if (mEtStDate4.getText().toString().equals("")){
+            }else if (Utils.isEmptyContainSpace(mEtStDate4.getText())){
                 checkEtStudy(mEtStDate4);
 
             }

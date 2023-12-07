@@ -30,25 +30,15 @@ import kr.jeet.edu.student.sns.NaverLoginManager;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.play.core.appupdate.AppUpdateInfo;
-import com.google.android.play.core.appupdate.AppUpdateManager;
-import com.google.android.play.core.appupdate.AppUpdateManagerFactory;
-import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager;
-import com.google.android.play.core.install.model.AppUpdateType;
-import com.google.android.play.core.install.model.UpdateAvailability;
-import com.google.android.play.core.tasks.OnSuccessListener;
-import com.google.android.play.core.tasks.Task;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.normal.TedPermission;
 
@@ -76,7 +66,7 @@ public class IntroActivity extends BaseActivity {
 
     private int stCodeParent = 0;
 
-    private AppUpdateManager appUpdateManager = null;
+    //private AppUpdateManager appUpdateManager = null;
     private final int REQUEST_INAPP_UPDATE = 1000;
 
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -181,38 +171,38 @@ public class IntroActivity extends BaseActivity {
         initView();
         checkPermissions();
 
-        if (LogMgr.DEBUG) updateTest();
+        //if (LogMgr.DEBUG) updateTest();
     }
 
-    private void updateTest() {
-        if(appUpdateManager == null) {
-            appUpdateManager = AppUpdateManagerFactory.create(mContext);
-            Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
-
-            appUpdateInfoTask.addOnSuccessListener(updateInfo -> {
-                if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
-                    try {
-                        requestVersionUpdate(updateInfo);
-                    }catch (Exception e) {
-                        LogMgr.e(TAG, "FAIL REQUEST UPDATE\n" + Log.getStackTraceString(e));
-                    }
-                }
-            });
-            appUpdateInfoTask.addOnFailureListener(e -> {
-                LogMgr.e(TAG, "FAIL REQUEST APP_UPDATE_INFO\n" + Log.getStackTraceString(e));
-                startIntro();
-            });
-        }
-    }
-
-    private void requestVersionUpdate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {
-        if (appUpdateManager != null) {
-            appUpdateManager.startUpdateFlowForResult(
-                    appUpdateInfo, AppUpdateType.IMMEDIATE, IntroActivity.this,
-                    REQUEST_INAPP_UPDATE
-            );
-        }
-    }
+//    private void updateTest() {
+//        if(appUpdateManager == null) {
+//            appUpdateManager = AppUpdateManagerFactory.create(mContext);
+//            Task<AppUpdateInfo> appUpdateInfoTask = appUpdateManager.getAppUpdateInfo();
+//
+//            appUpdateInfoTask.addOnSuccessListener(updateInfo -> {
+//                if (updateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+//                    try {
+//                        requestVersionUpdate(updateInfo);
+//                    }catch (Exception e) {
+//                        LogMgr.e(TAG, "FAIL REQUEST UPDATE\n" + Log.getStackTraceString(e));
+//                    }
+//                }
+//            });
+//            appUpdateInfoTask.addOnFailureListener(e -> {
+//                LogMgr.e(TAG, "FAIL REQUEST APP_UPDATE_INFO\n" + Log.getStackTraceString(e));
+//                startIntro();
+//            });
+//        }
+//    }
+//
+//    private void requestVersionUpdate(AppUpdateInfo appUpdateInfo) throws IntentSender.SendIntentException {
+//        if (appUpdateManager != null) {
+//            appUpdateManager.startUpdateFlowForResult(
+//                    appUpdateInfo, AppUpdateType.IMMEDIATE, IntroActivity.this,
+//                    REQUEST_INAPP_UPDATE
+//            );
+//        }
+//    }
 
     private void initIntentData() {
         Intent intent = getIntent();
