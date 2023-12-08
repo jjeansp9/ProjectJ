@@ -134,6 +134,23 @@ public class FCMManager {
         _context.sendBroadcast(sendIntent);
         LogMgr.e(TAG, "sendBroadcast ~ " + message.pushType);
     }
+
+//    key = acaCode : value = 5
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = pushId : value = qXTFtUuS7t
+//2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = stCode : value = 74846
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = body : value = 테스트중(2023-12-08~)
+//2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = date : value = 2023-12-08 14:01:25
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = title : value = [수지 중등영재센터] 캠퍼스일정
+//2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = userGubun : value = 2
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = connSeq : value = 359
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = memberSeq : value = 10
+//            2023-12-08 14:01:25.715 14114-25317 firebase                kr.jeet.edu.student                  E  key = pushType : value = SCHEDULE
+//2023-12-08 14:01:25.717 14114-25317 FCMManager              kr.jeet.edu.student                  D  isReject = false
+//            2023-12-08 14:01:25.750 14114-25317 FCMManager              kr.jeet.edu.student                  E  sendBroadcast ~ SCHEDULE
+//
+//    2023-12-08 14:01:33.821 14114-14114 IntroActivity           kr.jeet.edu.student                  E  push msg
+//2023-12-08 14:01:33.821 14114-14114 IntroActivity           kr.jeet.edu.student                  E  msg = (답변처리중) QnA 테스트12, 2
+
     public void requestPushReceivedToServer(List<String> pushId){
         if (RetrofitClient.getInstance() != null) {
             RetrofitApi mRetrofitApi = RetrofitClient.getApiInterface();

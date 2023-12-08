@@ -751,7 +751,7 @@
     <string name="description_file_open_after_download">선택한 파일을 다운로드하였습니다.\n파일을 여시겠습니까?</string>
 
     <string name="title_report_card">성적표</string>
-    <string name="empty_menu_list_report_card">성적표 내역이 없습니다.</string>
+    <string name="empty_menu_list_report_card">성적표 전송내역이 없습니다.</string>
     <string name="empty_list_report_card">성적표 정보가 없습니다.</string>
     <string name="reportcard_binding_error">잘못된 성적표 정보입니다.</string>
     <string name="reportcard_not_found">성적표 정보를 찾을 수 없습니다.</string>

@@ -133,9 +133,11 @@ public class MenuTestReserveActivity extends BaseActivity {
         requestTestReserveList();
         requestTestTime();
 
-        if (_stCode <= 0) {
-            btnReserve.setOnClickListener(null);
-            btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+        if (PreferenceUtil.getUserIsOriginal(mContext).equals(Constants.MEMBER)) {
+            if (_stCode <= 0) {
+                btnReserve.setOnClickListener(null);
+                btnReserve.setBackgroundResource(R.drawable.bt_click_cancel);
+            }
         }
     }
 
