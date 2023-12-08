@@ -172,8 +172,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 if (_pushData != null) {
                     _currentSeq = _pushData.connSeq;
                     new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-
-                    LogMgr.e("EVENT4", _currentSeq+"");
                 }
             }
         }

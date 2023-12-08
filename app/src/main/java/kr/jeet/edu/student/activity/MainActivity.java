@@ -99,11 +99,6 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
-    // 작성시 trim() 관련
-    // 1. 상담요청 내용
-    // 2. 테스트예약 작성 - 앞 빈칸 제거
-    // 3. qna 작성, 수정
-
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;

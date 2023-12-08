@@ -111,7 +111,6 @@ public class PhotoViewActivity extends BaseActivity {
 
         if (Utils.isLandscapeMode(mContext)) { // 가로모드일때
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layoutHeader.getLayoutParams();
-            params.topMargin = statusBarHeight(mContext); // 상단의 상태 바 size만큼 margin 값 주기 - 스와이프로 상태표시줄 내릴때 겹쳐져서 marginTop 설정
             params.leftMargin = Utils.fromDpToPx(30); // 양쪽 마진 설정. 네비게이션바 겹쳐져서 다운로드 아이콘 클릭 잘 안됨
             params.rightMargin = Utils.fromDpToPx(30);
             layoutHeader.setLayoutParams(params);

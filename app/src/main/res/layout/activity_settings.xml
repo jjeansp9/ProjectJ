@@ -37,7 +37,7 @@
                 android:paddingVertical="@dimen/layout_margin"
                 android:layout_marginHorizontal="@dimen/layout_margin"
                 android:background="@drawable/bg_setting_layout"
-                >
+                android:alpha="0">
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/guideline_set_first_v25"
