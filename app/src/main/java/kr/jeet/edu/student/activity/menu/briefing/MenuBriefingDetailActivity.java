@@ -151,6 +151,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
     private void initIntentData(){
 
         _stCode = PreferenceUtil.getUserSTCode(mContext);
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
+        _userGubun = PreferenceUtil.getUserGubun(mContext);
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -170,12 +172,11 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 if (_pushData != null) {
                     _currentSeq = _pushData.connSeq;
                     new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+
+                    LogMgr.e("EVENT4", _currentSeq+"");
                 }
             }
         }
-
-        _memberSeq = PreferenceUtil.getUserSeq(mContext);
-        _userGubun = PreferenceUtil.getUserGubun(mContext);
     }
 
     void initAppbar() {

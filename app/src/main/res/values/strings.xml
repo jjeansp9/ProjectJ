@@ -303,6 +303,8 @@
     <string name="address_empty">주소를 입력해주세요.</string>
     <string name="address_sub_empty">상세주소를 입력해주세요.</string>
     <string name="reason_empty">유입 경로를 선택해주세요.</string>
+    <string name="learning_process_hint">사용교재</string>
+    <string name="test_reserve_memo_hint">ex)\n기본적인 학생의 성향\n학원에 부탁하고 싶은 말씀\n커리큘럼 등</string>
 
     <string name="error_message_unselected_campus">캠퍼스를 선택해 주세요.</string>
     <string name="error_message_empty_subject">제목을 작성해 주세요.</string>
@@ -503,11 +505,11 @@
     <string name="informed_question_update_title">사전질문 수정</string>
     <string name="informed_question_no_1"><font color="@color/red">* </font>등원을 희망하시는 요일을 체크해주세요</string>
     <string name="informed_question_no_2"><font color="@color/red">* </font>테스트 전까지 학습한 방법을 작성해주세요</string>
-    <string name="informed_question_no_3"><font color="@color/red">* </font>진도/심화학습 여부 (학습한 과정을 적어주세요)</string>
-    <string name="informed_question_no_4">악어수학 입학 시 희망하시는 분야 (초등부만)</string>
-    <string name="informed_question_no_5">입학 희망 고등학교를 선택해주세요</string>
+    <string name="informed_question_no_3"><font color="@color/red">* </font>진도/심화학습 여부 (학습한 과정을 최대한 상세히 적어주세요. 학부모 직접작성)</string>
+    <string name="informed_question_no_4">악어수학 입학 시 희망하시는 분야 (중복선택가능)</string>
+    <string name="informed_question_no_5">입학 희망 고등학교를 선택해주세요 (중복선택가능)</string>
     <string name="informed_question_no_6">지트 중등영재센터 입학 희망 여부</string>
-    <string name="informed_question_no_7">커리큘럼 및 궁금하신 부분 등을 남겨주세요</string>
+    <string name="informed_question_no_7">궁금하신 부분 등을 남겨주세요</string>
     <string name="informed_question_sel_day_1">월, 수, 금</string>
     <string name="informed_question_sel_day_2">화, 목, 토</string>
     <string name="informed_question_sel_day_3">실력점검</string>

@@ -481,10 +481,7 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    if (_pushMessage.memberSeq != _memberSeq) {
-                        _pushMessage = null;
-                        return;
-                    }
+                    LogMgr.e("EVENT3", _pushMessage.pushType);
                     startDetailActivity(MenuBriefingDetailActivity.class);
                 }
                 break;

@@ -157,6 +157,10 @@ public class SelectStudentActivity extends BaseActivity {
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_ATTEND: // 출결상태
                 {
+                    if (_pushMessage.memberSeq != _parentSeq) {
+                        _pushMessage = null;
+                        return;
+                    }
                     if (_childCnt >= TWO_PEOPLE){
                         PushPopupDialog pushPopupDialog = new PushPopupDialog(this, _pushMessage);
                         pushPopupDialog.setOnOkButtonClickListener(view -> {
@@ -187,10 +191,6 @@ public class SelectStudentActivity extends BaseActivity {
                 case MSG_TYPE_PT: // 설명회예약
                 {
                     LogMgr.e(TAG, "pushConnSeq: " + _pushMessage.connSeq);
-                    if (_pushMessage.memberSeq != _parentSeq) {
-                        _pushMessage = null;
-                        return;
-                    }
                     if (_childCnt >= TWO_PEOPLE) startPushActivity(MenuBriefingDetailActivity.class);
                 }
                     break;

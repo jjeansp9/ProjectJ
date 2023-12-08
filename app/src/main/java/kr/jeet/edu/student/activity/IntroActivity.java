@@ -626,9 +626,11 @@ public class IntroActivity extends BaseActivity {
 
         PreferenceUtil.setStuSeq(mContext, seq);
         PreferenceUtil.setUserSTCode(mContext, stCode);
-
         Intent intent = new Intent(mContext, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        if(_pushMessage != null) {
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+        }
         startActivity(intent);
         finish();
     }

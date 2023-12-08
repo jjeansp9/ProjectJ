@@ -26,6 +26,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -664,31 +665,13 @@ public class Utils {
         String trimStr = str.toString().trim();
         return TextUtils.isEmpty(trimStr);
     }
-
-    // ios 회원가입 패턴
-//    static func checkUserName(_ text: String) -> Bool {
-//        let reg = ("^[가-힣A-Za-z\\s]{2,}$")
-//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
-//        return predicate.evaluate(with: text)
-//    }
-//
-//    static func checkPassword(_ text: String) -> Bool {
-//        let reg = ("^(?=.*[a-zA-Z])(?=.*\\d)[A-Za-z\\d$~`!@#$%^&*()_+=-?]{8,}$")
-//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
-//        return predicate.evaluate(with: text)
-//    }
-//
-//    static func checkId(_ text: String) -> Bool {
-//        let reg = ("^[A-Za-z\\d_-]{4,100}$")
-//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
-//        return predicate.evaluate(with: text)
-//    }
-//
-//    static func checkMobileNumber(_ text: String) -> Bool {
-//        let reg = ("^01[0-1, 7][0-9]{7,8}$")
-//        let predicate = NSPredicate(format: "SELF MATCHES %@", reg)
-//        return predicate.evaluate(with: text)
-//    }
+    /**
+     * 가로모드 체크
+     * */
+    public static boolean isLandscapeMode(Context context) {
+        int orientation = context.getResources().getConfiguration().orientation;
+        return orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
 }
 
 

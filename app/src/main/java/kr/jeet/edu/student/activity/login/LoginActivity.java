@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class LoginActivity extends BaseActivity {
     private String TAG = LoginActivity.class.getSimpleName();
 
     private EditText mEditId, mEditPw;
+    private LinearLayoutCompat layoutAutoLogin;
     private CheckBox mAutoLoginCb;
     private RetrofitApi mRetrofitApi;
     private EditText[] mEditList;
@@ -117,8 +119,10 @@ public class LoginActivity extends BaseActivity {
         findViewById(R.id.btn_google).setOnClickListener(this);
         findViewById(R.id.btn_apple).setOnClickListener(this);
         findViewById(R.id.btn_login).setOnClickListener(this);
-        findViewById(R.id.checkbox_text).setOnClickListener(this);
+//        findViewById(R.id.checkbox_text).setOnClickListener(this);
 
+        layoutAutoLogin = findViewById(R.id.layout_auto_login);
+        layoutAutoLogin.setOnClickListener(this);
         mAutoLoginCb = (CheckBox) findViewById(R.id.checkbox_login);
         mAutoLoginCb.setChecked(PreferenceUtil.getAutoLogin(mContext));
 
@@ -209,7 +213,7 @@ public class LoginActivity extends BaseActivity {
                 else PreferenceUtil.setAutoLogin(mContext, false);
                 break;
 
-            case R.id.checkbox_text:    //체크박스 범위 확대
+            case R.id.layout_auto_login:    //체크박스 범위 확대
                 mAutoLoginCb.setChecked(!mAutoLoginCb.isChecked());
                 break;
         }

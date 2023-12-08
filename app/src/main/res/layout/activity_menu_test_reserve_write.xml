@@ -275,6 +275,7 @@
                     app:layout_constraintEnd_toStartOf="@id/img_reserve_birth_date_cal"
                     android:paddingHorizontal="@dimen/editbox_padding"
                     android:paddingVertical="@dimen/editbox_padding_vertical"
+                    android:hint="@string/select"
                     android:textSize="@dimen/font_size"
                     android:gravity="center"
                     android:textColor="@color/black"/>
@@ -520,6 +521,7 @@
                 app:layout_constraintEnd_toStartOf="@id/guideline_test_reserve_fourth"
                 android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
+                android:hint="010-000-1234"
                 android:maxLines="1"
                 android:maxLength="20"
                 android:inputType="number"
