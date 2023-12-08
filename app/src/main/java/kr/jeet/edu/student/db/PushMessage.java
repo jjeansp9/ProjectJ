@@ -95,10 +95,13 @@ public class PushMessage implements Parcelable {
 
     public static PushMessage buildFromMap(Map<String, String> map, Context context) {
         LocalDateTime initDate = LocalDateTime.now();
-        if(map.containsKey("date")) {
-            String dateStr = map.get("date");
-            if (dateStr != null) initDate = LocalDateTime.parse(dateStr, dateTimeFormatter);
-        }
+        try{
+            if(map.containsKey("date")) {
+                String dateStr = map.get("date");
+                if (dateStr != null) initDate = LocalDateTime.parse(dateStr, dateTimeFormatter);
+            }
+        }catch (Exception e) {}
+
         long id = 0L;
         String title = map.containsKey("title")? map.get("title") : "";
         String content = map.containsKey("body")? map.get("body") : "";

@@ -46,6 +46,7 @@ public class FCMManager {
     public static final String MSG_TYPE_TEST_CNL = "LEVEL_CNL";    //테스트예약 취소
     public static final String MSG_TYPE_COUNSEL = "COUNSEL";    //상담요청
     public static final String MSG_TYPE_VIDEO = "VIDEO";    //동영상
+    public static final String MSG_TYPE_REPORTCARD = "REPORT";  //성적표
     public static final String MSG_TYPE_ACA_SCHEDULE = "SCHEDULE";    //캠퍼스일정
     public static final String MSG_TYPE_QNA_ING = "QNA_ING";    // qna 접수
     public static final String MSG_TYPE_QNA_COMPLETE = "QNA_COMPLETE";    // qna 접수 완료
@@ -83,11 +84,7 @@ public class FCMManager {
             if (PreferenceUtil.getNotificationAnnouncement(_context) == false) {
                 isReject = true;
             }
-        } else if (message.pushType.equals(MSG_TYPE_PT)) {
-            if (PreferenceUtil.getNotificationSeminar(_context) == false) {
-                isReject = true;
-            }
-        } else if (message.pushType.equals(MSG_TYPE_PT_REZ_CNL)) {
+        } else if (message.pushType.equals(MSG_TYPE_PT) || message.pushType.equals(MSG_TYPE_PT_REZ_CNL)) {
             if (PreferenceUtil.getNotificationSeminar(_context) == false) {
                 isReject = true;
             }
@@ -106,30 +103,17 @@ public class FCMManager {
                 isReject = true;
                 isRequireConfirmReceived = true;
             }
-        }
-        else if (message.pushType.equals(MSG_TYPE_REPORT)) {
-            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
-                isReject = true;
-                isRequireConfirmReceived = true;
-            }
-        }
-        else if (message.pushType.equals(MSG_TYPE_TUITION)) {
-            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
-                isReject = true;
-                isRequireConfirmReceived = true;
-            }
-        }
-        else if (message.pushType.equals(MSG_TYPE_QNA_ING)) {
-            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
-                isReject = true;
-                isRequireConfirmReceived = true;
-            }
-        }
-        else if (message.pushType.equals(MSG_TYPE_QNA_COMPLETE)) {
-            if (PreferenceUtil.getNotificationSchedule(_context) == false) {
-                isReject = true;
-                isRequireConfirmReceived = true;
-            }
+        } else if (message.pushType.equals(MSG_TYPE_TEST_APPT)) {
+            isReject = false;
+
+        } else if(message.pushType.equals(MSG_TYPE_REPORTCARD)) {
+            isReject = false;
+
+        } else if (message.pushType.equals(MSG_TYPE_QNA_ING)) {
+            isReject = false;
+
+        } else if (message.pushType.equals(MSG_TYPE_QNA_COMPLETE)) {
+            isReject = false;
         }
         LogMgr.d(TAG, "isReject = " + isReject);
         if(!isReject) {
