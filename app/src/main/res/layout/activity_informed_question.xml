@@ -649,7 +649,7 @@
                     android:layout_marginBottom="@dimen/informed_question_sub_title_margin_top"
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
-                    android:minLines="4"
+                    android:minLines="5"
                     android:maxLines="10"
                     android:hint="@string/test_reserve_memo_hint"
                     android:gravity="start"
