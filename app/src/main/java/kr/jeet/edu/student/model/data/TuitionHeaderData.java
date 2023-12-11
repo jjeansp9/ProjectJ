@@ -8,6 +8,8 @@ public class TuitionHeaderData implements Constants.PayListItem {
     public String payment;    // 금액
     public String accountNO;  // 가상 계좌번호
     public String gubun;      // 수강료 구분
+    public String acaLink;
+    public String acaLinkIsNull;
 
     public TuitionHeaderData() {}
 

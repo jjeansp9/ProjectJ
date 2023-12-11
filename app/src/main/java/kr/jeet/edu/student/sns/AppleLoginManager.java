@@ -6,9 +6,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.ComponentActivity;
 import androidx.annotation.NonNull;
@@ -72,8 +74,6 @@ public class AppleLoginManager extends SNSLoginManager {
                 pending.addOnSuccessListener(this::actionAfterSuccess)
                         .addOnFailureListener( error -> {
                     LogMgr.e(TAG, error.getMessage());
-                    mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
-                    ((Activity)mActivity).finish();
                     hideProgressDialog();
 
                 });
@@ -89,8 +89,6 @@ public class AppleLoginManager extends SNSLoginManager {
                     .addOnSuccessListener(this::actionAfterSuccess)
                     .addOnFailureListener( error -> {
                         LogMgr.e(TAG, error.getMessage());
-                        mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
-                        ((Activity)mActivity).finish();
                         hideProgressDialog();
                     });
         }
@@ -158,26 +156,16 @@ public class AppleLoginManager extends SNSLoginManager {
             PreferenceUtil.setSNSUserId(mActivity, uId);
             PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_APPLE);
 
-            if (mIsJoinStatus){
-                Intent intent = new Intent(mActivity, JoinActivity.class);
-                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_APPLE);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, uId);
-                mActivity.startActivity(intent);
-                mActivity.finish();
-            }else{
-                LogMgr.e("login complete -> ");
-                if(mHandler != null) {
-                    Bundle data = new Bundle();
-                    data.putString("name", name);
-                    data.putInt("loginType", Constants.LOGIN_TYPE_SNS_APPLE);
+            if(mHandler != null) {
+                // apple은 성별 데이터를 주지 않음
+                Bundle data = new Bundle();
+                data.putString(IntentParams.PARAM_LOGIN_USER_NAME, name);
 
-                    Message msg = Message.obtain();
-                    msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
-                    msg.obj = uId;
-                    msg.setData(data);
-                    mHandler.sendMessage(msg);
-                }
+                Message msg = Message.obtain();
+                msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
+                msg.obj = uId;
+                msg.setData(data);
+                mHandler.sendMessage(msg);
             }
         }else{
             LogMgr.e(TAG, "apple Login user info is null");

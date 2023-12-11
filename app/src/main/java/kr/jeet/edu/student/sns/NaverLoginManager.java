@@ -3,7 +3,9 @@ package kr.jeet.edu.student.sns;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +13,7 @@ import com.navercorp.nid.NaverIdLoginSDK;
 import com.navercorp.nid.oauth.NidOAuthLogin;
 import com.navercorp.nid.oauth.OAuthLoginCallback;
 import com.navercorp.nid.profile.NidProfileCallback;
+import com.navercorp.nid.profile.data.NidProfile;
 import com.navercorp.nid.profile.data.NidProfileResponse;
 
 import kr.jeet.edu.student.R;
@@ -112,8 +115,6 @@ public class NaverLoginManager extends SNSLoginManager {
             String errorDescription = NaverIdLoginSDK.INSTANCE.getLastErrorDescription();
             LogMgr.e("errorCode -> " + errorCode);
             LogMgr.e("errorDescription -> " + errorDescription);
-            mContext.startActivity(new Intent(mContext, LoginActivity.class));
-            ((Activity)mContext).finish();
             //Toast.makeText(mContext, "errorCode : " + errorCode, Toast.LENGTH_SHORT).show();
         }
 
@@ -127,52 +128,47 @@ public class NaverLoginManager extends SNSLoginManager {
         @Override
         public void onSuccess(Object o) {
             NidProfileResponse result = (NidProfileResponse) o ;
-            String userId = Utils.getStr(result.getProfile().getId());
-            String gender = Utils.getStr(result.getProfile().getGender());
-            String name = Utils.getStr(result.getProfile().getName());
-            LogMgr.e("userId -> " + userId);
-            LogMgr.e("gender -> " + gender);
-            LogMgr.e("name -> " + name);
+            NidProfile profile = result.getProfile();
+            String userId = "";
+            String gender = "";
+            String name = "";
+            if(profile != null) {
+                userId = profile.getId();
+                gender = profile.getGender();
+                name = profile.getName();
+                LogMgr.e("userId -> " + userId);
+                LogMgr.e("gender -> " + gender);
+                LogMgr.e("name -> " + name);
 
-            PreferenceUtil.setSNSUserId(mContext, userId);
-            PreferenceUtil.setLoginType(mContext, Constants.LOGIN_TYPE_SNS_NAVER);
-
-            if(mIsJoinStatus == true) //회원가입 모드
-            {
-                Intent intent = new Intent(mContext, JoinActivity.class);
-                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_NAVER);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_GENDER, gender);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, userId);
-                mContext.startActivity(intent);
-                ((Activity)mContext).finish();
+                PreferenceUtil.setSNSUserId(mContext, userId);
+                PreferenceUtil.setLoginType(mContext, Constants.LOGIN_TYPE_SNS_NAVER);
             }
-            else
-            {
-                //server login api send
-                LogMgr.e("login complete -> ");
-                if(mHandler != null) {
-                    Message msg = Message.obtain();
-                    msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
-                    msg.obj = userId;
-                    mHandler.sendMessage(msg);
-                }
+
+            if(mHandler != null) {
+                Bundle data = new Bundle();
+                data.putString(IntentParams.PARAM_LOGIN_USER_NAME, name);
+                data.putString(IntentParams.PARAM_LOGIN_USER_GENDER, gender);
+
+                Message msg = Message.obtain();
+                msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
+                msg.obj = userId;
+                msg.setData(data);
+                mHandler.sendMessage(msg);
             }
         }
 
+        // TODO : 로그인 실패, 에러났을 때 사용자에게 Toast등과 같은 알림이 필요해보임
         @Override
         public void onFailure(int i, @NonNull String s) {
-            mContext.startActivity(new Intent(mContext, LoginActivity.class));
-            ((Activity)mContext).finish();
+//            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+//            ((Activity)mContext).finish();
         }
 
         @Override
         public void onError(int i, @NonNull String s) {
-            mContext.startActivity(new Intent(mContext, LoginActivity.class));
-            ((Activity)mContext).finish();
+//            mContext.startActivity(new Intent(mContext, LoginActivity.class));
+//            ((Activity)mContext).finish();
         }
     };
-
-    //
 }
 

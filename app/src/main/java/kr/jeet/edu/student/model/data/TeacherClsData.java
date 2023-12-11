@@ -10,6 +10,7 @@ public class TeacherClsData implements Parcelable {
     public String sfName;         // 강사 이름
     public String clsName;        // 학급명
     public int clsCode;           // 학급 코드
+    public String clsTimeName;    // 수업 시간
     public String extNumber;      // 강사 내선 번호
 
     public TeacherClsData() {}
@@ -20,6 +21,7 @@ public class TeacherClsData implements Parcelable {
         sfName = in.readString();
         clsName = in.readString();
         clsCode = in.readInt();
+        clsTimeName = in.readString();
         extNumber = in.readString();
     }
 
@@ -47,6 +49,7 @@ public class TeacherClsData implements Parcelable {
         dest.writeString(sfName);
         dest.writeString(clsName);
         dest.writeInt(clsCode);
+        dest.writeString(clsTimeName);
         dest.writeString(extNumber);
     }
 }

@@ -78,9 +78,19 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
                 TuitionHeaderData headerItem = (TuitionHeaderData) item;
 
+                String btnText = "계좌연동";
+
+                // acaLink항목이 없으면 accoutNo에 acaLinkIsNull 항목을 보여주고 버튼을 계좌복사로 변경, 클릭시 다이얼로그, 확인버튼만, 버튼누르면 계좌 복사
+                if (headerItem.acaLink != null || !TextUtils.isEmpty(headerItem.acaLink)) {
+                    headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
+                }else {
+                    headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.acaLinkIsNull));
+                    btnText = "계좌복사";
+                }
+
                 headerHolder.tvGubunBadge.setText(Utils.getStr(headerItem.gubun));
-                headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
                 headerHolder.tvHeaderAcaName.setText(Utils.getStr(headerItem.acaName));
+                headerHolder.btnAccountLink.setText(btnText);
 
                 headerHolder.tvPayTotal.setText(headerItem.payment);
 

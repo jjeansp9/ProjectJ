@@ -4,7 +4,9 @@ import static android.app.Activity.RESULT_OK;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Message;
+import android.text.TextUtils;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
@@ -55,8 +57,6 @@ public class GoogleLoginManager extends SNSLoginManager {
                     }
 
                 }else{
-                    mActivity.startActivity(new Intent(mActivity, LoginActivity.class));
-                    ((Activity)mActivity).finish();
                     LogMgr.e("로그인 실패 : " + result.getResultCode());
                 }
             }
@@ -75,7 +75,7 @@ public class GoogleLoginManager extends SNSLoginManager {
             resultLauncher.launch(signInIntent);
         }catch (Exception e){
             LogMgr.e(TAG, e.getMessage());
-            mActivity.finish();
+            //mActivity.finish();
         }
     }
 
@@ -123,21 +123,16 @@ public class GoogleLoginManager extends SNSLoginManager {
             PreferenceUtil.setSNSUserId(mActivity, userId);
             PreferenceUtil.setLoginType(mActivity, Constants.LOGIN_TYPE_SNS_GOOGLE);
 
-            if (mIsJoinStatus){ // 회원가입 모드
-                Intent intent = new Intent(mActivity, JoinActivity.class);
-                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_SNS_GOOGLE);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
-                intent.putExtra(IntentParams.PARAM_LOGIN_USER_SNSID, userId);
-                mActivity.startActivity(intent);
-                mActivity.finish();
+            if (mHandler != null){
+                // google은 성별 데이터를 주지 않음
+                Bundle data = new Bundle();
+                data.putString(IntentParams.PARAM_LOGIN_USER_NAME, name);
 
-            }else{ // 로그인 모드
-                if (mHandler != null){
-                    Message msg = Message.obtain();
-                    msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
-                    msg.obj = userId;
-                    mHandler.sendMessage(msg);
-                }
+                Message msg = Message.obtain();
+                msg.what = Constants.HANDLER_SNS_LOGIN_COMPLETE;
+                msg.obj = userId;
+                msg.setData(data);
+                mHandler.sendMessage(msg);
             }
 
         } catch (ApiException e) {

@@ -19,13 +19,13 @@ import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingActivity;
 import kr.jeet.edu.student.activity.menu.briefing.MenuBriefingDetailActivity;
 import kr.jeet.edu.student.activity.menu.bus.MenuBusActivity;
 import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveActivity;
-import kr.jeet.edu.student.activity.menu.leveltest.MenuTestReserveDetailActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeActivity;
 import kr.jeet.edu.student.activity.menu.notice.MenuNoticeDetailActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNAActivity;
 import kr.jeet.edu.student.activity.menu.qna.MenuQNADetailActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.MenuReportCardActivity;
 import kr.jeet.edu.student.activity.menu.reportcard.ReportCardDetailActivity;
+import kr.jeet.edu.student.activity.menu.timetable.MenuTimeTableActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleActivity;
 import kr.jeet.edu.student.activity.menu.schedule.MenuScheduleDetailActivity;
 import kr.jeet.edu.student.activity.setting.SettingsActivity;
@@ -67,7 +67,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -627,6 +626,9 @@ public class MainActivity extends BaseActivity {
             mList.add(new MainMenuItemData(DataManager.BOARD_REPORT, R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
             //QnA
             mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
+            //시간표
+            mList.add(new MainMenuItemData(DataManager.BOARD_TIME_TABLE, R.drawable.icon_menu_timetable, R.string.main_menu_rollbook, MenuTimeTableActivity.class));
+
         }else{ // 비회원
             //공지사항
             mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
@@ -640,6 +642,7 @@ public class MainActivity extends BaseActivity {
             mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
         }
     }
+
     private void updateMenus() {
         if(mList == null) return;
         mList.stream().forEach(menu -> {

@@ -225,6 +225,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.sfName = mInfo.sfName;
         request.clsName = mInfo.clsName;
         request.managerPhoneNumber = mInfo.phoneNumber;
+        request.callWishDate = "11:00 ~ 15:00"; // TODO : 테스트용 더미데이터 (나중에 수정하기)
 
         str = mEtConsultContent.getText().toString();
 
@@ -247,7 +248,8 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nmemo: " + request.memo +
                 "\nclsName: " + request.clsName +
                 "\nphoneNumber: " + request.phoneNumber +
-                "\nsmsSender: " + request.smsSender
+                "\nsmsSender: " + request.smsSender +
+                "\ncallWishDate: " + request.callWishDate
         );
 
         if (request.counselDate.equals("")) {

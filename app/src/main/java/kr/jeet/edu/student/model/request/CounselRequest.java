@@ -17,4 +17,5 @@ public class CounselRequest {
     public String managerPhoneNumber;  // 강사 폰번호
     public String smsSender;  // 캠퍼스 대표번호
     public String isSendNoti;  // (사용안함)알림전송여부(Y/N)-API문서작성시필요
+    public String callWishDate; // 전화 요청일시
 }

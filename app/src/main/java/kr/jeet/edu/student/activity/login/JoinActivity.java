@@ -72,26 +72,41 @@ public class JoinActivity extends BaseActivity {
         setStatusAndNavigatinBar(true);
         mContext = this;
 
+        initData();
+        initAppbar();
+        initView();
+    }
+
+    private void initData() {
+
+        mUserSnsId = PreferenceUtil.getSNSUserId(mContext);
+
         Intent intent = getIntent();
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_LOGIN_TYPE)){
                 mLoginType = intent.getIntExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
 
-                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER || mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO || mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE || mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) {
+                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER ||
+                        mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO ||
+                        mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE ||
+                        mLoginType == Constants.LOGIN_TYPE_SNS_APPLE
+                ) {
                     if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_NAME)) mUserName = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_NAME);
                     else mUserName = "";
                     if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_GENDER)) mUserGender = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_GENDER);
                     else mUserGender = "";
-                    //mUserSnsId = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_SNSID);
-
                 }
             }else{
                 LogMgr.e("no intent extra");
             }
         }
-        mUserSnsId = PreferenceUtil.getSNSUserId(mContext);
-        initAppbar();
-        initView();
+
+        LogMgr.e(TAG,
+                "LoginType: " + mLoginType +
+                "\nname: " + mUserName +
+                "\ngender: " + mUserGender +
+                "\nsnsId: " + mUserSnsId
+        );
     }
 
     void initAppbar() {

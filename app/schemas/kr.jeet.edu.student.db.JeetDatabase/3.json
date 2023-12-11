@@ -6,7 +6,7 @@
     "entities": [
       {
         "tableName": "tbl_push_message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `body` TEXT, `acaCode` TEXT, `stCode` INTEGER NOT NULL, `userGubun` INTEGER NOT NULL, `pushType` TEXT, `memberSeq` INTEGER NOT NULL, `connSeq` INTEGER NOT NULL, `pushId` TEXT, `isRead` INTEGER NOT NULL DEFAULT false, `date` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `body` TEXT, `acaCode` TEXT, `stCode` INTEGER NOT NULL, `userGubun` INTEGER NOT NULL, `date` TEXT, `pushType` TEXT, `memberSeq` INTEGER NOT NULL, `connSeq` INTEGER NOT NULL, `pushId` TEXT, `isRead` INTEGER NOT NULL DEFAULT false)",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,6 +45,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "pushType",
             "columnName": "pushType",
             "affinity": "TEXT",
@@ -74,12 +80,6 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "false"
-          },
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {

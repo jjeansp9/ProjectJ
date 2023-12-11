@@ -25,20 +25,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AgreeTermsActivity extends BaseActivity {
 
+    private static final String TAG = "AgreeTermsActivity";
+
     private CheckBox mAllCheckBox, mCheckBox1, mCheckBox2;
     private TextView mTvCheck1, mTvCheck2;
     private Button mBtnNext;
     private int mLoginType = Constants.LOGIN_TYPE_NORMAL;
 
-    private NaverLoginManager mNaverLogin = null;
-    private KaKaoLoginManager mKakaoLogin = null;
-    private GoogleLoginManager mGoogleLogin = null;
-    private AppleLoginManager mAppleLogin = null;
-
-    private AppCompatActivity mActivity = null;
     private String url = "";
 
     private String snsName = "";
+    private String snsGender = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +43,6 @@ public class AgreeTermsActivity extends BaseActivity {
         setContentView(R.layout.activity_agree_terms);
         setStatusAndNavigatinBar(true);
         mContext = this;
-        mActivity = this;
 
         Intent intent = getIntent();
         if(intent != null) {
@@ -56,14 +52,14 @@ public class AgreeTermsActivity extends BaseActivity {
             }else{
                 LogMgr.e("no intent extra");
             }
-
             if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_NAME)) snsName = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_NAME);
-        }
+            if (intent.hasExtra(IntentParams.PARAM_LOGIN_USER_GENDER)) snsGender = intent.getStringExtra(IntentParams.PARAM_LOGIN_USER_GENDER);
 
-        if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) mNaverLogin = new NaverLoginManager(mContext);
-        else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) mKakaoLogin = new KaKaoLoginManager(mContext);
-        else if(mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE) mGoogleLogin = new GoogleLoginManager(mActivity);
-        else if(mLoginType == Constants.LOGIN_TYPE_SNS_APPLE) mAppleLogin = new AppleLoginManager(mActivity);
+            LogMgr.e(TAG,
+                    "snsName: " + snsName +
+                    "\nsnsGender: " + snsGender
+            );
+        }
         initAppbar();
         initView();
     }
@@ -107,43 +103,8 @@ public class AgreeTermsActivity extends BaseActivity {
                     Toast.makeText(mContext, R.string.terms_agreement_msg, Toast.LENGTH_SHORT).show();
                     return ;
                 }
-
-                if(mLoginType == Constants.LOGIN_TYPE_SNS_NAVER) {
-                    if(mNaverLogin != null) {
-                        mNaverLogin.setJoinProcess();
-                        mNaverLogin.LoginProcess();
-                    }
-                    break;
-                }
-                else if(mLoginType == Constants.LOGIN_TYPE_SNS_KAKAO) {
-                    if(mKakaoLogin != null) {
-                        mKakaoLogin.setJoinProcess();
-                        mKakaoLogin.LoginProcess();
-                    }
-                    break;
-                }
-                else if (mLoginType == Constants.LOGIN_TYPE_SNS_GOOGLE){
-                    if (mGoogleLogin != null){
-                        mGoogleLogin.setJoinProcess();
-                        mGoogleLogin.LoginProcess();
-                    }
-                    break;
-                }
-                else if (mLoginType == Constants.LOGIN_TYPE_SNS_APPLE){
-                    if (mAppleLogin != null){
-
-                        if (!TextUtils.isEmpty(snsName)) {
-                            startActivity();
-                        } else {
-                            mAppleLogin.setJoinProcess();
-                            mAppleLogin.LoginProcess();
-                        }
-                    }
-                    break;
-                }else{
-                    startActivity();
-                    break;
-                }
+                startActivity(snsName, snsGender, mLoginType);
+                break;
 
             case R.id.layout_all_check:
                 if(!mAllCheckBox.isChecked()) {
@@ -191,10 +152,11 @@ public class AgreeTermsActivity extends BaseActivity {
         }
     }
 
-    private void startActivity(){
-        Intent intent = new Intent(this, JoinActivity.class);
-        intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, mLoginType);
-        if (!TextUtils.isEmpty(snsName)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
+    private void startActivity(String name, String gender, int snsType){
+        Intent intent = new Intent(mContext, JoinActivity.class);
+        intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, snsType);
+        if (!TextUtils.isEmpty(name)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, name);
+        if (!TextUtils.isEmpty(gender)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_GENDER, gender);
         startActivity(intent);
         finish();
     }

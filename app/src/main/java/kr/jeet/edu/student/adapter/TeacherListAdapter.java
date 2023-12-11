@@ -22,6 +22,7 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private static final int VIEW_TYPE_HEADER = 0;
     private static final int VIEW_TYPE_BODY = 1;
+    private static final int VIEW_TYPE_CLS_TIME = 2;
 
     private Context mContext;
     private ArrayList<TeacherClsData> mList = null;
@@ -35,6 +36,11 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this._listener = listener;
     }
 
+    public TeacherListAdapter(Context mContext, ArrayList<TeacherClsData> mList) {
+        this.mContext = mContext;
+        this.mList = mList;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -43,9 +49,14 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (viewType == VIEW_TYPE_HEADER){
             View view = inflater.inflate(R.layout.layout_txt_header_item, parent, false);
             return new HeaderViewHolder(view);
-        } else {
+        } else if (viewType == VIEW_TYPE_BODY){
+
             View view = inflater.inflate(R.layout.layout_teacher_list_item, parent, false);
             return new BodyViewHolder(view);
+
+        }else {
+            View view = inflater.inflate(R.layout.layout_time_table_list_item, parent, false);
+            return new ClsTimeViewHolder(view);
         }
     }
 
@@ -57,7 +68,7 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             HeaderViewHolder headerViewHolder = (HeaderViewHolder) holder;
             headerViewHolder.tvHeader.setText(mContext.getString(R.string.main_tv_consult));
 
-        } else {
+        } else if (holder.getItemViewType() == VIEW_TYPE_BODY){
 
             TeacherClsData item = mList.get(position);
 
@@ -67,6 +78,16 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 bodyHolder.tvName.setText(Utils.getStr(item.sfName));
                 bodyHolder.tvClsName.setText(Utils.getStr(item.clsName));
                 bodyHolder.tvPhoneNum.setText(Utils.getStr(item.extNumber));
+            }
+        } else {
+            TeacherClsData item = mList.get(position);
+
+            ClsTimeViewHolder bodyHolder = (ClsTimeViewHolder) holder;
+
+            if (item != null) {
+                bodyHolder.tvName.setText(Utils.getStr(item.sfName));
+                bodyHolder.tvClsName.setText(Utils.getStr(item.clsName));
+                bodyHolder.tvClsTime.setText(Utils.getStr(item.clsTimeName));
             }
         }
     }
@@ -79,8 +100,12 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemViewType(int position) {
-        if (position == 0) return VIEW_TYPE_HEADER;
-        else return VIEW_TYPE_BODY;
+        if (_listener != null) {
+            if (position == 0) return VIEW_TYPE_HEADER;
+            else return VIEW_TYPE_BODY;
+        } else {
+            return VIEW_TYPE_CLS_TIME;
+        }
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
@@ -104,6 +129,23 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             tvName = itemView.findViewById(R.id.name);
             tvClsName = itemView.findViewById(R.id.tv_cls_name);
             tvPhoneNum = itemView.findViewById(R.id.tv_phone_num);
+
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (position > 0) if (mList.size() > 1) _listener.onItemClick(mList.get(position));
+            });
+        }
+    }
+
+    public class ClsTimeViewHolder extends RecyclerView.ViewHolder {
+        private TextView tvName, tvClsName, tvClsTime;
+
+        public ClsTimeViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            tvName = itemView.findViewById(R.id.tv_name);
+            tvClsName = itemView.findViewById(R.id.tv_cls_name);
+            tvClsTime = itemView.findViewById(R.id.tv_cls_time);
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();

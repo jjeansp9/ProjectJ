@@ -159,34 +159,48 @@ public class TuitionActivity extends BaseActivity {
     }
 
     private void startWebView(Constants.PayListItem item) {
-        if (!((TuitionHeaderData)item).accountNO.isEmpty()){
-
-//            String str = Utils.setClipData(mContext, ((TuitionHeaderData)item).accountNO);
+//        if (!((TuitionHeaderData)item).accountNO.isEmpty()){
 //
-//            if (str.equals(((TuitionHeaderData)item).accountNO)){
-//                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
 //
-//                Intent intent = new Intent(mContext, WebViewActivity.class);
-//                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
-//                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
-//                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
-//                resultLauncher.launch(intent);
-//
-//            } else {
-//                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_error, Toast.LENGTH_SHORT).show();
-//            }
+//            Intent intent = new Intent(mContext, WebViewActivity.class);
+//            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
+//            intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
+//            intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
+//            resultLauncher.launch(intent);
+//        }else{
+//            Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
+//        }
+        if (!((TuitionHeaderData)item).accountNO.isEmpty()){ // 가상계좌번호가 있는 경우
 
-            Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
+            if ( ((TuitionHeaderData)item).acaLink != null || !TextUtils.isEmpty( ((TuitionHeaderData)item).acaLink) ) {
+                Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(mContext, WebViewActivity.class);
-            intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
-            intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, WEB_VIEW_URL);
-            intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
-            resultLauncher.launch(intent);
-        }else{
+                Intent intent = new Intent(mContext, WebViewActivity.class);
+                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
+                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, ((TuitionHeaderData)item).acaLink);
+                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
+                resultLauncher.launch(intent);
+
+            } else { // acaLink가 없고, acaLinkIsNull이 있는 경우
+                showDialog(item);
+            }
+
+        } else { // 가상계좌번호가 없는 경우
             Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
         }
+    }
 
+    private void showDialog(Constants.PayListItem item) {
+        String title = getString(R.string.dialog_title_alarm);
+        String msg = TextUtils.isEmpty(((TuitionHeaderData)item).accountNO) ? "계좌정보가 없습니다" : ((TuitionHeaderData)item).accountNO;
+        showMessageDialog(title, msg, v -> {
+            //String result = Utils.setClipData(mContext, msg.replaceAll("[^0-9]", "")); // 숫자가 아닌 문자들은 모두 제거
+            String result = Utils.setClipData(mContext, msg);
+            hideMessageDialog();
+            if (!TextUtils.isEmpty(result)) Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard, Toast.LENGTH_SHORT).show();
+            else Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_error, Toast.LENGTH_SHORT).show();
+        }, null, false);
     }
 
     private void initHeaderData(ArrayList<TuitionData> item) {

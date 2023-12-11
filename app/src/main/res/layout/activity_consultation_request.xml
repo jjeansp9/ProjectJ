@@ -76,65 +76,31 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--            <TextView-->
-<!--                android:id="@+id/tv_consultation_campus"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/layout_calendar"-->
-<!--                android:layout_marginTop="@dimen/layout_margin"-->
-<!--                android:text="@string/consultation_request_campus"-->
-<!--                android:textColor="@color/font_color_default"-->
-<!--                android:textSize="@dimen/font_size"-->
-<!--                android:textStyle="bold" />-->
-
-<!--            <com.skydoves.powerspinner.PowerSpinnerView-->
-<!--                android:id="@+id/spinner_campus"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/tv_consultation_campus"-->
-<!--                android:layout_marginTop="@dimen/layout_margin_12"-->
-<!--                android:paddingHorizontal="@dimen/layout_margin_16"-->
-<!--                android:paddingVertical="@dimen/layout_margin_12"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/font_size"-->
-<!--                app:spinner_arrow_gravity="end"-->
-<!--                app:spinner_arrow_tint="@color/blackgray"-->
-<!--                app:spinner_divider_color="@color/line"-->
-<!--                app:spinner_divider_show="true"-->
-<!--                app:spinner_divider_size="0.4dp"-->
-<!--                app:spinner_popup_animation="dropdown"-->
-<!--                app:spinner_popup_background="@drawable/selector_spinner_item"-->
-<!--                app:spinner_popup_elevation="2dp"-->
-<!--                android:background="@drawable/bg_campus_spinner"/>-->
-
             <TextView
-                android:id="@+id/tv_consultation_teacher"
+                android:id="@+id/tv_consultation_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_calendar"
                 android:layout_marginTop="@dimen/layout_margin"
-                android:text="@string/consultation_request_teacher"
+                android:text="@string/consultation_request_type"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+                android:textStyle="bold" />
 
             <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/spinner_teacher"
+                android:id="@+id/spinner_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_type"
                 android:layout_marginTop="@dimen/layout_margin_12"
                 android:paddingHorizontal="@dimen/layout_margin_16"
                 android:paddingVertical="@dimen/layout_margin_12"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size"
+                android:hint="@string/select"
                 android:gravity="center"
                 app:spinner_arrow_gravity="end"
                 app:spinner_arrow_tint="@color/blackgray"
@@ -144,15 +110,83 @@
                 app:spinner_popup_animation="dropdown"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
                 app:spinner_popup_elevation="2dp"
-                android:background="@drawable/bg_campus_spinner"
-                android:visibility="gone"/>
+                android:background="@drawable/bg_campus_spinner"/>
+
+            <TextView
+                android:id="@+id/tv_consultation_teacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spinner_type"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:text="@string/consultation_request_time"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
+                android:layout_marginTop="@dimen/layout_margin_12">
+
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/spinner_time_start"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:paddingHorizontal="@dimen/layout_margin_16"
+                    android:paddingVertical="@dimen/layout_margin_12"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size"
+                    android:hint="@string/select"
+                    android:gravity="center"
+                    app:spinner_arrow_gravity="end"
+                    app:spinner_arrow_tint="@color/blackgray"
+                    app:spinner_divider_color="@color/line"
+                    app:spinner_divider_show="true"
+                    app:spinner_divider_size="0.4dp"
+                    app:spinner_popup_animation="dropdown"
+                    app:spinner_popup_background="@drawable/selector_spinner_item"
+                    app:spinner_popup_elevation="2dp"
+                    android:background="@drawable/bg_campus_spinner"/>
+
+                <com.skydoves.powerspinner.PowerSpinnerView
+                    android:id="@+id/spinner_teacher"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingHorizontal="@dimen/layout_margin_16"
+                    android:paddingVertical="@dimen/layout_margin_12"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/font_size"
+                    android:hint="@string/select"
+                    android:gravity="center"
+                    app:spinner_arrow_gravity="end"
+                    app:spinner_arrow_tint="@color/blackgray"
+                    app:spinner_divider_color="@color/line"
+                    app:spinner_divider_show="true"
+                    app:spinner_divider_size="0.4dp"
+                    app:spinner_popup_animation="dropdown"
+                    app:spinner_popup_background="@drawable/selector_spinner_item"
+                    app:spinner_popup_elevation="2dp"
+                    android:background="@drawable/bg_campus_spinner"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
 
             <TextView
                 android:id="@+id/tv_consultation_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_teacher"
+                app:layout_constraintTop_toBottomOf="@id/layout_time"
                 android:layout_marginTop="@dimen/layout_margin"
                 android:text="@string/consultation_request_content"
                 android:textColor="@color/font_color_default"

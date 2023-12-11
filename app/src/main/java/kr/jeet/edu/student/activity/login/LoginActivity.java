@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -62,7 +63,7 @@ public class LoginActivity extends BaseActivity {
 
     private AppCompatActivity mActivity = null;
     private String snsName = "";
-    private String snsType = "";
+    private String snsGender = "";
 
     private boolean btnPush = false;
 
@@ -77,8 +78,8 @@ public class LoginActivity extends BaseActivity {
 
                     Bundle data = msg.getData();
                     if (data != null){
-                        snsName = data.getString("name");
-                        snsType = data.getString("loginType");
+                        snsName = data.getString(IntentParams.PARAM_LOGIN_USER_NAME);
+                        snsGender = data.getString(IntentParams.PARAM_LOGIN_USER_GENDER);
                     }
 
                     if(snsId != null && !snsId.isEmpty()) {
@@ -107,6 +108,7 @@ public class LoginActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         DataManager.getInstance().isSelectedChild = false;
+        btnPush = false; // onResume일 때 false로 설정하지 않으면 다시 버튼클릭시 작동안함
     }
 
     void initAppbar(){}
@@ -138,15 +140,11 @@ public class LoginActivity extends BaseActivity {
         super.onClick(view);
         Intent intent = null;
 
-        String snsUserId = "";
-        int loginType = Constants.LOGIN_TYPE_NORMAL;
-
         switch (view.getId()) {
             case R.id.btn_naver:
-                if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
-
                 if (!btnPush) {
                     btnPush = true;
+                    if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
                     selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_NAVER;
                     mNaverLogin = new NaverLoginManager(mContext);
                     mNaverLogin.setHandler(mHandler);
@@ -155,11 +153,9 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_kakao:
-
-                if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
-
                 if (!btnPush) {
                     btnPush = true;
+                    if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
                     selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_KAKAO;
                     mKaKaoLogin = new KaKaoLoginManager(mContext);
                     mKaKaoLogin.setHandler(mHandler);
@@ -168,10 +164,9 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_google:
-                if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
-
                 if (!btnPush) {
                     btnPush = true;
+                    if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
                     selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_GOOGLE;
                     mGoogleLogin.setHandler(mHandler);
                     mGoogleLogin.LoginProcess();
@@ -179,27 +174,31 @@ public class LoginActivity extends BaseActivity {
                 break;
 
             case R.id.btn_apple:
-                if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
-
                 if (!btnPush){
                     btnPush = true;
+                    if (mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
                     selectedSNSLoginType = Constants.LOGIN_TYPE_SNS_APPLE;
                     mAppleLogin = new AppleLoginManager(mActivity);
                     mAppleLogin.setHandler(mHandler);
                     mAppleLogin.LoginProcess();
                 }
-
                 break;
 
             case R.id.tv_join :
-                intent = new Intent(this, AgreeTermsActivity.class);
-                intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
-                startActivity(intent);
+                if (!btnPush) {
+                    btnPush = true;
+                    intent = new Intent(this, AgreeTermsActivity.class);
+                    intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, Constants.LOGIN_TYPE_NORMAL);
+                    startActivity(intent);
+                }
                 break;
 
             case R.id.tv_find :
-                intent = new Intent(this, FindCredentialsActivity.class);
-                startActivity(intent);
+                if (!btnPush) {
+                    btnPush = true;
+                    intent = new Intent(this, FindCredentialsActivity.class);
+                    startActivity(intent);
+                }
                 break;
 
             case R.id.btn_login :
@@ -208,9 +207,6 @@ public class LoginActivity extends BaseActivity {
                     if(checkLogin()) requestLogin();
                     else btnPush = false;
                 }
-                // 자동로그인 체크 저장
-                if(mAutoLoginCb.isChecked()) PreferenceUtil.setAutoLogin(mContext, true);
-                else PreferenceUtil.setAutoLogin(mContext, false);
                 break;
 
             case R.id.layout_auto_login:    //체크박스 범위 확대
@@ -254,11 +250,12 @@ public class LoginActivity extends BaseActivity {
                         try {
                             LoginResponse res = response.body();
 
-                            if (res.data != null){
+                            if (res != null && res.data != null){
                                 PreferenceUtil.setUserSeq(mContext, res.data.seq);
                                 PreferenceUtil.setUserGubun(mContext, res.data.userGubun);
                                 PreferenceUtil.setLoginType(mContext, Constants.LOGIN_TYPE_NORMAL);
                                 PreferenceUtil.setUserIsOriginal(mContext, res.data.isOriginalMember);
+                                PreferenceUtil.setAutoLogin(mContext, mAutoLoginCb.isChecked());
                                 PreferenceUtil.setSNSUserId(mContext, "");
                                 PreferenceUtil.setNumberOfChild(mContext, 0);
 
@@ -495,7 +492,8 @@ public class LoginActivity extends BaseActivity {
                                     Intent intent = null;
                                     intent = new Intent(mContext, AgreeTermsActivity.class);
                                     intent.putExtra(IntentParams.PARAM_LOGIN_TYPE, selectedSNSLoginType);
-                                    intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
+                                    if (!TextUtils.isEmpty(snsName)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_NAME, snsName);
+                                    if (!TextUtils.isEmpty(snsGender)) intent.putExtra(IntentParams.PARAM_LOGIN_USER_GENDER, snsGender);
                                     startActivity(intent);
                                 }else{
                                     if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();

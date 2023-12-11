@@ -97,37 +97,40 @@ public class IntroActivity extends BaseActivity {
                         String SnsUserId = PreferenceUtil.getSNSUserId(mContext);
                         LogMgr.e(TAG,"SnsUserId = " + SnsUserId);
 
-                        if(loginType == Constants.LOGIN_TYPE_SNS_NAVER) {
-                            if(SnsUserId != null && !SnsUserId.equals("")) {
-                                mNaverLogin = new NaverLoginManager(mContext);
-                                mNaverLogin.setHandler(mHandler);
-                                mNaverLogin.LoginProcess();
-                            }
-                            else { emptyUserInfo(); }
-                        }
-                        else if(loginType == Constants.LOGIN_TYPE_SNS_KAKAO) {
-                            if(SnsUserId != null && !SnsUserId.equals("")) {
-                                mKaKaoLogin = new KaKaoLoginManager(mContext);
-                                mKaKaoLogin.setHandler(mHandler);
-                                mKaKaoLogin.LoginProcess();
-                            }
-                            else { emptyUserInfo(); }
-                        }
-                        else if(loginType == Constants.LOGIN_TYPE_SNS_GOOGLE) {
-                            if (SnsUserId != null && !SnsUserId.equals("")){
-                                mGoogleLogin.setHandler(mHandler);
-                                mGoogleLogin.LoginProcess();
-                            }
-                            else { emptyUserInfo(); }
-                        }
-                        else if(loginType == Constants.LOGIN_TYPE_SNS_APPLE) {
-                            if (SnsUserId != null && !SnsUserId.equals("")){
-                                mAppleLogin = new AppleLoginManager(mActivity);
-                                mAppleLogin.setHandler(mHandler);
-                                mAppleLogin.LoginProcess();
-                            }
-                            else { emptyUserInfo(); }
-                        }
+                        if(SnsUserId != null && !SnsUserId.equals("")) requestLoginFromSns(SnsUserId);
+                        else emptyUserInfo();
+
+//                        if(loginType == Constants.LOGIN_TYPE_SNS_NAVER) {
+//                            if(SnsUserId != null && !SnsUserId.equals("")) {
+//                                mNaverLogin = new NaverLoginManager(mContext);
+//                                mNaverLogin.setHandler(mHandler);
+//                                mNaverLogin.LoginProcess();
+//                            }
+//                            else { emptyUserInfo(); }
+//                        }
+//                        else if(loginType == Constants.LOGIN_TYPE_SNS_KAKAO) {
+//                            if(SnsUserId != null && !SnsUserId.equals("")) {
+//                                mKaKaoLogin = new KaKaoLoginManager(mContext);
+//                                mKaKaoLogin.setHandler(mHandler);
+//                                mKaKaoLogin.LoginProcess();
+//                            }
+//                            else { emptyUserInfo(); }
+//                        }
+//                        else if(loginType == Constants.LOGIN_TYPE_SNS_GOOGLE) {
+//                            if (SnsUserId != null && !SnsUserId.equals("")){
+//                                mGoogleLogin.setHandler(mHandler);
+//                                mGoogleLogin.LoginProcess();
+//                            }
+//                            else { emptyUserInfo(); }
+//                        }
+//                        else if(loginType == Constants.LOGIN_TYPE_SNS_APPLE) {
+//                            if (SnsUserId != null && !SnsUserId.equals("")){
+//                                mAppleLogin = new AppleLoginManager(mActivity);
+//                                mAppleLogin.setHandler(mHandler);
+//                                mAppleLogin.LoginProcess();
+//                            }
+//                            else { emptyUserInfo(); }
+//                        }
                     }
 
                     break;
@@ -136,14 +139,14 @@ public class IntroActivity extends BaseActivity {
                     startLogin();
                     break;
 
-                case Constants.HANDLER_SNS_LOGIN_COMPLETE:
-                    LogMgr.e(TAG, "SNS_LOGIN_COMPLETE");
-
-                    String snsId = (String) msg.obj;
-                    if(snsId != null && !snsId.isEmpty()) {
-                        requestLoginFromSns(snsId);
-                    }
-                    break;
+//                case Constants.HANDLER_SNS_LOGIN_COMPLETE:
+//                    LogMgr.e(TAG, "SNS_LOGIN_COMPLETE");
+//
+//                    String snsId = (String) msg.obj;
+//                    if(snsId != null && !snsId.isEmpty()) {
+//                        requestLoginFromSns(snsId);
+//                    }
+//                    break;
             }
         }
     };

@@ -164,6 +164,7 @@
     <string name="main_menu_attendance">출석부</string>
     <string name="main_menu_report_card">성적표</string>
     <string name="main_menu_qna">Q&amp;A</string>
+    <string name="main_menu_rollbook">시간표</string>
     <string name="main_menu_tuition">수강료 납부</string>
 
     <string name="settings_title">설정</string>
@@ -262,7 +263,7 @@
     <string name="menu_stu_info_get_clipboard">납부 계좌번호를 클립보드에 복사하였습니다.</string>
     <string name="menu_stu_info_get_account_no">납부 계좌번호를 복사하였습니다.</string>
     <string name="menu_stu_info_get_clipboard_error">error: 클립보드 서비스를 찾을 수 없습니다.</string>
-    <string name="menu_stu_info_get_clipboard_empty">계좌번호를 확인해주세요.</string>
+    <string name="menu_stu_info_get_clipboard_empty">계좌번호 정보가 없습니다.</string>
     <string name="won">원</string>
     <string name="year">년</string>
     <string name="month">월</string>
@@ -270,18 +271,20 @@
     <string name="msg_empty_class">반 정보가 없습니다.</string>
 
 
-    <string name="consultation_request_day_desired">상담 희망일</string>
+    <string name="consultation_request_day_desired"><font color="@color/red">* </font>상담 희망일</string>
     <string name="consultation_request_sel_date">날짜를 선택해주세요</string>
-    <string name="consultation_request_campus">캠퍼스</string>
+    <string name="consultation_request_sel_type">항목을 선택해주세요</string>
+    <string name="consultation_request_sel_time">항목을 선택해주세요</string>
+    <string name="consultation_request_type"><font color="@color/red">* </font>분류항목</string>
     <string name="consultation_request_date">%d년 %d월 %d일</string>
-    <string name="consultation_request_teacher">상담 강사</string>
+    <string name="consultation_request_time"><font color="@color/red">* </font>전화요청 일시</string>
     <string name="consultation_request_content">상담 내용</string>
     <string name="consultation_request_content_success">선생님에게 상담요청을 하였습니다</string>
     <string name="consultation_request_attention">상담은 내선전화 [ 070 ] 번호로 진행됩니다.\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>
-<!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
+    <!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
     <string name="menu_test_reserve_header">※ 학생명 수정 또는 테스트 취소는 데스크로 연락 바랍니다.</string>
     <string name="menu_test_reserve_test_time_empty">테스트예약 시간정보가 없습니다.지트학원에 문의바랍니다.</string>
     <string name="menu_test_reserve_test_time_fail">서버 통신이 불안정합니다. 잠시 후 다시 시도해주세요.</string>

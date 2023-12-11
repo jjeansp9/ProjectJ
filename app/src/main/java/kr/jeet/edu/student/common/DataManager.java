@@ -31,6 +31,7 @@ public class DataManager {
     public static final String BOARD_LEVELTEST = "levelTest";  //테스트예약
     public static final String BOARD_REPORT = "report";    //성적표
     public static final String BOARD_QNA = "qna";  //Q&A
+    public static final String BOARD_TIME_TABLE = "시간표";  //시간표
     ////서버에서 주지 않는 항목
 //    public static final String BOARD_STUDENT_INFO = "studentinfo"; //원생정보
     public static final String BOARD_ATTENDANCE = "attendance"; //출석부
