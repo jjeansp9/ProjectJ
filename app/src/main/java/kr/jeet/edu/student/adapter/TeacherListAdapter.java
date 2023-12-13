@@ -79,7 +79,7 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 bodyHolder.tvClsName.setText(Utils.getStr(item.clsName));
                 bodyHolder.tvPhoneNum.setText(Utils.getStr(item.extNumber));
             }
-        } else {
+        } else { // 시간표 메뉴
             TeacherClsData item = mList.get(position);
 
             ClsTimeViewHolder bodyHolder = (ClsTimeViewHolder) holder;

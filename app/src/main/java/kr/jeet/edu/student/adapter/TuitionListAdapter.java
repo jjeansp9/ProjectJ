@@ -82,8 +82,17 @@ public class TuitionListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
                 // acaLink항목이 없으면 accoutNo에 acaLinkIsNull 항목을 보여주고 버튼을 계좌복사로 변경, 클릭시 다이얼로그, 확인버튼만, 버튼누르면 계좌 복사
                 if (headerItem.acaLink != null || !TextUtils.isEmpty(headerItem.acaLink)) {
-                    headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
+                    if (headerItem.accountNO.isEmpty()) {
+                        headerItem.accountNO = headerItem.acaLinkIsNull;
+                        headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.acaLinkIsNull));
+                        btnText = "계좌복사";
+                    } else {
+                        LogMgr.e(TAG, "adapter Test2: " + headerItem.accountNO);
+                        headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.accountNO));
+                    }
+
                 }else {
+                    headerItem.accountNO = headerItem.acaLinkIsNull;
                     headerHolder.tvAccountNo.setText(Utils.getStr(headerItem.acaLinkIsNull));
                     btnText = "계좌복사";
                 }

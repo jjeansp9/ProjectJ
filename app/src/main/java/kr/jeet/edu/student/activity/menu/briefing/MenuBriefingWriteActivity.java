@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,6 +67,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     SchoolListBottomSheetDialog _schoolListBottomSheetDialog;
     SchoolListAdapter _schoolListAdapter;
     private PowerSpinnerView mSpinnerGrade;
+    private RadioButton rbStu, rbStuNon;
 
     private RetrofitApi mRetrofitApi;
 
@@ -146,6 +148,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         //mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         //mEtSchool = findViewById(R.id.et_brf_write_school);
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
+        rbStu = findViewById(R.id.rb_stu);
+        rbStuNon = findViewById(R.id.rb_stu_non);
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum};
 
@@ -192,60 +196,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         });
 
         setSchoolSpinner();
-
-        //mEtPersonnel.setText("1");
-        //perCnt = Integer.parseInt(mEtPersonnel.getText().toString());
-
-        // 0 입력 막기
-//        mEtPersonnel.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (s.length() == 1) if ("0".equals(s.toString())) mEtPersonnel.setText("");
-//                if (s.length() >= 2 && s.charAt(0) == '0') mEtPersonnel.getText().replace(0, 1, "");
-//                if (s.length() > 4){
-//                    mEtPersonnel.setText(s.subSequence(0, 4));
-//                    mEtPersonnel.setSelection(4);
-//                }
-//                if (s.length() > 0) perCnt = Integer.parseInt(s.toString());
-//            }
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//        });
-//
-//        mEtPersonnel.setOnFocusChangeListener((view, hasFocus) -> {
-//            if (hasFocus) mEtPersonnel.setText("");
-//            else mEtPersonnel.setText(String.valueOf(perCnt));
-//        });
-
-//        mEtEmail.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if (count > before) { // 문자를 지울때는 실행 안되게
-//                    if (s.charAt(start) == ' ') { // 새로 추가된 문자가 공백인지 체크
-//                        mEtEmail.setText(s.toString().replace(" ", ""));
-//                        mEtEmail.setSelection(start); // 커서 위치 설정
-//                    }
-//                }
-//            }
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//        });
     }
-
-//    @SuppressLint("ClickableViewAccessibility")
-//    private final View.OnTouchListener spinnerTouchListener = (v, event) -> {
-//        switch (event.getAction()){
-//            case MotionEvent.ACTION_UP:
-//                Utils.clearFocus(mEtList);
-//                Utils.hideKeyboard(mContext, mEtList);
-//                break;
-//        }
-//        return false;
-//    };
 
     private void setSchoolSpinner(){
         toggleFilterLayout();
@@ -341,29 +292,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
             case R.id.btn_brf_write_complete:
                 if (checkWrite()) requestBrfReserve();
                 break;
-
-//            case R.id.img_cnt_sub:
-//                addOrSubCnt(SUBTRACT, TYPE_SUB);
-//                break;
-//
-//            case R.id.img_cnt_add:
-//                addOrSubCnt(ADD, TYPE_ADD);
-//                break;
         }
     }
-
-//    private void addOrSubCnt(int num, boolean type){
-//
-//        if (perCnt > MIN_CNT && type == TYPE_SUB){
-//            perCnt += num;
-//            mEtPersonnel.setText(String.valueOf(perCnt));
-//
-//        }else if (perCnt < MAX_CNT && type == TYPE_ADD){
-//            perCnt += num;
-//            mEtPersonnel.setText(String.valueOf(perCnt));
-//        }
-//        mEtPersonnel.clearFocus();
-//    }
 
     private void requestBrfReserve(){
         requestData();

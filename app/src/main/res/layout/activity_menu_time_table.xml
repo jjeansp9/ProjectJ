@@ -36,7 +36,7 @@
             android:id="@+id/tv_time_table_empty"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="시간표 정보가 없습니다."
+            android:text="배정된 반 정보가 없습니다."
             android:textColor="@color/font_color_999"
             android:textSize="@dimen/font_size_xlarge"
             android:layout_gravity="center"

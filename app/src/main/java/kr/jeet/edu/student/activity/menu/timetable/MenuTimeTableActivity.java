@@ -93,7 +93,7 @@ public class MenuTimeTableActivity extends BaseActivity {
                             if (list != null && !list.isEmpty()) mList.addAll(list);
 
                         }else{
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
                             LogMgr.e(TAG, "requestTeacherCls() errBody : " + response.errorBody().string());
                         }
 
@@ -110,8 +110,7 @@ public class MenuTimeTableActivity extends BaseActivity {
 
                     if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
-
-                    Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }
             });
         }

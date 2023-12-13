@@ -12,6 +12,8 @@ public class TuitionData implements Constants.PayListItem {
     public String clsName;    // 학급명
     public String payment;    // 금액
     public String accountNO;  // 가상 계좌번호
+    public String acaLink;    // 가상 계좌번호 url
+    public String acaLinkIsNull;    // JEET측 계좌번호 (가상 계좌번호가 없을때)
     public String gubun;      // 수강료 구분
     public String payDate;    // 수강 날짜
 

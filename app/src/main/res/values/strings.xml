@@ -566,8 +566,11 @@
     <string name="briefing_reserved_list">예약자 명단</string>
     <string name="briefing_write_name_stu"><font color="@color/red">* </font>이름</string>
     <string name="briefing_write_phonenumber"><font color="@color/red">* </font>휴대폰번호</string>
+    <string name="briefing_write_gubun"><font color="@color/red">* </font>재원생 여부</string>
     <string name="briefing_write_email"><font color="@color/red">* </font>이메일</string>
     <string name="briefing_write_personnel"><font color="@color/red">* </font>참여인원</string>
+    <string name="briefing_write_stu_non">비재원생</string>
+    <string name="briefing_write_stu">재원생</string>
     <string name="briefing_write_personnel_cnt">참석인원(%d/%d)</string>
     <string name="briefing_write_please_sel">"초/중/고"를 먼저 선택해주세요.</string>
     <string name="briefing_write_please_per_cnt">참가인원은 1명 이상으로 입력해주세요.</string>
