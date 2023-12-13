@@ -77,11 +77,140 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
-                android:id="@+id/tv_consultation_type"
+                android:id="@+id/tv_consultation_teacher"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/layout_calendar"
+                android:layout_marginTop="@dimen/layout_margin"
+                android:text="@string/consultation_request_time"
+                android:textColor="@color/font_color_default"
+                android:textSize="@dimen/font_size"
+                android:textStyle="bold"/>
+
+            <RelativeLayout
+                android:id="@+id/layout_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/bg_campus_spinner"
+                android:layout_marginTop="@dimen/layout_margin_12">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:elevation="8dp">
+
+                    <NumberPicker
+                        android:id="@+id/picker_start_am_pm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/consultation_number_picker"
+                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1" />
+
+                    <NumberPicker
+                        android:id="@+id/picker_start_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/consultation_number_picker"
+                        android:text="~"
+                        android:textSize="@dimen/font_size_xlarge"
+                        android:textColor="@color/font_color_default"/>
+
+                    <NumberPicker
+                        android:id="@+id/picker_end_am_pm"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/consultation_number_picker"
+                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1" />
+
+                    <NumberPicker
+                        android:id="@+id/picker_end_time"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_border_default_start"
+                        android:backgroundTint="@color/bg_gray" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/consultation_number_picker"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_border_default_end"
+                        android:backgroundTint="@color/bg_gray" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="@dimen/consultation_number_picker"
+                        android:text=""
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size_xlarge" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_border_default_start"
+                        android:backgroundTint="@color/bg_gray" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_border_default_end"
+                        android:backgroundTint="@color/bg_gray" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </RelativeLayout>
+
+
+
+            <TextView
+                android:id="@+id/tv_consultation_bag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/layout_time"
                 android:layout_marginTop="@dimen/layout_margin"
                 android:text="@string/consultation_request_type"
                 android:textColor="@color/font_color_default"
@@ -89,19 +218,20 @@
                 android:textStyle="bold" />
 
             <com.skydoves.powerspinner.PowerSpinnerView
-                android:id="@+id/spinner_type"
+                android:id="@+id/spinner_bag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_consultation_type"
-                android:layout_marginTop="@dimen/layout_margin_12"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/bg_campus_spinner"
+                android:gravity="center"
+                android:hint="@string/select"
                 android:paddingHorizontal="@dimen/layout_margin_16"
                 android:paddingVertical="@dimen/layout_margin_12"
                 android:textColor="@color/black"
                 android:textSize="@dimen/font_size"
-                android:hint="@string/select"
-                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_consultation_bag"
                 app:spinner_arrow_gravity="end"
                 app:spinner_arrow_tint="@color/blackgray"
                 app:spinner_divider_color="@color/line"
@@ -109,84 +239,14 @@
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_animation="dropdown"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
-                app:spinner_popup_elevation="2dp"
-                android:background="@drawable/bg_campus_spinner"/>
-
-            <TextView
-                android:id="@+id/tv_consultation_teacher"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_type"
-                android:layout_marginTop="@dimen/layout_margin"
-                android:text="@string/consultation_request_time"
-                android:textColor="@color/font_color_default"
-                android:textSize="@dimen/font_size"
-                android:textStyle="bold"/>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/layout_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
-                android:layout_marginTop="@dimen/layout_margin_12">
-
-                <com.skydoves.powerspinner.PowerSpinnerView
-                    android:id="@+id/spinner_time_start"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:paddingHorizontal="@dimen/layout_margin_16"
-                    android:paddingVertical="@dimen/layout_margin_12"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/font_size"
-                    android:hint="@string/select"
-                    android:gravity="center"
-                    app:spinner_arrow_gravity="end"
-                    app:spinner_arrow_tint="@color/blackgray"
-                    app:spinner_divider_color="@color/line"
-                    app:spinner_divider_show="true"
-                    app:spinner_divider_size="0.4dp"
-                    app:spinner_popup_animation="dropdown"
-                    app:spinner_popup_background="@drawable/selector_spinner_item"
-                    app:spinner_popup_elevation="2dp"
-                    android:background="@drawable/bg_campus_spinner"/>
-
-                <com.skydoves.powerspinner.PowerSpinnerView
-                    android:id="@+id/spinner_teacher"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingHorizontal="@dimen/layout_margin_16"
-                    android:paddingVertical="@dimen/layout_margin_12"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/font_size"
-                    android:hint="@string/select"
-                    android:gravity="center"
-                    app:spinner_arrow_gravity="end"
-                    app:spinner_arrow_tint="@color/blackgray"
-                    app:spinner_divider_color="@color/line"
-                    app:spinner_divider_show="true"
-                    app:spinner_divider_size="0.4dp"
-                    app:spinner_popup_animation="dropdown"
-                    app:spinner_popup_background="@drawable/selector_spinner_item"
-                    app:spinner_popup_elevation="2dp"
-                    android:background="@drawable/bg_campus_spinner"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-
+                app:spinner_popup_elevation="2dp" />
 
             <TextView
                 android:id="@+id/tv_consultation_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/layout_time"
+                app:layout_constraintTop_toBottomOf="@id/spinner_bag"
                 android:layout_marginTop="@dimen/layout_margin"
                 android:text="@string/consultation_request_content"
                 android:textColor="@color/font_color_default"

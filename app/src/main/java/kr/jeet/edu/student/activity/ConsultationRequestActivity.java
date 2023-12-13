@@ -3,7 +3,6 @@ package kr.jeet.edu.student.activity;
 import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD;
 import static kr.jeet.edu.student.common.Constants.DATE_FORMATTER_YYYY_MM_DD_KOR;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -17,13 +16,17 @@ import android.text.style.StyleSpan;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.text.ParseException;
@@ -33,22 +36,23 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.dialog.DatePickerFragment;
+import kr.jeet.edu.student.model.data.BagData;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.data.TeacherClsData;
-import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.CounselRequest;
+import kr.jeet.edu.student.model.response.BagResponse;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.StudentInfoResponse;
-import kr.jeet.edu.student.model.response.TeacherClsResponse;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
-import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -63,7 +67,8 @@ public class ConsultationRequestActivity extends BaseActivity {
 
     private EditText mEtConsultContent;
     private TextView mTvCal;
-    private PowerSpinnerView mSpinnerTeacher;
+    private PowerSpinnerView mSpinnerTeacher, mSpinnerBag;
+    private NumberPicker npStartAmPm, npStartTime, npEndAmPm, npEndTime;
 
     private RetrofitApi mRetrofitApi;
 
@@ -82,10 +87,14 @@ public class ConsultationRequestActivity extends BaseActivity {
     private String _phoneNumber = "";
     private String _managerPhoneNumber = "";
     Date _selectedDate;
+    Date _selectedTime;
     private int minYear = 0;
     private int maxYear = 2100;
 
     private ArrayList<TeacherClsData> mListTeacher = new ArrayList<>();
+    private List<BagData> mListBag = new ArrayList<>();
+    private List<String> mListBagName = new ArrayList<>();
+    private BagData _selectedBag = null;
     private TeacherClsData mInfo;
     private String title = "";
 
@@ -120,6 +129,7 @@ public class ConsultationRequestActivity extends BaseActivity {
         mListTeacher.addAll(DataManager.getInstance().getClsListMap().values());
 
         _selectedDate = new Date();
+        _selectedTime = new Date();
         Calendar calendar = Calendar.getInstance();
         minYear = calendar.get(Calendar.YEAR);
 
@@ -145,11 +155,54 @@ public class ConsultationRequestActivity extends BaseActivity {
 
         mEtConsultContent = findViewById(R.id.et_consultation_content);
         mTvCal = findViewById(R.id.tv_consultation_request_cal);
-        //mSpinnerTeacher = findViewById(R.id.spinner_teacher);
+        npStartAmPm = findViewById(R.id.picker_start_am_pm);
+        npStartTime = findViewById(R.id.picker_start_time);
+        npEndAmPm = findViewById(R.id.picker_end_am_pm);
+        npEndTime = findViewById(R.id.picker_end_time);
+        mSpinnerBag = findViewById(R.id.spinner_bag);
 
         mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
-        //setSpinnerTeacher();
+        setNumberPicker();
+        requestBagList();
+    }
+
+    private void setNumberPicker() {
+        setAmPm(npStartAmPm);
+        setAmPm(npEndAmPm);
+        setTime(npStartTime);
+        setTime(npEndTime);
+    }
+
+    private void setAmPm(NumberPicker picker) { // 오전, 오후 설정
+        String[] amPm = {"오전", "오후"};
+        picker.setMinValue(0);
+        picker.setMaxValue(1);
+        picker.setDisplayedValues(amPm);
+
+        Calendar calendar = Calendar.getInstance();
+
+        int hour_24 = calendar.get(Calendar.HOUR_OF_DAY); // 현재시간 24시간 단위
+
+        if (hour_24 <= 11) picker.setValue(0); // 오전
+        else picker.setValue(1); // 오후
+    }
+
+    private void setTime(NumberPicker picker) { // 시간 설정
+        int minValue = 0;
+        int maxValue = 11;
+        ArrayList<String> hours = new ArrayList<>();
+        for (int i = minValue + 1; i <= maxValue + 1; i++) hours.add(i+"시");
+
+        String[] hoursArray = hours.toArray(new String[0]);
+
+        picker.setMinValue(minValue);
+        picker.setMaxValue(maxValue);
+        picker.setDisplayedValues(hoursArray);
+
+        Calendar calendar = Calendar.getInstance();
+        int hour_12 = calendar.get(Calendar.HOUR); // 현재시간 12시간 단위
+        picker.setValue(hour_12 - 1);
     }
 
     void initAppbar() {
@@ -202,6 +255,35 @@ public class ConsultationRequestActivity extends BaseActivity {
     }
 
     private void putConsultRequest(){
+        Calendar calendarStart = Calendar.getInstance();
+        Calendar calendarEnd = Calendar.getInstance();
+
+        final int FORMAT_HOUR_12 = 12;
+        final String AM = "오전";
+        final String PM = "오후";
+
+        String startAmPm = (npStartAmPm.getValue() == 0) ? "오전" : "오후";
+        String endAmPm = (npEndAmPm.getValue() == 0) ? "오전" : "오후";
+
+        int startHour = npStartTime.getValue() + 1;
+        int endHour = npEndTime.getValue() + 1;
+
+        // 오후인 경우 시간에 12 더하기
+        if (startAmPm.equals(PM) && startHour != FORMAT_HOUR_12) startHour += FORMAT_HOUR_12;
+        if (endAmPm.equals(PM) && endHour != FORMAT_HOUR_12) endHour += FORMAT_HOUR_12;
+
+        // 오전 12시는 0시로 처리
+        if (startAmPm.equals(AM) && startHour == FORMAT_HOUR_12) startHour = 0;
+        if (endAmPm.equals(AM) && endHour == FORMAT_HOUR_12) endHour = 0;
+
+        calendarStart.set(Calendar.HOUR_OF_DAY, startHour);
+        calendarStart.set(Calendar.MINUTE, 0);
+
+        calendarEnd.set(Calendar.HOUR_OF_DAY, endHour);
+        calendarEnd.set(Calendar.MINUTE, 0);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.KOREA);
+        String resultTime = sdf.format(calendarStart.getTime()) + "~" + sdf.format(calendarEnd.getTime());
 
         String str = "";
 
@@ -216,16 +298,16 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.counselDate = str;
         request.acaCode = _acaCode;
         request.acaName = _acaName;
-//        request.sfCode = _sfCode;
-//        request.sfName = _sfName;
-//        request.clsName = _clsName;
-        //request.managerPhoneNumber = _managerPhoneNumber.replace("-", "");
         request.stCode = _stCode;
         request.sfCode = mInfo.sfCode;
         request.sfName = mInfo.sfName;
         request.clsName = mInfo.clsName;
         request.managerPhoneNumber = mInfo.phoneNumber;
-        request.callWishDate = "11:00 ~ 15:00"; // TODO : 테스트용 더미데이터 (나중에 수정하기)
+        request.callWishDate = resultTime;
+        if (_selectedBag != null) {
+            request.bagCode = _selectedBag.bagCode;
+            if (_selectedBag.bagName != null) request.bagName = _selectedBag.bagName;
+        }
 
         str = mEtConsultContent.getText().toString();
 
@@ -249,17 +331,34 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nclsName: " + request.clsName +
                 "\nphoneNumber: " + request.phoneNumber +
                 "\nsmsSender: " + request.smsSender +
-                "\ncallWishDate: " + request.callWishDate
+                "\ncallWishDate: " + request.callWishDate +
+                "\nbagCode: " + request.bagCode +
+                "\nbagName: " + request.bagName
         );
 
-        if (request.counselDate.equals("")) {
+        if (request.counselDate.isEmpty()) { // 상담희망일 미선택시
             Toast.makeText(mContext, R.string.please_date, Toast.LENGTH_SHORT).show();
 
-        } else if (request.memo.equals("")) {
-            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
-            showKeyboard(mEtConsultContent);
+        } else if(mListBagName == null || mListBagName.isEmpty()) { // 분류항목 데이터를 불러오지 못한 경우, 데이터 가져오기
+            requestBagList();
+            showMessageDialog(
+                    getString(R.string.dialog_title_alarm),
+                    getString(R.string.loading_bag_info),
+                    v-> hideMessageDialog(),
+                    null,
+                    false
+            );
+        } else if (request.bagName == null || request.bagName.isEmpty()) { // 분류항목 미선택시
+            Toast.makeText(mContext, R.string.please_bag, Toast.LENGTH_SHORT).show();
+            if (!mSpinnerBag.isShowing()) mSpinnerBag.show();
 
-        } else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) {
+        }
+//        else if (request.memo.isEmpty()) {
+//            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
+//            showKeyboard(mEtConsultContent);
+//
+//        }
+        else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) { // 캠퍼스 데이터를 불러오지 못한 경우, 데이터 가져오기
             requestMemberInfo(_memberSeq, _stCode);
             showMessageDialog(
                     getString(R.string.dialog_title_alarm),
@@ -268,7 +367,7 @@ public class ConsultationRequestActivity extends BaseActivity {
                     null,
                     false
             );
-        }else{
+        } else {
             showProgressDialog();
             if(RetrofitClient.getInstance() != null) {
                 mRetrofitApi = RetrofitClient.getApiInterface();
@@ -352,6 +451,67 @@ public class ConsultationRequestActivity extends BaseActivity {
                 public void onFailure(Call<StudentInfoResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestMemberInfo() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestMemberInfo() Exception : ", e.getMessage()); }
+                    hideProgressDialog();
+                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void setBagSpinner() {
+        if (mListBag != null && mListBag.size() > 0) mListBagName = mListBag.stream().map(t -> t.bagName).collect(Collectors.toList());
+        mSpinnerBag.setItems(mListBagName);
+        mSpinnerBag.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
+            LogMgr.e(newItem + " selected");
+            if(oldItem != null && oldItem.equals(newItem)) return;
+            BagData selectedData = null;
+            Optional<BagData> optional = mListBag.stream().filter(t -> t.bagName == newItem).findFirst();
+            if(optional.isPresent()) selectedData = (BagData) optional.get();
+
+            _selectedBag = selectedData;
+        });
+        mSpinnerBag.setSpinnerOutsideTouchListener((view, motionEvent) -> mSpinnerBag.dismiss());
+        mSpinnerBag.setLifecycleOwner(this);
+    }
+
+    private void requestBagList() {
+        showProgressDialog();
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.getBag().enqueue(new Callback<BagResponse>() {
+                @Override
+                public void onResponse(Call<BagResponse> call, Response<BagResponse> response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null){
+                            List<BagData> getData;
+                            getData = response.body().data;
+
+                            if (getData != null && !getData.isEmpty()) {
+                                if (mListBag.size() > 0) mListBag.clear();
+                                mListBag.addAll(getData);
+                                setBagSpinner();
+                            }
+
+                        }else{
+                            // TODO : 응답 코드에 따른 Toast 처리
+                            if (response.code() == RetrofitApi.RESPONSE_CODE_BINDING_ERROR) {
+
+                            } else if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+
+                            }
+                            Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                            LogMgr.e(TAG, "requestBagList() errBody : " + response.errorBody().string());
+                        }
+
+                    }catch (Exception e){ LogMgr.e(TAG + "requestBagList() Exception : ", e.getMessage()); }
+
+                    hideProgressDialog();
+                }
+
+                @Override
+                public void onFailure(Call<BagResponse> call, Throwable t) {
+                    try { LogMgr.e(TAG, "requestBagList() onFailure >> " + t.getMessage()); }
+                    catch (Exception e) { LogMgr.e(TAG + "requestBagList() Exception : ", e.getMessage()); }
                     hideProgressDialog();
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                 }

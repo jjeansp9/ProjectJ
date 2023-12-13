@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
@@ -15,8 +16,15 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -397,7 +405,52 @@ public class FileUtils {
         downloadManager.enqueue(request);
 
     }
+    public static void isImageUrlValid(Context context, String imageUrl, ImageValidationListener listener) {
+        RequestOptions requestOptions = new RequestOptions()
+                .onlyRetrieveFromCache(true)
+                .dontAnimate()
+                .skipMemoryCache(true);
 
+        Glide.with(context)
+                .load(imageUrl)
+                .apply(requestOptions)
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // 이미지 로딩에 실패한 경우
+                        listener.onImageValidation(false);
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        // 이미지 로딩에 성공한 경우
+                        listener.onImageValidation(true);
+                        return false;
+                    }
+                })
+                .submit();
+    }
+
+    public interface ImageValidationListener {
+        void onImageValidation(boolean isValid);
+    }
+
+    public static boolean setImageViewEnabledWithColor(Context context, ImageView imageView, boolean flag, int enableColorRes, int disableColorRes) {
+        if(imageView != null) {
+            imageView.setEnabled(flag);
+            if (flag) {
+                // Set the color filter for the enabled state
+                imageView.setColorFilter(context.getColor(enableColorRes));
+            } else {
+                // Set the color filter for the disabled state
+                imageView.setColorFilter(context.getColor(disableColorRes));
+            }
+            return true;
+        }else{
+            return false;
+        }
+    }
     public static void loadImage(Context mContext, String url, ImageView view){
         Glide.with(mContext)
                 .load(url)

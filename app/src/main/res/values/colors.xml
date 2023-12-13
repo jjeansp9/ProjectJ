@@ -33,8 +33,10 @@
     <color name="line_set">#EDEDED</color>
     <color name="gray">#cccccc</color>
     <color name="blackgray_sub">#444444</color>
+    <color name="blackgray2">#555555</color>
     <color name="blackgray">#666666</color>
     <color name="darkgray">#999999</color>
+    <color name="darkergray">#777777</color>
     <color name="bg_gray">#eee</color>
     <color name="bg_lightgray">#f0f0f0</color>
     <color name="bg_lightgray_2">#f8f8f8</color>

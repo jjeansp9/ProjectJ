@@ -97,8 +97,10 @@
     <string name="auth_complete">인증이 완료되었습니다.</string>
     <string name="timeout">시간초과</string>
     <string name="please_date">상담 희망일을 선택해주세요.</string>
+    <string name="please_bag">분류항목을 선택해주세요.</string>
     <string name="please_content">내용을 입력해주세요.</string>
     <string name="loading_aca_info">캠퍼스 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.</string>
+    <string name="loading_bag_info">분류항목 정보를 불러오는 중입니다. 잠시 후 다시 시도해주세요.</string>
     <string name="check_duplicate">중복체크</string>
     <string name="duplicate_id">중복된 아이디입니다.</string>
     <string name="duplicate_phone_no">이미 사용 중인 휴대폰 번호입니다.</string>
@@ -273,11 +275,9 @@
 
     <string name="consultation_request_day_desired"><font color="@color/red">* </font>상담 희망일</string>
     <string name="consultation_request_sel_date">날짜를 선택해주세요</string>
-    <string name="consultation_request_sel_type">항목을 선택해주세요</string>
-    <string name="consultation_request_sel_time">항목을 선택해주세요</string>
     <string name="consultation_request_type"><font color="@color/red">* </font>분류항목</string>
     <string name="consultation_request_date">%d년 %d월 %d일</string>
-    <string name="consultation_request_time"><font color="@color/red">* </font>전화요청 일시</string>
+    <string name="consultation_request_time"><font color="@color/red">* </font>상담 희망시간</string>
     <string name="consultation_request_content">상담 내용</string>
     <string name="consultation_request_content_success">선생님에게 상담요청을 하였습니다</string>
     <string name="consultation_request_attention">상담은 내선전화 [ 070 ] 번호로 진행됩니다.\n수업중이거나, 내부사정에 따라서 상담이 지연될 수 있으니 양해 바랍니다.</string>
@@ -777,6 +777,9 @@
     <string name="qna_insert_success">문의사항이 신청되었습니다.</string>
     <string name="qna_update_success">문의사항이 수정되었습니다.</string>
 
+    <string name="title_bus_start">출발</string>
+    <string name="btn_title_phone_call">전화하기</string>
+    <string name="btn_title_bus_timetable_">등/하원 시간표</string>
 
 </resources>
 

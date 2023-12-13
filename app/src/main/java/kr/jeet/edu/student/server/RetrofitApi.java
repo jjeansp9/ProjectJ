@@ -18,6 +18,7 @@ import kr.jeet.edu.student.model.request.UpdatePushStatusRequest;
 import kr.jeet.edu.student.model.request.UpdatePushTokenRequest;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.BCListResponse;
+import kr.jeet.edu.student.model.response.BagResponse;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
@@ -25,6 +26,7 @@ import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingReserveResponse;
 import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
 import kr.jeet.edu.student.model.response.BriefingResponse;
+import kr.jeet.edu.student.model.response.BusDriveHistoryResponse;
 import kr.jeet.edu.student.model.response.BusInfoResponse;
 import kr.jeet.edu.student.model.response.BusRouteResponse;
 import kr.jeet.edu.student.model.response.FindIDResponse;
@@ -79,7 +81,6 @@ public interface RetrofitApi {
     public final static int RESPONSE_CODE_NOT_FOUND= 404;
     public final static int RESPONSE_CODE_DUPLICATE_ERROR= 409;
     public final static int RESPONSE_CODE_INERNAL_SERVER_ERROR= 500;
-
 
     // 회원가입
     @POST("member/signUp")
@@ -199,6 +200,10 @@ public interface RetrofitApi {
     @POST("counsel")
     Call<BaseResponse> requestCounsel(@Body CounselRequest counselRequest);
 
+    // 상담 분류항목 조회
+    @GET("counsel/bag")
+    Call<BagResponse> getBag();
+
     // 레벨테스트 등록
     @POST("levelTest")
     Call<BaseResponse> requestLevelTest(@Body LevelTestRequest request);
@@ -277,6 +282,9 @@ public interface RetrofitApi {
     // 버스 목록 조회
     @GET("buses")
     Call<BusInfoResponse> getBusesInfo(@Query("busAcaName") String busAcaName);
+    // 버스 운행 이력 조회
+    @GET("bus/drive")
+    Call<BusDriveHistoryResponse> getBusDriveHistory(@Query("busAcaName") String busAcaName, @Query("busCode") int busCode);
     // 버스 노선 조회
     @GET("bus/route")
     Call<BusRouteResponse> getBusRoute(@Query("busAcaName") String busAcaName, @Query("busCode") int busCode);

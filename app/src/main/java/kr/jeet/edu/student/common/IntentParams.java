@@ -37,6 +37,7 @@ public class IntentParams {
 
     public final static String PARAM_ANNOUNCEMENT_DETAIL_IMG = "announcementDetailImg";  // 공지사항 상세화면 이미지 item
     public final static String PARAM_BOARD_POSITION = "board_position";  // 선택한 아이템 position
+    public final static String PARAM_WEB_DETAIL_IMG = "webDetailImg";  // web 이미지 item (차량)
 
     public final static String PARAM_WEB_VIEW_URL = "webViewUrl";  // 웹뷰에서 로드할 url
     public final static String PARAM_PUSH_MESSAGE = "pushMessage";  // pushMessage

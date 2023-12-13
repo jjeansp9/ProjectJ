@@ -42,7 +42,7 @@ public class MenuTimeTableActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_menu_roll_book);
+        setContentView(R.layout.activity_menu_time_table);
         mContext = this;
         initAppbar();
         initView();
