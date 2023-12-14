@@ -128,10 +128,9 @@ public class TuitionActivity extends BaseActivity {
         Intent intent = getIntent();
         if(intent != null) {
             if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                }else{
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                Bundle bundle = getIntent().getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                if (bundle != null) {
+                    _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
                 }
                 if (_pushData != null) _stCode = _pushData.stCode;
                 else _stCode = PreferenceUtil.getUserSTCode(mContext);

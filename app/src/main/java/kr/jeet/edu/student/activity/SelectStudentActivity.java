@@ -50,6 +50,7 @@ import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -137,7 +138,10 @@ public class SelectStudentActivity extends BaseActivity {
 
                 if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                     LogMgr.e(TAG, "push msg ");
-                    _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                    Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                    if (bundle != null) {
+                        _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                    }
                     if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body);
 
 
@@ -232,14 +236,7 @@ public class SelectStudentActivity extends BaseActivity {
 
                 case MSG_TYPE_TEST_APPT: // 레벨테스트
                 {
-//                    key = pushId : value = mbWOdBFuWm
-//                       E  key = body : value = 김영태 테스트예약 등록되었습니다.
-//                       E  key = date : value = 2023-12-05 14:33:59
-//                       E  key = title : value = 테스트예약
-//                       E  key = userGubun : value = 3
-//                       E  key = connSeq : value = 14
-//                       E  key = memberSeq : value = 3
-//                       E  key = pushType : value = LEVEL_TEST
+
                 }
                 break;
 
@@ -253,8 +250,11 @@ public class SelectStudentActivity extends BaseActivity {
 
     private void startPushActivity(Class<?> targetActivity){
         Intent intent = new Intent(mContext, targetActivity);
-        if(_pushMessage != null) intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-
+        if(_pushMessage != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+        }
         startActivity(intent);
         _pushMessage = null;
     }
@@ -378,7 +378,9 @@ public class SelectStudentActivity extends BaseActivity {
         Intent intent = new Intent(mContext, MainActivity.class);
         LogMgr.e(TAG, "EVENT goMain()");
         if(_pushMessage != null) {
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

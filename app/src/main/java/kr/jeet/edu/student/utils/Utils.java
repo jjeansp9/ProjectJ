@@ -1,5 +1,6 @@
 package kr.jeet.edu.student.utils;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.text.ParseException;
@@ -37,6 +38,8 @@ import android.graphics.drawable.InsetDrawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.util.TypedValue;
@@ -671,6 +674,34 @@ public class Utils {
     public static boolean isLandscapeMode(Context context) {
         int orientation = context.getResources().getConfiguration().orientation;
         return orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+    /**
+    * bundle serializable extra
+    * */
+    public static <T extends Serializable> T getSerializableExtra(Bundle bundle, String key, Class<T> clazz) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return clazz.cast(bundle.getSerializable(key, clazz));
+        } else {
+            Serializable temp = bundle.getSerializable(key);
+            if (clazz.isInstance(temp)) {
+                return clazz.cast(temp);
+            }
+            return null;
+        }
+    }
+    /**
+     * intent parcelableExtra extra
+     * */
+    public static <T extends Parcelable> T getParcelableExtra(Intent intent, String key, Class<T> clazz) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return clazz.cast(intent.getParcelableExtra(key, clazz));
+        } else {
+            Parcelable temp = intent.getParcelableExtra(key);
+            if (clazz.isInstance(temp)) {
+                return clazz.cast(temp);
+            }
+            return null;
+        }
     }
 }
 

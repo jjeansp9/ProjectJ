@@ -30,6 +30,7 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
+import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,11 +95,12 @@ public class ReportCardDetailActivity extends BaseActivity {
 
             if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                 LogMgr.w("param is recived");
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                }else{
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+
+                Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                if (bundle != null) {
+                    _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
                 }
+
                 if (_pushData != null) {
                     reportSeq = _pushData.connSeq;
                     if (_pushData.stCode == _stCode) new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);

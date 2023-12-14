@@ -101,10 +101,10 @@ public class MenuQNADetailActivity extends BaseActivity {
 
         }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) { // 푸쉬 -> 상세
             PushMessage message = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-            }else{
-                message = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+
+            Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+            if (bundle != null) {
+                message = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
             }
             if (message != null) {
                 _currentSeq = message.connSeq;

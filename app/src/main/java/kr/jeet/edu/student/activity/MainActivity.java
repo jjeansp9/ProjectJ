@@ -374,7 +374,11 @@ public class MainActivity extends BaseActivity {
         if(intent != null) {
             if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
                 LogMgr.e(TAG, "push msg ");
-                _pushMessage = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                if (bundle != null) {
+                    PushMessage msg = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                    if (msg != null) _pushMessage = msg;
+                }
             } else {
                 LogMgr.e(TAG, "push msg is null");
             }
@@ -438,7 +442,7 @@ public class MainActivity extends BaseActivity {
 
         if(_pushMessage != null) {
 
-            LogMgr.e("EVENT", _pushMessage.pushType);
+            LogMgr.e("EVENT", _pushMessage.pushType + ", " + _pushMessage.connSeq);
 
             switch(_pushMessage.pushType) {
                 case MSG_TYPE_NOTICE:   //공지사항의 경우 공지사항 상세페이지로 이동
@@ -475,13 +479,13 @@ public class MainActivity extends BaseActivity {
 
                 case MSG_TYPE_PT: // 설명회예약
                 {
-                    LogMgr.e("EVENT3", _pushMessage.pushType);
                     startDetailActivity(MenuBriefingDetailActivity.class);
                 }
                 break;
 
                 case MSG_TYPE_SYSTEM: // 시스템알림
                 {
+
                     if (_pushMessage.memberSeq != _memberSeq) {
                         _pushMessage = null;
                         return;
@@ -561,7 +565,11 @@ public class MainActivity extends BaseActivity {
     private void startDetailActivity(Class<?> targetActivity) {
         if (targetActivity != null) {
             Intent intent = new Intent(this, targetActivity);
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+            if (_pushMessage != null) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
+                intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+            }
             intent.putExtras(intent);
             resultLauncher.launch(intent);
             _pushMessage = null;

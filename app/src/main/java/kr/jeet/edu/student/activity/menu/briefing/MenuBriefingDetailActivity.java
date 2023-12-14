@@ -164,10 +164,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                 }
 
             }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                }else{
-                    _pushData = intent.getParcelableExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+                if (bundle != null) {
+                    _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
                 }
                 if (_pushData != null) {
                     _currentSeq = _pushData.connSeq;
