@@ -241,17 +241,11 @@ public class IntroActivity extends BaseActivity {
     private void initIntentData() {
         Intent intent = getIntent();
         if(intent != null) {
-            if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)){
-                LogMgr.e(TAG, "push msg ");
-                Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
+            Bundle bundle = intent.getExtras();
 
-                if (bundle != null) {
-                    _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                    if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body + ", " + _pushMessage.connSeq);
-                }
-
-            }else{
-                LogMgr.e(TAG, "push msg is null");
+            if (bundle != null) {
+                _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body + ", " + _pushMessage.connSeq);
             }
 //            if(intent.getExtras() != null) {
 //                Bundle map = intent.getExtras();
@@ -637,7 +631,7 @@ public class IntroActivity extends BaseActivity {
                                             LogMgr.e(TAG, "EVENT intro pushConnSeq: " + _pushMessage.connSeq+"");
                                             Bundle bundle = new Bundle();
                                             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                                            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+                                            intent.putExtras(bundle);
                                         }
                                         startActivity(intent);
                                         finish();
@@ -675,7 +669,7 @@ public class IntroActivity extends BaseActivity {
         if(_pushMessage != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+            intent.putExtras(bundle);
         }
         startActivity(intent);
         finish();
@@ -691,7 +685,7 @@ public class IntroActivity extends BaseActivity {
         if(_pushMessage != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+            intent.putExtras(bundle);
         }
         startActivity(intent);
         finish();
@@ -708,7 +702,7 @@ public class IntroActivity extends BaseActivity {
             if(_pushMessage != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+                intent.putExtras(bundle);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);

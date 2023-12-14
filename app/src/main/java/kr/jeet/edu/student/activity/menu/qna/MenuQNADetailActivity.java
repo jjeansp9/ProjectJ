@@ -99,17 +99,15 @@ public class MenuQNADetailActivity extends BaseActivity {
             }
             if (_currentData != null) _currentSeq = _currentData.seq;
 
-        }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) { // 푸쉬 -> 상세
-            PushMessage message = null;
+        }
+        PushMessage message = null;
 
-            Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
-            if (bundle != null) {
-                message = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-            }
-            if (message != null) {
-                _currentSeq = message.connSeq;
-                new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
-            }
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) message = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+
+        if (message != null) {
+            _currentSeq = message.connSeq;
+            new FCMManager(mContext).requestPushConfirmToServer(message, _stCode);
         }
     }
 

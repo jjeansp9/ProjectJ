@@ -284,7 +284,7 @@
 
     <string name="menu_test_reserve_state">상태</string>
     <string name="menu_test_reserve_btn">레벨테스트 예약하기</string>
-    <!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
+<!--    <string name="menu_test_reserve_header">※ 개인정보 수정을 원하실경우 데스크로 연락주시기 바랍니다.</string>-->
     <string name="menu_test_reserve_header">※ 학생명 수정 또는 테스트 취소는 데스크로 연락 바랍니다.</string>
     <string name="menu_test_reserve_test_time_empty">테스트예약 시간정보가 없습니다.지트학원에 문의바랍니다.</string>
     <string name="menu_test_reserve_test_time_fail">서버 통신이 불안정합니다. 잠시 후 다시 시도해주세요.</string>
@@ -566,11 +566,8 @@
     <string name="briefing_reserved_list">예약자 명단</string>
     <string name="briefing_write_name_stu"><font color="@color/red">* </font>이름</string>
     <string name="briefing_write_phonenumber"><font color="@color/red">* </font>휴대폰번호</string>
-    <string name="briefing_write_gubun"><font color="@color/red">* </font>재원생 여부</string>
     <string name="briefing_write_email"><font color="@color/red">* </font>이메일</string>
     <string name="briefing_write_personnel"><font color="@color/red">* </font>참여인원</string>
-    <string name="briefing_write_stu_non">비재원생</string>
-    <string name="briefing_write_stu">재원생</string>
     <string name="briefing_write_personnel_cnt">참석인원(%d/%d)</string>
     <string name="briefing_write_please_sel">"초/중/고"를 먼저 선택해주세요.</string>
     <string name="briefing_write_please_per_cnt">참가인원은 1명 이상으로 입력해주세요.</string>

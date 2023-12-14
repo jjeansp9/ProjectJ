@@ -110,16 +110,13 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                 _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
             }
 
-        }else if(intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-            LogMgr.w("param is push");
-            Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
-            if (bundle != null) {
-                _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-            }
-            if (_pushData != null) {
-                _currentSeq = _pushData.connSeq;
-                new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
-            }
+        }
+        Bundle bundle = intent.getExtras();
+        if (bundle != null) _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+
+        if (_pushData != null) {
+            _currentSeq = _pushData.connSeq;
+            new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
         }
     }
 

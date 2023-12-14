@@ -136,18 +136,11 @@ public class SelectStudentActivity extends BaseActivity {
                     requestChildStudentInfo(_parentSeq);
                 }
 
-                if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                    LogMgr.e(TAG, "push msg ");
-                    Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                    if (bundle != null) {
-                        _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                    }
-                    if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body);
-
-
-                } else {
-                    LogMgr.e(TAG, "push msg is null");
+                Bundle bundle = intent.getExtras();
+                if (bundle != null) {
+                    _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
                 }
+                if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body);
             }
         } catch (Exception e) {
             LogMgr.e(TAG + " Exception: ", e.getMessage());
@@ -253,7 +246,7 @@ public class SelectStudentActivity extends BaseActivity {
         if(_pushMessage != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+            intent.putExtras(bundle);
         }
         startActivity(intent);
         _pushMessage = null;
@@ -380,7 +373,7 @@ public class SelectStudentActivity extends BaseActivity {
         if(_pushMessage != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-            intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+            intent.putExtras(bundle);
         }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

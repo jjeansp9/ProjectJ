@@ -115,48 +115,11 @@
                 android:visibility="gone"/>
 
             <TextView
-                android:id="@+id/tv_brf_write_gubun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_brf_write_email"
-                android:text="@string/briefing_write_gubun"
-                android:textColor="@color/font_color_default"
-                android:textSize="@dimen/font_size"
-                android:textStyle="bold"
-                android:layout_marginTop="20dp"/>
-
-            <RadioGroup
-                android:id="@+id/rg_gubun"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/tv_brf_write_gubun"
-                android:orientation="horizontal">
-                <RadioButton
-                    android:id="@+id/rb_stu_non"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/briefing_write_stu_non"
-                    android:textColor="@color/font_color_default"
-                    android:textSize="@dimen/font_size"
-                    android:checked="true" />
-                <RadioButton
-                    android:id="@+id/rb_stu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/briefing_write_stu"
-                    android:textColor="@color/font_color_default"
-                    android:textSize="@dimen/font_size" />
-            </RadioGroup>
-
-            <TextView
                 android:id="@+id/tv_brf_write_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rg_gubun"
+                app:layout_constraintTop_toBottomOf="@id/et_brf_write_email"
                 android:text="@string/test_reserve_write_grade"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"

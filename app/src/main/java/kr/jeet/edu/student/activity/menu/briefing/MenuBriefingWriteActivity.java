@@ -148,8 +148,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         //mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         //mEtSchool = findViewById(R.id.et_brf_write_school);
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
-        rbStu = findViewById(R.id.rb_stu);
-        rbStuNon = findViewById(R.id.rb_stu_non);
+//        rbStu = findViewById(R.id.rb_stu);
+//        rbStuNon = findViewById(R.id.rb_stu_non);
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum};
 

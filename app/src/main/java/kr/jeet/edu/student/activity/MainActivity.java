@@ -372,15 +372,10 @@ public class MainActivity extends BaseActivity {
 
         Intent intent = getIntent();
         if(intent != null) {
-            if (intent.hasExtra(IntentParams.PARAM_PUSH_MESSAGE)) {
-                LogMgr.e(TAG, "push msg ");
-                Bundle bundle = intent.getBundleExtra(IntentParams.PARAM_PUSH_MESSAGE);
-                if (bundle != null) {
-                    PushMessage msg = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                    if (msg != null) _pushMessage = msg;
-                }
-            } else {
-                LogMgr.e(TAG, "push msg is null");
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                PushMessage msg = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
+                if (msg != null) _pushMessage = msg;
             }
 //            if (intent.getExtras() != null) {
 //                Bundle map = intent.getExtras();
@@ -568,9 +563,8 @@ public class MainActivity extends BaseActivity {
             if (_pushMessage != null) {
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
-                intent.putExtra(IntentParams.PARAM_PUSH_MESSAGE, bundle);
+                intent.putExtras(bundle);
             }
-            intent.putExtras(intent);
             resultLauncher.launch(intent);
             _pushMessage = null;
         }
