@@ -1,5 +1,7 @@
 package kr.jeet.edu.student.dialog;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +20,7 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -26,8 +29,15 @@ import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.LogMgr;
 
 public class SearchAddressDialog extends DialogFragment {
-    static public SearchAddressDialog newInstance() {
-        return new SearchAddressDialog();
+
+    private Context mContext;
+
+    static public SearchAddressDialog newInstance(Context context) {
+        return new SearchAddressDialog(context);
+    }
+
+    public SearchAddressDialog(Context mContext) {
+        this.mContext = mContext;
     }
 
     public interface OnSearchAddressResult {
@@ -92,15 +102,14 @@ public class SearchAddressDialog extends DialogFragment {
 
             @Override
             public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                // SSL 에러가 발생해도 계속 진행
-                handler.proceed();
+                //handler.proceed(); : 이렇게 구현하면 작동은 하지만 Play Console에 앱을 출시하면 경고가 뜸.
+                final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(getString(R.string.received_ssl_error_msg));
+                builder.setPositiveButton(getString(R.string.msg_continue), (dialog, which) -> handler.proceed());
+                builder.setNegativeButton(getString(R.string.cancel), (dialog, whitch) -> handler.cancel());
+                final AlertDialog dialog = builder.create();
+                dialog.show();
             }
-//
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                view.loadUrl(url);
-//                return true;
-//            }
 
             // 페이지 로딩 시작시 호출
             @Override

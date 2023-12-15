@@ -451,7 +451,7 @@ public class MenuTestReserveWriteActivity extends BaseActivity {
 
     private void searchAddress(){
         dialogDismiss();
-        mDialog = SearchAddressDialog.newInstance();
+        mDialog = SearchAddressDialog.newInstance(mContext);
         mDialog.showDialog(this, address -> {
             if (address != null) runOnUiThread(() -> mTvAddress.setText(address));
             dialogDismiss();
