@@ -44,6 +44,9 @@ public class AnnouncementData implements Parcelable {
     @SerializedName("memberResponseVO")
     public MemberResponseVO memberResponseVO;
 
+    @SerializedName("isRead")
+    public boolean isRead = true;
+
     @SerializedName("fileList")
     public List<FileData> fileList;
     public AnnouncementData(Parcel in) {
@@ -82,6 +85,7 @@ public class AnnouncementData implements Parcelable {
         parcel.writeString(acaGubunName);
         parcel.writeString(insertDate);
         parcel.writeParcelable(memberResponseVO, i);
+        parcel.writeByte((byte) (isRead ? 1 : 0));
         parcel.writeInt(fileList.size());
         for(FileData data : fileList) {
             parcel.writeParcelable(data, i);
@@ -100,6 +104,7 @@ public class AnnouncementData implements Parcelable {
         acaGubunName = in.readString();
         insertDate = in.readString();
         memberResponseVO = in.readParcelable(MemberResponseVO.class.getClassLoader());
+        isRead = in.readByte() != 0;
         int size = in.readInt();
         fileList = new ArrayList<>();
         for(int i = 0; i < size; i++) {

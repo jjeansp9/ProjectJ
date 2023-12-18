@@ -77,6 +77,13 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
                 holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
+                LogMgr.e(TAG, "isRead: " + item.isRead);
+
+                if (!item.isRead) { // 읽지 않은 게시글
+                    holder.brfRoot.setBackgroundColor(mContext.getColor(R.color.bg_is_read));
+                } else {
+                    holder.brfRoot.setBackgroundColor(mContext.getColor(R.color.bg_white));
+                }
                 //holder.tvLocation.setVisibility(View.VISIBLE);
 
                 str = TextUtils.isEmpty(item.acaName) ? "캠퍼스 정보없음" : item.acaName + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);

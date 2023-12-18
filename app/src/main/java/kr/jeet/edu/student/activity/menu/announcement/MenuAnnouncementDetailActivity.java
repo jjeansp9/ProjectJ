@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
@@ -25,6 +26,8 @@ import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.AnnouncementData;
@@ -66,6 +69,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
 
     private String _stName = "";
     private int _stCode = 0;
+    private int _memberSeq = -1;
 
     private final int TYPE_PUSH = 0;
     private final int TYPE_ANNOUNCEMENT = 1;
@@ -95,6 +99,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
 
     private void initData() {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
         Intent intent = getIntent();
         if(intent == null) return;
@@ -104,12 +109,23 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
 
         if(intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
             LogMgr.w("param is recived");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, AnnouncementData.class);
-            }else{
-                _currentData = intent.getParcelableExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO);
+            _currentData = Utils.getParcelableExtra(intent, IntentParams.PARAM_ANNOUNCEMENT_INFO, AnnouncementData.class);
+            if (_currentData != null) {
+                if (!_currentData.isRead) {
+                    new Thread(() -> {
+                        List<NewBoardData> newBoardData = JeetDatabase.getInstance(getApplicationContext()).newBoardDao().getBoardByReadFlagNType(_memberSeq, false, FCMManager.MSG_TYPE_NOTICE);
+                        if(!newBoardData.isEmpty()) {
+                            for(NewBoardData boardData : newBoardData) {
+                                if (boardData.connSeq == _currentData.seq) {
+                                    boardData.isRead = true;
+                                    //_currentData.isRead = true;
+                                    JeetDatabase.getInstance(getApplicationContext()).newBoardDao().update(boardData);
+                                }
+                            }
+                        }
+                    }).start();
+                }
             }
-
         }
         Bundle bundle = intent.getExtras();
         if (bundle != null) _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
@@ -118,6 +134,21 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
             _currentSeq = _pushData.connSeq;
             new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
         }
+
+//        new Thread(() -> {
+//            try {
+//                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
+//                if(pushMessages.isEmpty()) {
+//                    setNewAttendanceContent(false);
+//                }else{
+//                    for (PushMessage data : pushMessages) {
+//                        if (data.stCode == _stCode) setNewAttendanceContent(true);
+//                    }
+//                }
+//            }catch(Exception e){
+//
+//            }
+//        }).start();
     }
 
     private void initView() {
@@ -232,6 +263,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                     AnnouncementData data = response.body().data;
                                     if (data != null){
                                         _currentData = data;
+                                        LogMgr.e(TAG+"isRead Test", _currentData.isRead + "");
                                         //initData();
                                         setView();
 

@@ -419,8 +419,8 @@ public class Utils {
     /**
      * 날짜 포맷
      * */
-    public static String formatDate(String inputDate, String inputFoarmatStr, String outputFormatStr) {
-        SimpleDateFormat inputDateFormat = new SimpleDateFormat(inputFoarmatStr, Locale.KOREA);
+    public static String formatDate(String inputDate, String inputFormatStr, String outputFormatStr) {
+        SimpleDateFormat inputDateFormat = new SimpleDateFormat(inputFormatStr, Locale.KOREA);
         SimpleDateFormat outputFormat = new SimpleDateFormat(outputFormatStr, Locale.KOREA);
 
         try {

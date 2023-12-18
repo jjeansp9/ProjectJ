@@ -34,6 +34,8 @@
     <string name="msg_continue">계속하기</string>
     <string name="pay">납부하기</string>
     <string name="new_member">신규원생</string>
+    <string name="stu">재원생</string>
+    <string name="stu_non">비재원생</string>
 
     <string name="id_pattern">0123456789qwertzuiopasdfghjklyxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM_-</string>
 
@@ -567,6 +569,7 @@
     <string name="briefing_reserved_list">예약자 명단</string>
     <string name="briefing_write_name_stu"><font color="@color/red">* </font>이름</string>
     <string name="briefing_write_phonenumber"><font color="@color/red">* </font>휴대폰번호</string>
+    <string name="briefing_write_stu_state"><font color="@color/red">* </font>재원생 여부</string>
     <string name="briefing_write_email"><font color="@color/red">* </font>이메일</string>
     <string name="briefing_write_personnel"><font color="@color/red">* </font>참여인원</string>
     <string name="briefing_write_personnel_cnt">참석인원(%d/%d)</string>

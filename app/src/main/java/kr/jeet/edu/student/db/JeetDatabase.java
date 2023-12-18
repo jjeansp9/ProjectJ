@@ -9,11 +9,12 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import kr.jeet.edu.student.utils.Converters;
 
-@Database(entities = {PushMessage.class}, version = 3, exportSchema = true, autoMigrations = {@AutoMigration(from = 2, to = 3)})
+@Database(entities = {PushMessage.class, NewBoardData.class}, version = 5, exportSchema = true, autoMigrations = {@AutoMigration(from = 4, to = 5)})
 @TypeConverters({Converters.class})
 public abstract class JeetDatabase extends RoomDatabase {
     private static JeetDatabase JeetDBInstance = null;
     public abstract PushMessageDao pushMessageDao();
+    public abstract NewBoardDao newBoardDao();
 
     public static JeetDatabase getInstance(Context context) {
         if(JeetDBInstance == null) {

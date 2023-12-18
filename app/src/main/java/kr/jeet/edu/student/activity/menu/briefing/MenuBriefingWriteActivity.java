@@ -96,6 +96,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     private String url = "";
     private final int PUT_CNT = 1;
 
+    private String isStudent = "Y";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,8 +150,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
         //mEtPersonnel = findViewById(R.id.et_brf_write_personnel);
         //mEtSchool = findViewById(R.id.et_brf_write_school);
         mSpinnerGrade = findViewById(R.id.spinner_reserve_grade);
-//        rbStu = findViewById(R.id.rb_stu);
-//        rbStuNon = findViewById(R.id.rb_stu_non);
+        rbStu = findViewById(R.id.rb_stu);
+        rbStuNon = findViewById(R.id.rb_stu_non);
 
         mEtList = new EditText[]{mEtName, mEtPhoneNum};
 
@@ -296,6 +298,7 @@ public class MenuBriefingWriteActivity extends BaseActivity {
     }
 
     private void requestBrfReserve(){
+        showProgressDialog();
         requestData();
 
         if(RetrofitClient.getInstance() != null) {
@@ -333,6 +336,8 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestBrfReserve() Exception : ", e.getMessage()); }
+
+                    hideProgressDialog();
                 }
 
                 @Override
@@ -341,29 +346,36 @@ public class MenuBriefingWriteActivity extends BaseActivity {
                     catch (Exception e) { LogMgr.e(TAG + "requestBrfReserve() Exception : ", e.getMessage()); }
 
                     Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
+                    hideProgressDialog();
                 }
             });
         }
     }
 
     private void requestData(){
+
+        if (rbStu.isChecked()) isStudent = "Y";
+        else if (rbStuNon.isChecked()) isStudent = "N";
+
         request = new BriefingReserveRequest();
 
         request.ptSeq = ptSeq;
         request.memberSeq = _memberSeq;
         request.name = mEtName.getText().toString();
         request.phoneNumber = mEtPhoneNum.getText().toString().trim();
+        request.isStudent = isStudent;
         //request.email = mEtEmail.getText().toString().trim();
         //request.participantsCnt = Integer.parseInt(mEtPersonnel.getText().toString().trim());
         request.participantsCnt = PUT_CNT; // 참석자는 무조건 1로 보내기
         if (!TextUtils.isEmpty(_selectedSchoolData.scName)) request.schoolNm = _selectedSchoolData.scName;
-        if (!TextUtils.isEmpty(_stGrade)) request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), "");;
+        if (!TextUtils.isEmpty(_stGrade)) request.grade = _stGrade.replace(getString(R.string.test_reserve_write_grade_sub), "");
 
-        LogMgr.i(TAG, "== putData ==" +
+        LogMgr.i(TAG, "== inputData ==" +
                 "\nptSeq: " + request.ptSeq +
                 "\nmemberSeq: " + request.memberSeq +
                 "\nname: " + request.name +
                 "\nphoneNumber: " + request.phoneNumber +
+                "\nisStudent: " + request.isStudent +
                 "\nparticipantsCnt: " + request.participantsCnt +
                 "\nschoolNm: " + request.schoolNm +
                 "\ngrade: " + request.grade

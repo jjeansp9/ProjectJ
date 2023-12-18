@@ -15,6 +15,9 @@ public class BriefingReserveRequest {
     @SerializedName("phoneNumber")
     public String phoneNumber; // 연락처
 
+    @SerializedName("isStudent")
+    public String isStudent; // 재원생 여부
+
     @SerializedName("email")
     public String email; // 이메일
 

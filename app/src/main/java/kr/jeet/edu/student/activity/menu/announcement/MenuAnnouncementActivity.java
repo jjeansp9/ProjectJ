@@ -24,6 +24,9 @@ import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
 import java.io.IOException;
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,7 +40,11 @@ import kr.jeet.edu.student.adapter.AnnouncementListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
+import kr.jeet.edu.student.db.PushMessageDao;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
@@ -70,6 +77,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private ArrayList<AnnouncementData> mList = new ArrayList<>();
     private ArrayList<PushMessage> mPushList = new ArrayList<>();
 
+    private int _memberSeq = -1;
     private String _acaCode = "";
     private String _acaName = "";
     private String _appAcaCode = "";
@@ -87,11 +95,8 @@ public class MenuAnnouncementActivity extends BaseActivity {
                 if (added) {
                     AnnouncementData changedItem = null;
                     if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
-                        } else {
-                            changedItem = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-                        }
+                        changedItem = Utils.getParcelableExtra(intent, IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
+
                     }
                     LogMgr.w("showed =" + changedItem);
                     int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
@@ -142,12 +147,101 @@ public class MenuAnnouncementActivity extends BaseActivity {
     }
 
     private void getData(){
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _userType = PreferenceUtil.getUserIsOriginal(mContext);
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
         _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);
 //        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
 //        else requestBoardList("");
+    }
+
+    private void setDB() {
+        new Thread(() -> {
+            String date = Utils.currentDate(Constants.DATE_FORMATTER_YYYYMM);
+            JeetDatabase jeetDB = JeetDatabase.getInstance(mContext);
+
+            List<NewBoardData> getNewBoardList = jeetDB.newBoardDao().getNewBoard(_memberSeq, FCMManager.MSG_TYPE_NOTICE, date); // yyyyMM
+            List<NewBoardData> inputItem = new ArrayList<>();
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+
+            for (int i = 0; i < mList.size(); i++) {
+                LocalDateTime insertDate = LocalDateTime.parse(mList.get(i).insertDate, formatter);
+
+                if (!insertDate.isBefore(sevenDaysAgo)) {
+                    if (getNewBoardList.isEmpty()) {
+                        inputItem.add(new NewBoardData(
+                                FCMManager.MSG_TYPE_NOTICE,
+                                mList.get(i).seq,
+                                _memberSeq,
+                                false,
+                                insertDate,
+                                insertDate
+                        ));
+
+                    } else {
+                        for (NewBoardData data: getNewBoardList) {
+                            if (data.type.equals(FCMManager.MSG_TYPE_NOTICE) && data.connSeq != mList.get(i).seq) {
+                                inputItem.add(new NewBoardData(
+                                        FCMManager.MSG_TYPE_NOTICE,
+                                        mList.get(i).seq,
+                                        _memberSeq,
+                                        false,
+                                        insertDate,
+                                        insertDate
+                                ));
+
+                                LogMgr.e(TAG, "add inputItem seq: " + data.connSeq + ", " + mList.get(i).seq);
+                            }
+                        }
+                    }
+                }
+            }
+
+            jeetDB.newBoardDao().insertAll(inputItem);
+
+            if (!getNewBoardList.isEmpty()) {
+                LogMgr.e(TAG, getNewBoardList.size()+"");
+            } else {
+                LogMgr.e(TAG, "item is empty");
+            }
+
+            for (AnnouncementData announcement : mList) {
+                for (NewBoardData newBoardData : getNewBoardList) {
+                    if (announcement.seq == newBoardData.connSeq) { // connSeq 가 같다면
+
+                        if (newBoardData.insertDate.isBefore(sevenDaysAgo)) { // 7일 이전의 데이터인 경우
+                            jeetDB.newBoardDao().delete(newBoardData);
+                            LogMgr.e(TAG,
+                                    "==  before Data  ==\n" +
+                                    "type: " + newBoardData.type +
+                                    "  connSeq: " + newBoardData.connSeq +
+                                    "  isRead: " + newBoardData.isRead +
+                                    "  insertDate: " + newBoardData.insertDate.toString() +
+                                    "  sevenDaysAgo: " + sevenDaysAgo.toString()
+                            );
+
+                        } else {
+                            announcement.isRead = newBoardData.isRead;
+                            LogMgr.e(TAG,
+                                    "==  after Data  ==\n" +
+                                            "type: " + newBoardData.type +
+                                            "  connSeq: " + newBoardData.connSeq +
+                                            "  isRead: " + newBoardData.isRead +
+                                            "  insertDate: " + newBoardData.insertDate.toString() +
+                                            "  sevenDaysAgo: " + sevenDaysAgo.toString()
+                            );
+                        }
+                    }
+                }
+            }
+
+            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
+        }).start();
     }
 
     void initAppbar() {
@@ -209,7 +303,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
 //            LogMgr.e(TAG, "else~");
             mSpinnerCampus.selectItemByIndex(0);
         }
-
     }
 
     private void setListRecycler(){
@@ -339,7 +432,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
                                     mList.addAll(getData);
 
-
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
 
                                 } else {
@@ -352,10 +444,12 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     } catch (Exception e) {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
+
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mSwipeRefresh.setRefreshing(false);
-                    mAdapter.notifyDataSetChanged();
+                    setDB();
+                    //mAdapter.notifyDataSetChanged();
                     if(finalLastNoticeSeq == 0 && mList.size() > 0 && mRecyclerView != null) {
                         _handler.postDelayed(() -> mRecyclerView.smoothScrollToPosition(0), scrollToTopDelay);
                     }
