@@ -217,6 +217,7 @@ public class FCMManager {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         if (msg != null) {
+            LogMgr.e(TAG, "push CreateNoti pushType: " + msg.pushType + ", push ConnSeq: " + msg.connSeq);
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, msg);
             intent.putExtras(bundle);

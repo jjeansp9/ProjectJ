@@ -24,6 +24,7 @@ public class BriefingData implements Parcelable {
     public int rdcnt; // 조회수
     public String fileId; // 파일 ID
     public List<FileData> fileList; // 파일목록
+    public boolean isRead = false; // 읽음 유무
 
     public BriefingData() {}
 
@@ -44,6 +45,7 @@ public class BriefingData implements Parcelable {
         rdcnt = in.readInt();
         fileId = in.readString();
         fileList = in.createTypedArrayList(FileData.CREATOR);
+        isRead = in.readByte() != 0;
     }
 
     public static final Creator<BriefingData> CREATOR = new Creator<BriefingData>() {
@@ -81,5 +83,6 @@ public class BriefingData implements Parcelable {
         dest.writeInt(rdcnt);
         dest.writeString(fileId);
         dest.writeTypedList(fileList);
+        dest.writeByte((byte) (isRead ? 1 : 0));
     }
 }

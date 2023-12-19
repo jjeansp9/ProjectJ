@@ -204,9 +204,9 @@ public class MainActivity extends BaseActivity {
                     requestMemberInfo(_stuSeq, _stCode, true);
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent, false);
                     break;
-                case CMD_GET_NOTIFY_INFO:
-                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
-                    break;
+//                case CMD_GET_NOTIFY_INFO:
+//                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
+//                    break;
                 case CMD_GET_BOARD_ATTRIBUTE:
                     requestBoardAttribute();
                     break;
@@ -709,14 +709,14 @@ public class MainActivity extends BaseActivity {
                         }
 
                     }
-                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                     mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
                 }
 
                 @Override
                 public void onFailure(Call<GetACAListResponse> call, Throwable t) {
                     LogMgr.e(TAG, "requestLocalACAList() onFailure >> " + t.getMessage());
-                    mHandler.sendEmptyMessage(CMD_GET_NOTIFY_INFO);
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                     mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
                 }
             });
@@ -979,17 +979,18 @@ public class MainActivity extends BaseActivity {
                         LogMgr.e(TAG + "requestBoardList() Exception: ", e.getMessage());
                     }
                     mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
+                    announceAdapter.setMainMode(true);
                     announceAdapter.notifyDataSetChanged();
-
-                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    //mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                 }
 
                 @Override
                 public void onFailure(Call<AnnouncementListResponse> call, Throwable t) {
                     mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
+                    announceAdapter.setMainMode(true);
                     announceAdapter.notifyDataSetChanged();
 
-                    mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    //mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
                 }
             });
         }

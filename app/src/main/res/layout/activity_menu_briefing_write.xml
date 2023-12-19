@@ -84,7 +84,6 @@
                 android:maxLength="11"
                 android:layout_marginTop="10dp"/>
 
-            <!-- 사용자 구분 -->
             <TextView
                 android:id="@+id/tv_brf_write_stu_state"
                 android:layout_width="wrap_content"

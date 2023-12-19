@@ -30,6 +30,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,6 +42,7 @@ import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardDao;
 import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.db.PushMessageDao;
@@ -131,7 +133,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
                         requestBoardList();
                     }
                     break;
-
             }
         }
     };
@@ -154,94 +155,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
         _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);
 //        if (_userType.equals(Constants.MEMBER)) requestBoardList(_acaCode);
 //        else requestBoardList("");
-    }
-
-    private void setDB() {
-        new Thread(() -> {
-            String date = Utils.currentDate(Constants.DATE_FORMATTER_YYYYMM);
-            JeetDatabase jeetDB = JeetDatabase.getInstance(mContext);
-
-            List<NewBoardData> getNewBoardList = jeetDB.newBoardDao().getNewBoard(_memberSeq, FCMManager.MSG_TYPE_NOTICE, date); // yyyyMM
-            List<NewBoardData> inputItem = new ArrayList<>();
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-
-            LocalDateTime today = LocalDateTime.now(); // 현재날짜
-            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-
-            for (int i = 0; i < mList.size(); i++) {
-                LocalDateTime insertDate = LocalDateTime.parse(mList.get(i).insertDate, formatter);
-
-                if (!insertDate.isBefore(sevenDaysAgo)) {
-                    if (getNewBoardList.isEmpty()) {
-                        inputItem.add(new NewBoardData(
-                                FCMManager.MSG_TYPE_NOTICE,
-                                mList.get(i).seq,
-                                _memberSeq,
-                                false,
-                                insertDate,
-                                insertDate
-                        ));
-
-                    } else {
-                        for (NewBoardData data: getNewBoardList) {
-                            if (data.type.equals(FCMManager.MSG_TYPE_NOTICE) && data.connSeq != mList.get(i).seq) {
-                                inputItem.add(new NewBoardData(
-                                        FCMManager.MSG_TYPE_NOTICE,
-                                        mList.get(i).seq,
-                                        _memberSeq,
-                                        false,
-                                        insertDate,
-                                        insertDate
-                                ));
-
-                                LogMgr.e(TAG, "add inputItem seq: " + data.connSeq + ", " + mList.get(i).seq);
-                            }
-                        }
-                    }
-                }
-            }
-
-            jeetDB.newBoardDao().insertAll(inputItem);
-
-            if (!getNewBoardList.isEmpty()) {
-                LogMgr.e(TAG, getNewBoardList.size()+"");
-            } else {
-                LogMgr.e(TAG, "item is empty");
-            }
-
-            for (AnnouncementData announcement : mList) {
-                for (NewBoardData newBoardData : getNewBoardList) {
-                    if (announcement.seq == newBoardData.connSeq) { // connSeq 가 같다면
-
-                        if (newBoardData.insertDate.isBefore(sevenDaysAgo)) { // 7일 이전의 데이터인 경우
-                            jeetDB.newBoardDao().delete(newBoardData);
-                            LogMgr.e(TAG,
-                                    "==  before Data  ==\n" +
-                                    "type: " + newBoardData.type +
-                                    "  connSeq: " + newBoardData.connSeq +
-                                    "  isRead: " + newBoardData.isRead +
-                                    "  insertDate: " + newBoardData.insertDate.toString() +
-                                    "  sevenDaysAgo: " + sevenDaysAgo.toString()
-                            );
-
-                        } else {
-                            announcement.isRead = newBoardData.isRead;
-                            LogMgr.e(TAG,
-                                    "==  after Data  ==\n" +
-                                            "type: " + newBoardData.type +
-                                            "  connSeq: " + newBoardData.connSeq +
-                                            "  isRead: " + newBoardData.isRead +
-                                            "  insertDate: " + newBoardData.insertDate.toString() +
-                                            "  sevenDaysAgo: " + sevenDaysAgo.toString()
-                            );
-                        }
-                    }
-                }
-            }
-
-            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
-        }).start();
     }
 
     void initAppbar() {
@@ -329,6 +242,9 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
+
+            //if (!clickItem.isRead) insertDB(clickItem);
+
             Intent intent = new Intent(mContext, MenuAnnouncementDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
@@ -408,6 +324,46 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mSpinnerGrade.setLifecycleOwner(this);
     }
 
+    private void setDB() {
+        new Thread(() -> {
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
+            List<NewBoardData> getAfterList = jeetDBNewBoard.getAfterBoard(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
+
+            HashSet<String> getAfterKeyList = new HashSet<>();
+
+            for (NewBoardData boardData : getAfterList) {
+                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
+                getAfterKeyList.add(key);
+            }
+
+            for (AnnouncementData announcement : mList) {
+
+                LocalDateTime insertDate = LocalDateTime.parse(announcement.insertDate, formatter);
+
+                if (sevenDaysAgo.isBefore(insertDate)) { // 최근 7일 이내의 데이터인 경우
+                    if (!getAfterList.isEmpty()) {
+                        if (sevenDaysAgo.isBefore(insertDate)) {
+                            String key = FCMManager.MSG_TYPE_NOTICE + "," + announcement.seq + "," + _memberSeq;
+                            if (getAfterKeyList.contains(key)) announcement.isRead = true;
+
+                        } else { // 최근 7일 이후의 데이터인 경우
+                            for (NewBoardData boardData : getAfterList) jeetDBNewBoard.delete(boardData);
+                            announcement.isRead = true;
+                        }
+                    }
+                } else {
+                    announcement.isRead = true;
+                }
+            }
+
+            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
+        }).start();
+    }
+
     private void requestBoardList(int... lastSeq) {
         int lastNoticeSeq = 0;
         if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
@@ -431,7 +387,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                 if (getData != null && !getData.isEmpty()) {
 
                                     mList.addAll(getData);
-
+                                    setDB();
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
 
                                 } else {
@@ -448,7 +404,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     mTvListEmpty.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     //if (mAdapter != null) mAdapter.notifyDataSetChanged();
                     mSwipeRefresh.setRefreshing(false);
-                    setDB();
                     //mAdapter.notifyDataSetChanged();
                     if(finalLastNoticeSeq == 0 && mList.size() > 0 && mRecyclerView != null) {
                         _handler.postDelayed(() -> mRecyclerView.smoothScrollToPosition(0), scrollToTopDelay);

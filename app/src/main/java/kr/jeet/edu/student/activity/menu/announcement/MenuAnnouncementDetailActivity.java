@@ -16,8 +16,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import kr.jeet.edu.student.R;
@@ -25,8 +29,10 @@ import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardDao;
 import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
@@ -97,6 +103,8 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    // api 2개 - 공지 목록, 설명회 목록
+
     private void initData() {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
@@ -110,22 +118,6 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
         if(intent.hasExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO)) {
             LogMgr.w("param is recived");
             _currentData = Utils.getParcelableExtra(intent, IntentParams.PARAM_ANNOUNCEMENT_INFO, AnnouncementData.class);
-            if (_currentData != null) {
-                if (!_currentData.isRead) {
-                    new Thread(() -> {
-                        List<NewBoardData> newBoardData = JeetDatabase.getInstance(getApplicationContext()).newBoardDao().getBoardByReadFlagNType(_memberSeq, false, FCMManager.MSG_TYPE_NOTICE);
-                        if(!newBoardData.isEmpty()) {
-                            for(NewBoardData boardData : newBoardData) {
-                                if (boardData.connSeq == _currentData.seq) {
-                                    boardData.isRead = true;
-                                    //_currentData.isRead = true;
-                                    JeetDatabase.getInstance(getApplicationContext()).newBoardDao().update(boardData);
-                                }
-                            }
-                        }
-                    }).start();
-                }
-            }
         }
         Bundle bundle = intent.getExtras();
         if (bundle != null) _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
@@ -134,21 +126,6 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
             _currentSeq = _pushData.connSeq;
             new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
         }
-
-//        new Thread(() -> {
-//            try {
-//                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_NOTICE);
-//                if(pushMessages.isEmpty()) {
-//                    setNewAttendanceContent(false);
-//                }else{
-//                    for (PushMessage data : pushMessages) {
-//                        if (data.stCode == _stCode) setNewAttendanceContent(true);
-//                    }
-//                }
-//            }catch(Exception e){
-//
-//            }
-//        }).start();
     }
 
     private void initView() {
@@ -245,6 +222,35 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
         if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
     }
 
+    private void insertDB(AnnouncementData currentData) {
+        new Thread(() -> {
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
+
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            NewBoardData boardInfo = jeetDBNewBoard.getAfterBoardInfo(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo, currentData.seq); // 읽은글
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+            LocalDateTime insertDate = LocalDateTime.parse(currentData.insertDate, formatter);
+
+            if (boardInfo == null) {
+                if (sevenDaysAgo.isBefore(insertDate)) {
+                    // 최근 7일 이내의 데이터인 경우
+                    NewBoardData newBoardData = new NewBoardData(
+                            FCMManager.MSG_TYPE_NOTICE,
+                            currentData.seq,
+                            _memberSeq,
+                            currentData.isRead,
+                            insertDate,
+                            insertDate
+                    );
+                    jeetDBNewBoard.insert(newBoardData);
+                    LogMgr.e(TAG, "dbTest Insert!");
+                }
+            }
+        }).start();
+    }
+
     // 공지사항 글 상세정보 조회
     private void requestAnnouncementDetail(int boardSeq){
         if (RetrofitClient.getInstance() != null){
@@ -263,7 +269,8 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                     AnnouncementData data = response.body().data;
                                     if (data != null){
                                         _currentData = data;
-                                        LogMgr.e(TAG+"isRead Test", _currentData.isRead + "");
+                                        _currentData.isRead = true;
+                                        insertDB(_currentData);
                                         //initData();
                                         setView();
 

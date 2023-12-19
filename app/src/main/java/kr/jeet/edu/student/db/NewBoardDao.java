@@ -6,22 +6,28 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import org.threeten.bp.LocalDateTime;
+
+import java.util.Date;
 import java.util.List;
 
 @Dao
 public interface NewBoardDao {
 
-    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND strftime('%Y%m', insertDate) = :insertDate ORDER BY id DESC")
-    List<NewBoardData> getNewBoard(int memberSeq, String type, String insertDate);
+    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate >= :checkDate ORDER BY id DESC")
+    List<NewBoardData> getAfterBoard(int memberSeq, String type, LocalDateTime checkDate);
 
-    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND isRead =:isread AND type=:type ORDER BY id DESC")
-    List<NewBoardData> getBoardByReadFlagNType(int memberSeq, boolean isread, String type);
+    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate >= :checkDate AND connSeq == :connSeq ORDER BY id DESC")
+    NewBoardData getAfterBoardInfo(int memberSeq, String type, LocalDateTime checkDate, int connSeq);
 
     @Update
     void update(NewBoardData... newBoardData);
 
     @Insert
-    void insertAll(List<NewBoardData> newBoardData);
+    void insert(NewBoardData newBoardData);
+
+    @Insert
+    void insertList(List<NewBoardData> newBoardData);
 
     @Delete
     void delete(NewBoardData newBoardData);

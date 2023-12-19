@@ -44,8 +44,7 @@ public class AnnouncementData implements Parcelable {
     @SerializedName("memberResponseVO")
     public MemberResponseVO memberResponseVO;
 
-    @SerializedName("isRead")
-    public boolean isRead = true;
+    public boolean isRead = false;
 
     @SerializedName("fileList")
     public List<FileData> fileList;

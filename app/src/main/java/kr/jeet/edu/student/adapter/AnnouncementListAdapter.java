@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public void setWholeCampusMode(boolean flag) {
         this.isWholeCampusMode = flag;
     }
+    public void setMainMode(boolean flag) {this.isMain = flag;}
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -73,6 +75,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 holder.brfRoot.setForeground(null);
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
+                holder.brfRoot.setBackgroundColor(Color.TRANSPARENT);
             }else{
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
@@ -82,7 +85,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 if (!item.isRead) { // 읽지 않은 게시글
                     holder.brfRoot.setBackgroundColor(mContext.getColor(R.color.bg_is_read));
                 } else {
-                    holder.brfRoot.setBackgroundColor(mContext.getColor(R.color.bg_white));
+                    holder.brfRoot.setBackgroundColor(Color.TRANSPARENT);
                 }
                 //holder.tvLocation.setVisibility(View.VISIBLE);
 

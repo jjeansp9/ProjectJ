@@ -22,6 +22,9 @@ import com.demogorgorn.monthpicker.MonthPickerDialog;
 import com.skydoves.powerspinner.OnSpinnerOutsideTouchListener;
 import com.skydoves.powerspinner.PowerSpinnerView;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,6 +32,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -40,7 +44,12 @@ import kr.jeet.edu.student.adapter.BriefingListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardDao;
+import kr.jeet.edu.student.db.NewBoardData;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
+import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.BriefingResponse;
@@ -74,6 +83,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private String _acaCode = "";
     private String _appAcaCode = "";
 
+    private int _memberSeq = -1;
     private String _acaName = "";
     private String _userType = "";
     List<ACAData> _ACAList = new ArrayList<>();
@@ -166,6 +176,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         _acaCode = PreferenceUtil.getAcaCode(mContext);
         _acaName = PreferenceUtil.getAcaName(mContext);
         _appAcaCode = PreferenceUtil.getAppAcaCode(mContext);
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -364,8 +375,53 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             Message msg = _handler.obtainMessage(CMD_GET_BRIEFINGS);
             _handler.sendMessage(msg);
         }
-
     }
+
+    private void setDB() {
+        new Thread(() -> {
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
+            List<NewBoardData> getAfterList = jeetDBNewBoard.getAfterBoard(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
+
+            HashSet<String> getAfterKeyList = new HashSet<>();
+
+            for (NewBoardData boardData : getAfterList) {
+                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
+                getAfterKeyList.add(key);
+            }
+
+            for (BriefingData briefing : mList) {
+                String date = "";
+                try {
+                    if (briefing.date != null && !briefing.date.isEmpty()) date = briefing.date;
+                    if (briefing.ptTime != null && !briefing.ptTime.isEmpty()) date += " " + briefing.ptTime;
+                }catch (Exception e) {}
+
+                LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
+
+                if (sevenDaysAgo.isBefore(insertDate)) { // 최근 7일 이내의 데이터인 경우
+                    if (!getAfterList.isEmpty()) {
+                        if (sevenDaysAgo.isBefore(insertDate)) {
+                            String key = FCMManager.MSG_TYPE_NOTICE + "," + briefing.seq + "," + _memberSeq;
+                            if (getAfterKeyList.contains(key)) briefing.isRead = true;
+
+                        } else { // 최근 7일 이후의 데이터인 경우
+                            for (NewBoardData boardData : getAfterList) jeetDBNewBoard.delete(boardData);
+                            briefing.isRead = true;
+                        }
+                    }
+                } else {
+                    briefing.isRead = true;
+                }
+            }
+
+            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
+        }).start();
+    }
+
     private void requestGradeList(String acaCode){
         if(RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().getStudentGradeList(acaCode).enqueue(new Callback<StudentGradeListResponse>() {
@@ -438,6 +494,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
                                     }
+                                    setDB();
 
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }
@@ -452,7 +509,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                     //if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
-                    mAdapter.notifyDataSetChanged();
+                    //mAdapter.notifyDataSetChanged();
                     if(mList.size() > 0 && mRecyclerBrf!= null) {
                         _handler.postDelayed(() -> mRecyclerBrf.smoothScrollToPosition(0), scrollToTopDelay);
                     }

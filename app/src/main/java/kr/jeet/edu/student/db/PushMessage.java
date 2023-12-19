@@ -227,7 +227,7 @@ public class PushMessage implements Serializable {
     @ColumnInfo(name = "date")
     public LocalDateTime date;
 
-        public PushMessage(long id, String title, String body, String acaCode, int stCode, int userGubun, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
+    public PushMessage(long id, String title, String body, String acaCode, int stCode, int userGubun, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
         this.id = id;
         this.title = title;
         this.body = body;
