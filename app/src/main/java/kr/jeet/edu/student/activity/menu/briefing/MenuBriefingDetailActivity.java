@@ -45,7 +45,6 @@ import kr.jeet.edu.student.db.NewBoardDao;
 import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.BriefingReservedListData;
 import kr.jeet.edu.student.model.data.FileData;
@@ -448,7 +447,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
 
             LocalDateTime today = LocalDateTime.now(); // 현재날짜
             LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            NewBoardData boardInfo = jeetDBNewBoard.getAfterBoardInfo(_memberSeq, FCMManager.MSG_TYPE_PT, sevenDaysAgo, currentData.seq); // 읽은글
+            NewBoardData boardInfo = jeetDBNewBoard.getReadInfo(_memberSeq, FCMManager.MSG_TYPE_PT, sevenDaysAgo, currentData.seq); // 읽은글
 
             String date = "";
             try {

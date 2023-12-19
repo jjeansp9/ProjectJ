@@ -49,7 +49,6 @@ import kr.jeet.edu.student.db.NewBoardDao;
 import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
-import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.BriefingResponse;
@@ -384,7 +383,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
 
             NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
-            List<NewBoardData> getAfterList = jeetDBNewBoard.getAfterBoard(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
+            List<NewBoardData> getAfterList = jeetDBNewBoard.getReadInfoList(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
 
             HashSet<String> getAfterKeyList = new HashSet<>();
 

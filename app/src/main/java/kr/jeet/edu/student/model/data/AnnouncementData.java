@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnnouncementData implements Parcelable {
+public class AnnouncementData implements Parcelable, ReadData {
     @SerializedName("seq")
     public int seq;
 
@@ -109,5 +109,25 @@ public class AnnouncementData implements Parcelable {
         for(int i = 0; i < size; i++) {
             fileList.add(in.readParcelable(FileData.class.getClassLoader()));
         }
+    }
+
+    @Override
+    public String getDate() {
+        return insertDate;
+    }
+
+    @Override
+    public String getPtTime() {
+        return null;
+    }
+
+    @Override
+    public boolean getIsRead() {
+        return isRead;
+    }
+
+    @Override
+    public int getSeq() {
+        return seq;
     }
 }

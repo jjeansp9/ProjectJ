@@ -7,7 +7,6 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -21,8 +20,6 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
@@ -44,6 +41,7 @@ import kr.jeet.edu.student.model.response.BoardDetailResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.DBUtils;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -228,7 +226,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
 
             LocalDateTime today = LocalDateTime.now(); // 현재날짜
             LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            NewBoardData boardInfo = jeetDBNewBoard.getAfterBoardInfo(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo, currentData.seq); // 읽은글
+            NewBoardData boardInfo = jeetDBNewBoard.getReadInfo(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo, currentData.seq); // 읽은글
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
             LocalDateTime insertDate = LocalDateTime.parse(currentData.insertDate, formatter);
@@ -270,7 +268,8 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                     if (data != null){
                                         _currentData = data;
                                         _currentData.isRead = true;
-                                        insertDB(_currentData);
+                                        //insertDB(_currentData);
+                                        DBUtils.insertReadDB(_currentData, mContext, _memberSeq, FCMManager.MSG_TYPE_NOTICE);
                                         //initData();
                                         setView();
 
