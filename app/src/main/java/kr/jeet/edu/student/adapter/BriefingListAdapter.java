@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -92,6 +93,12 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
             }
 
             String str = "";
+
+            if (!item.isRead) { // 읽지 않은 게시글
+                holder.brfRoot.setBackgroundColor(mContext.getColor(R.color.bg_is_read));
+            } else {
+                holder.brfRoot.setBackgroundColor(Color.TRANSPARENT);
+            }
 
             holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
             holder.tvLocation.setVisibility(View.VISIBLE);

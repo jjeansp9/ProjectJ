@@ -21,6 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
+
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,9 +38,14 @@ import kr.jeet.edu.student.activity.BaseActivity;
 import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
+import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardDao;
+import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.BriefingReservedListData;
 import kr.jeet.edu.student.model.data.FileData;
@@ -434,6 +442,41 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
     }
 
+    private void insertDB(BriefingData currentData) {
+        new Thread(() -> {
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
+
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            NewBoardData boardInfo = jeetDBNewBoard.getAfterBoardInfo(_memberSeq, FCMManager.MSG_TYPE_PT, sevenDaysAgo, currentData.seq); // 읽은글
+
+            String date = "";
+            try {
+                if (currentData.date != null && !currentData.date.isEmpty()) date = currentData.date;
+                if (currentData.ptTime != null && !currentData.ptTime.isEmpty()) date += " " + currentData.ptTime;
+            }catch (Exception e) {}
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+            LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
+
+            if (boardInfo == null) {
+                if (sevenDaysAgo.isBefore(insertDate)) {
+                    // 최근 7일 이내의 데이터인 경우
+                    NewBoardData newBoardData = new NewBoardData(
+                            FCMManager.MSG_TYPE_PT,
+                            currentData.seq,
+                            _memberSeq,
+                            currentData.isRead,
+                            insertDate,
+                            insertDate
+                    );
+                    jeetDBNewBoard.insert(newBoardData);
+                    LogMgr.e(TAG, "dbTest Insert!");
+                }
+            }
+        }).start();
+    }
+
     private void requestBrfDetail(int ptSeq){
         if (RetrofitClient.getInstance() != null){
             showProgressDialog();
@@ -449,6 +492,8 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 BriefingData data = response.body().data;
                                 if (data != null){
                                     mInfo = data;
+                                    mInfo.isRead = true;
+                                    insertDB(mInfo);
 
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }
