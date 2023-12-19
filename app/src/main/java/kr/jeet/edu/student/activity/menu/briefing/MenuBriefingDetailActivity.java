@@ -54,6 +54,7 @@ import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.DBUtils;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -224,29 +225,9 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         mTvReserve.setText(getString(R.string.briefing_reserve_loading));
         layoutStartReserve.setBackgroundResource(R.drawable.bg_pref_sel_disabled);
         layoutStartReserve.setStateListAnimator(null);
-        if (mInfo != null) {
 
-//            if(mInfo.fileList != null && mInfo.fileList.size() > 0) {
-//                new Thread(() -> {
-//                    for(FileData data : mInfo.fileList) {
-//                        String mimeType = FileUtils.getMimeTypeFromExtension(data.extension);
-//                        LogMgr.w(data.saveName + " / " + mimeType);
-//
-//                        // mimeType is checked for null here.
-//                        if (mimeType != null && mimeType.startsWith("image")) mImageList.add(data);
-//                        else mFileList.add(data);
-//                    }
-//                }).start();
-//            }
-//            runOnUiThread(() -> {
-//                setView();
-//                if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
-//                if(mFileAdapter != null && mFileList.size() > 0)mFileAdapter.notifyDataSetChanged();
-//            });
-            requestBrfDetail(mInfo.seq);
-        }else if(_currentSeq != -1) {
-            requestBrfDetail(_currentSeq);
-        }
+        if (mInfo != null) requestBrfDetail(mInfo.seq);
+        else if(_currentSeq != -1) requestBrfDetail(_currentSeq);
     }
 
     private void setView(){
@@ -441,41 +422,6 @@ public class MenuBriefingDetailActivity extends BaseActivity {
         }
     }
 
-    private void insertDB(BriefingData currentData) {
-        new Thread(() -> {
-            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
-
-            LocalDateTime today = LocalDateTime.now(); // 현재날짜
-            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            NewBoardData boardInfo = jeetDBNewBoard.getReadInfo(_memberSeq, FCMManager.MSG_TYPE_PT, sevenDaysAgo, currentData.seq); // 읽은글
-
-            String date = "";
-            try {
-                if (currentData.date != null && !currentData.date.isEmpty()) date = currentData.date;
-                if (currentData.ptTime != null && !currentData.ptTime.isEmpty()) date += " " + currentData.ptTime;
-            }catch (Exception e) {}
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-            LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
-
-            if (boardInfo == null) {
-                if (sevenDaysAgo.isBefore(insertDate)) {
-                    // 최근 7일 이내의 데이터인 경우
-                    NewBoardData newBoardData = new NewBoardData(
-                            FCMManager.MSG_TYPE_PT,
-                            currentData.seq,
-                            _memberSeq,
-                            currentData.isRead,
-                            insertDate,
-                            insertDate
-                    );
-                    jeetDBNewBoard.insert(newBoardData);
-                    LogMgr.e(TAG, "dbTest Insert!");
-                }
-            }
-        }).start();
-    }
-
     private void requestBrfDetail(int ptSeq){
         if (RetrofitClient.getInstance() != null){
             showProgressDialog();
@@ -492,7 +438,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 if (data != null){
                                     mInfo = data;
                                     mInfo.isRead = true;
-                                    insertDB(mInfo);
+                                    DBUtils.insertReadDB(mInfo, mContext, _memberSeq, FCMManager.MSG_TYPE_PT);
 
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }

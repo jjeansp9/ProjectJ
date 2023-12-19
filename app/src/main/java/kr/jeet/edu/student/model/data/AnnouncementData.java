@@ -117,7 +117,7 @@ public class AnnouncementData implements Parcelable, ReadData {
     }
 
     @Override
-    public String getPtTime() {
+    public String getTime() {
         return null;
     }
 

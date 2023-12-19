@@ -2,7 +2,7 @@ package kr.jeet.edu.student.model.data;
 
 public interface ReadData {
     String getDate();
-    String getPtTime();
+    String getTime();
     boolean getIsRead();
     int getSeq();
 }

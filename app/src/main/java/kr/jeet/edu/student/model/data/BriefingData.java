@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class BriefingData implements Parcelable {
+public class BriefingData implements Parcelable, ReadData {
     public int seq; // 설명회 글 seq
     public String title; // 제목
     public String content; // 내용
@@ -84,5 +84,25 @@ public class BriefingData implements Parcelable {
         dest.writeString(fileId);
         dest.writeTypedList(fileList);
         dest.writeByte((byte) (isRead ? 1 : 0));
+    }
+
+    @Override
+    public String getDate() {
+        return date;
+    }
+
+    @Override
+    public String getTime() {
+        return ptTime;
+    }
+
+    @Override
+    public boolean getIsRead() {
+        return isRead;
+    }
+
+    @Override
+    public int getSeq() {
+        return seq;
     }
 }
