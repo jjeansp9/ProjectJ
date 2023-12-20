@@ -34,8 +34,12 @@ import kr.jeet.edu.student.adapter.MainMenuListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
+import kr.jeet.edu.student.db.NewBoardDao;
+import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.dialog.PushPopupDialog;
+import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
@@ -46,6 +50,7 @@ import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
+import kr.jeet.edu.student.model.response.BoardNewResponse;
 import kr.jeet.edu.student.model.response.GetACAListResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.SchoolListResponse;
@@ -68,6 +73,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -91,6 +97,9 @@ import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
+
+import org.threeten.bp.LocalDateTime;
+import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -120,10 +129,12 @@ public class MainActivity extends BaseActivity {
     private final int CMD_GET_MEMBER_INFO = 3;       // 자녀정보
     private final int CMD_GET_NOTIFY_INFO = 4;       // 공지사항 정보
     private final int CMD_GET_BOARD_ATTRIBUTE = 5;       // 게시판 속성
-    private final int CMD_GET_SCHOOL_LIST = 6;       // 학교 목록
-    private final int CMD_GET_LTC_LIST = 7;       // LTC 목록
-    private final int CMD_GET_TEACHER = 8;       // 지도강사 목록
-    private final int CMD_GET_LTC_SUBJECT = 9;       // LTC 과목 목록
+    private final int CMD_GET_SCHOOL_LIST = 7;       // 학교 목록
+    private final int CMD_GET_LTC_LIST = 8;       // LTC 목록
+    private final int CMD_GET_TEACHER = 9;       // 지도강사 목록
+    private final int CMD_GET_LTC_SUBJECT = 10;       // LTC 과목 목록
+
+    private final int NOTICE_MENU_POSITION = 0; // 공지사항 메뉴 아이콘 index
 
     private String _userType = "";
     private String _stName = "";
@@ -170,26 +181,12 @@ public class MainActivity extends BaseActivity {
 //                                }
 //                            }).start();
 //                        }
+                        requestBoardNew();
                     }
                 }
             }
         }
     };
-
-    // 출석상태 업데이트되었을 때 New 표시
-//    void setNewAttendanceContent(boolean isNew) {
-//        runOnUiThread(()->{
-//            if(ivAttendanceNew != null) {
-//                if (isNew) {
-//                    ivAttendanceNew.setVisibility(View.VISIBLE);
-////                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box_new));
-//                } else {
-//                    ivAttendanceNew.setVisibility(View.INVISIBLE);
-////                    layoutNotify.setBackground(getDrawable(R.drawable.selector_main_box));
-//                }
-//            }
-//        });
-//    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -208,7 +205,7 @@ public class MainActivity extends BaseActivity {
 //                case CMD_GET_NOTIFY_INFO:
 //                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
 //                    break;
-                case CMD_GET_BOARD_ATTRIBUTE:
+                case CMD_GET_BOARD_ATTRIBUTE: // 게시판 속성조회
                     requestBoardAttribute();
                     break;
                 case CMD_GET_SCHOOL_LIST:
@@ -238,8 +235,8 @@ public class MainActivity extends BaseActivity {
 
             } else {
                 mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
+                requestBoardNew();
             }
-
         }
     });
 
@@ -538,23 +535,9 @@ public class MainActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         IntentFilter intentFilter = new IntentFilter(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
-        registerReceiver(pushNotificationReceiver, intentFilter);
-
-//        new Thread(() -> {
-//            try {
-//                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-//                if(pushMessages.isEmpty()) {
-//                    setNewAttendanceContent(false);
-//                }else{
-//                    for (PushMessage data : pushMessages) {
-//                        if (data.stCode == _stCode) setNewAttendanceContent(true);
-//                    }
-//                }
-//            }catch(Exception e){
-//
-//            }
-//        }).start();
-
+        // RECEIVER_NOT_EXPORTED - 내 앱에서 보낸 브로드캐스트만 수신
+        ContextCompat.registerReceiver(mContext, pushNotificationReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
+        requestBoardNew();
         requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
     }
 
@@ -573,6 +556,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
+        LogMgr.e(TAG, "LifeCycle: onPause");
         unregisterReceiver(pushNotificationReceiver);
         super.onPause();
     }
@@ -612,37 +596,37 @@ public class MainActivity extends BaseActivity {
             //원생정보
             //mList.add(new MainMenuItemData(R.drawable.icon_menu_student, R.string.main_menu_student_info, MenuStudentInfoActivity.class));
             //공지사항
-            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, false, MenuAnnouncementActivity.class));
             //캠퍼스일정
-            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, false, MenuScheduleActivity.class));
             //알림장
-            mList.add(new MainMenuItemData(DataManager.BOARD_SYSTEM_NOTICE, R.drawable.icon_menu_notify, R.string.main_menu_notice, MenuNoticeActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SYSTEM_NOTICE, R.drawable.icon_menu_notify, R.string.main_menu_notice, false, MenuNoticeActivity.class));
             //테스트예약
-            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, false, MenuTestReserveActivity.class));
             //차량정보
-            mList.add(new MainMenuItemData(DataManager.BOARD_BUS, R.drawable.icon_menu_bus, R.string.main_menu_bus_info, MenuBusActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_BUS, R.drawable.icon_menu_bus, R.string.main_menu_bus_info, false, MenuBusActivity.class));
             //설명회예약
-            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, false, MenuBriefingActivity.class));
             //출석부
-            mList.add(new MainMenuItemData(DataManager.BOARD_ATTENDANCE, R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, MenuAttendanceActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_ATTENDANCE, R.drawable.icon_menu_rollbook, R.string.main_menu_attendance, false, MenuAttendanceActivity.class));
             //성적표
-            mList.add(new MainMenuItemData(DataManager.BOARD_REPORT, R.drawable.icon_menu_notice, R.string.main_menu_report_card, MenuReportCardActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_REPORT, R.drawable.icon_menu_notice, R.string.main_menu_report_card, false, MenuReportCardActivity.class));
             //QnA
-            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, false, MenuQNAActivity.class));
             //시간표
-            mList.add(new MainMenuItemData(DataManager.BOARD_TIME_TABLE, R.drawable.icon_menu_timetable, R.string.main_menu_rollbook, MenuTimeTableActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_TIME_TABLE, R.drawable.icon_menu_timetable, R.string.main_menu_rollbook, false, MenuTimeTableActivity.class));
 
         }else{ // 비회원
             //공지사항
-            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, MenuAnnouncementActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, false, MenuAnnouncementActivity.class));
             //캠퍼스일정
-            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, MenuScheduleActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_SCHEDULE, R.drawable.icon_menu_schedule, R.string.main_menu_campus_schedule, false, MenuScheduleActivity.class));
             //테스트예약
-            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, MenuTestReserveActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_LEVELTEST, R.drawable.icon_menu_test_reserve, R.string.main_menu_test_reserve, false, MenuTestReserveActivity.class));
             //설명회예약
-            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, MenuBriefingActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, false, MenuBriefingActivity.class));
             //QnA
-            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, MenuQNAActivity.class));
+            mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, false, MenuQNAActivity.class));
         }
     }
 
@@ -656,7 +640,34 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-        mAdapter.notifyDataSetChanged();
+        runOnUiThread(() -> mAdapter.notifyDataSetChanged());
+    }
+    // 공지사항 메뉴아이콘에 new 표시
+    private void updateMenusNew(Context context, int memberSeq, String type, int readNum) {
+        if(mList == null) return;
+        new Thread(() -> {
+            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(context).newBoardDao();
+            List<NewBoardData> getReadList = jeetDBNewBoard.getReadInfoList(memberSeq, type, sevenDaysAgo); // yyyyMM
+            for (NewBoardData data : getReadList) {
+                LogMgr.e(TAG, "seqTest: " + data.connSeq);
+            }
+
+            LogMgr.e(TAG, "newapi size: " + readNum + ", dbRead size: " + getReadList.size());
+
+            if (mList.size() > 0) {
+                if (readNum > getReadList.size()) {
+                    mList.set(NOTICE_MENU_POSITION, new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, true, MenuAnnouncementActivity.class));
+                } else {
+                    mList.set(NOTICE_MENU_POSITION, new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, false, MenuAnnouncementActivity.class));
+                }
+            }
+
+            updateMenus();
+        }).start();
     }
     // 캠퍼스 목록 조회
     private void requestACAList(){
@@ -931,7 +942,6 @@ public class MainActivity extends BaseActivity {
                                     }
                                 }
                             }
-                            updateMenus();
                         }else{
                             LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());
 
@@ -943,6 +953,43 @@ public class MainActivity extends BaseActivity {
                 }
                 @Override
                 public void onFailure(Call<BoardAttributeResponse> call, Throwable t) {
+                    try{
+                        LogMgr.e(TAG, "requestBoardAttribute() onFailure >> " + t.getMessage());
+
+                    }catch (Exception e){ LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
+
+                    mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
+                }
+            });
+        }
+    }
+
+    // 공지사항 일주일 이내 글 seq - 메뉴아이콘 new 표시 관련
+    private void requestBoardNew(){
+        if(RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            mRetrofitApi.getNoticeNewList().enqueue(new Callback<BoardNewResponse>() {
+                @Override
+                public void onResponse(Call<BoardNewResponse> call, Response<BoardNewResponse> response) {
+                    try {
+                        if (response.isSuccessful()){
+                            if (response.body() != null)  {
+                                List<Integer> getData = response.body().data;
+                                if (getData != null) {
+                                    updateMenusNew(mContext, _memberSeq, MSG_TYPE_NOTICE, getData.size());
+                                }
+                            }// 193,191,188,187,178,176,175,174,165,164
+                        }else{
+                            LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());
+
+                        }
+
+                    }catch (Exception e) { LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
+
+                    mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
+                }
+                @Override
+                public void onFailure(Call<BoardNewResponse> call, Throwable t) {
                     try{
                         LogMgr.e(TAG, "requestBoardAttribute() onFailure >> " + t.getMessage());
 

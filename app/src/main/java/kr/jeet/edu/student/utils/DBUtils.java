@@ -95,7 +95,7 @@ public class DBUtils {
                             if (getAfterKeyList.contains(key)) listData.setIsRead(true);
 
                         } else { // 최근 7일이 지난 데이터인 경우
-                            //for (NewBoardData dbData : getReadList) jeetDBNewBoard.delete(memberSeq, type, sevenDaysAgo, listData.getSeq());
+                            for (NewBoardData dbData : getReadList) jeetDBNewBoard.delete(memberSeq, type, sevenDaysAgo, listData.getSeq());
                             listData.setIsRead(true);
                         }
                     }

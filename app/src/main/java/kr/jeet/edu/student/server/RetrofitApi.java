@@ -22,6 +22,7 @@ import kr.jeet.edu.student.model.response.BagResponse;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.BoardAttributeResponse;
 import kr.jeet.edu.student.model.response.BoardDetailResponse;
+import kr.jeet.edu.student.model.response.BoardNewResponse;
 import kr.jeet.edu.student.model.response.BriefingDetailResponse;
 import kr.jeet.edu.student.model.response.BriefingReserveResponse;
 import kr.jeet.edu.student.model.response.BriefingReservedListResponse;
@@ -68,9 +69,9 @@ import retrofit2.http.Query;
 public interface RetrofitApi {
 
     //public final static String SERVER_BASE_URL = "http://192.168.2.51:7777/";   //kyt local
-    public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
     //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
-    //public final static String SERVER_BASE_URL = "http://192.168.2.83:7777/"; // jwj local
+    public final static String SERVER_BASE_URL = "http://192.168.2.83:7777/"; // jwj local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // cloud local
     //public final static String SERVER_BASE_URL = "http://211.252.86.6/"; // 신규 cloud local
     //public final static String SERVER_BASE_URL = "https://www.jeetapp.kr/"; // domain
@@ -332,4 +333,7 @@ public interface RetrofitApi {
     // QnA 글 삭제
     @DELETE("qna/{qnaSeq}")
     Call<BaseResponse> deleteQna(@Path("qnaSeq") int qnaSeq);
+    // 공지사항 일주일 이내 글 SEQ - 공지사항 메뉴아이콘에 New 표시하기위한 api
+    @GET("notices/new")
+    Call<BoardNewResponse> getNoticeNewList();
 }

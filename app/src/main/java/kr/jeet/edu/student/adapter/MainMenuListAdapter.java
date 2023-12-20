@@ -56,6 +56,12 @@ public class MainMenuListAdapter extends RecyclerView.Adapter<MainMenuListAdapte
                 }else{
                     holder.tvMenu.setText(item.getTitle());
                 }
+
+                if (item.getIsNew()) {
+                    holder.tv_new.setVisibility(View.VISIBLE);
+                } else {
+                    holder.tv_new.setVisibility(View.GONE);
+                }
             }
         }catch (Exception e){
             LogMgr.e("Main Menu Adapter Exception : " + e.getMessage());
@@ -72,13 +78,14 @@ public class MainMenuListAdapter extends RecyclerView.Adapter<MainMenuListAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         private ConstraintLayout rootLayout;
         private ImageView imgMenu;
-        private TextView tvMenu;
+        private TextView tvMenu, tv_new;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             rootLayout = itemView.findViewById(R.id.root);
             imgMenu = itemView.findViewById(R.id.img_menu);
             tvMenu = itemView.findViewById(R.id.tv_menu);
+            tv_new = itemView.findViewById(R.id.tv_new);
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();

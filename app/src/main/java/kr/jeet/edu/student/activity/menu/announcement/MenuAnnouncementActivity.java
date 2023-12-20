@@ -328,46 +328,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
         mSpinnerGrade.setLifecycleOwner(this);
     }
 
-//    private void setDB() {
-//        new Thread(() -> {
-//            LocalDateTime today = LocalDateTime.now(); // 현재날짜
-//            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-//
-//            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
-//            List<NewBoardData> getAfterList = jeetDBNewBoard.getReadInfoList(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
-//
-//            HashSet<String> getAfterKeyList = new HashSet<>();
-//
-//            for (NewBoardData boardData : getAfterList) {
-//                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
-//                getAfterKeyList.add(key);
-//            }
-//
-//            for (AnnouncementData announcement : mList) {
-//
-//                LocalDateTime insertDate = LocalDateTime.parse(announcement.insertDate, formatter);
-//
-//                if (sevenDaysAgo.isBefore(insertDate)) { // 최근 7일 이내의 데이터인 경우
-//                    if (!getAfterList.isEmpty()) {
-//                        if (sevenDaysAgo.isBefore(insertDate)) {
-//                            String key = FCMManager.MSG_TYPE_NOTICE + "," + announcement.seq + "," + _memberSeq;
-//                            if (getAfterKeyList.contains(key)) announcement.isRead = true;
-//
-//                        } else { // 최근 7일 이후의 데이터인 경우
-//                            for (NewBoardData boardData : getAfterList) jeetDBNewBoard.delete(boardData);
-//                            announcement.isRead = true;
-//                        }
-//                    }
-//                } else {
-//                    announcement.isRead = true;
-//                }
-//            }
-//
-//            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
-//        }).start();
-//    }
-
     private void requestBoardList(int... lastSeq) {
         int lastNoticeSeq = 0;
         if(lastSeq != null && lastSeq.length > 0) lastNoticeSeq = lastSeq[0];
@@ -391,7 +351,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                 if (getData != null && !getData.isEmpty()) {
 
                                     mList.addAll(getData);
-                                    //setDB();
                                     DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_NOTICE, mAdapter);
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
 

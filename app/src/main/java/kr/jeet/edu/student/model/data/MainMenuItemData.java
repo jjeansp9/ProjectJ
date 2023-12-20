@@ -5,14 +5,15 @@ public class MainMenuItemData {
     private int titleRes;
     private String type;
     private String title;
+    private boolean isNew;
     private Class<?> targetClass;
 
-    public MainMenuItemData(String type, int img_res, int title_res, Class<?> cls) {
+    public MainMenuItemData(String type, int img_res, int title_res, boolean isNew, Class<?> cls) {
         this.type = type;
         this.imgRes = img_res;
         this.titleRes = title_res;
+        this.isNew = isNew;
         this.targetClass = cls;
-
     }
 
     public String getType() {
@@ -34,6 +35,9 @@ public class MainMenuItemData {
     public int getTitleRes() {
         return titleRes;
     }
+
+    public void setIsNew(boolean isNew) {this.isNew = isNew;}
+    public boolean getIsNew() {return isNew;}
 
     public Class<?> getTargetClass() {
         return targetClass;
