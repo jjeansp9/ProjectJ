@@ -221,6 +221,7 @@ public class MyWebViewClient extends WebViewClient {
 
     private String shinhanJSCode(){
         if (activity != null && !activity.isFinishing()) {
+            LogMgr.e(TAG, "WEBVIEWS ACTIVITY2" + accountNo);
 //            String inputValue = "";
 //
 //            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
