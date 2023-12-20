@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -90,10 +93,17 @@ public class SelectStudentListAdapter extends RecyclerView.Adapter<SelectStudent
                     Glide.with(mContext).load(R.drawable.img_dot_man).into(holder.imgGender);
                     Glide.with(mContext).load(R.drawable.img_profile_man).into(holder.imgProfile);
                     Glide.with(mContext).load(R.drawable.bg_student_list_gender_man).into(holder.imgLineGender);
-                } else {
+
+                } else if(Utils.getStr(item.gender).equals("F")) {
                     Glide.with(mContext).load(R.drawable.img_dot_woman).into(holder.imgGender);
                     Glide.with(mContext).load(R.drawable.img_profile_woman).into(holder.imgProfile);
                     Glide.with(mContext).load(R.drawable.bg_student_list_gender_woman).into(holder.imgLineGender);
+
+                } else {
+                    Glide.with(mContext).load(R.drawable.img_profile_unisex).into(holder.imgProfile);
+                    holder.imgGender.setBackground(ContextCompat.getDrawable(mContext, R.drawable.bg_circle));
+                    ViewCompat.setBackgroundTintList(holder.imgGender, ColorStateList.valueOf(ContextCompat.getColor(mContext, R.color.darkgray)));
+                    Glide.with(mContext).load(R.drawable.bg_student_list_gender_unisex).into(holder.imgLineGender);
                 }
             }
         }catch (Exception e) {}

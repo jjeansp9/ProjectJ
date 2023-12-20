@@ -156,6 +156,7 @@ public class MenuReportCardActivity extends BaseActivity {
                     _userGubun,
                     _stCode,
                     ""
+                    //_acaCode
             ).enqueue(new Callback<SystemReportListResponse>() {
                 @Override
                 public void onResponse(Call<SystemReportListResponse> call, Response<SystemReportListResponse> response) {

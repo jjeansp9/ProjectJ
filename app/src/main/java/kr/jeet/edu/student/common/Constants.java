@@ -309,5 +309,5 @@ public class Constants {
     public static String QNA_STATE_RECEPTION = "2";    // 접수
     public static String QNA_STATE_COMPLETE = "3";     // 완료
 
-    public static int IS_READ_DELETE_DAY = 7;
+    public static int IS_READ_DELETE_DAY = 6;
 }

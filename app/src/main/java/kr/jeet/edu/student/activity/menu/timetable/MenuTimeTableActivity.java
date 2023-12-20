@@ -90,7 +90,7 @@ public class MenuTimeTableActivity extends BaseActivity {
 
                             List<TeacherClsData> list = response.body().data;
 
-                            if (list != null && !list.isEmpty()) mList.addAll(list);
+                            if (list != null) mList.addAll(list);
 
                         }else{
                             Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();

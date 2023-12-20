@@ -135,6 +135,8 @@ public class MainActivity extends BaseActivity {
     private final int CMD_GET_LTC_SUBJECT = 10;       // LTC 과목 목록
 
     private final int NOTICE_MENU_POSITION = 0; // 공지사항 메뉴 아이콘 index
+    private final int PT_MEMBER_MENU_POSITION = 5; // 설명회 메뉴 아이콘 index - 회원
+    private final int PT_NOT_MEMBER_MENU_POSITION = 3; // 설명회 메뉴 아이콘 index - 비회원
 
     private String _userType = "";
     private String _stName = "";
@@ -181,7 +183,11 @@ public class MainActivity extends BaseActivity {
 //                                }
 //                            }).start();
 //                        }
-                        requestBoardNew();
+                        if (RetrofitClient.getInstance() != null) {
+                            mRetrofitApi = RetrofitClient.getApiInterface();
+                            requestBoardNew(mRetrofitApi.getNoticeNewList(), MSG_TYPE_NOTICE);
+                            //requestBoardNew(mRetrofitApi.getPtNewList(), MSG_TYPE_PT);
+                        }
                     }
                 }
             }
@@ -235,7 +241,6 @@ public class MainActivity extends BaseActivity {
 
             } else {
                 mHandler.sendEmptyMessage(CMD_GET_MEMBER_INFO);
-                requestBoardNew();
             }
         }
     });
@@ -251,16 +256,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-//        if (_userGubun == Constants.USER_TYPE_PARENTS) {
-//            startActivity(new Intent(mContext, SelectStudentActivity.class));
-//            finish();
-//            return;
-//        }
-//        if (PreferenceUtil.getNumberOfChild(mContext) > 0){ // 자녀 인원수가 1명 이상인 경우
-//            startActivity(new Intent(mContext, SelectStudentActivity.class));
-//            finish();
-//            return;
-//        }
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             DataManager.getInstance().isSelectedChild = false;
@@ -537,7 +532,11 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
         // RECEIVER_NOT_EXPORTED - 내 앱에서 보낸 브로드캐스트만 수신
         ContextCompat.registerReceiver(mContext, pushNotificationReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
-        requestBoardNew();
+        if (RetrofitClient.getInstance() != null) {
+            mRetrofitApi = RetrofitClient.getApiInterface();
+            requestBoardNew(mRetrofitApi.getNoticeNewList(), MSG_TYPE_NOTICE);
+            //requestBoardNew(mRetrofitApi.getPtNewList(), MSG_TYPE_PT);
+        }
         requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
     }
 
@@ -556,7 +555,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        LogMgr.e(TAG, "LifeCycle: onPause");
         unregisterReceiver(pushNotificationReceiver);
         super.onPause();
     }
@@ -640,35 +638,45 @@ public class MainActivity extends BaseActivity {
                 }
             }
         });
-        runOnUiThread(() -> mAdapter.notifyDataSetChanged());
     }
-    // 공지사항 메뉴아이콘에 new 표시
+    // 공지사항 or 설명회 메뉴아이콘에 new 표시
     private void updateMenusNew(Context context, int memberSeq, String type, int readNum) {
         if(mList == null) return;
         new Thread(() -> {
             LocalDateTime today = LocalDateTime.now(); // 현재날짜
             LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+            List<NewBoardData> getReadList = JeetDatabase.getInstance(context).newBoardDao().getReadInfoList(memberSeq, type, sevenDaysAgo);
 
-            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(context).newBoardDao();
-            List<NewBoardData> getReadList = jeetDBNewBoard.getReadInfoList(memberSeq, type, sevenDaysAgo); // yyyyMM
-            for (NewBoardData data : getReadList) {
-                LogMgr.e(TAG, "seqTest: " + data.connSeq);
+            boolean hasAttention;
+
+            if (type.equals(MSG_TYPE_NOTICE)) { // 공지사항
+                hasAttention = readNum > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
+                updateMenuItem(mList, NOTICE_MENU_POSITION, DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, hasAttention, MenuAnnouncementActivity.class);
+
+            } else if (type.equals(MSG_TYPE_PT)) { // 설명회
+                hasAttention = readNum > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
+                int position = _userType.equals(Constants.MEMBER) ? PT_MEMBER_MENU_POSITION : PT_NOT_MEMBER_MENU_POSITION;
+                updateMenuItem(mList, position, DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, hasAttention, MenuBriefingActivity.class);
             }
 
-            LogMgr.e(TAG, "newapi size: " + readNum + ", dbRead size: " + getReadList.size());
-
-            if (mList.size() > 0) {
-                if (readNum > getReadList.size()) {
-                    mList.set(NOTICE_MENU_POSITION, new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, true, MenuAnnouncementActivity.class));
-                } else {
-                    mList.set(NOTICE_MENU_POSITION, new MainMenuItemData(DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, false, MenuAnnouncementActivity.class));
-                }
-            }
-
-            updateMenus();
+            runOnUiThread(() -> mAdapter.notifyDataSetChanged());
         }).start();
     }
+
+    private void updateMenuItem(
+            List<MainMenuItemData> list,
+            int position,
+            String boardType,
+            int iconResId,
+            int titleResId,
+            boolean hasAttention,
+            Class<?> activityClass
+    ) {
+        if (list.size() > position) {
+            list.set(position, new MainMenuItemData(boardType, iconResId, titleResId, hasAttention, activityClass));
+        }
+    }
+
     // 캠퍼스 목록 조회
     private void requestACAList(){
 //        showProgressDialog();
@@ -932,16 +940,13 @@ public class MainActivity extends BaseActivity {
                 public void onResponse(Call<BoardAttributeResponse> call, Response<BoardAttributeResponse> response) {
                     try {
                         if (response.isSuccessful()){
-                            List<BoardAttributeData> getData = null;
-                            if (response.body() != null)  {
-                                getData= response.body().data;
-                                if (getData != null) {
-                                    List<BoardAttributeData> list = response.body().data;
-                                    for(BoardAttributeData data : list){
-                                        DataManager.getInstance().setBoardInfo(data);
-                                    }
+                            if(response.body() != null) {
+                                List<BoardAttributeData> list = response.body().data;
+                                for(BoardAttributeData data : list){
+                                    DataManager.getInstance().setBoardInfo(data);
                                 }
                             }
+                            updateMenus();
                         }else{
                             LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());
 
@@ -965,10 +970,9 @@ public class MainActivity extends BaseActivity {
     }
 
     // 공지사항 일주일 이내 글 seq - 메뉴아이콘 new 표시 관련
-    private void requestBoardNew(){
+    private void requestBoardNew(Call<BoardNewResponse> call, String boardType){
         if(RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            mRetrofitApi.getNoticeNewList().enqueue(new Callback<BoardNewResponse>() {
+            call.enqueue(new Callback<BoardNewResponse>() {
                 @Override
                 public void onResponse(Call<BoardNewResponse> call, Response<BoardNewResponse> response) {
                     try {
@@ -976,17 +980,17 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null)  {
                                 List<Integer> getData = response.body().data;
                                 if (getData != null) {
-                                    updateMenusNew(mContext, _memberSeq, MSG_TYPE_NOTICE, getData.size());
+                                    updateMenusNew(mContext, _memberSeq, boardType, getData.size());
+                                } else {
+                                    updateMenusNew(mContext, _memberSeq, boardType, 0);
                                 }
-                            }// 193,191,188,187,178,176,175,174,165,164
+                            }
                         }else{
                             LogMgr.e(TAG, "requestBoardAttribute() errBody : " + response.errorBody().string());
 
                         }
 
                     }catch (Exception e) { LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
-
-                    mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
                 }
                 @Override
                 public void onFailure(Call<BoardNewResponse> call, Throwable t) {
@@ -994,8 +998,7 @@ public class MainActivity extends BaseActivity {
                         LogMgr.e(TAG, "requestBoardAttribute() onFailure >> " + t.getMessage());
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestBoardAttribute() Exception : ", e.getMessage()); }
-
-                    mHandler.sendEmptyMessage(CMD_GET_SCHOOL_LIST);
+                    mAdapter.notifyDataSetChanged();
                 }
             });
         }

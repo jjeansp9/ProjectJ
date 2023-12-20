@@ -246,9 +246,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
 
     private void startBoardDetailActivity(AnnouncementData clickItem, TextView title, int position){
         if (clickItem != null){
-
-            //if (!clickItem.isRead) insertDB(clickItem);
-
             Intent intent = new Intent(mContext, MenuAnnouncementDetailActivity.class);
             intent.putExtra(IntentParams.PARAM_ANNOUNCEMENT_INFO, clickItem);
             intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.main_menu_announcement));
@@ -344,12 +341,11 @@ public class MenuAnnouncementActivity extends BaseActivity {
                     try {
                         if (response.isSuccessful()) {
                             List<AnnouncementData> getData = new ArrayList<>();
-                            if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
 
                             if (response.body() != null) {
                                 getData = response.body().data;
-                                if (getData != null && !getData.isEmpty()) {
-
+                                if (getData != null) {
+                                    if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                     mList.addAll(getData);
                                     DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_NOTICE, mAdapter);
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));

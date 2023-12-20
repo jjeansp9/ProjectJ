@@ -91,7 +91,7 @@ public class TeacherInfoActivity extends BaseActivity {
                             List<TeacherClsData> list = response.body().data;
                             mList.add(0, new TeacherClsData());
 
-                            if (list != null && !list.isEmpty()) mList.addAll(list);
+                            if (list != null) mList.addAll(list);
 
                         }else{
                             Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();

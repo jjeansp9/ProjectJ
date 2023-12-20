@@ -9,7 +9,7 @@ import org.threeten.bp.LocalDateTime;
 import java.io.Serializable;
 
 @Entity(tableName = "tbl_new_board")
-public class NewBoardData implements Serializable {
+public class NewBoardData {
     @PrimaryKey(autoGenerate = true)
     public long id;
 

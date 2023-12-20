@@ -2,8 +2,6 @@ package kr.jeet.edu.student.server;
 
 import java.util.List;
 
-import kr.jeet.edu.student.model.data.SystemNoticeData;
-import kr.jeet.edu.student.model.data.TestReserveData;
 import kr.jeet.edu.student.model.request.BriefingReserveRequest;
 import kr.jeet.edu.student.model.request.CounselRequest;
 import kr.jeet.edu.student.model.request.LevelTestRequest;
@@ -37,7 +35,6 @@ import kr.jeet.edu.student.model.response.GetAttendanceInfoResponse;
 import kr.jeet.edu.student.model.response.LTCListResponse;
 import kr.jeet.edu.student.model.response.LevelTestSubjectResponse;
 import kr.jeet.edu.student.model.response.LoginResponse;
-import kr.jeet.edu.student.model.response.NoticeListResponse;
 import kr.jeet.edu.student.model.response.QnaDetailResponse;
 import kr.jeet.edu.student.model.response.QnaListResponse;
 import kr.jeet.edu.student.model.response.ReportCardShowResponse;
@@ -71,10 +68,10 @@ public interface RetrofitApi {
     //public final static String SERVER_BASE_URL = "http://192.168.2.51:7777/";   //kyt local
     //public final static String SERVER_BASE_URL = "http://192.168.2.55:7777/"; // pjh local
     //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
-    public final static String SERVER_BASE_URL = "http://192.168.2.83:7777/"; // jwj local
+    //public final static String SERVER_BASE_URL = "http://192.168.2.83:7777/"; // jwj local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // cloud local
     //public final static String SERVER_BASE_URL = "http://211.252.86.6/"; // 신규 cloud local
-    //public final static String SERVER_BASE_URL = "https://www.jeetapp.kr/"; // domain
+    public final static String SERVER_BASE_URL = "https://www.jeetapp.kr/"; // domain
 
     public final static String PREFIX = "mobile/api/";
     public final static String FILE_SUFFIX_URL = SERVER_BASE_URL + "attachFile/";
@@ -336,4 +333,7 @@ public interface RetrofitApi {
     // 공지사항 일주일 이내 글 SEQ - 공지사항 메뉴아이콘에 New 표시하기위한 api
     @GET("notices/new")
     Call<BoardNewResponse> getNoticeNewList();
+    // 설명회예약 일주일 이내 글 SEQ - 설명회에약 메뉴아이콘에 New 표시하기위한 api
+    @GET("pts/new")
+    Call<BoardNewResponse> getPtNewList();
 }

@@ -101,8 +101,6 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    // api 2개 - 공지 목록, 설명회 목록
-
     private void initData() {
         _stCode = PreferenceUtil.getUserSTCode(mContext);
         _memberSeq = PreferenceUtil.getUserSeq(mContext);
@@ -218,35 +216,6 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
         }
         if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
         if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
-    }
-
-    private void insertDB(AnnouncementData currentData) {
-        new Thread(() -> {
-            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
-
-            LocalDateTime today = LocalDateTime.now(); // 현재날짜
-            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            NewBoardData boardInfo = jeetDBNewBoard.getReadInfo(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo, currentData.seq); // 읽은글
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-            LocalDateTime insertDate = LocalDateTime.parse(currentData.insertDate, formatter);
-
-            if (boardInfo == null) {
-                if (sevenDaysAgo.isBefore(insertDate)) {
-                    // 최근 7일 이내의 데이터인 경우
-                    NewBoardData newBoardData = new NewBoardData(
-                            FCMManager.MSG_TYPE_NOTICE,
-                            currentData.seq,
-                            _memberSeq,
-                            currentData.isRead,
-                            insertDate,
-                            insertDate
-                    );
-                    jeetDBNewBoard.insert(newBoardData);
-                    LogMgr.e(TAG, "dbTest Insert!");
-                }
-            }
-        }).start();
     }
 
     // 공지사항 글 상세정보 조회

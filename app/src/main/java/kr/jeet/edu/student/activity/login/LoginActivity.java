@@ -399,7 +399,7 @@ public class LoginActivity extends BaseActivity {
 
                             LoginResponse res = response.body();
 
-                            if (res.data != null){
+                            if (res != null && res.data != null){
 
                                 PreferenceUtil.setUserSeq(mContext, res.data.seq);
                                 PreferenceUtil.setUserGubun(mContext, res.data.userGubun);
@@ -480,16 +480,19 @@ public class LoginActivity extends BaseActivity {
                                 String title = getString(R.string.dialog_title_alarm);
                                 String msgMismatch = getString(R.string.msg_user_gubun_mismatch);
                                 String msgNotJeetMember = getString(R.string.msg_user_0_not_jeet_member);
+                                
+                                if (response.body() != null) {
+                                    if (response.body().msg.equals(Constants.PARAMETER_BINDING_ERROR)){
+                                        Toast.makeText(mContext, R.string.msg_parameter_binding_error, Toast.LENGTH_SHORT).show();
 
-                                if (response.body().msg.equals(Constants.PARAMETER_BINDING_ERROR)){
-                                    Toast.makeText(mContext, R.string.msg_parameter_binding_error, Toast.LENGTH_SHORT).show();
+                                    }else if (response.body().msg.equals(Constants.USER_GUBUN_MISMATCH)){
+                                        showMessageDialog(title, msgMismatch, clickOK -> hideMessageDialog(), null, false);
 
-                                }else if (response.body().msg.equals(Constants.USER_GUBUN_MISMATCH)){
-                                    showMessageDialog(title, msgMismatch, clickOK -> hideMessageDialog(), null, false);
-
-                                }else if (response.body().msg.equals(Constants.USER_NOT_JEET_MEMBER)){
-                                    showMessageDialog(title, msgNotJeetMember, clickOK -> hideMessageDialog(), null, false);
+                                    }else if (response.body().msg.equals(Constants.USER_NOT_JEET_MEMBER)){
+                                        showMessageDialog(title, msgNotJeetMember, clickOK -> hideMessageDialog(), null, false);
+                                    }
                                 }
+
                                 if (mAppleLogin != null) mAppleLogin.DeleteAccountProcess();
 
                             }else if(response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {

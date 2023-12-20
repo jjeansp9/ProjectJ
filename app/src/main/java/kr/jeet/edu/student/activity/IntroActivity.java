@@ -376,7 +376,7 @@ public class IntroActivity extends BaseActivity {
 
                             LoginResponse res = response.body();
 
-                            if (res.data != null){
+                            if (res != null && res.data != null){
 
                                 PreferenceUtil.setUserSeq(mContext, res.data.seq);
                                 PreferenceUtil.setUserGubun(mContext, res.data.userGubun);
@@ -494,7 +494,7 @@ public class IntroActivity extends BaseActivity {
 
                             LoginResponse res = response.body();
 
-                            if (res.data != null){
+                            if (res != null && res.data != null){
 
                                 PreferenceUtil.setUserSeq(mContext, res.data.seq);
                                 PreferenceUtil.setUserGubun(mContext, res.data.userGubun);
