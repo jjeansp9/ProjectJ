@@ -41,6 +41,7 @@ import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.BoardAttributeData;
 import kr.jeet.edu.student.model.data.LTCData;
 import kr.jeet.edu.student.model.data.MainMenuItemData;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.model.data.SchoolData;
 import kr.jeet.edu.student.model.data.StudentInfo;
 import kr.jeet.edu.student.model.response.AnnouncementListResponse;
@@ -104,7 +105,7 @@ public class MainActivity extends BaseActivity {
     private MainMenuListAdapter mAdapter;
     private AnnouncementListAdapter announceAdapter;
     private ArrayList<MainMenuItemData> mList = new ArrayList<>();
-    private ArrayList<AnnouncementData> announceList = new ArrayList<>();
+    private ArrayList<ReadData> announceList = new ArrayList<>();
     private TextView mTvStudentName, mTvSchoolAndGradeName, mTvStudentCampus, mTvGrade, mTvNonMember,
             mTvAttendance, mTvAttendanceDate, mTvNonMemberNoti, mTvNotifyContent, mTvTeacherName, mTvListEmpty, mTvNameSub;
     private ImageView imgStudentAttendance;

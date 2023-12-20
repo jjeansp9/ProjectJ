@@ -122,12 +122,32 @@ public class AnnouncementData implements Parcelable, ReadData {
     }
 
     @Override
+    public int getSeq() {
+        return seq;
+    }
+
+    @Override
     public boolean getIsRead() {
         return isRead;
     }
 
     @Override
-    public int getSeq() {
-        return seq;
+    public void setDate(String date) {
+        this.insertDate = date; // yyyy-MM-dd HH:ss
+    }
+
+    @Override
+    public void setTime(String time) {
+        // 공지사항엔 time 파라미터가 없음. date 파라미터 참고
+    }
+
+    @Override
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
+
+    @Override
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 }

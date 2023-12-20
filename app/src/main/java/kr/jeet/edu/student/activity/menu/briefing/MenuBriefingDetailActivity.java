@@ -438,7 +438,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 if (data != null){
                                     mInfo = data;
                                     mInfo.isRead = true;
-                                    DBUtils.insertReadDB(mInfo, mContext, _memberSeq, FCMManager.MSG_TYPE_PT);
+                                    DBUtils.insertReadDB(mContext, mInfo, _memberSeq, FCMManager.MSG_TYPE_PT);
 
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }

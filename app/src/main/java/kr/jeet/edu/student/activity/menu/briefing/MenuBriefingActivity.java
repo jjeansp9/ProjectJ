@@ -3,6 +3,7 @@ package kr.jeet.edu.student.activity.menu.briefing;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -50,10 +51,12 @@ import kr.jeet.edu.student.db.NewBoardData;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.ACAData;
 import kr.jeet.edu.student.model.data.BriefingData;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.model.data.StudentGradeData;
 import kr.jeet.edu.student.model.response.BriefingResponse;
 import kr.jeet.edu.student.model.response.StudentGradeListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.DBUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -69,6 +72,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private static final int CMD_GET_GRADE_LIST = 1;
     private static final int CMD_GET_BRIEFINGS = 2;
 
+    private AppCompatActivity mContext;
+
     private PowerSpinnerView _spinnerCampus, _spinnerGrade;
 
     private TextView mTvCalendar, mTvEmptyList;
@@ -77,7 +82,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
 
     private BriefingListAdapter mAdapter;
 
-    private ArrayList<BriefingData> mList = new ArrayList<>();
+    private ArrayList<ReadData> mList = new ArrayList<>();
 
     private String _acaCode = "";
     private String _appAcaCode = "";
@@ -376,50 +381,50 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
         }
     }
 
-    private void setDB() {
-        new Thread(() -> {
-            LocalDateTime today = LocalDateTime.now(); // 현재날짜
-            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-
-            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
-            List<NewBoardData> getAfterList = jeetDBNewBoard.getReadInfoList(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
-
-            HashSet<String> getAfterKeyList = new HashSet<>();
-
-            for (NewBoardData boardData : getAfterList) {
-                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
-                getAfterKeyList.add(key);
-            }
-
-            for (BriefingData briefing : mList) {
-                String date = "";
-                try {
-                    if (briefing.date != null && !briefing.date.isEmpty()) date = briefing.date;
-                    if (briefing.ptTime != null && !briefing.ptTime.isEmpty()) date += " " + briefing.ptTime;
-                }catch (Exception e) {}
-
-                LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
-
-                if (sevenDaysAgo.isBefore(insertDate)) { // 최근 7일 이내의 데이터인 경우
-                    if (!getAfterList.isEmpty()) {
-                        if (sevenDaysAgo.isBefore(insertDate)) {
-                            String key = FCMManager.MSG_TYPE_NOTICE + "," + briefing.seq + "," + _memberSeq;
-                            if (getAfterKeyList.contains(key)) briefing.isRead = true;
-
-                        } else { // 최근 7일 이후의 데이터인 경우
-                            for (NewBoardData boardData : getAfterList) jeetDBNewBoard.delete(boardData);
-                            briefing.isRead = true;
-                        }
-                    }
-                } else {
-                    briefing.isRead = true;
-                }
-            }
-
-            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
-        }).start();
-    }
+//    private void setDB() {
+//        new Thread(() -> {
+//            LocalDateTime today = LocalDateTime.now(); // 현재날짜
+//            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+//
+//            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(mContext).newBoardDao();
+//            List<NewBoardData> getAfterList = jeetDBNewBoard.getReadInfoList(_memberSeq, FCMManager.MSG_TYPE_NOTICE, sevenDaysAgo); // yyyyMM
+//
+//            HashSet<String> getAfterKeyList = new HashSet<>();
+//
+//            for (NewBoardData boardData : getAfterList) {
+//                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
+//                getAfterKeyList.add(key);
+//            }
+//
+//            for (BriefingData briefing : mList) {
+//                String date = "";
+//                try {
+//                    if (briefing.date != null && !briefing.date.isEmpty()) date = briefing.date;
+//                    if (briefing.ptTime != null && !briefing.ptTime.isEmpty()) date += " " + briefing.ptTime;
+//                }catch (Exception e) {}
+//
+//                LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
+//
+//                if (sevenDaysAgo.isBefore(insertDate)) { // 최근 7일 이내의 데이터인 경우
+//                    if (!getAfterList.isEmpty()) {
+//                        if (sevenDaysAgo.isBefore(insertDate)) {
+//                            String key = FCMManager.MSG_TYPE_NOTICE + "," + briefing.seq + "," + _memberSeq;
+//                            if (getAfterKeyList.contains(key)) briefing.isRead = true;
+//
+//                        } else { // 최근 7일 이후의 데이터인 경우
+//                            for (NewBoardData boardData : getAfterList) jeetDBNewBoard.delete(boardData);
+//                            briefing.isRead = true;
+//                        }
+//                    }
+//                } else {
+//                    briefing.isRead = true;
+//                }
+//            }
+//
+//            runOnUiThread(() -> {mAdapter.notifyDataSetChanged();});
+//        }).start();
+//    }
 
     private void requestGradeList(String acaCode){
         if(RetrofitClient.getInstance() != null) {
@@ -493,7 +498,8 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
                                     }
-                                    setDB();
+                                    //setDB();
+                                    DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_PT, mAdapter);
 
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }

@@ -269,7 +269,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                         _currentData = data;
                                         _currentData.isRead = true;
                                         //insertDB(_currentData);
-                                        DBUtils.insertReadDB(_currentData, mContext, _memberSeq, FCMManager.MSG_TYPE_NOTICE);
+                                        DBUtils.insertReadDB(mContext, _currentData, _memberSeq, FCMManager.MSG_TYPE_NOTICE);
                                         //initData();
                                         setView();
 

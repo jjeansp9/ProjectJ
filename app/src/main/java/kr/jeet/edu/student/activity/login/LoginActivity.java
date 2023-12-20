@@ -334,21 +334,29 @@ public class LoginActivity extends BaseActivity {
                                 String msgMismatch = getString(R.string.msg_user_gubun_mismatch);
                                 String msgNotJeetMember = getString(R.string.msg_user_0_not_jeet_member);
 
-                                if (response.body().msg.equals(Constants.ALREADY_LOGIN_IN)){
-                                    Toast.makeText(mContext, R.string.msg_already_login_in, Toast.LENGTH_SHORT).show();
+                                if (response.body() != null) {
 
-                                } else if (response.body().msg.equals(Constants.PASSWORD_MISMATCH)){
-                                    Toast.makeText(mContext, R.string.msg_password_mismatch, Toast.LENGTH_SHORT).show();
+                                    String msg = response.body().msg;
 
-                                } else if (response.body().msg.equals(Constants.PARAMETER_BINDING_ERROR)) {
-                                    Toast.makeText(mContext, R.string.msg_parameter_binding_error, Toast.LENGTH_SHORT).show();
+                                    LogMgr.e(TAG+" -> response body msg", msg);
 
-                                } else if (response.body().msg.equals(Constants.USER_GUBUN_MISMATCH)) {
-                                    showMessageDialog(title, msgMismatch, clickOK -> hideMessageDialog(), null, false);
+                                    if (msg.equals(Constants.ALREADY_LOGIN_IN)){
+                                        Toast.makeText(mContext, R.string.msg_already_login_in, Toast.LENGTH_SHORT).show();
 
-                                } else if (response.body().msg.equals(Constants.USER_NOT_JEET_MEMBER)) {
-                                    showMessageDialog(title, msgNotJeetMember, clickOK -> hideMessageDialog(), null, false);
+                                    } else if (msg.equals(Constants.PASSWORD_MISMATCH)){
+                                        Toast.makeText(mContext, R.string.msg_password_mismatch, Toast.LENGTH_SHORT).show();
+
+                                    } else if (msg.equals(Constants.PARAMETER_BINDING_ERROR)) {
+                                        Toast.makeText(mContext, R.string.msg_parameter_binding_error, Toast.LENGTH_SHORT).show();
+
+                                    } else if (msg.equals(Constants.USER_GUBUN_MISMATCH)) {
+                                        showMessageDialog(title, msgMismatch, clickOK -> hideMessageDialog(), null, false);
+
+                                    } else if (msg.equals(Constants.USER_NOT_JEET_MEMBER)) {
+                                        showMessageDialog(title, msgNotJeetMember, clickOK -> hideMessageDialog(), null, false);
+                                    }
                                 }
+
                             }else if(response.code() == 404 || response.code() == 401) {
                                 // {"msg":"NOT_FOUND_MEMBER"}
                                 Toast.makeText(mContext, R.string.login_not_found_member, Toast.LENGTH_SHORT).show();

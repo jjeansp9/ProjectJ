@@ -105,4 +105,24 @@ public class BriefingData implements Parcelable, ReadData {
     public int getSeq() {
         return seq;
     }
+
+    @Override
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    @Override
+    public void setTime(String time) {
+        this.ptTime = time;
+    }
+
+    @Override
+    public void setSeq(int seq) {
+        this.seq = seq;
+    }
+
+    @Override
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
+    }
 }

@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.Locale;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.model.data.BriefingData;
 import kr.jeet.edu.student.model.data.FileData;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -41,14 +43,14 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
     public interface ItemClickListener{ public void onItemClick(BriefingData item, int position); }
 
     private Context mContext;
-    private List<BriefingData> mList;
+    private List<ReadData> mList;
     private ItemClickListener _listener;
 
     private static boolean isWholeCampusMode = false;
     private final boolean IMG_IS_EMPTY = true;
     private final boolean IMG_IS_NOT_EMPTY = false;
 
-    public BriefingListAdapter(Context mContext, List<BriefingData> mList, ItemClickListener listener) {
+    public BriefingListAdapter(Context mContext, List<ReadData> mList, ItemClickListener listener) {
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
@@ -65,7 +67,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        BriefingData item = mList.get(position);
+        BriefingData item = (BriefingData) mList.get(position);
         try{
             String cnt;
 
@@ -205,7 +207,7 @@ public class BriefingListAdapter extends RecyclerView.Adapter<BriefingListAdapte
 
             itemView.setOnClickListener(v -> {
                 int position = getAbsoluteAdapterPosition();
-                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position), position);
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick((BriefingData) mList.get(position), position);
             });
         }
     }

@@ -16,7 +16,7 @@ public interface NewBoardDao {
     @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate >= :checkDate ORDER BY id DESC")
     List<NewBoardData> getReadInfoList(int memberSeq, String type, LocalDateTime checkDate);
 
-    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate >= :checkDate AND connSeq == :connSeq ORDER BY id DESC")
+    @Query("SELECT * FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate >= :checkDate AND connSeq == :connSeq")
     NewBoardData getReadInfo(int memberSeq, String type, LocalDateTime checkDate, int connSeq);
 
     @Update
@@ -28,6 +28,6 @@ public interface NewBoardDao {
     @Insert
     void insertList(List<NewBoardData> newBoardData);
 
-    @Delete
-    void delete(NewBoardData newBoardData);
+    @Query("DELETE FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate < :checkDate AND connSeq == :connSeq")
+    void delete(int memberSeq, String type, LocalDateTime checkDate, int connSeq);
 }

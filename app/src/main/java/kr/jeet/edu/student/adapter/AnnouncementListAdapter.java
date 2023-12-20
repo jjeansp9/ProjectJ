@@ -24,6 +24,7 @@ import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.model.data.AnnouncementData;
 import kr.jeet.edu.student.model.data.FileData;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
@@ -36,7 +37,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     public interface ItemClickListener{ public void onItemClick(AnnouncementData item, TextView title, int position); }
 
     private Context mContext;
-    private List<AnnouncementData> mList;
+    private List<ReadData> mList;
     private ItemClickListener _listener;
 
     private final boolean IMG_IS_EMPTY = true;
@@ -45,7 +46,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
     private static boolean isWholeCampusMode = false;
     private static boolean isMain = false;
 
-    public AnnouncementListAdapter(Context mContext, List<AnnouncementData> mList, boolean isMain, AnnouncementListAdapter.ItemClickListener listener) {
+    public AnnouncementListAdapter(Context mContext, List<ReadData> mList, boolean isMain, AnnouncementListAdapter.ItemClickListener listener) {
         this.mContext = mContext;
         this._listener = listener;
         this.mList = mList;
@@ -65,7 +66,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        AnnouncementData item = mList.get(position);
+        AnnouncementData item = (AnnouncementData) mList.get(position);
         try{
             LogMgr.e("isMain: " + isMain);
 
@@ -194,7 +195,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();
-                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick(mList.get(position), tvTitle, position);
+                if (position != NO_POSITION) if (mList.size() > 0) _listener.onItemClick((AnnouncementData) mList.get(position), tvTitle, position);
             });
         }
     }
