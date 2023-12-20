@@ -157,34 +157,34 @@ public class TuitionActivity extends BaseActivity {
     }
 
     private void startWebView(Constants.PayListItem item) {
-        if (((TuitionHeaderData)item).acaLinkIsNull == null || ((TuitionHeaderData)item).acaLinkIsNull.isEmpty()){ // 가상계좌번호가 있는 경우
 
-            if ( ((TuitionHeaderData)item).acaLink != null || !TextUtils.isEmpty( ((TuitionHeaderData)item).acaLink) ) {
+        if ( ((TuitionHeaderData)item).acaLink != null || !TextUtils.isEmpty( ((TuitionHeaderData)item).acaLink) ) {
 
-                if (((TuitionHeaderData)item).accountNO == null || ((TuitionHeaderData)item).accountNO.isEmpty()) {
-                    Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
+            if (((TuitionHeaderData)item).accountNO == null || ((TuitionHeaderData)item).accountNO.isEmpty()) {
+                Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
 
-                } else {
-                    Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(mContext, WebViewActivity.class);
-                    intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
-                    intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, ((TuitionHeaderData)item).acaLink);
-                    intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
-                    resultLauncher.launch(intent);
-                }
+                Intent intent = new Intent(mContext, WebViewActivity.class);
+                intent.putExtra(IntentParams.PARAM_APPBAR_TITLE, getString(R.string.menu_stu_info_tuition_title));
+                intent.putExtra(IntentParams.PARAM_WEB_VIEW_URL, ((TuitionHeaderData)item).acaLink);
+                intent.putExtra(IntentParams.PARAM_ACCOUNT_NO, ((TuitionHeaderData)item).accountNO);
+                resultLauncher.launch(intent);
+            }
 
-            } else { // 가상계좌번호 url이 없는 경우
+        } else { // 가상계좌번호 url이 없는 경우
+
+            if (((TuitionHeaderData)item).acaLinkIsNull == null || ((TuitionHeaderData)item).acaLinkIsNull.isEmpty()){ // 가상계좌번호가 있는 경우
                 if (((TuitionHeaderData)item).accountNO == null || ((TuitionHeaderData)item).accountNO.isEmpty()) {
                     Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
 
                 } else {
                     showDialog(item);
                 }
+            } else { // acaLink가 없고, acaLinkIsNull이 있는 경우
+                showDialog(item);
             }
-
-        } else { // acaLink가 없고, acaLinkIsNull이 있는 경우
-            showDialog(item);
         }
     }
 
