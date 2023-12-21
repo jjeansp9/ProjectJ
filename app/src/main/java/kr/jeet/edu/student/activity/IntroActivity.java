@@ -628,7 +628,7 @@ public class IntroActivity extends BaseActivity {
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         intent.putParcelableArrayListExtra(IntentParams.PARAM_CHILD_STUDENT_INFO, getData);
                                         if(_pushMessage != null) {
-                                            LogMgr.e(TAG, "EVENT intro pushConnSeq: " + _pushMessage.connSeq+"");
+                                            LogMgr.e(TAG, "EVENT intro push: " + _pushMessage.pushType + "push connSeq: " + _pushMessage.connSeq+"");
                                             Bundle bundle = new Bundle();
                                             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, _pushMessage);
                                             intent.putExtras(bundle);

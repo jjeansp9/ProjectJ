@@ -24,7 +24,7 @@ public class BriefingData implements Parcelable, ReadData {
     public int rdcnt; // 조회수
     public String fileId; // 파일 ID
     public List<FileData> fileList; // 파일목록
-    public boolean isRead = false; // 읽음 유무
+    public boolean isRead = true; // 읽음 유무
 
     public BriefingData() {}
 

@@ -72,8 +72,6 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
     private static final int CMD_GET_GRADE_LIST = 1;
     private static final int CMD_GET_BRIEFINGS = 2;
 
-    private AppCompatActivity mContext;
-
     private PowerSpinnerView _spinnerCampus, _spinnerGrade;
 
     private TextView mTvCalendar, mTvEmptyList;
@@ -453,7 +451,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
                                     }
-                                    //DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_PT, mAdapter);
+                                    //DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_PT, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
 
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }

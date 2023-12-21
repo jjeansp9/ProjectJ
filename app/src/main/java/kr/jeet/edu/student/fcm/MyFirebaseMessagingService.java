@@ -89,6 +89,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 InsertRunnable insertRunnable = new InsertRunnable(pushMsg);
                 Thread t = new Thread(insertRunnable);
                 t.start();
+
+                LogMgr.e(TAG, "pushMsg pushType = " + pushMsg.pushType + ", pushConnSeq = " + pushMsg.connSeq);
                 FCMManager fcmManager = new FCMManager(this, pushMsg);
                 fcmManager.handlePushMessage();
             }

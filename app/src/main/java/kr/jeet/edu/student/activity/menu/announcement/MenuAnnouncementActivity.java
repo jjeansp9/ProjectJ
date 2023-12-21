@@ -69,8 +69,6 @@ public class MenuAnnouncementActivity extends BaseActivity {
     private static final int CMD_GET_ACA_LIST = 0;
     private static final int CMD_GET_GRADE_LIST = 1;
 
-    private AppCompatActivity mContext;
-
     private RecyclerView mRecyclerView;
     private TextView mTvListEmpty;
     private PowerSpinnerView mSpinnerCampus, mSpinnerGrade;
@@ -347,7 +345,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                 if (getData != null) {
                                     if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                     mList.addAll(getData);
-                                    DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_NOTICE, mAdapter);
+                                    DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_NOTICE, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
 
                                 } else {

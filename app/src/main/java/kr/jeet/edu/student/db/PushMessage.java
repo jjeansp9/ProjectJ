@@ -222,7 +222,7 @@ public class PushMessage implements Serializable {
     public String pushId;
 
     @ColumnInfo(name = "isRead", defaultValue = "false")
-    public boolean isRead = false;
+    public Boolean isRead = false;
 
     @ColumnInfo(name = "date")
     public LocalDateTime date;
@@ -243,14 +243,14 @@ public class PushMessage implements Serializable {
         catch (Exception e){ LogMgr.e("PushMessage()", e.getMessage()); }
     }
 
-        public static final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
+    public static final DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
             .appendPattern("yyyy-MM-dd HH:mm:ss")
             .optionalStart()
             .appendFraction(ChronoField.MILLI_OF_SECOND, 0, 3, true)
             .optionalEnd()
             .toFormatter();
 
-        public static PushMessage buildFromMap(Map<String, String> map, Context context) {
+    public static PushMessage buildFromMap(Map<String, String> map, Context context) {
         LocalDateTime initDate = LocalDateTime.now();
         try{
             if(map.containsKey("date")) {
@@ -268,7 +268,7 @@ public class PushMessage implements Serializable {
         int userGubun = -1;
         String userGubunStr = map.containsKey("userGubun")? map.get("userGubun") : "";
         int connSeq = -1;
-        String connSeqStr = map.containsKey("connSeq")? map.get("connSeq") : "";
+        String connSeqStr = map.containsKey("connSeq")? map.get("connSeq") : "-1";
         try {
             stCode = Integer.parseInt(stCodeStr);
         }catch (Exception e){}
@@ -300,6 +300,8 @@ public class PushMessage implements Serializable {
         String pushId = map.containsKey("pushId")? map.get("pushId") : "";
 
         LocalDateTime date = initDate;
+
+        LogMgr.e("PushMessage", "pushType: " + pushType + ", pushConnSeq: " + connSeq);
 
         return new PushMessage(id, title, content, acaCode, stCode, userGubun, date, pushType, memberSeq, connSeq, pushId, false);
     }
