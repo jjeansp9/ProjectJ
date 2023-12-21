@@ -639,22 +639,25 @@ public class MainActivity extends BaseActivity {
             }
         });
     }
+
+    // TODO : 앱 아이콘 새로 생성하기 [ HCT 참고 ]
+
     // 공지사항 or 설명회 메뉴아이콘에 new 표시
-    private void updateMenusNew(Context context, int memberSeq, String type, int readNum) {
+    private void updateMenusNew(Context context, int memberSeq, String type, List<Integer> weekData) {
         if(mList == null) return;
         new Thread(() -> {
             LocalDateTime today = LocalDateTime.now(); // 현재날짜
-            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+            LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 6일을 뺀 날짜
             List<NewBoardData> getReadList = JeetDatabase.getInstance(context).newBoardDao().getReadInfoList(memberSeq, type, sevenDaysAgo);
 
             boolean hasAttention;
 
             if (type.equals(MSG_TYPE_NOTICE)) { // 공지사항
-                hasAttention = readNum > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
+                hasAttention = weekData.size() > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
                 updateMenuItem(mList, NOTICE_MENU_POSITION, DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, hasAttention, MenuAnnouncementActivity.class);
 
             } else if (type.equals(MSG_TYPE_PT)) { // 설명회
-                hasAttention = readNum > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
+                hasAttention = weekData.size() > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
                 int position = _userType.equals(Constants.MEMBER) ? PT_MEMBER_MENU_POSITION : PT_NOT_MEMBER_MENU_POSITION;
                 updateMenuItem(mList, position, DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, hasAttention, MenuBriefingActivity.class);
             }
@@ -980,9 +983,10 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null)  {
                                 List<Integer> getData = response.body().data;
                                 if (getData != null) {
-                                    updateMenusNew(mContext, _memberSeq, boardType, getData.size());
+                                    updateMenusNew(mContext, _memberSeq, boardType, getData);
                                 } else {
-                                    updateMenusNew(mContext, _memberSeq, boardType, 0);
+                                    //updateMenusNew(mContext, _memberSeq, boardType, 0);
+                                    mAdapter.notifyDataSetChanged();
                                 }
                             }
                         }else{

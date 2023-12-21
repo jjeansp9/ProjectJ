@@ -67,11 +67,11 @@ public class DBUtils {
         new Thread(() -> {
             try{
                 LocalDateTime today = LocalDateTime.now(); // 현재날짜
-                LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 7일을 뺀 날짜
+                LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 6일을 뺀 날짜
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
 
                 NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(context).newBoardDao();
-                List<NewBoardData> getReadList = jeetDBNewBoard.getReadInfoList(memberSeq, type); // yyyyMM
+                List<NewBoardData> getReadList = jeetDBNewBoard.getReadInfoList(memberSeq, type);
 
                 HashSet<String> getReadKeyList = new HashSet<>();
 

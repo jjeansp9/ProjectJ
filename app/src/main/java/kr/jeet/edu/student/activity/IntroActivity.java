@@ -245,7 +245,9 @@ public class IntroActivity extends BaseActivity {
 
             if (bundle != null) {
                 _pushMessage = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
-                if (_pushMessage != null) LogMgr.e(TAG, "msg = " + _pushMessage.body + ", " + _pushMessage.connSeq);
+                if (_pushMessage != null) {
+                    LogMgr.e(TAG, "EVENT intro initIntentData() push: " + _pushMessage.pushType + "push connSeq: " + _pushMessage.connSeq+"");
+                }
             }
 //            if(intent.getExtras() != null) {
 //                Bundle map = intent.getExtras();
