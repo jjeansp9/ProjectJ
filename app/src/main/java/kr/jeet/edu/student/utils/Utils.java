@@ -506,11 +506,7 @@ public class Utils {
 
     public static void createNotification(Context _context, String title, String content){
         PendingIntent pendingIntent;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-        }else{
-            pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT);
-        }
+        pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         String channelId = _context.getString(R.string.consult_notification_headup_channel_id);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(_context, channelId)
 //                .setTicker(tickerText)
@@ -704,12 +700,6 @@ public class Utils {
         }
     }
 }
-
-
-
-
-
-
 
 
 

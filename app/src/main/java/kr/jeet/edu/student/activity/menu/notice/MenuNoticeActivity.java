@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.content.ContextCompat;
@@ -39,9 +41,12 @@ import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.AnnouncementData;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
 import kr.jeet.edu.student.model.response.SystemNoticeListResponse;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.DBUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
@@ -61,7 +66,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private TextView txtEmpty, mTvCalendar;
     private AppCompatImageButton btnPrevious, btnNext;
 
-    private final ArrayList<SystemNoticeListData> mList = new ArrayList<>();
+    private final ArrayList<ReadData> mList = new ArrayList<>();
     //private final ArrayList<ReportCardSummaryData> mReportList = new ArrayList<>();
 
     Date _selectedDate = new Date();
@@ -96,6 +101,25 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
     private final int CMD_GET_LIST = 0;       // roomDB에 저장된 목록 가져오기
 
+    ActivityResultLauncher<Intent> resultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        LogMgr.w("result =" + result);
+        Intent intent = result.getData();
+        if(result.getResultCode() != RESULT_CANCELED) {
+            AnnouncementData changedItem = null;
+            if(intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+                changedItem = Utils.getParcelableExtra(intent, IntentParams.PARAM_BOARD_ITEM, AnnouncementData.class);
+
+            }
+            LogMgr.w("showed =" + changedItem);
+            int position = intent.getIntExtra(IntentParams.PARAM_BOARD_POSITION, -1);
+            LogMgr.w("position =" + position);
+            if(position >= 0 && changedItem != null) {
+                mList.set(position, changedItem);
+                mAdapter.notifyItemChanged(position);
+            }
+        }
+    });
+
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -114,15 +138,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         mContext = this;
         initAppbar();
         initView();
-
-        if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) changeMessageState2Read();
+        if (getType.equals(FCMManager.MSG_TYPE_SYSTEM)) changeMessageState2Read();
         setAnimMove(Constants.MOVE_DOWN);
     }
 
     void changeMessageState2Read() {
         new Thread(() -> {
             try {
-                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_ATTEND);
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_SYSTEM);
                 if(!pushMessages.isEmpty()) {
                     for(PushMessage message : pushMessages) {
                         if (message.stCode == _stCode){
@@ -163,13 +186,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         Intent intent = getIntent();
         if (intent != null && intent.hasExtra(IntentParams.PARAM_TYPE_NOTICE)){
             getType = intent.getStringExtra(IntentParams.PARAM_TYPE_NOTICE);
-
-            if (getType != null) {
+            if (getType != null && !getType.isEmpty()) {
                 if (getType.equals(FCMManager.MSG_TYPE_ATTEND)) selType = attendanceType;
-                //else if (getType.equals(FCMManager.MSG_TYPE_REPORT)) selType = reportCardType;
                 else if (getType.equals(FCMManager.MSG_TYPE_TUITION)) selType = tuitionType;
-                else selType = systemType;
             }
+
+        } else {
+            getType = FCMManager.MSG_TYPE_SYSTEM;
+            selType = systemType;
         }
     }
 
@@ -195,7 +219,6 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         setRecycler();
         mSwipeRefresh.setOnRefreshListener(this::getListData);
 
-        mHandler.sendEmptyMessage(CMD_GET_LIST);
     }
 
     private void calendarSetVisible(int visible) {
@@ -218,13 +241,14 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
         _spinnerType.setOnSpinnerItemSelectedListener((oldIndex, oldItem, newIndex, newItem) -> {
             selType = newItem.toString();
-            getListData();
+            mHandler.sendEmptyMessage(CMD_GET_LIST);
         });
 
         _spinnerType.setSpinnerOutsideTouchListener((view, motionEvent) -> _spinnerType.dismiss());
+
         switch (getType) {
             case FCMManager.MSG_TYPE_SYSTEM:
-
+                _spinnerType.selectItemByIndex(0);
                 break;
             case FCMManager.MSG_TYPE_ATTEND:
                 _spinnerType.selectItemByIndex(1);
@@ -244,11 +268,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
     private void setRecycler(){
         mAdapter = new NoticeListAdapter(mContext, mList, this::startActivity);
         mRecyclerView.setAdapter(mAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mContext,LinearLayoutManager.VERTICAL);
-        Drawable dividerColor = new ColorDrawable(ContextCompat.getColor(this, R.color.line_2));
-
-        dividerItemDecoration.setDrawable(dividerColor);
-        mRecyclerView.addItemDecoration(dividerItemDecoration);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL));
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -258,10 +278,8 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
                         && newState == RecyclerView.SCROLL_STATE_IDLE
                         && (mList != null && !mList.isEmpty()))
                 {
-                    int lastNoticeSeq = mList.get(mList.size() - 1).seq;
+                    int lastNoticeSeq = mList.get(mList.size() - 1).getSeq();
 
-//                    if (selType.equals(reportCardType)) getReportListData(lastNoticeSeq);
-//                    else getListData(lastNoticeSeq);
                     getListData(lastNoticeSeq);
                 }
             }
@@ -279,7 +297,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
      *   userGubun (혹시필요하면)
      *  insertDate 작성일
      */
-    private void startActivity(SystemNoticeListData item){
+    private void startActivity(SystemNoticeListData item, int position){
         if (item != null){
 
             String title = "";
@@ -289,7 +307,7 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
             switch (item.searchType) {
                 case FCMManager.MSG_TYPE_SYSTEM:  // 시스템알림
-                    startBoardDetailActivity(item, TYPE_SYSTEM);
+                    startBoardDetailActivity(item, TYPE_SYSTEM, position);
                     break;
 
                 case FCMManager.MSG_TYPE_ATTEND:  // 출결현황
@@ -369,7 +387,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
 
                             if (response.body() != null) {
                                 List<SystemNoticeListData> list = response.body().data;
-                                if (list != null) mList.addAll(list);
+                                if (list != null) {
+                                    mList.addAll(list);
+                                    //DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_SYSTEM, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
+                                } else {
+                                    //if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                                }
                             }
                         } else {
                             Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
@@ -503,11 +526,12 @@ public class MenuNoticeActivity extends BaseActivity implements MonthPickerDialo
         getListData();
     }
 
-    private void startBoardDetailActivity(SystemNoticeListData item, int type) {
+    private void startBoardDetailActivity(SystemNoticeListData item, int type, int position) {
         Intent intent = new Intent(mContext, MenuNoticeDetailActivity.class);
         intent.putExtra(IntentParams.PARAM_NOTICE_INFO, item);
         intent.putExtra(IntentParams.PARAM_DATA_TYPE, type);
+        intent.putExtra(IntentParams.PARAM_BOARD_POSITION, position);
         intent.putExtra(IntentParams.PARAM_BOARD_SEQ, item.connSeq);
-        startActivity(intent);
+        resultLauncher.launch(intent);
     }
 }

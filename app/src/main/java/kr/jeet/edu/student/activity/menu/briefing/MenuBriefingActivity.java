@@ -451,7 +451,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                                         if (mList.size() > 0) mList.clear();
                                         mList.addAll(list);
                                     }
-                                    //DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_PT, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
+                                    DBUtils.setReadDB(mContext, mList, _memberSeq, DataManager.BOARD_PT, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
 
 //                                    mAdapter.setWholeCampusMode(TextUtils.isEmpty(acaCode));
                                 }
@@ -463,7 +463,7 @@ public class MenuBriefingActivity extends BaseActivity implements MonthPickerDia
                         LogMgr.e(TAG + "requestBrfList() Exception : ", e.getMessage());
                     }
 
-                    if(mAdapter != null) mAdapter.notifyDataSetChanged();
+                    //if(mAdapter != null) mAdapter.notifyDataSetChanged();
                     mTvEmptyList.setVisibility(mList.isEmpty() ? View.VISIBLE : View.GONE);
                     mSwipeRefresh.setRefreshing(false);
                     if(mList.size() > 0 && mRecyclerBrf!= null) {

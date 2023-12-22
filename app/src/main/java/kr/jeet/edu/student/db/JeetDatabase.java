@@ -9,7 +9,19 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 import kr.jeet.edu.student.utils.Converters;
 
-@Database(entities = {PushMessage.class, NewBoardData.class}, version = 4, exportSchema = true, autoMigrations = {@AutoMigration(from = 3, to = 4)})
+@Database(
+        entities = {
+                PushMessage.class
+                , NewBoardData.class
+        }
+        , version = 4
+        , exportSchema = true
+        , autoMigrations = {
+            @AutoMigration(from = 1, to = 2),
+            @AutoMigration(from = 2, to = 3),
+            @AutoMigration(from = 3, to = 4)
+        }
+        )
 @TypeConverters({Converters.class})
 public abstract class JeetDatabase extends RoomDatabase {
     private static JeetDatabase JeetDBInstance = null;

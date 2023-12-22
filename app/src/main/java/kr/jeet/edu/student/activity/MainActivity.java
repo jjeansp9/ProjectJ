@@ -103,6 +103,7 @@ import org.threeten.bp.format.DateTimeFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,16 +128,18 @@ public class MainActivity extends BaseActivity {
     private final int CMD_GET_ACALIST = 1;  // ACA정보
     private final int CMD_GET_LOCAL_ACALIST = 2;  // 지역별 캠퍼스정보
     private final int CMD_GET_MEMBER_INFO = 3;       // 자녀정보
-    private final int CMD_GET_NOTIFY_INFO = 4;       // 공지사항 정보
-    private final int CMD_GET_BOARD_ATTRIBUTE = 5;       // 게시판 속성
-    private final int CMD_GET_SCHOOL_LIST = 7;       // 학교 목록
-    private final int CMD_GET_LTC_LIST = 8;       // LTC 목록
-    private final int CMD_GET_TEACHER = 9;       // 지도강사 목록
-    private final int CMD_GET_LTC_SUBJECT = 10;       // LTC 과목 목록
+    private final int CMD_GET_BOARD_ATTRIBUTE = 4;       // 게시판 속성
+    private final int CMD_GET_SCHOOL_LIST = 5;       // 학교 목록
+    private final int CMD_GET_LTC_LIST = 6;       // LTC 목록
+    private final int CMD_GET_TEACHER = 7;       // 지도강사 목록
+    private final int CMD_GET_LTC_SUBJECT = 8;       // LTC 과목 목록
+    private final int CMD_GET_LAST_ANNOUNCEMENT_BOARD = 9;       // 공지사항게시판정보 가져오기
+    private final int CMD_GET_BOARD_NEW_CONTENT = 10;  //공지사항 최신글 조회
 
     private final int NOTICE_MENU_POSITION = 0; // 공지사항 메뉴 아이콘 index
     private final int PT_MEMBER_MENU_POSITION = 5; // 설명회 메뉴 아이콘 index - 회원
     private final int PT_NOT_MEMBER_MENU_POSITION = 3; // 설명회 메뉴 아이콘 index - 비회원
+    private final int SYSTEM_MEMBER_MENU_POSITION = 2; // 알림 메뉴 아이콘 index - 회원
 
     private String _userType = "";
     private String _stName = "";
@@ -165,34 +168,43 @@ public class MainActivity extends BaseActivity {
             if (intent != null) {
                 if(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED.equals(intent.getAction())){
                     LogMgr.w(TAG, "broadcast onReceived ");
-                    if(intent.hasExtra(IntentParams.PARAM_ATTENDANCE_INFO)) {
-                        String type = intent.getStringExtra(IntentParams.PARAM_ATTENDANCE_INFO);
-//                        if(type.equals(MSG_TYPE_ATTEND)) {
-//                            new Thread(() -> {
-//                                try {
-//                                    List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_ATTEND);
-//                                    if(pushMessages.isEmpty()) {
-//                                        setNewAttendanceContent(false);
-//                                    }else{
-//                                        for (PushMessage data : pushMessages) {
-//                                            if (data.stCode == _stCode) setNewAttendanceContent(true);
-//                                        }
-//                                    }
-//                                }catch(Exception e){
-//
-//                                }
-//                            }).start();
-//                        }
-                        if (RetrofitClient.getInstance() != null) {
-                            mRetrofitApi = RetrofitClient.getApiInterface();
-                            requestBoardNew(mRetrofitApi.getNoticeNewList(), MSG_TYPE_NOTICE);
-                            //requestBoardNew(mRetrofitApi.getPtNewList(), MSG_TYPE_PT);
+                    if(intent.hasExtra(IntentParams.PARAM_SYSTEM_INFO)) {
+                        String type = intent.getStringExtra(IntentParams.PARAM_SYSTEM_INFO);
+                        if(type != null && type.equals(MSG_TYPE_SYSTEM) && _userType.equals(Constants.MEMBER)) {
+                            new Thread(() -> {
+                                try {
+                                    List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_SYSTEM);
+                                    if(pushMessages.isEmpty()) {
+                                        setNewSystemMenu(false);
+                                    }else{
+                                        for (PushMessage data : pushMessages) {
+                                            if (data.stCode == _stCode) setNewSystemMenu(true);
+                                        }
+                                    }
+                                }catch(Exception e){
+
+                                }
+                            }).start();
                         }
+
+                        mHandler.sendEmptyMessage(CMD_GET_LAST_ANNOUNCEMENT_BOARD);
                     }
                 }
             }
         }
     };
+
+    void setNewSystemMenu(boolean isNew) {
+        runOnUiThread(()->{
+            if(mList != null) {
+                int position = SYSTEM_MEMBER_MENU_POSITION;
+                if (mList.size() > position && mList.get(position) != null && mList.get(position).getIsNew() != isNew) {
+                    mList.get(position).setIsNew(isNew);
+                    runOnUiThread(() -> mAdapter.notifyItemChanged(position));
+                }
+            }
+        });
+    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper()){
         @Override
@@ -208,9 +220,6 @@ public class MainActivity extends BaseActivity {
                     requestMemberInfo(_stuSeq, _stCode, true);
                     if (_userGubun == Constants.USER_TYPE_PARENTS) requestMemberInfo(_memberSeq, stCodeParent, false);
                     break;
-//                case CMD_GET_NOTIFY_INFO:
-//                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
-//                    break;
                 case CMD_GET_BOARD_ATTRIBUTE: // 게시판 속성조회
                     requestBoardAttribute();
                     break;
@@ -225,6 +234,16 @@ public class MainActivity extends BaseActivity {
                     break;
                 case CMD_GET_LTC_SUBJECT:
                     HttpUtils.requestLTCSubjectList();
+                    break;
+                case CMD_GET_LAST_ANNOUNCEMENT_BOARD: // 최근 공지사항 목록
+                    requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
+                    break;
+                case CMD_GET_BOARD_NEW_CONTENT: // new 표시
+                    if (RetrofitClient.getInstance() != null) {
+                        mRetrofitApi = RetrofitClient.getApiInterface();
+                        requestBoardNew(mRetrofitApi.getNoticeNewList(), DataManager.BOARD_NOTICE);
+                        requestBoardNew(mRetrofitApi.getPtNewList(), DataManager.BOARD_PT);
+                    }
                     break;
             }
         }
@@ -532,12 +551,20 @@ public class MainActivity extends BaseActivity {
         IntentFilter intentFilter = new IntentFilter(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
         // RECEIVER_NOT_EXPORTED - 내 앱에서 보낸 브로드캐스트만 수신
         ContextCompat.registerReceiver(mContext, pushNotificationReceiver, intentFilter, ContextCompat.RECEIVER_NOT_EXPORTED);
-        if (RetrofitClient.getInstance() != null) {
-            mRetrofitApi = RetrofitClient.getApiInterface();
-            requestBoardNew(mRetrofitApi.getNoticeNewList(), MSG_TYPE_NOTICE);
-            //requestBoardNew(mRetrofitApi.getPtNewList(), MSG_TYPE_PT);
-        }
-        requestBoardList(PreferenceUtil.getAppAcaCode(mContext), "");
+
+        new Thread(() -> {
+
+            List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, MSG_TYPE_SYSTEM);
+            if(pushMessages.isEmpty()) {
+                setNewSystemMenu(false);
+            }else{
+                for (PushMessage data : pushMessages) {
+                    if (data.stCode == _stCode) setNewSystemMenu(true);
+                }
+            }
+        }).start();
+
+        mHandler.sendEmptyMessage(CMD_GET_LAST_ANNOUNCEMENT_BOARD);
     }
 
     private void startDetailActivity(Class<?> targetActivity) {
@@ -640,43 +667,54 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    // TODO : 앱 아이콘 새로 생성하기 [ HCT 참고 ]
-
     // 공지사항 or 설명회 메뉴아이콘에 new 표시
-    private void updateMenusNew(Context context, int memberSeq, String type, List<Integer> weekData) {
+    private void updateMenusNew(Context context, String type, List<Integer> weekData) {
         if(mList == null) return;
         new Thread(() -> {
+
+            NewBoardDao jeetDBNewBoard = JeetDatabase.getInstance(context).newBoardDao();
+
             LocalDateTime today = LocalDateTime.now(); // 현재날짜
             LocalDateTime sevenDaysAgo = today.minusDays(Constants.IS_READ_DELETE_DAY); // 현재 날짜에서 6일을 뺀 날짜
-            List<NewBoardData> getReadList = JeetDatabase.getInstance(context).newBoardDao().getReadInfoList(memberSeq, type, sevenDaysAgo);
+            List<NewBoardData> getReadList = jeetDBNewBoard.getReadInfoList(_memberSeq, type, sevenDaysAgo);
+
+            HashSet<String> getReadKeyList = new HashSet<>();
+
+            for (Integer weekConnSeq : weekData) {
+                String key = type + "," + weekConnSeq + "," + _memberSeq;
+                getReadKeyList.add(key);
+            }
+
+            for (NewBoardData boardData : getReadList) {
+                String key = boardData.type + "," + boardData.connSeq + "," + boardData.memberSeq;
+                if (!getReadKeyList.contains(key)) jeetDBNewBoard.delete(_memberSeq, type, boardData.connSeq);
+            }
+
+            getReadList = jeetDBNewBoard.getReadInfoList(_memberSeq, type, sevenDaysAgo);
 
             boolean hasAttention;
 
-            if (type.equals(MSG_TYPE_NOTICE)) { // 공지사항
+            if (type.equals(DataManager.BOARD_NOTICE)) { // 공지사항
                 hasAttention = weekData.size() > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
-                updateMenuItem(mList, NOTICE_MENU_POSITION, DataManager.BOARD_NOTICE, R.drawable.icon_menu_attention, R.string.main_menu_announcement, hasAttention, MenuAnnouncementActivity.class);
+                updateMenuItem(mList, NOTICE_MENU_POSITION, hasAttention);
 
-            } else if (type.equals(MSG_TYPE_PT)) { // 설명회
+            } else if (type.equals(DataManager.BOARD_PT)) { // 설명회
                 hasAttention = weekData.size() > getReadList.size(); // 최근 7일간의 게시글 size > read insert data size
                 int position = _userType.equals(Constants.MEMBER) ? PT_MEMBER_MENU_POSITION : PT_NOT_MEMBER_MENU_POSITION;
-                updateMenuItem(mList, position, DataManager.BOARD_PT, R.drawable.icon_menu_briefing, R.string.main_menu_briefing_reserve, hasAttention, MenuBriefingActivity.class);
+                updateMenuItem(mList, position, hasAttention);
             }
 
-            runOnUiThread(() -> mAdapter.notifyDataSetChanged());
         }).start();
     }
 
     private void updateMenuItem(
             List<MainMenuItemData> list,
             int position,
-            String boardType,
-            int iconResId,
-            int titleResId,
-            boolean hasAttention,
-            Class<?> activityClass
+            boolean hasAttention
     ) {
-        if (list.size() > position) {
-            list.set(position, new MainMenuItemData(boardType, iconResId, titleResId, hasAttention, activityClass));
+        if (position >= 0 && list.size() > position && list.get(position) != null && list.get(position).getIsNew() != hasAttention) {
+            list.get(position).setIsNew(hasAttention);
+            runOnUiThread(() -> mAdapter.notifyItemChanged(position));
         }
     }
 
@@ -983,7 +1021,7 @@ public class MainActivity extends BaseActivity {
                             if (response.body() != null)  {
                                 List<Integer> getData = response.body().data;
                                 if (getData != null) {
-                                    updateMenusNew(mContext, _memberSeq, boardType, getData);
+                                    updateMenusNew(mContext, boardType, getData);
                                 } else {
                                     //updateMenusNew(mContext, _memberSeq, boardType, 0);
                                     mAdapter.notifyDataSetChanged();
@@ -1036,7 +1074,7 @@ public class MainActivity extends BaseActivity {
                     mTvListEmpty.setVisibility(announceList.isEmpty() ? View.VISIBLE : View.GONE);
                     announceAdapter.setMainMode(true);
                     announceAdapter.notifyDataSetChanged();
-                    //mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_NEW_CONTENT);
                 }
 
                 @Override
@@ -1045,7 +1083,7 @@ public class MainActivity extends BaseActivity {
                     announceAdapter.setMainMode(true);
                     announceAdapter.notifyDataSetChanged();
 
-                    //mHandler.sendEmptyMessage(CMD_GET_BOARD_ATTRIBUTE);
+                    mHandler.sendEmptyMessage(CMD_GET_BOARD_NEW_CONTENT);
                 }
             });
         }

@@ -7,6 +7,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
@@ -226,6 +227,9 @@ public class PushMessage implements Serializable {
 
     @ColumnInfo(name = "date")
     public LocalDateTime date;
+
+    @Ignore
+    public PushMessage() {}
 
     public PushMessage(long id, String title, String body, String acaCode, int stCode, int userGubun, LocalDateTime date, String pushType, int memberSeq, int connSeq, String pushId, boolean isRead) {
         this.id = id;

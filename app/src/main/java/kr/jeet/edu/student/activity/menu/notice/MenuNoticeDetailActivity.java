@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.BaseActivity;
@@ -27,6 +28,7 @@ import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
+import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.PushMessage;
 import kr.jeet.edu.student.fcm.FCMManager;
 import kr.jeet.edu.student.model.data.FileData;
@@ -36,6 +38,7 @@ import kr.jeet.edu.student.model.response.SystemNoticeResponse;
 import kr.jeet.edu.student.receiver.DownloadReceiver;
 import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
+import kr.jeet.edu.student.utils.DBUtils;
 import kr.jeet.edu.student.utils.FileUtils;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -64,6 +67,7 @@ public class MenuNoticeDetailActivity extends BaseActivity {
     private int _currentSeq = -1;
     private String title = "";
 
+    private int _memberSeq = -1;
     private String _stName = "";
     private int _stCode = 0;
 
@@ -90,6 +94,7 @@ public class MenuNoticeDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        _memberSeq = PreferenceUtil.getUserSeq(mContext);
         _stCode = PreferenceUtil.getUserSTCode(mContext);
 
         Intent intent = getIntent();
@@ -100,13 +105,19 @@ public class MenuNoticeDetailActivity extends BaseActivity {
 
         if(intent.hasExtra(IntentParams.PARAM_NOTICE_INFO)) {
             LogMgr.w("param is recived");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                _systemNoticeListData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO, SystemNoticeListData.class);
-            }else{
-                _systemNoticeListData = intent.getParcelableExtra(IntentParams.PARAM_NOTICE_INFO);
-            }
+            _systemNoticeListData = Utils.getParcelableExtra(intent, IntentParams.PARAM_NOTICE_INFO, SystemNoticeListData.class);
+            if (_systemNoticeListData != null) {
 
+                _pushData = new PushMessage();
+                _pushData.pushId = _systemNoticeListData.pushId;
+                _pushData.pushType = FCMManager.MSG_TYPE_SYSTEM;
+                _pushData.connSeq = _systemNoticeListData.connSeq;
+                _pushData.stCode = _stCode;
+
+                new FCMManager(mContext).requestPushConfirmToServer(_pushData, _stCode);
+            }
         }
+
         Bundle bundle = intent.getExtras();
         if (bundle != null) _pushData = Utils.getSerializableExtra(bundle, IntentParams.PARAM_PUSH_MESSAGE, PushMessage.class);
 
@@ -209,6 +220,24 @@ public class MenuNoticeDetailActivity extends BaseActivity {
 //        if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
     }
 
+    void changeMessageState2Read() {
+        new Thread(() -> {
+            try {
+                List<PushMessage> pushMessages = JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().getMessageByReadFlagNType(false, FCMManager.MSG_TYPE_SYSTEM);
+                if(!pushMessages.isEmpty()) {
+                    for(PushMessage message : pushMessages) {
+                        if (message.stCode == _stCode){
+                            message.isRead = true;
+                            JeetDatabase.getInstance(getApplicationContext()).pushMessageDao().update(message);
+                        }
+                    }
+                }
+            }catch (Exception e){
+
+            }
+        }).start();
+    }
+
     // 시스템알림 상세정보 조회
     private void requestSystemDetail(int boardSeq){
         if (RetrofitClient.getInstance() != null){
@@ -226,6 +255,7 @@ public class MenuNoticeDetailActivity extends BaseActivity {
                                     SystemNoticeData data = response.body().data;
                                     if (data != null){
                                         _systemNoticeData = data;
+                                        _systemNoticeData.isRead = true;
                                         mTvTitle.setText(TextUtils.isEmpty(_systemNoticeData.title) ? "" : _systemNoticeData.title); // 제목
                                         mTvName.setVisibility(View.VISIBLE);
                                         mTvName.setText(TextUtils.isEmpty(_systemNoticeData.writerName) ? "" : _systemNoticeData.writerName); // 작성자 이름
@@ -253,6 +283,9 @@ public class MenuNoticeDetailActivity extends BaseActivity {
                                         }
                                         if(mImageAdapter != null && mImageList.size() > 0) mImageAdapter.notifyDataSetChanged();
                                         if(mFileAdapter != null && mFileList.size() > 0) mFileAdapter.notifyDataSetChanged();
+
+                                        //DBUtils.insertReadDB(mContext, _systemNoticeData, _memberSeq, FCMManager.MSG_TYPE_SYSTEM);
+                                        changeMessageState2Read();
 
                                     }else LogMgr.e(TAG+" DetailData is null");
                                 }
@@ -408,7 +441,7 @@ public class MenuNoticeDetailActivity extends BaseActivity {
     public void onBackPressed() {
         Intent intent = getIntent();
         intent.putExtra(IntentParams.PARAM_RD_CNT_ADD, true);
-        //intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _currentData);
+        intent.putExtra(IntentParams.PARAM_BOARD_ITEM, _systemNoticeListData);
         intent.putExtra(IntentParams.PARAM_BOARD_POSITION, _currentDataPosition);
         setResult(RESULT_OK, intent);
         finish();

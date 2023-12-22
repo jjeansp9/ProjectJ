@@ -2,6 +2,7 @@ package kr.jeet.edu.student.db;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import org.threeten.bp.LocalDateTime;
@@ -31,6 +32,7 @@ public class NewBoardData {
     @ColumnInfo(name = "updateDate")
     public LocalDateTime updateDate;
 
+    @Ignore
     public NewBoardData() {}
 
     public NewBoardData(String type, int connSeq, int memberSeq, boolean isRead, LocalDateTime insertDate, LocalDateTime updateDate) {

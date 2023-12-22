@@ -41,24 +41,27 @@ public class DBUtils {
                 if (readData.getTime() != null && !readData.getTime().isEmpty()) date += " " + readData.getTime();
             }catch (Exception e) {}
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
-            LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
+            try {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+                LocalDateTime insertDate = LocalDateTime.parse(date, formatter);
 
-            if (boardInfo == null) {
-                if (sevenDaysAgo.isBefore(insertDate)) {
-                    // 최근 7일 이내의 데이터인 경우
-                    NewBoardData newBoardData = new NewBoardData(
-                            type,
-                            readData.getSeq(),
-                            memberSeq,
-                            readData.getIsRead(),
-                            insertDate,
-                            insertDate
-                    );
-                    jeetDBNewBoard.insert(newBoardData);
-                    LogMgr.e(TAG, "dbTest Insert!");
+                if (boardInfo == null) {
+                    if (sevenDaysAgo.isBefore(insertDate)) {
+                        // 최근 7일 이내의 데이터인 경우
+                        NewBoardData newBoardData = new NewBoardData(
+                                type,
+                                readData.getSeq(),
+                                memberSeq,
+                                readData.getIsRead(),
+                                insertDate,
+                                insertDate
+                        );
+                        jeetDBNewBoard.insert(newBoardData);
+                        LogMgr.e(TAG, "dbTest Insert!");
+                    }
                 }
-            }
+
+            }catch (Exception e) {}
         }).start();
     }
 

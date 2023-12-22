@@ -33,4 +33,7 @@ public interface NewBoardDao {
 
     @Query("DELETE FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND insertDate < :checkDate AND connSeq == :connSeq")
     void delete(int memberSeq, String type, LocalDateTime checkDate, int connSeq);
+
+    @Query("DELETE FROM tbl_new_board WHERE memberSeq = :memberSeq AND type = :type AND connSeq == :connSeq")
+    void delete(int memberSeq, String type, int connSeq);
 }

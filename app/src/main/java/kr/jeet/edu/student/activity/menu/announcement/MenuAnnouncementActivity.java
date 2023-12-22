@@ -345,7 +345,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
                                 if (getData != null) {
                                     if(finalLastNoticeSeq == 0) if (mList.size() > 0) mList.clear();
                                     mList.addAll(getData);
-                                    DBUtils.setReadDB(mContext, mList, _memberSeq, FCMManager.MSG_TYPE_NOTICE, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
+                                    DBUtils.setReadDB(mContext, mList, _memberSeq, DataManager.BOARD_NOTICE, () -> runOnUiThread(() -> mAdapter.notifyDataSetChanged()));
 
                                 } else {
                                     LogMgr.e(TAG, "ListData is null");

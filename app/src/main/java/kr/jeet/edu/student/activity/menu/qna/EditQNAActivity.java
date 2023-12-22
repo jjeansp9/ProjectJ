@@ -187,25 +187,22 @@ public class EditQNAActivity extends BaseActivity {
     private void initIntentData() {
         Intent intent = getIntent();
         if(intent != null) {
-            if (intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
-                boardEditMode = Constants.BoardEditMode.Edit;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
-                } else {
-                    _currentData = intent.getParcelableExtra(IntentParams.PARAM_BOARD_ITEM);
-                }
-                if (_currentData != null) {
-                    _boardSeq = _currentData.seq;
-                }
-
-            } else {
-                boardEditMode = Constants.BoardEditMode.New;
-            }
             if(intent.hasExtra(IntentParams.PARAM_STU_ACACODE)) {
                 _acaCode = intent.getStringExtra(IntentParams.PARAM_STU_ACACODE);
             }
             if(intent.hasExtra(IntentParams.PARAM_STU_GRADECODE)) {
                 _gubunCode = intent.getStringExtra(IntentParams.PARAM_STU_GRADECODE);
+            }
+            if (intent.hasExtra(IntentParams.PARAM_BOARD_ITEM)) {
+                boardEditMode = Constants.BoardEditMode.Edit;
+                _currentData = Utils.getParcelableExtra(intent, IntentParams.PARAM_BOARD_ITEM, QnaDetailData.class);
+                if (_currentData != null) {
+                    _acaCode = _currentData.acaCode;
+                    _gubunCode = _currentData.acaGubunCode;
+                    _boardSeq = _currentData.seq;
+                }
+            } else {
+                boardEditMode = Constants.BoardEditMode.New;
             }
         }
     }

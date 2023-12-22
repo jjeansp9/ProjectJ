@@ -3,6 +3,7 @@ package kr.jeet.edu.student.adapter;
 import static androidx.recyclerview.widget.RecyclerView.NO_POSITION;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.fcm.FCMManager;
+import kr.jeet.edu.student.model.data.ReadData;
 import kr.jeet.edu.student.model.data.ReportCardSummaryData;
 import kr.jeet.edu.student.model.data.SystemNoticeListData;
 import kr.jeet.edu.student.utils.Utils;
@@ -31,11 +33,11 @@ import kr.jeet.edu.student.utils.Utils;
 public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.ViewHolder> {
 
     public interface ItemClickListener{
-        public void onItemClick(SystemNoticeListData item);
+        public void onItemClick(SystemNoticeListData item, int position);
     }
 
     private Context mContext;
-    private ArrayList<SystemNoticeListData> mList;
+    private ArrayList<ReadData> mList;
     //private ArrayList<ReportCardSummaryData> mReportList;
     private ItemClickListener _listener;
 
@@ -43,7 +45,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
     private final String TYPE_ATTEND = "출결 알림";
     private final String TYPE_TUITION = "미납 알림";
 
-    public NoticeListAdapter(Context mContext, ArrayList<SystemNoticeListData> mList, ItemClickListener _listener) {
+    public NoticeListAdapter(Context mContext, ArrayList<ReadData> mList, ItemClickListener _listener) {
         this.mContext = mContext;
         this.mList = mList;
         this._listener = _listener;
@@ -61,7 +63,7 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
         if (position != NO_POSITION){
 
             if (mList.size() > 0) {
-                SystemNoticeListData item = mList.get(position);
+                SystemNoticeListData item = (SystemNoticeListData) mList.get(position);
 
                 String noticeType = TextUtils.isEmpty(item.searchType) ? "" : item.searchType;
                 String strType = "";
@@ -124,14 +126,19 @@ public class NoticeListAdapter extends RecyclerView.Adapter<NoticeListAdapter.Vi
 
     private void setClickEnabled(String str, ViewHolder holder, int position, SystemNoticeListData item) {
 
-        if (str.equals(TYPE_SYSTEM)) holder.btnNext.setVisibility(View.VISIBLE);
-        else holder.btnNext.setVisibility(View.GONE);
+        if (str.equals(TYPE_SYSTEM)) {
+            holder.btnNext.setVisibility(View.VISIBLE);
+//            if (!item.isRead) { // 읽지 않은 게시글
+//                holder.root.setBackgroundColor(mContext.getColor(R.color.bg_is_read));
+//            } else {
+//                holder.root.setBackgroundColor(Color.TRANSPARENT);
+//            }
+        }
+        else {
+            holder.btnNext.setVisibility(View.GONE);
+        }
 
-        TypedValue typedValue = new TypedValue();
-        mContext.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, typedValue, true);
-        holder.root.setBackgroundResource(typedValue.resourceId);
-
-        holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick(mList.get(position));});
+        holder.root.setOnClickListener(v -> {if (mList.size() > 0) _listener.onItemClick((SystemNoticeListData) mList.get(position), position);});
 
         try {
             String date = Utils.formatDate(item.insertDate, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);

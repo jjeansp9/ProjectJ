@@ -3,7 +3,10 @@ package kr.jeet.edu.student.model.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class SystemNoticeListData implements Parcelable {
+import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.utils.Utils;
+
+public class SystemNoticeListData implements Parcelable, ReadData {
     public int seq;             // Push SEQ (for paging)
     public int connSeq;         // 게시물 SEQ (for viewing)
     public String title;        // 알림장 타이틀
@@ -18,6 +21,7 @@ public class SystemNoticeListData implements Parcelable {
     public String searchType;   // 게시물 유형
     public String writerName;   // 상담 - 작성자(학생)명
     public String pushId;       // (부모앱) PushId
+    public boolean isRead = true;
 
     // Parcelable 생성자
     protected SystemNoticeListData(Parcel in) {
@@ -35,6 +39,7 @@ public class SystemNoticeListData implements Parcelable {
         searchType = in.readString();
         writerName = in.readString();
         pushId = in.readString();
+        isRead = in.readByte() != 0;
     }
 
     public SystemNoticeListData() {
@@ -75,5 +80,46 @@ public class SystemNoticeListData implements Parcelable {
         dest.writeString(searchType);
         dest.writeString(writerName);
         dest.writeString(pushId);
+        dest.writeByte((byte) (isRead ? 1 : 0));
+    }
+
+    @Override
+    public String getDate() {
+        return Utils.formatDate(insertDate, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm);
+    }
+
+    @Override
+    public String getTime() {
+        return null;
+    }
+
+    @Override
+    public int getSeq() {
+        return connSeq;
+    }
+
+    @Override
+    public boolean getIsRead() {
+        return isRead;
+    }
+
+    @Override
+    public void setDate(String date) {
+        this.insertDate = Utils.formatDate(date, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm_ss, Constants.DATE_FORMATTER_YYYY_MM_DD_HH_mm); // yyyy-MM-dd HH:ss
+    }
+
+    @Override
+    public void setTime(String time) {
+        // 시스템알림엔 time 파라미터가 없음. date 파라미터 참고
+    }
+
+    @Override
+    public void setSeq(int seq) {
+        this.connSeq = seq;
+    }
+
+    @Override
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 }

@@ -131,7 +131,7 @@ public class FCMManager {
         }
         //sendBroadcast
         Intent sendIntent = new Intent(Constants.ACTION_JEET_PUSH_MESSAGE_RECEIVED);
-        sendIntent.putExtra(IntentParams.PARAM_ATTENDANCE_INFO, message.pushType);
+        sendIntent.putExtra(IntentParams.PARAM_SYSTEM_INFO, message.pushType); // 푸쉬로 알림 noti가 왔을 때 알림 메뉴에 new 표시
         _context.sendBroadcast(sendIntent);
         LogMgr.e(TAG, "sendBroadcast ~ " + message.pushType);
     }
@@ -267,11 +267,9 @@ public class FCMManager {
         }
         PendingIntent pendingIntent;
         requestCode = NotificationID.getID(); // notification 생성될 때 마다 다른 값을 추가해줘야함. [ 각각의 notify가 가지고있는 데이터를 구분하기 위함 ]
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity(_context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-        }else{
-            pendingIntent = PendingIntent.getActivity(_context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT);
-        }
+
+        pendingIntent = PendingIntent.getActivity(_context, requestCode, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+
         String channelId = _context.getString(R.string.default_notification_headup_channel_id);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(_context, channelId)
 //                .setTicker(tickerText)

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "6c35f03594f8076bf958708cb67d4ff2",
+    "identityHash": "d4ca64a2b683aae3a4c5f02ab8a8d307",
     "entities": [
       {
         "tableName": "tbl_push_message",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `body` TEXT, `acaCode` TEXT, `stCode` INTEGER NOT NULL, `userGubun` INTEGER NOT NULL, `pushType` TEXT, `memberSeq` INTEGER NOT NULL, `connSeq` INTEGER NOT NULL, `pushId` TEXT, `isRead` INTEGER NOT NULL DEFAULT false, `date` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `title` TEXT, `body` TEXT, `acaCode` TEXT, `stCode` INTEGER NOT NULL, `userGubun` INTEGER NOT NULL, `date` TEXT, `pushType` TEXT, `memberSeq` INTEGER NOT NULL, `connSeq` INTEGER NOT NULL, `pushId` TEXT, `isRead` INTEGER NOT NULL DEFAULT false)",
         "fields": [
           {
             "fieldPath": "id",
@@ -45,6 +45,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
             "fieldPath": "pushType",
             "columnName": "pushType",
             "affinity": "TEXT",
@@ -74,68 +80,6 @@
             "affinity": "INTEGER",
             "notNull": true,
             "defaultValue": "false"
-          },
-          {
-            "fieldPath": "date",
-            "columnName": "date",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": true,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "tbl_new_board",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `type` TEXT, `connSeq` INTEGER NOT NULL, `memberSeq` INTEGER NOT NULL, `isRead` INTEGER NOT NULL, `insertDate` TEXT, `updateDate` TEXT)",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "type",
-            "columnName": "type",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "connSeq",
-            "columnName": "connSeq",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "memberSeq",
-            "columnName": "memberSeq",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "isRead",
-            "columnName": "isRead",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "insertDate",
-            "columnName": "insertDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "updateDate",
-            "columnName": "updateDate",
-            "affinity": "TEXT",
-            "notNull": false
           }
         ],
         "primaryKey": {
@@ -151,7 +95,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6c35f03594f8076bf958708cb67d4ff2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd4ca64a2b683aae3a4c5f02ab8a8d307')"
     ]
   }
 }

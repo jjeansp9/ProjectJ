@@ -27,6 +27,7 @@ import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.NewBoardDao;
@@ -238,7 +239,7 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                         _currentData = data;
                                         _currentData.isRead = true;
                                         //insertDB(_currentData);
-                                        DBUtils.insertReadDB(mContext, _currentData, _memberSeq, FCMManager.MSG_TYPE_NOTICE);
+                                        DBUtils.insertReadDB(mContext, _currentData, _memberSeq, DataManager.BOARD_NOTICE);
                                         //initData();
                                         setView();
 

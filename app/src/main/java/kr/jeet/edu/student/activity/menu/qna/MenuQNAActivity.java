@@ -457,7 +457,7 @@ public class MenuQNAActivity extends BaseActivity {
         if (_userType.equals(Constants.MEMBER)) {
             switch(item.getItemId()) {
                 case R.id.action_add:
-                    resultLauncher.launch(new Intent(mContext, EditQNAActivity.class));
+                    navigate2EditQnaActivity();
                     return true;
             }
         }
@@ -474,5 +474,16 @@ public class MenuQNAActivity extends BaseActivity {
             mTvListEmpty.setVisibility(View.VISIBLE);
             return true;
         }
+    }
+
+    public void navigate2EditQnaActivity() {
+        Intent editIntent = new Intent(mContext, EditQNAActivity.class);
+        if(_selectedLocalACA != null) {
+            editIntent.putExtra(IntentParams.PARAM_STU_ACACODE, _selectedLocalACA.acaCode);
+        }
+        if(_selectedGrade != null) {
+            editIntent.putExtra(IntentParams.PARAM_STU_GRADECODE, _selectedGrade.gubunCode);
+        }
+        resultLauncher.launch(editIntent);
     }
 }

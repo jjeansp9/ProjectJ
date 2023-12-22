@@ -39,6 +39,7 @@ import kr.jeet.edu.student.activity.PhotoViewActivity;
 import kr.jeet.edu.student.adapter.BoardDetailFileListAdapter;
 import kr.jeet.edu.student.adapter.BoardDetailImageListAdapter;
 import kr.jeet.edu.student.common.Constants;
+import kr.jeet.edu.student.common.DataManager;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.JeetDatabase;
 import kr.jeet.edu.student.db.NewBoardDao;
@@ -438,7 +439,7 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                                 if (data != null){
                                     mInfo = data;
                                     mInfo.isRead = true;
-                                    //DBUtils.insertReadDB(mContext, mInfo, _memberSeq, FCMManager.MSG_TYPE_PT);
+                                    DBUtils.insertReadDB(mContext, mInfo, _memberSeq, DataManager.BOARD_PT);
 
                                 }else LogMgr.e(TAG+" DetailData is null");
                             }

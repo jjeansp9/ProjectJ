@@ -28,7 +28,7 @@
         android:layout_marginTop="2dp"
         android:hint="(시간표 없음)"
         android:textSize="@dimen/font_size"
-        android:textColor="@color/font_color_999"/>
+        android:textColor="@color/font_color_default"/>
 
     <TextView
         android:id="@+id/tv_name"
