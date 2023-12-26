@@ -221,16 +221,21 @@ public class MyWebViewClient extends WebViewClient {
 
     private String shinhanJSCode(){
         if (activity != null && !activity.isFinishing()) {
-            LogMgr.e(TAG, "WEBVIEWS ACTIVITY2" + accountNo);
-//            String inputValue = "";
-//
-//            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
-//            Utils.setClipData(activity, "");
-//
-//            LogMgr.e(TAG, "clipboard: " + clipboard + ", accountNo: " + accountNo);
-//
-//            if (clipboard.equals("")) inputValue = accountNo;
-//            else inputValue = clipboard;
+            String inputValue = "";
+
+            String clipboard = Utils.getClipData(activity).replaceAll("[^0-9]", "");
+            //String clipboard = Utils.getClipData(activity);
+            Utils.setClipData(activity, "");
+
+            if (clipboard != null && accountNo != null) LogMgr.e(TAG, "clipboard: " + clipboard + ", accountNo: " + accountNo);
+
+            if (clipboard.isEmpty()) {
+                // 클립보드에 복사된 데이터를 불러오지 못한 경우 intent로 전달받은 데이터로 추가
+                if (accountNo != null) inputValue = accountNo.replaceAll("[^0-9]", "");
+
+            } else {
+                inputValue = clipboard;
+            }
 
             return "javascript:(function() {" +
                     "   var element = document.getElementById('btn-sitemap');" +
@@ -248,7 +253,7 @@ public class MyWebViewClient extends WebViewClient {
                     "   }" +
                     "   var bankNum = document.getElementById('bankNum');" +
                     "   if (bankNum) {" +
-                    "       bankNum.value = '" + accountNo + "';" +
+                    "       bankNum.value = '" + inputValue + "';" +
                     "   }" +
                     "})()";
         } else {

@@ -102,7 +102,6 @@ public class WebViewActivity extends BaseActivity {
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
-        LogMgr.e(TAG, "WEBVIEWS ACTIVITY" + accountNo);
         wv.setWebViewClient(new MyWebViewClient(mActivity, wv, accountNo));
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
 

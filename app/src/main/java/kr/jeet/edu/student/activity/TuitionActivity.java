@@ -164,6 +164,7 @@ public class TuitionActivity extends BaseActivity {
                 Toast.makeText(mContext, R.string.menu_stu_info_get_clipboard_empty, Toast.LENGTH_SHORT).show();
 
             } else {
+                Utils.setClipData(mContext, ((TuitionHeaderData)item).accountNO);
                 Toast.makeText(mContext, R.string.menu_stu_info_get_account_no, Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(mContext, WebViewActivity.class);
