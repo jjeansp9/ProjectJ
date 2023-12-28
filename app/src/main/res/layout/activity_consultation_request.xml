@@ -267,10 +267,9 @@
                 android:inputType="textMultiLine|textNoSuggestions"
                 android:minLines="6"
                 android:hint="@string/please_content"
-                android:maxLines="12"
+                android:maxLength="300"
                 android:textColor="@color/black"
-                android:textSize="@dimen/font_size"
-                android:maxLength="500" />
+                android:textSize="@dimen/font_size" />
 
             <TextView
                 android:id="@+id/tv_consultation_attention_sub"

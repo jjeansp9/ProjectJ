@@ -26,6 +26,11 @@ import kr.jeet.edu.student.utils.PreferenceUtil;
 
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
+    // 테스트예약 작성 - 완료
+    // 상담요청 - maxLength - 300
+    // QNA - maxLength - 1000, 제목 100
+    // 회원가입 - 완료
+
     public Context mContext;
     public AppCompatActivity mActivity;
     private AlertDialog mProgressDialog = null;

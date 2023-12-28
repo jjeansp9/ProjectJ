@@ -19,7 +19,6 @@ public class MyWebChromeClient extends WebChromeClient {
     private WebView newWebView;
     private AppCompatActivity activity;
 
-
     public MyWebChromeClient(AppCompatActivity mActivity) {
         this.activity = mActivity;
     }

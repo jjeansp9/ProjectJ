@@ -384,7 +384,7 @@ public class Utils {
     * */
     public static boolean checkPhoneNumber(String str) {
         if(TextUtils.isEmpty(str)) return false;
-        return Pattern.matches("^01(?:[0-2])(?:\\d{3}|\\d{4})\\d{4}$", str);
+        return Pattern.matches("^01(?:0|1|2)[-]?(?:\\d{3}|\\d{4})[-]?\\d{4}$", str);
     }
 
     /**
