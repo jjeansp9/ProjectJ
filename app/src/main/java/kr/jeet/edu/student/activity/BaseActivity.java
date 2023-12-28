@@ -20,11 +20,14 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.dialog.PopupDialog;
+import kr.jeet.edu.student.utils.HttpUtils;
 import kr.jeet.edu.student.utils.LogMgr;
+import kr.jeet.edu.student.utils.PreferenceUtil;
 
 public class BaseActivity extends AppCompatActivity implements View.OnClickListener {
 
     public Context mContext;
+    public AppCompatActivity mActivity;
     private AlertDialog mProgressDialog = null;
     private PopupDialog popupDialog = null;
     TextView txt;
@@ -39,6 +42,7 @@ public class BaseActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         setStatusAndNavigatinBar(setBar);
     }
+
     private void initData() {
         scrollToTopDelay = getResources().getInteger(R.integer.scroll_to_top_delay);
     }

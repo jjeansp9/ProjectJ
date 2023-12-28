@@ -310,4 +310,8 @@ public class Constants {
     public static String QNA_STATE_COMPLETE = "3";     // 완료
 
     public static int IS_READ_DELETE_DAY = 6;
+
+    public static int LOGOUT_TYPE_APP_FINISH = 0; // 앱종료로 로그아웃 api 호출할 때
+    public static int LOGOUT_TYPE_TEST_RESERVE = 1; // 테스트예약하여 데이터를 초기화해야할 때
+    public static int LOGOUT_TYPE_LOGOUT = 2; // 설정에서 로그아웃 api 호출할 때
 }

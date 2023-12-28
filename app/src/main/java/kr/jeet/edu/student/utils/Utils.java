@@ -234,11 +234,11 @@ public class Utils {
 //        }
 //    }
 //
-//    public static void hideKeyboard(Context mContext, View focus) {
-//        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        if (inputMethodManager == null) return;
-//        inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
-//    }
+    public static void hideKeyboard(Context mContext, View focus) {
+        InputMethodManager inputMethodManager = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager == null) return;
+        inputMethodManager.hideSoftInputFromWindow(focus.getWindowToken(), 0);
+    }
 
     /**
      * EditText List Focus Clear
@@ -384,7 +384,7 @@ public class Utils {
     * */
     public static boolean checkPhoneNumber(String str) {
         if(TextUtils.isEmpty(str)) return false;
-        return Pattern.matches("^01(?:0|1|[6-9])(?:\\d{3}|\\d{4})\\d{4}$", str);
+        return Pattern.matches("^01(?:[0-2])(?:\\d{3}|\\d{4})\\d{4}$", str);
     }
 
     /**

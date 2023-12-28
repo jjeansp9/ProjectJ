@@ -128,7 +128,7 @@ public class HttpUtils {
     /**
      * 로그아웃
      * */
-    public static void requestLogOut(AppCompatActivity mContext){
+    public static void requestLogOut(AppCompatActivity mContext, int type){
         int memberSeq = PreferenceUtil.getUserSeq(mContext);
         if(RetrofitClient.getInstance() != null) {
             RetrofitClient.getApiInterface().logout(memberSeq).enqueue(new Callback<BaseResponse>() {
@@ -150,26 +150,29 @@ public class HttpUtils {
                             PreferenceUtil.setUserSTCode(mContext, -1);
                             PreferenceUtil.setParentName(mContext, "");
                             PreferenceUtil.setNumberOfChild(mContext, 0);
+                            PreferenceUtil.setAcaCode(mContext, "");
+                            PreferenceUtil.setAcaName(mContext, "");
                             PreferenceUtil.setAutoLogin(mContext, false);
 
-                            Utils.showMessageDialog(
-                                    mContext.getString(R.string.dialog_title_alarm),
-                                    mContext.getString(R.string.informed_question_new_child_add_success),
-                                    v -> {
-                                        Utils.hideMessageDialog(mContext);
+                            if (type == Constants.LOGOUT_TYPE_TEST_RESERVE) {
+                                Utils.showMessageDialog(
+                                        mContext.getString(R.string.dialog_title_alarm),
+                                        mContext.getString(R.string.informed_question_new_child_add_success),
+                                        v -> {
+                                            Utils.hideMessageDialog(mContext);
 
-                                        startLogin(mContext);
-                                    },
-                                    null,
-                                    false,
-                                    mContext
-                            );
+                                            startLogin(mContext);
+                                        },
+                                        null,
+                                        false,
+                                        mContext
+                                );
+                            }
 
                         }else{
-
                             Toast.makeText(mContext, R.string.server_error, Toast.LENGTH_SHORT).show();
-                            startLogin(mContext);
                             LogMgr.e(TAG, "requestLogOut() errBody : " + response.errorBody().string());
+                            if (type == Constants.LOGOUT_TYPE_TEST_RESERVE) startLogin(mContext);
                         }
 
                     }catch (Exception e){ LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
@@ -179,8 +182,8 @@ public class HttpUtils {
                 public void onFailure(Call<BaseResponse> call, Throwable t) {
                     try { LogMgr.e(TAG, "requestLogOut() onFailure >> " + t.getMessage()); }
                     catch (Exception e) { LogMgr.e(TAG + "requestLogOut() Exception : ", e.getMessage()); }
-                    startLogin(mContext);
                     Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                    if (type == Constants.LOGOUT_TYPE_TEST_RESERVE) startLogin(mContext);
                 }
             });
         }

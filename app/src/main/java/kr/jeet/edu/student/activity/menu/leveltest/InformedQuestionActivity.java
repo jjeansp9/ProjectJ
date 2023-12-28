@@ -508,7 +508,7 @@ public class InformedQuestionActivity extends BaseActivity {
                                 if (testType == Constants.LEVEL_TEST_TYPE_NEW_CHILD) { // 신규원생 추가하는 경우
                                     if (_userType.equals(Constants.MEMBER)) {
                                         if (_childCnt < 1) { // 자녀가 없는 경우 메인화면 UI 갱신을 위해 로그아웃
-                                            HttpUtils.requestLogOut(mActivity);
+                                            HttpUtils.requestLogOut(mActivity, Constants.LOGOUT_TYPE_TEST_RESERVE);
                                         } else {
                                             intent.putExtra(IntentParams.PARAM_TEST_NEW_CHILD, true);
                                             setResult(RESULT_OK, intent);
@@ -517,7 +517,7 @@ public class InformedQuestionActivity extends BaseActivity {
                                         }
 
                                     } else {
-                                        HttpUtils.requestLogOut(mActivity);
+                                        HttpUtils.requestLogOut(mActivity, Constants.LOGOUT_TYPE_TEST_RESERVE);
                                     }
 
                                 } else {
@@ -527,7 +527,7 @@ public class InformedQuestionActivity extends BaseActivity {
                                         finish();
                                         Toast.makeText(mContext, R.string.informed_question_success, Toast.LENGTH_SHORT).show();
                                     } else {
-                                        HttpUtils.requestLogOut(mActivity);
+                                        HttpUtils.requestLogOut(mActivity, Constants.LOGOUT_TYPE_TEST_RESERVE);
                                     }
                                 }
                             }

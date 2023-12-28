@@ -20,6 +20,7 @@ import java.util.List;
 
 import kr.jeet.edu.student.R;
 import kr.jeet.edu.student.activity.IntroActivity;
+import kr.jeet.edu.student.activity.MainActivity;
 import kr.jeet.edu.student.common.Constants;
 import kr.jeet.edu.student.common.IntentParams;
 import kr.jeet.edu.student.db.PushMessage;
@@ -213,58 +214,66 @@ public class FCMManager {
         }
     }
     private void createNotification(PushMessage msg) {
+
+        String tickerText = "";
+        if (msg != null && msg.pushType != null) {
+            switch(msg.pushType) {
+                case MSG_TYPE_NOTICE:
+                    tickerText = _context.getString(R.string.push_noti_received_announcement);
+                    break;
+                case MSG_TYPE_ATTEND:
+                    tickerText = _context.getString(R.string.push_noti_received_attendance);
+                    break;
+                case MSG_TYPE_TEST_APPT:
+                    tickerText = _context.getString(R.string.push_noti_received_leveltest);
+                    break;
+                case MSG_TYPE_PT:
+                    tickerText = _context.getString(R.string.push_noti_received_pt);
+                    break;
+                case MSG_TYPE_PT_REZ_CNL:
+                    tickerText = _context.getString(R.string.push_noti_received_pt);
+                    break;
+                case MSG_TYPE_COUNSEL:
+                    tickerText = _context.getString(R.string.push_noti_received_counsel);
+                    break;
+                case MSG_TYPE_SYSTEM:
+                    tickerText = _context.getString(R.string.push_noti_received_system);
+                    break;
+                case MSG_TYPE_ACA_SCHEDULE:
+                    tickerText = _context.getString(R.string.push_noti_received_schedule);
+                    break;
+                case MSG_TYPE_REPORT:
+                    tickerText = _context.getString(R.string.push_noti_received_report_card);
+                    break;
+                case MSG_TYPE_TUITION:
+                    tickerText = _context.getString(R.string.push_noti_received_tuition);
+                    break;
+                case MSG_TYPE_QNA_ING:
+                    tickerText = _context.getString(R.string.push_noti_received_qna);
+                    break;
+                case MSG_TYPE_QNA_COMPLETE:
+                    tickerText = _context.getString(R.string.push_noti_received_qna);
+                    break;
+                default :
+                    tickerText = "JEET알림";
+                    break;
+            }
+        }
+
         Intent intent = new Intent(_context, IntroActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         if (msg != null) {
-            LogMgr.e(TAG, "push CreateNoti pushType: " + msg.pushType + ", push ConnSeq: " + msg.connSeq);
+            if (msg.pushType != null) {
+                LogMgr.e(TAG, "push CreateNoti pushType: " + msg.pushType + ", push ConnSeq: " + msg.connSeq);
+            } else {
+                LogMgr.e(TAG, "push CreateNoti pushType is null");
+            }
             Bundle bundle = new Bundle();
             bundle.putSerializable(IntentParams.PARAM_PUSH_MESSAGE, msg);
             intent.putExtras(bundle);
         }
 
-        String tickerText = "";
-        switch(msg.pushType) {
-            case MSG_TYPE_NOTICE:
-                tickerText = _context.getString(R.string.push_noti_received_announcement);
-                break;
-            case MSG_TYPE_ATTEND:
-                tickerText = _context.getString(R.string.push_noti_received_attendance);
-                break;
-            case MSG_TYPE_TEST_APPT:
-                tickerText = _context.getString(R.string.push_noti_received_leveltest);
-                break;
-            case MSG_TYPE_PT:
-                tickerText = _context.getString(R.string.push_noti_received_pt);
-                break;
-            case MSG_TYPE_PT_REZ_CNL:
-                tickerText = _context.getString(R.string.push_noti_received_pt);
-                break;
-            case MSG_TYPE_COUNSEL:
-                tickerText = _context.getString(R.string.push_noti_received_counsel);
-                break;
-            case MSG_TYPE_SYSTEM:
-                tickerText = _context.getString(R.string.push_noti_received_system);
-                break;
-            case MSG_TYPE_ACA_SCHEDULE:
-                tickerText = _context.getString(R.string.push_noti_received_schedule);
-                break;
-            case MSG_TYPE_REPORT:
-                tickerText = _context.getString(R.string.push_noti_received_report_card);
-                break;
-            case MSG_TYPE_TUITION:
-                tickerText = _context.getString(R.string.push_noti_received_tuition);
-                break;
-            case MSG_TYPE_QNA_ING:
-                tickerText = _context.getString(R.string.push_noti_received_qna);
-                break;
-            case MSG_TYPE_QNA_COMPLETE:
-                tickerText = _context.getString(R.string.push_noti_received_qna);
-                break;
-            default :
-                tickerText = "JEET알림";
-                break;
-        }
         PendingIntent pendingIntent;
         requestCode = NotificationID.getID(); // notification 생성될 때 마다 다른 값을 추가해줘야함. [ 각각의 notify가 가지고있는 데이터를 구분하기 위함 ]
 
