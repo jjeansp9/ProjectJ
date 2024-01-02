@@ -57,6 +57,7 @@ import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import kr.jeet.edu.student.view.LimitableEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +66,7 @@ public class ConsultationRequestActivity extends BaseActivity {
 
     private final static String TAG = "Consult Activity";
 
-    private EditText mEtConsultContent;
+    private LimitableEditText mEtConsultContent;
     private TextView mTvCal;
     private PowerSpinnerView mSpinnerTeacher, mSpinnerBag;
     private NumberPicker npStartAmPm, npStartTime, npEndAmPm, npEndTime;
@@ -160,6 +161,13 @@ public class ConsultationRequestActivity extends BaseActivity {
         npEndAmPm = findViewById(R.id.picker_end_am_pm);
         npEndTime = findViewById(R.id.picker_end_time);
         mSpinnerBag = findViewById(R.id.spinner_bag);
+
+        npStartAmPm.setOnFocusChangeListener((view, hasFocus) -> {
+            if (hasFocus) {
+                view.clearFocus();
+            }
+        });
+
 
         mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
@@ -309,7 +317,7 @@ public class ConsultationRequestActivity extends BaseActivity {
             if (_selectedBag.bagName != null) request.bagName = _selectedBag.bagName;
         }
 
-        str = mEtConsultContent.getText().toString();
+        str = mEtConsultContent.getText();
 
         if (Utils.isEmptyContainSpace(str)) request.memo = str.trim();
         else request.memo = str;
@@ -353,9 +361,10 @@ public class ConsultationRequestActivity extends BaseActivity {
             if (!mSpinnerBag.isShowing()) mSpinnerBag.show();
 
         }
+        // 상담 내용은 선택사항
 //        else if (request.memo.isEmpty()) {
 //            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
-//            showKeyboard(mEtConsultContent);
+//            showKeyboard(mEtConsultContent.getEditText());
 //
 //        }
         else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) { // 캠퍼스 데이터를 불러오지 못한 경우, 데이터 가져오기

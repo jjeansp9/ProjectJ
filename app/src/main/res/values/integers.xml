@@ -5,4 +5,14 @@
     <integer name="animation_duration">100</integer>
     <integer name="btn_push_duration">100</integer>
     <integer name="scroll_to_top_delay">100</integer>
+
+    <integer name="maxlength_title">100</integer>
+    <integer name="maxlength_content">3000</integer>
+    <integer name="maxlength_sms">500</integer>
+    <integer name="maxlength_memo_counsel_and_leveltest">300</integer>
+    <integer name="maxlength_memo_reportcard">255</integer>
+    <integer name="maxlength_qna">1000</integer>
+    <integer name="maxlength_default">45</integer>
+    <integer name="maxlength_id_and_pw">100</integer>
+    <integer name="maxlength_address_detail">100</integer>
 </resources>

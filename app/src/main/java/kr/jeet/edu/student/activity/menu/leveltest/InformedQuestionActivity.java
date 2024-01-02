@@ -61,6 +61,7 @@ import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import kr.jeet.edu.student.view.LimitableEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,8 +72,9 @@ public class InformedQuestionActivity extends BaseActivity {
 
     private TextView tvQuestionNo1, tvQuestionNo2, tvQuestionNo3, tvQuestionNo4, tvQuestionNo5, tvQuestionNo6;
     private EditText[] mEditList;
-    private EditText mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
+    private EditText mEtLearningProc1, mEtLearningProc2, mEtLearningProc3,
             mEtStName1, mEtStTime1,  mEtStTime2,  mEtStTime3,  mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4;
+    private LimitableEditText mEtAnyQuestion;
     private RadioGroup rgSelDay, rgPrefArea;
     private RadioButton rbSelDay1, rbSelDay2, rbSelDay3, rbSelDay4, rbGiftedPref, rbGiftedNonPref;
     private RadioButton[] rbList;
@@ -288,7 +290,7 @@ public class InformedQuestionActivity extends BaseActivity {
         }
         setSpinner();
 
-        mEditList = new EditText[]{mEtLearningProc1, mEtLearningProc2, mEtLearningProc3, mEtAnyQuestion,
+        mEditList = new EditText[]{mEtLearningProc1, mEtLearningProc2, mEtLearningProc3,
                 mEtStName1, mEtStTime1, mEtStTime2, mEtStTime3, mEtStTime4, mEtStDate1, mEtStDate2, mEtStDate3, mEtStDate4};
         rbList = new RadioButton[]{rbSelDay1, rbSelDay2, rbSelDay3, rbSelDay4};
 

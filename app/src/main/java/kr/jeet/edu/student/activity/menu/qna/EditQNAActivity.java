@@ -51,6 +51,7 @@ import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
 import kr.jeet.edu.student.utils.Utils;
 import kr.jeet.edu.student.view.CustomAppbarLayout;
+import kr.jeet.edu.student.view.LimitableEditText;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,7 +64,8 @@ public class EditQNAActivity extends BaseActivity {
     //views
     PowerSpinnerView spinnerCampus, spinnerGrade;
     NestedScrollView scrollView;
-    EditText etSubject, etContent;
+    EditText etSubject;
+    LimitableEditText etContent;
     LinearLayout layoutPrivate;
     CheckBox cbIsPrivate;
     LinearLayoutCompat layoutBottom;
@@ -340,7 +342,7 @@ public class EditQNAActivity extends BaseActivity {
             return false;
         }
         if(Utils.isEmptyContainSpace(etContent.getText())) {   //내용
-            showKeyboard(etContent);
+            showKeyboard(etContent.getEditText());
             Toast.makeText(mContext, R.string.error_message_empty_content, Toast.LENGTH_SHORT).show();
             return false;
         }
@@ -465,7 +467,7 @@ public class EditQNAActivity extends BaseActivity {
         else qnaInsert.title = str;
 
         // 내용
-        str = etContent.getText().toString();
+        str = etContent.getText();
         if (Utils.isEmptyContainSpace(str)) qnaInsert.content = str.trim();
         else  qnaInsert.content = str;
 
@@ -507,7 +509,7 @@ public class EditQNAActivity extends BaseActivity {
         else qnaUpdate.title = str;
 
         // 내용
-        str = etContent.getText().toString();
+        str = etContent.getText();
         if (Utils.isEmptyContainSpace(str)) qnaUpdate.content = str.trim();
         else  qnaUpdate.content = str;
         qnaUpdate.isOpen = isOpen;

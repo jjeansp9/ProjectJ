@@ -173,7 +173,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_hours"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -186,7 +186,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_month"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -236,7 +236,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_hours"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -249,7 +249,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_month"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -299,7 +299,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_hours"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -312,7 +312,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_month"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -362,7 +362,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_hours"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -375,7 +375,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_month"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -438,7 +438,7 @@
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
                     android:maxLines="2"
-                    android:maxLength="45"
+                    android:maxLength="@integer/maxlength_default"
                     android:hint="@string/learning_process_hint"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:textColor="@color/font_color_default"
@@ -486,7 +486,7 @@
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
                     android:maxLines="2"
-                    android:maxLength="45"
+                    android:maxLength="@integer/maxlength_default"
                     android:hint="@string/learning_process_hint"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:textColor="@color/font_color_default"
@@ -534,7 +534,7 @@
                     android:background="@drawable/bg_edittext"
                     android:textSize="@dimen/font_size"
                     android:maxLines="2"
-                    android:maxLength="45"
+                    android:maxLength="@integer/maxlength_default"
                     android:hint="@string/learning_process_hint"
                     android:inputType="textMultiLine|textNoSuggestions"
                     android:textColor="@color/font_color_default"
@@ -648,7 +648,28 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_large"/>
 
-                <EditText
+<!--                <EditText-->
+<!--                    android:id="@+id/et_any_question"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_question_no_7"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    android:layout_marginHorizontal="@dimen/layout_margin"-->
+<!--                    android:layout_marginTop="@dimen/informed_question_margin_top"-->
+<!--                    android:layout_marginBottom="@dimen/informed_question_sub_title_margin_top"-->
+<!--                    android:background="@drawable/bg_edittext"-->
+<!--                    android:textSize="@dimen/font_size"-->
+<!--                    android:minLines="5"-->
+<!--                    android:maxLength="300"-->
+<!--                    android:hint="@string/test_reserve_memo_hint"-->
+<!--                    android:gravity="start"-->
+<!--                    android:inputType="textMultiLine|textNoSuggestions"-->
+<!--                    android:textColor="@color/font_color_default"-->
+<!--                    android:padding="@dimen/editbox_padding"/>-->
+
+                <kr.jeet.edu.student.view.LimitableEditText
                     android:id="@+id/et_any_question"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -659,15 +680,13 @@
                     android:layout_marginHorizontal="@dimen/layout_margin"
                     android:layout_marginTop="@dimen/informed_question_margin_top"
                     android:layout_marginBottom="@dimen/informed_question_sub_title_margin_top"
-                    android:background="@drawable/bg_edittext"
-                    android:textSize="@dimen/font_size"
-                    android:minLines="5"
-                    android:maxLength="300"
                     android:hint="@string/test_reserve_memo_hint"
-                    android:gravity="start"
-                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:maxLength="@integer/maxlength_memo_counsel_and_leveltest"
+                    android:textSize="@dimen/font_size"
                     android:textColor="@color/font_color_default"
-                    android:padding="@dimen/editbox_padding"/>
+                    android:minLines="5"
+                    android:inputType="textMultiLine|textNoSuggestions"
+                    android:gravity="top" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

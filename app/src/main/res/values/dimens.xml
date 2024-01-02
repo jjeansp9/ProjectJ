@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_menu_icon_size">72dp</dimen>
+    <dimen name="layout_margin_40">40dp</dimen>
     <dimen name="layout_margin_32">32dp</dimen>
     <dimen name="layout_margin_28">28dp</dimen>
     <dimen name="layout_margin_24">24dp</dimen>

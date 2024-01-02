@@ -70,7 +70,7 @@ public interface RetrofitApi {
     //public final static String SERVER_BASE_URL = "http://192.168.2.77:7777/"; // khj local
     public final static String SERVER_BASE_URL = "http://192.168.2.83:7777/"; // jwj local
     //public final static String SERVER_BASE_URL = "http://211.252.86.237:7777/"; // 테스트 cloud local
-    //public final static String SERVER_BASE_URL = "http://211.252.86.6/"; // 운영 cloud local
+    //public final static String SERVER_BASE_URL = "http://211.252.86.6/"; // 운영 cloud
     //public final static String SERVER_BASE_URL = "https://www.jeetapp.kr/"; // domain
 
     public final static String PREFIX = "mobile/api/";

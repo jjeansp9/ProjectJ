@@ -87,7 +87,7 @@
                 android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
                 android:maxLines="1"
-                android:maxLength="45"
+                android:maxLength="@integer/maxlength_default"
                 android:inputType="text"
                 android:textColor="@color/font_color_default"
                 android:padding="@dimen/editbox_padding"
@@ -163,7 +163,7 @@
                     android:textColor="@color/font_color_default"
                     android:inputType="textVisiblePassword"
                     android:padding="@dimen/editbox_padding"
-                    android:maxLength="100"
+                    android:maxLength="@integer/maxlength_id_and_pw"
                     android:digits="@string/id_pattern"
                     />
 
@@ -189,7 +189,7 @@
                     android:inputType="textPassword"
                     android:padding="@dimen/editbox_padding"
                     android:maxLines="1"
-                    android:maxLength="100"
+                    android:maxLength="@integer/maxlength_id_and_pw"
                     />
 
                 <TextView
@@ -225,7 +225,7 @@
                     android:inputType="textPassword"
                     android:padding="@dimen/editbox_padding"
                     android:maxLines="1"
-                    android:maxLength="100"
+                    android:maxLength="@integer/maxlength_id_and_pw"
                     />
 
             </LinearLayout>

@@ -125,7 +125,7 @@
                 android:inputType="text"
                 android:padding="@dimen/editbox_padding"
                 android:maxLines="1"
-                android:maxLength="100" />
+                android:maxLength="@integer/maxlength_title" />
 
             <!-- 내용-->
             <TextView
@@ -139,45 +139,23 @@
                 android:layout_marginBottom="@dimen/layout_margin_8"
                 />
 
-            <EditText
+            <kr.jeet.edu.student.view.LimitableEditText
                 android:id="@+id/et_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_edittext"
-                android:textSize="@dimen/font_size_large"
-                android:hint="내용을 입력하세요."
+                android:hint="@string/hint_input_content"
+                android:maxLength="@integer/maxlength_qna"
+                android:textSize="@dimen/font_size"
                 android:textColor="@color/font_color_default"
                 android:minLines="4"
-                android:maxLength="1000"
                 android:inputType="textMultiLine|textNoSuggestions"
-                android:padding="@dimen/editbox_padding"
-                android:gravity="top"
-                />
-            <!-- 답변-->
-<!--            <TextView-->
-<!--                android:id="@+id/tv_answer"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/title_main_answer"-->
-<!--                android:textColor="@color/font_color_default"-->
-<!--                android:textSize="@dimen/font_size"-->
-<!--                android:textStyle="bold"-->
-<!--                android:layout_marginTop="@dimen/layout_margin"-->
-<!--                android:layout_marginBottom="@dimen/layout_margin_8"-->
-<!--                />-->
+                android:gravity="top" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/et_answer"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@drawable/bg_edittext"-->
-<!--                android:textSize="@dimen/font_size_large"-->
-<!--                android:textColor="@color/font_color_default"-->
-<!--                android:minLines="4"-->
-<!--                android:inputType="textMultiLine|textNoSuggestions"-->
-<!--                android:padding="@dimen/editbox_padding"-->
-<!--                android:gravity="top"-->
-<!--                />-->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="@dimen/layout_margin_40"
+                android:visibility="invisible" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -201,30 +179,6 @@
             android:background="@color/bg_white"
             android:paddingHorizontal="@dimen/layout_margin"
             android:paddingVertical="@dimen/layout_margin_16">
-<!--            <LinearLayout-->
-<!--                android:id="@+id/layout_allow_notice"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:stateListAnimator="@xml/animate_button_push">-->
-<!--                <CheckBox-->
-<!--                    android:id="@+id/check_notice"-->
-<!--                    android:layout_width="24dp"-->
-<!--                    android:layout_height="24dp"-->
-<!--                    android:background="@drawable/selector_bt_agree"-->
-<!--                    android:button="@null"-->
-<!--                    android:checked="true"-->
-<!--                    android:clickable="false"-->
-<!--                    />-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="@string/title_qna_notice"-->
-<!--                    android:textSize="@dimen/font_size"-->
-<!--                    android:textColor="@color/font_color_default"-->
-<!--                    android:layout_marginHorizontal="@dimen/layout_margin_xxxsmall"-->
-<!--                    />-->
-<!--            </LinearLayout>-->
             <LinearLayout
                 android:id="@+id/layout_allow_private"
                 android:layout_width="wrap_content"

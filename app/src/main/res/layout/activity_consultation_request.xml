@@ -113,6 +113,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/consultation_number_picker"
                         android:theme="@style/NumberPicker"
+                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1" />
 
                     <NumberPicker
@@ -121,6 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:theme="@style/NumberPicker"
+                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1" />
 
                     <TextView
@@ -139,6 +141,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/consultation_number_picker"
                         android:theme="@style/NumberPicker"
+                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1" />
 
                     <NumberPicker
@@ -147,6 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:theme="@style/NumberPicker"
+                        android:descendantFocusability="blocksDescendants"
                         android:layout_weight="1" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
@@ -253,7 +257,25 @@
                 android:textSize="@dimen/font_size"
                 android:textStyle="bold" />
 
-            <EditText
+<!--            <EditText-->
+<!--                android:id="@+id/et_consultation_content"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_consultation_content"-->
+<!--                android:layout_marginTop="@dimen/layout_margin_12"-->
+<!--                android:padding="12dp"-->
+<!--                android:gravity="start"-->
+<!--                android:background="@drawable/selector_edit_consultation"-->
+<!--                android:inputType="textMultiLine|textNoSuggestions"-->
+<!--                android:minLines="6"-->
+<!--                android:hint="@string/hint_input_content"-->
+<!--                android:maxLength="300"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/font_size" />-->
+
+            <kr.jeet.edu.student.view.LimitableEditText
                 android:id="@+id/et_consultation_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -261,15 +283,13 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_consultation_content"
                 android:layout_marginTop="@dimen/layout_margin_12"
-                android:padding="12dp"
-                android:gravity="start"
-                android:background="@drawable/selector_edit_consultation"
-                android:inputType="textMultiLine|textNoSuggestions"
+                android:hint="@string/hint_input_content"
+                android:maxLength="@integer/maxlength_memo_counsel_and_leveltest"
+                android:textSize="@dimen/font_size"
+                android:textColor="@color/font_color_default"
                 android:minLines="6"
-                android:hint="@string/please_content"
-                android:maxLength="300"
-                android:textColor="@color/black"
-                android:textSize="@dimen/font_size" />
+                android:inputType="textMultiLine|textNoSuggestions"
+                android:gravity="top" />
 
             <TextView
                 android:id="@+id/tv_consultation_attention_sub"
