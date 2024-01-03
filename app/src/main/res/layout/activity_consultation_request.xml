@@ -112,18 +112,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/consultation_number_picker"
-                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1"
                         android:descendantFocusability="blocksDescendants"
-                        android:layout_weight="1" />
+                        android:theme="@style/NumberPicker" />
 
                     <NumberPicker
                         android:id="@+id/picker_start_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1"
                         android:descendantFocusability="blocksDescendants"
-                        android:layout_weight="1" />
+                        android:theme="@style/NumberPicker" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -131,8 +131,8 @@
                         android:layout_gravity="center"
                         android:layout_marginHorizontal="@dimen/consultation_number_picker"
                         android:text="~"
-                        android:textSize="@dimen/font_size_xlarge"
-                        android:textColor="@color/font_color_default"/>
+                        android:textColor="@color/font_color_default"
+                        android:textSize="@dimen/font_size_xlarge" />
 
                     <NumberPicker
                         android:id="@+id/picker_end_am_pm"
@@ -140,18 +140,18 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/consultation_number_picker"
-                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1"
                         android:descendantFocusability="blocksDescendants"
-                        android:layout_weight="1" />
+                        android:theme="@style/NumberPicker" />
 
                     <NumberPicker
                         android:id="@+id/picker_end_time"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:theme="@style/NumberPicker"
+                        android:layout_weight="1"
                         android:descendantFocusability="blocksDescendants"
-                        android:layout_weight="1" />
+                        android:theme="@style/NumberPicker" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -256,24 +256,6 @@
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
                 android:textStyle="bold" />
-
-<!--            <EditText-->
-<!--                android:id="@+id/et_consultation_content"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/tv_consultation_content"-->
-<!--                android:layout_marginTop="@dimen/layout_margin_12"-->
-<!--                android:padding="12dp"-->
-<!--                android:gravity="start"-->
-<!--                android:background="@drawable/selector_edit_consultation"-->
-<!--                android:inputType="textMultiLine|textNoSuggestions"-->
-<!--                android:minLines="6"-->
-<!--                android:hint="@string/hint_input_content"-->
-<!--                android:maxLength="300"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:textSize="@dimen/font_size" />-->
 
             <kr.jeet.edu.student.view.LimitableEditText
                 android:id="@+id/et_consultation_content"

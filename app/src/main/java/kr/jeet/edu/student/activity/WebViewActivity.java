@@ -104,7 +104,6 @@ public class WebViewActivity extends BaseActivity {
 
         wv.setWebViewClient(new MyWebViewClient(mActivity, wv, accountNo));
         wv.setWebChromeClient(new MyWebChromeClient(mActivity));
-
         if (url != null) wv.loadUrl(url);
     }
 

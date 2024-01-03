@@ -47,6 +47,7 @@ public class MyWebChromeClient extends WebChromeClient {
                 super.onCloseWindow(window);
             }
         });
+
         activity.setContentView(newWebView);
         //dialog = new Dialog(view.getContext());
 

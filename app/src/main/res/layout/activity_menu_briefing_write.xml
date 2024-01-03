@@ -51,6 +51,7 @@
                 android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
                 android:maxLines="1"
+                android:maxLength="@integer/maxlength_default"
                 android:inputType="text"
                 android:textColor="@color/font_color_default"
                 android:padding="@dimen/editbox_padding"

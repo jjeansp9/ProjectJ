@@ -159,7 +159,7 @@
                             android:textSize="@dimen/font_size"
                             android:hint="@string/informed_question_class_path_hint_name"
                             android:maxLines="1"
-                            android:maxLength="45"
+                            android:maxLength="@integer/maxlength_default"
                             android:inputType="text"
                             android:textColor="@color/font_color_default"
                             android:paddingHorizontal="@dimen/editbox_padding"
@@ -647,27 +647,6 @@
                     android:text="@string/informed_question_no_7"
                     android:textColor="@color/black"
                     android:textSize="@dimen/font_size_large"/>
-
-<!--                <EditText-->
-<!--                    android:id="@+id/et_any_question"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    app:layout_constraintTop_toBottomOf="@+id/tv_question_no_7"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    android:layout_marginHorizontal="@dimen/layout_margin"-->
-<!--                    android:layout_marginTop="@dimen/informed_question_margin_top"-->
-<!--                    android:layout_marginBottom="@dimen/informed_question_sub_title_margin_top"-->
-<!--                    android:background="@drawable/bg_edittext"-->
-<!--                    android:textSize="@dimen/font_size"-->
-<!--                    android:minLines="5"-->
-<!--                    android:maxLength="300"-->
-<!--                    android:hint="@string/test_reserve_memo_hint"-->
-<!--                    android:gravity="start"-->
-<!--                    android:inputType="textMultiLine|textNoSuggestions"-->
-<!--                    android:textColor="@color/font_color_default"-->
-<!--                    android:padding="@dimen/editbox_padding"/>-->
 
                 <kr.jeet.edu.student.view.LimitableEditText
                     android:id="@+id/et_any_question"

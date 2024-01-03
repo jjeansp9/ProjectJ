@@ -89,7 +89,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -111,8 +110,6 @@ import java.util.stream.Collectors;
 public class MainActivity extends BaseActivity {
 
     private String TAG = MainActivity.class.getSimpleName();
-
-    private AppCompatActivity mActivity;
 
     private RecyclerView mRecyclerView, announceRecycler;
     private MainMenuListAdapter mAdapter;
@@ -272,7 +269,6 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = this;
-        mActivity = this;
         initView();
         initAppbar();
     }

@@ -162,13 +162,13 @@ public class AuthPhoneNumberView extends LinearLayout implements View.OnClickLis
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                 if(charSequence!= null) {
-                    if (charSequence.length() == 6) {
+                    if (charSequence.length() == String.valueOf(mAuthNum).length()) {
                         if(mTimer != null && mAuthNum == Integer.parseInt(mEditAuthNo.getText().toString().trim())) {
                             //Toast.makeText(_context, R.string.check_auth_number, Toast.LENGTH_SHORT).show();
                             mCheckPhoneTxt.setText(_context.getString(R.string.auth_complete));
                             mCheckPhoneTxt.setVisibility(View.VISIBLE);
                             mEditAuthNo.setEnabled(false);
-                            //Utils.hideKeyboard(_context, mEditAuthNo);
+                            Utils.hideKeyboard(_context, mEditAuthNo);
 
                         } else {
                             mCheckPhoneTxt.setText(_context.getString(R.string.mismatch_phonenumber));

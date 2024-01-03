@@ -251,7 +251,7 @@
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.menu.briefing.MenuBriefingDetailActivity"
@@ -282,14 +282,14 @@
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.menu.leveltest.MenuTestReserveWriteActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.menu.leveltest.InformedConsentActivity"
@@ -320,7 +320,7 @@
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.menu.student.MenuStudentInfoActivity"
@@ -338,30 +338,24 @@
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.setting.SetPhoneNumActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.setting.SetProfileInfoActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.setting.SetAccountActivity"
-            android:configChanges="smallestScreenSize|screenSize|screenLayout"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            />
-        <activity
-            android:name=".activity.menu.MenuBoardDetailActivity"
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -389,7 +383,7 @@
             android:configChanges="smallestScreenSize|screenSize|screenLayout"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             />
         <activity
             android:name=".activity.login.FindCredentialsActivity"

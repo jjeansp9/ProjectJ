@@ -162,13 +162,6 @@ public class ConsultationRequestActivity extends BaseActivity {
         npEndTime = findViewById(R.id.picker_end_time);
         mSpinnerBag = findViewById(R.id.spinner_bag);
 
-        npStartAmPm.setOnFocusChangeListener((view, hasFocus) -> {
-            if (hasFocus) {
-                view.clearFocus();
-            }
-        });
-
-
         mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
         setNumberPicker();
@@ -361,8 +354,8 @@ public class ConsultationRequestActivity extends BaseActivity {
             if (!mSpinnerBag.isShowing()) mSpinnerBag.show();
 
         }
-        // 상담 내용은 선택사항
-//        else if (request.memo.isEmpty()) {
+
+//        else if (request.memo.isEmpty()) { // 상담 내용은 선택사항
 //            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
 //            showKeyboard(mEtConsultContent.getEditText());
 //

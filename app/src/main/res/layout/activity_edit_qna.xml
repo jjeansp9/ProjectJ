@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_edittext"
                 android:textSize="@dimen/font_size"
-                android:hint="제목을 입력하세요."
+                android:hint="@string/hint_input_subject"
                 android:textColor="@color/font_color_default"
                 android:inputType="text"
                 android:padding="@dimen/editbox_padding"
