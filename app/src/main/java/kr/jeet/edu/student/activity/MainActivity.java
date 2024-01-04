@@ -1106,8 +1106,17 @@ public class MainActivity extends BaseActivity {
                                 if (getData.data.size() > 0) str = getData.data.get(0).sfName;
                                 teacherCnt = getData.data.size();
 
-                                if (teacherCnt <= 1) mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 선생님");
-                                else mTvTeacherName.setText(TextUtils.isEmpty(str) ? "" : str+" 외 선생님");
+                                if (teacherCnt == 0) {
+                                    mTvTeacherName.setText(""); // text hint - 배정되지 않음
+
+                                } else if (teacherCnt == 1){ // 지도강사가 1명일 때
+                                    str += " " + getString(R.string.main_tv_teacher);
+                                    mTvTeacherName.setText(Utils.getStr(str));
+
+                                } else {// 지도강사가 여러명일 때
+                                    str += getString(R.string.person_count, teacherCnt - 1);
+                                    mTvTeacherName.setText(Utils.getStr(str));
+                                }
                             }
 
                             LogMgr.e(TAG, "TeacherCnt: " + teacherCnt);

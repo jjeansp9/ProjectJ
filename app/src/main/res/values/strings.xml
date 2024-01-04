@@ -223,6 +223,7 @@
 
     <string name="main_tv_my_teacher">지도강사/상담</string>
     <string name="main_tv_teacher">선생님</string>
+    <string name="person_count"> 외 %d명</string>
     <string name="main_tv_consult">※ 상담을 진행하실 강사를 선택해주세요.</string>
     <string name="main_tv_teacher_empty">지도강사 정보가 없습니다.</string>
 
