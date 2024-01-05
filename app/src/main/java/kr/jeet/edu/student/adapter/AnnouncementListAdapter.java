@@ -76,6 +76,7 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 holder.brfRoot.setForeground(null);
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
                 holder.imgRdCnt.setVisibility(View.VISIBLE);
+                holder.tvCampusAndAcaGubun.setVisibility(View.VISIBLE);
                 holder.brfRoot.setBackgroundColor(Color.TRANSPARENT);
             }else{
                 holder.tvRdCnt.setVisibility(View.VISIBLE);
@@ -90,13 +91,11 @@ public class AnnouncementListAdapter extends RecyclerView.Adapter<AnnouncementLi
                 }
                 //holder.tvLocation.setVisibility(View.VISIBLE);
 
-                str = TextUtils.isEmpty(item.acaName) ? "캠퍼스 정보없음" : item.acaName + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
-                holder.tvCampusAndAcaGubun.setText(str);
-
                 //str = TextUtils.isEmpty(item.memberResponseVO.name) ? "이름 정보없음" : item.memberResponseVO.name;
                 //holder.tvLocation.setText(str);
             }
-
+            str = TextUtils.isEmpty(item.acaName) ? "캠퍼스 정보없음" : item.acaName + (TextUtils.isEmpty(item.acaGubunName) ? "" : " / " + item.acaGubunName);
+            holder.tvCampusAndAcaGubun.setText(str);
             holder.tvState.setVisibility(View.GONE);
             holder.tvDate.setVisibility(View.GONE);
             holder.tvAnnouncementDate.setVisibility(View.VISIBLE);

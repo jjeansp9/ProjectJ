@@ -37,7 +37,8 @@
                 android:text="@string/consultation_request_day_desired"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
             
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_calendar"
@@ -47,7 +48,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_consultation_day_desired"
                 android:layout_marginTop="@dimen/layout_margin_12"
-                android:background="@drawable/bg_campus_spinner">
+                android:background="@drawable/bg_campus_spinner"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_consultation_request_cal"
@@ -86,7 +88,8 @@
                 android:text="@string/consultation_request_time"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:id="@+id/layout_time"
@@ -97,7 +100,8 @@
                 app:layout_constraintTop_toBottomOf="@id/tv_consultation_teacher"
                 android:paddingHorizontal="16dp"
                 android:background="@drawable/bg_campus_spinner"
-                android:layout_marginTop="@dimen/layout_margin_12">
+                android:layout_marginTop="@dimen/layout_margin_12"
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -219,7 +223,8 @@
                 android:text="@string/consultation_request_type"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinner_bag"
@@ -243,19 +248,22 @@
                 app:spinner_divider_size="0.4dp"
                 app:spinner_popup_animation="dropdown"
                 app:spinner_popup_background="@drawable/selector_spinner_item"
-                app:spinner_popup_elevation="2dp" />
+                app:spinner_popup_elevation="2dp"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_consultation_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_bag"
-                android:layout_marginTop="@dimen/layout_margin"
+                app:layout_constraintTop_toTopOf="parent"
                 android:text="@string/consultation_request_content"
                 android:textColor="@color/font_color_default"
                 android:textSize="@dimen/font_size"
                 android:textStyle="bold" />
+<!--      위 GONE 설정된 모든 View들을 다시 VISIBLE로 바꿔야한 다면 tv_consultation_content의 TextView를 아래 두줄 주석처리된 부분 추가해야함      -->
+<!--            android:layout_marginTop="@dimen/layout_margin"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/spinner_bag"-->
 
             <kr.jeet.edu.student.view.LimitableEditText
                 android:id="@+id/et_consultation_content"

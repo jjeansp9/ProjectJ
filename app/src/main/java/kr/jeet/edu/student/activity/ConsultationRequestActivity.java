@@ -164,8 +164,8 @@ public class ConsultationRequestActivity extends BaseActivity {
 
         mTvCal.setText(Utils.currentDate(DATE_FORMATTER_YYYY_MM_DD_KOR));
 
-        setNumberPicker();
-        requestBagList();
+        //setNumberPicker();
+        //requestBagList();
     }
 
     private void setNumberPicker() {
@@ -296,7 +296,7 @@ public class ConsultationRequestActivity extends BaseActivity {
 
         str = Utils.reformFormatDate(mTvCal.getText().toString(), DATE_FORMATTER_YYYY_MM_DD_KOR, DATE_FORMATTER_YYYY_MM_DD);
 
-        request.counselDate = str;
+        //request.counselDate = str; // 상담요청일
         request.acaCode = _acaCode;
         request.acaName = _acaName;
         request.stCode = _stCode;
@@ -304,11 +304,11 @@ public class ConsultationRequestActivity extends BaseActivity {
         request.sfName = mInfo.sfName;
         request.clsName = mInfo.clsName;
         request.managerPhoneNumber = mInfo.phoneNumber;
-        request.callWishDate = resultTime;
-        if (_selectedBag != null) {
-            request.bagCode = _selectedBag.bagCode;
-            if (_selectedBag.bagName != null) request.bagName = _selectedBag.bagName;
-        }
+        //request.callWishDate = resultTime; // 전화요청일시
+//        if (_selectedBag != null) {
+//            request.bagCode = _selectedBag.bagCode;
+//            if (_selectedBag.bagName != null) request.bagName = _selectedBag.bagName;
+//        }
 
         str = mEtConsultContent.getText();
 
@@ -322,7 +322,7 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nmemberName: " + request.memberName +
                 "\nwriterName: " + request.writerName +
                 "\nuserGubun: " + request.userGubun +
-                "\ncounselDate: " + request.counselDate +
+                //"\ncounselDate: " + request.counselDate +
                 "\nacaCode: " + request.acaCode +
                 "\nacaName: " + request.acaName +
                 "\nstCode: " + request.stCode +
@@ -331,36 +331,36 @@ public class ConsultationRequestActivity extends BaseActivity {
                 "\nmemo: " + request.memo +
                 "\nclsName: " + request.clsName +
                 "\nphoneNumber: " + request.phoneNumber +
-                "\nsmsSender: " + request.smsSender +
-                "\ncallWishDate: " + request.callWishDate +
-                "\nbagCode: " + request.bagCode +
-                "\nbagName: " + request.bagName
+                "\nmanagerPhoneNumber: " + request.managerPhoneNumber +
+                "\nsmsSender: " + request.smsSender
+                //"\ncallWishDate: " + request.callWishDate +
+                //"\nbagCode: " + request.bagCode +
+                //"\nbagName: " + request.bagName
         );
 
-        if (request.counselDate.isEmpty()) { // 상담희망일 미선택시
-            Toast.makeText(mContext, R.string.please_date, Toast.LENGTH_SHORT).show();
-
-        } else if(mListBagName == null || mListBagName.isEmpty()) { // 분류항목 데이터를 불러오지 못한 경우, 데이터 가져오기
-            requestBagList();
-            showMessageDialog(
-                    getString(R.string.dialog_title_alarm),
-                    getString(R.string.loading_bag_info),
-                    v-> hideMessageDialog(),
-                    null,
-                    false
-            );
-        } else if (request.bagName == null || request.bagName.isEmpty()) { // 분류항목 미선택시
-            Toast.makeText(mContext, R.string.please_bag, Toast.LENGTH_SHORT).show();
-            if (!mSpinnerBag.isShowing()) mSpinnerBag.show();
-
-        }
-
-//        else if (request.memo.isEmpty()) { // 상담 내용은 선택사항
-//            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
-//            showKeyboard(mEtConsultContent.getEditText());
+//        if (request.counselDate.isEmpty()) { // 상담희망일 미선택시
+//            Toast.makeText(mContext, R.string.please_date, Toast.LENGTH_SHORT).show();
+//
+//        } else if(mListBagName == null || mListBagName.isEmpty()) { // 분류항목 데이터를 불러오지 못한 경우, 데이터 가져오기
+//            requestBagList();
+//            showMessageDialog(
+//                    getString(R.string.dialog_title_alarm),
+//                    getString(R.string.loading_bag_info),
+//                    v-> hideMessageDialog(),
+//                    null,
+//                    false
+//            );
+//        } else if (request.bagName == null || request.bagName.isEmpty()) { // 분류항목 미선택시
+//            Toast.makeText(mContext, R.string.please_bag, Toast.LENGTH_SHORT).show();
+//            if (!mSpinnerBag.isShowing()) mSpinnerBag.show();
 //
 //        }
-        else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) { // 캠퍼스 데이터를 불러오지 못한 경우, 데이터 가져오기
+
+        if (request.memo.isEmpty()) { // 상담 내용은 선택사항
+            Toast.makeText(mContext, R.string.please_content, Toast.LENGTH_SHORT).show();
+            showKeyboard(mEtConsultContent.getEditText());
+
+        } else if(TextUtils.isEmpty(request.acaCode) || TextUtils.isEmpty(request.acaName)) { // 캠퍼스 데이터를 불러오지 못한 경우, 데이터 가져오기
             requestMemberInfo(_memberSeq, _stCode);
             showMessageDialog(
                     getString(R.string.dialog_title_alarm),

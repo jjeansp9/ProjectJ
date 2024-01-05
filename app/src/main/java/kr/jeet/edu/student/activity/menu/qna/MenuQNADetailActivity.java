@@ -32,6 +32,7 @@ import kr.jeet.edu.student.model.data.QnaData;
 import kr.jeet.edu.student.model.data.QnaDetailData;
 import kr.jeet.edu.student.model.response.BaseResponse;
 import kr.jeet.edu.student.model.response.QnaDetailResponse;
+import kr.jeet.edu.student.server.RetrofitApi;
 import kr.jeet.edu.student.server.RetrofitClient;
 import kr.jeet.edu.student.utils.LogMgr;
 import kr.jeet.edu.student.utils.PreferenceUtil;
@@ -244,7 +245,11 @@ public class MenuQNADetailActivity extends BaseActivity {
                                 }
                             }else{
                                 finishActivity();
-                                Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                                if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+                                    Toast.makeText(mContext, R.string.server_not_found_board, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }catch (Exception e){
                             LogMgr.e(TAG + "requestNoticeDetail() Exception : ", e.getMessage());

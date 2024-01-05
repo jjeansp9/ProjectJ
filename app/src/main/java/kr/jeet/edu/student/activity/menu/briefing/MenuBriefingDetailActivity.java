@@ -445,7 +445,11 @@ public class MenuBriefingDetailActivity extends BaseActivity {
                             }
                         }else{
                             finish();
-                            Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+                                Toast.makeText(mContext, R.string.server_not_found_board, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }catch (Exception e){
                         LogMgr.e(TAG + "requestBrfDetail() Exception : ", e.getMessage());

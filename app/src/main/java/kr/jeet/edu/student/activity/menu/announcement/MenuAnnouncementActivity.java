@@ -183,7 +183,7 @@ public class MenuAnnouncementActivity extends BaseActivity {
         setListSpinner();
 
         mSwipeRefresh.setOnRefreshListener( () -> requestBoardList() );
-//        LogMgr.e(TAG, "appACACode = " + _appAcaCode + " userType = " + _userType);
+        LogMgr.e(TAG, "appACACode = " + _appAcaCode + " userType = " + _userType);
         if(!TextUtils.isEmpty(_appAcaCode) && Constants.MEMBER.equals(_userType)){
             ACAData selectedACA = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -203,8 +203,11 @@ public class MenuAnnouncementActivity extends BaseActivity {
                 if (selectedACA != null) {
 //                    LogMgr.e(TAG, "selectedACA != null");
                     int selectedIndex = _ACAList.indexOf(selectedACA);
-                    if(selectedIndex >= 0) {
-                        mSpinnerCampus.selectItemByIndex(selectedIndex);
+//                    if(selectedIndex >= 0) {
+//                        mSpinnerCampus.selectItemByIndex(selectedIndex);
+//                    }
+                    if(selectedIndex >= 0 && selectedIndex <= _ACAList.size()) {
+                        mSpinnerCampus.selectItemByIndex(0); //전체
                     }
                 } else {
 //                    LogMgr.e(TAG, "selectedACA == null");

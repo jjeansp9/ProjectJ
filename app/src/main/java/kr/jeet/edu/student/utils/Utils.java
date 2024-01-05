@@ -506,17 +506,16 @@ public class Utils {
 
     public static void createNotification(Context _context, String title, String content){
         PendingIntent pendingIntent;
-        pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(_context, IntroActivity.class), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+        pendingIntent = PendingIntent.getActivity(_context, 0, new Intent(), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
         String channelId = _context.getString(R.string.consult_notification_headup_channel_id);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(_context, channelId)
 //                .setTicker(tickerText)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setContentIntent(pendingIntent);
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
 //                .setFullScreenIntent(pendingIntent, true);
         AudioManager audioManager = (AudioManager) _context.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE || audioManager.getRingerMode() == AudioManager.RINGER_MODE_SILENT) {
@@ -527,13 +526,13 @@ public class Utils {
         }
         notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         NotificationManager notificationManager = (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "jeet_notification", NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("jeet");
-            channel.setShowBadge(true);
-            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            notificationManager.createNotificationChannel(channel);
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(channelId, "jeet_notification", NotificationManager.IMPORTANCE_HIGH);
+//            channel.setDescription("jeet");
+//            channel.setShowBadge(true);
+//            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+//            notificationManager.createNotificationChannel(channel);
+//        }
 
         _notifyID = NotificationID.getID();
 

@@ -269,7 +269,7 @@ public class EditQNAActivity extends BaseActivity {
 
     private void initData() {
         if(boardEditMode == Constants.BoardEditMode.New){
-            layoutBottom.setVisibility(View.VISIBLE);
+            //layoutBottom.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(_acaCode)) {
 
                 Optional option = _ACAList.stream().filter(t -> t.acaCode.equals(_acaCode)).findFirst();
@@ -283,7 +283,7 @@ public class EditQNAActivity extends BaseActivity {
 
             }
         }else {
-            layoutBottom.setVisibility(View.VISIBLE);
+            //layoutBottom.setVisibility(View.VISIBLE);
             if (!TextUtils.isEmpty(_currentData.acaCode)) {
 
                 Optional option = _ACAList.stream().filter(t -> t.acaCode.equals(_currentData.acaCode)).findFirst();
@@ -445,7 +445,8 @@ public class EditQNAActivity extends BaseActivity {
         String isOpen = "";
         String str = "";
 
-        if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
+        // TODO 일단은 비공개로 체크해놓고 View는 gone으로 설정
+        if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE; // 비공개 체크되었을 때
         else isOpen = IS_OPEN;
 
         qnaInsert.writerSeq = _memberSeq;
@@ -498,7 +499,8 @@ public class EditQNAActivity extends BaseActivity {
         String isOpen = "";
         String str = "";
 
-        if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE;
+        // TODO 일단은 비공개로 체크해놓고 View는 gone으로 설정
+        if (cbIsPrivate.isChecked()) isOpen = IS_PRIVATE; // 비공개 체크되었을 때
         else isOpen = IS_OPEN;
 
         qnaUpdate.seq = _boardSeq;
@@ -512,7 +514,7 @@ public class EditQNAActivity extends BaseActivity {
         str = etContent.getText();
         if (Utils.isEmptyContainSpace(str)) qnaUpdate.content = str.trim();
         else  qnaUpdate.content = str;
-        qnaUpdate.isOpen = isOpen;
+        qnaUpdate.isOpen = isOpen; // 공개여부 [Y/N]
 
         LogMgr.e(TAG, "== requestQna Edit Data  ==" +
                 "\nseq: " + qnaUpdate.seq +

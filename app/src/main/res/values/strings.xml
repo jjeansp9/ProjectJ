@@ -172,7 +172,8 @@
     <string name="main_menu_briefing_reserve">설명회예약</string>
     <string name="main_menu_attendance">출석부</string>
     <string name="main_menu_report_card">성적표</string>
-    <string name="main_menu_qna">Q&amp;A</string>
+<!--    <string name="main_menu_qna">Q&amp;A</string>-->
+    <string name="main_menu_qna">자주하는질문</string>
     <string name="main_menu_rollbook">시간표</string>
     <string name="main_menu_tuition">수강료 납부</string>
 
@@ -785,6 +786,7 @@
     <string name="empty_menu_list_qna">Q&amp;A가 없습니다.</string>
     <string name="qna_insert_success">문의사항이 신청되었습니다.</string>
     <string name="qna_update_success">문의사항이 수정되었습니다.</string>
+    <string name="qna_request_attention">상담을 원하시면 반드시 연락처를 입력 바랍니다.</string>
 
     <string name="title_bus_start">출발</string>
     <string name="btn_title_phone_call">전화하기</string>

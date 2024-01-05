@@ -109,6 +109,22 @@ import java.util.stream.Collectors;
 
 public class MainActivity extends BaseActivity {
 
+    /**
+     == QNA == - 완료
+     1. QnA 작성시 사용자앱에서 무조건 비공개로 되도록 - o
+     2. QnA 작성시 내용하단에 ※상담을 원하시면 반드시 연락처를 입력 바랍니다. > 하단에 위 문구만 추가 - o
+     3. QnA를 자주 하는 질문 으로 변경 - o
+     4. QnA 타이틀 문구 변경시 푸시타입에도 문구변경
+
+     == 공지사항 == - 완료
+     5. 전체 항목을 추가하고 사용자 기본설정을 전체인걸로
+     6. 개별 캠퍼스 필터에서는 전체로 등록한 글제외한 캠퍼스로 지정하여 등록한 글만 표시
+     ※ 이렇게 하는 이유가 전체 캠퍼스 대상으로 공지글을 올려야 할 경우가 있는데 특정캠퍼스를 지정하기도, 여러군데에 올리기도 애매하여 이렇게 요청한다고 함.
+
+     == 상담요청 == - 완료
+     7. 상담요청시 상담희망일/상담희망시간/분류항목 제거요청
+     */
+
     private String TAG = MainActivity.class.getSimpleName();
 
     private RecyclerView mRecyclerView, announceRecycler;
@@ -433,7 +449,7 @@ public class MainActivity extends BaseActivity {
 
                     btnTeacher.setVisibility(View.GONE); // 화면 하단 지도강사 버튼 gone
                     btnTuition.setVisibility(View.GONE); // 화면 하단 수강료납부 버튼 gone
-                    newAnnouncement.setVisibility(View.GONE); // 최근 공지사항 레이아웃 gone
+//                    newAnnouncement.setVisibility(View.GONE); // 최근 공지사항 레이아웃 gone
 
                     if (_userGubun == Constants.USER_TYPE_STUDENT) str = MR_STUDENT +STR_NON_MEMBER; // 원생
                     else str = MR_PARENT+STR_NON_MEMBER; // 부모
@@ -653,6 +669,7 @@ public class MainActivity extends BaseActivity {
             //QnA
             mList.add(new MainMenuItemData(DataManager.BOARD_QNA, R.drawable.icon_menu_question, R.string.main_menu_qna, false, MenuQNAActivity.class));
         }
+        LogMgr.e(TAG+"boardInfo2", "data.boardNm");
     }
 
     private void updateMenus() {
@@ -662,9 +679,12 @@ public class MainActivity extends BaseActivity {
             if(boardData != null) {
                 if(!boardData.boardNm.equals(mContext.getString(menu.getTitleRes()))) {
                     menu.setTitle(boardData.boardNm);
+                    LogMgr.e(TAG+"boardInfo3", boardData.boardNm);
+                    LogMgr.e(TAG+"boardInfo3-1", mContext.getString(menu.getTitleRes()));
                 }
             }
         });
+        mAdapter.notifyDataSetChanged();
     }
 
     // 공지사항 or 설명회 메뉴아이콘에 new 표시
@@ -985,6 +1005,7 @@ public class MainActivity extends BaseActivity {
                                 List<BoardAttributeData> list = response.body().data;
                                 for(BoardAttributeData data : list){
                                     DataManager.getInstance().setBoardInfo(data);
+                                    LogMgr.e(TAG+"boardInfo1", data.boardNm);
                                 }
                             }
                             updateMenus();
@@ -1049,7 +1070,10 @@ public class MainActivity extends BaseActivity {
     // 공지사항 목록 정보 조회
     private void requestBoardList(String acaCode, String appgubunCode) {
         if (RetrofitClient.getInstance() != null) {
-            RetrofitClient.getApiInterface().getAnnouncementList(0, acaCode, appgubunCode).enqueue(new Callback<AnnouncementListResponse>() {
+
+            String acaCodeAll = "";
+            // 회원, 비회원 모두 최근 공지사항 목록을 전체 필터로 볼 수 있게
+            RetrofitClient.getApiInterface().getAnnouncementList(0, acaCodeAll, acaCodeAll).enqueue(new Callback<AnnouncementListResponse>() {
                 @Override
                 public void onResponse(Call<AnnouncementListResponse> call, Response<AnnouncementListResponse> response) {
                     try {

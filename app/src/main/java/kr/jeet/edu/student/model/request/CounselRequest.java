@@ -18,6 +18,6 @@ public class CounselRequest {
     public String smsSender;  // 캠퍼스 대표번호
     public String isSendNoti;  // (사용안함)알림전송여부(Y/N)-API문서작성시필요
     public String callWishDate; // 전화 요청일시
-    public int bagCode; // 항목 코드
-    public String bagName; // 항목 이름
+//    public int bagCode; // 항목 코드
+//    public String bagName; // 항목 이름
 }

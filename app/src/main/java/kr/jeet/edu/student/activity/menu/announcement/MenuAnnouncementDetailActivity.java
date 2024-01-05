@@ -246,8 +246,12 @@ public class MenuAnnouncementDetailActivity extends BaseActivity {
                                     }else LogMgr.e(TAG+" requestNoticeDetail is null");
                                 }
                             }else{
+                                if (response.code() == RetrofitApi.RESPONSE_CODE_NOT_FOUND) {
+                                    Toast.makeText(mContext, R.string.server_not_found_board, Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
+                                }
                                 finishActivity();
-                                Toast.makeText(mContext, R.string.server_fail, Toast.LENGTH_SHORT).show();
                             }
                         }catch (Exception e){
                             LogMgr.e(TAG + "requestNoticeDetail() Exception : ", e.getMessage());
