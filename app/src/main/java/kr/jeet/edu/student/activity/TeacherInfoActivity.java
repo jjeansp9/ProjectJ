@@ -68,7 +68,25 @@ public class TeacherInfoActivity extends BaseActivity {
     }
 
     private void startConsultActivity(TeacherClsData item){
+//        guard let phoneNumber = info.sfPhoneNumber?.removePretty, !StringUtils.checkMobileNumber(phoneNumber) else {
+//            self.view.makeToast("상담요청에 필요한 강사정보가 없습니다.", position: .center)
+//            return
+//        }
+//        guard info.sfName?.isEmpty == false, info.sfCode ?? 0 > 0, info.clsName?.isEmpty == false else {
+//            self.view.makeToast("상담요청에 필요한 강사정보가 없습니다.", position: .center)
+//            return
+//        }
         if (item != null){
+            if (
+                    item.phoneNumber.isEmpty() ||
+                    item.sfCode <= 0 ||
+                    item.sfName.isEmpty() ||
+                    item.clsName.isEmpty() ||
+                    item.clsCode <= 0
+            ) {
+                Toast.makeText(mContext, "상담요청에 필요한 강사정보가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(mContext, ConsultationRequestActivity.class);
             intent.putExtra(IntentParams.PARAM_LIST_ITEM, item);
             startActivity(intent);

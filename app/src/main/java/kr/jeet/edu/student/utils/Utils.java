@@ -526,13 +526,13 @@ public class Utils {
         }
         notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
         NotificationManager notificationManager = (NotificationManager) _context.getSystemService(Context.NOTIFICATION_SERVICE);
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(channelId, "jeet_notification", NotificationManager.IMPORTANCE_HIGH);
-//            channel.setDescription("jeet");
-//            channel.setShowBadge(true);
-//            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-//            notificationManager.createNotificationChannel(channel);
-//        }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId, "jeet_notification", NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("jeet");
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         _notifyID = NotificationID.getID();
 

@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.RenderProcessGoneDetail;
 import android.webkit.SslErrorHandler;

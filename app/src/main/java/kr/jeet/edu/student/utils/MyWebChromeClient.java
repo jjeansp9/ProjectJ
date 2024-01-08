@@ -19,6 +19,7 @@ public class MyWebChromeClient extends WebChromeClient {
     private WebView newWebView;
     private AppCompatActivity activity;
 
+
     public MyWebChromeClient(AppCompatActivity mActivity) {
         this.activity = mActivity;
     }
@@ -47,7 +48,6 @@ public class MyWebChromeClient extends WebChromeClient {
                 super.onCloseWindow(window);
             }
         });
-
         activity.setContentView(newWebView);
         //dialog = new Dialog(view.getContext());
 

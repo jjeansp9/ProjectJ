@@ -149,7 +149,7 @@ public class TeacherListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();
-                if (position > 0) if (mList.size() > 1) _listener.onItemClick(mList.get(position));
+                if (position > 0) if (mList.size() > 1 && _listener != null) _listener.onItemClick(mList.get(position));
             });
         }
     }
